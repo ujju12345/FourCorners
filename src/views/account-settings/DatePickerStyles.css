@@ -1,0 +1,3 @@
+.react-datepicker-popper {
+    z-index: 2000 !important; /* Ensure this value is high enough to overlay other elements */
+  }
