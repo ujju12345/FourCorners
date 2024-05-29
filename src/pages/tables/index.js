@@ -6,12 +6,6 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { useRouter } from 'next/router';
 // ** Demo Components Imports
-import CustomertDetails from 'src/views/customer-details/CustomertDetails'
-import TableDense from 'src/views/customer-details/TableDense'
-import TableSpanning from 'src/views/customer-details/TableSpanning'
-import TableCustomized from 'src/views/customer-details/TableCustomized'
-import TableCollapsible from 'src/views/customer-details/TableCollapsible'
-import TableStickyHeader from 'src/views/customer-details/TableStickyHeader'
 import { Button } from '@mui/material'
 
 const MUITable = () => {
@@ -42,7 +36,7 @@ const MUITable = () => {
       <Grid item xs={12}>
         <Card>
           <CardHeader title='Customer Details' titleTypographyProps={{ variant: 'h6' }} />
-          <CustomertDetails />
+          {/* <CustomertDetails /> */}
         </Card>
         </Grid>
  
