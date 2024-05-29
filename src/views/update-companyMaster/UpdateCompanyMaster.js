@@ -173,94 +173,95 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     return newErrors;
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newErrors = validateFields();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      setErrors({});
+ const handleSubmit = (event) => {
+   event.preventDefault();
+   const newErrors = validateFields();
+   if (Object.keys(newErrors).length > 0) {
+     setErrors(newErrors);
+   } else {
+     setErrors({});
 
-      const submitData = {
-        CreateUID: 1,
-        CompanyName: formData.companyName,
-        CompanyCode: formData.companyCode,
-        CommAddress: formData.companyAddress,
-        cityID: selectedCityId,
-        StateID: selectedStateId,
-        CountryID: 1,
-        Pincode: formData.pincode,
-        PhoneNo: formData.phone,
-        MobileNo: formData.mobilePhone,
-        Email: formData.email,
-        RegisteredAddress: formData.registeredAddress,
-        ERPLiveDate: formData.selectedDate,
-        BookBeginingFrom: formData.price,
-        PanITNo: formData.panIt,
-        GSTINNo: formData.gstinNumber,
-        TANNo: formData.tanNumber,
-        VATTINNo: formData.vatTinNumber,
-        CSTTINNo: formData.cstTinNumber,
-        ServiceTaxNo: formData.serviceTax,
-        CessNo: formData.cessNumber,
-        CINNo: formData.cinNumber,
-        Status: 1,
-        CompanyStatusID: 1,
-        Remarks: formData.remarks,
-        CompanyID:id
-      };
+     const submitData = {
+       CreateUID: 1,
+       CompanyName: formData.companyName,
+       CompanyCode: formData.companyCode,
+       CommAddress: formData.companyAddress,
+       cityID: selectedCityId,
+       StateID: selectedStateId,
+       CountryID: 1,
+       Pincode: formData.pincode,
+       PhoneNo: formData.phone,
+       MobileNo: formData.mobilePhone,
+       Email: formData.email,
+       RegisteredAddress: formData.registeredAddress,
+       ERPLiveDate: formData.selectedDate,
+       BookBeginingFrom: formData.price,
+       PanITNo: formData.panIt,
+       GSTINNo: formData.gstinNumber,
+       TANNo: formData.tanNumber,
+       VATTINNo: formData.vatTinNumber,
+       CSTTINNo: formData.cstTinNumber,
+       ServiceTaxNo: formData.serviceTax,
+       CessNo: formData.cessNumber,
+       CINNo: formData.cinNumber,
+       Status: 1,
+       CompanyStatusID: 1,
+       Remarks: formData.remarks,
+       CompanyID: id,
+     };
 
-      console.log(submitData, 'ALL DATAAAAAAA');
+     console.log(submitData, "ALL DATAAAAAAA");
 
-      axios
-        .post(
-          "https://apiforcorners.cubisysit.com/api/api-update-companymaster.php",
-          submitData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          if (response.data.status === "Success") {
-            console.log("UPDATEDDDDD");
-            setSubmitSuccess(true);
-            show("list");
-            setFormData({
-              companyName: "",
-              companyCode: "",
-              companyAddress: "",
-              registeredAddress: "",
-              selectedCity: "",
-              selectedState: "",
-              country: "India",
-              pincode: "",
-              phone: "",
-              mobilePhone: "",
-              email: "",
-              price: "",
-              panIt: "",
-              gstinNumber: "",
-              tanNumber: "",
-              vatTinNumber: "",
-              cstTinNumber: "",
-              serviceTax: "",
-              cessNumber: "",
-              cinNumber: "",
-              remarks: "",
-              selectedDate: "",
-            });
-          } else {
-            setSubmitSuccess(false);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          setSubmitSuccess(false);
-        });
-    }
-  };
+     axios
+       .post(
+         "https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php",
+         submitData,
+         {
+           headers: {
+             "Content-Type": "application/json",
+           },
+         }
+       )
+       .then((response) => {
+         if (response.data.status === "Success") {
+           console.log("UPDATEDDDDD");
+           setSubmitSuccess(true);
+           show("list");
+           setFormData({
+             companyName: "",
+             companyCode: "",
+             companyAddress: "",
+             registeredAddress: "",
+             selectedCity: "",
+             selectedState: "",
+             country: "India",
+             pincode: "",
+             phone: "",
+             mobilePhone: "",
+             email: "",
+             price: "",
+             panIt: "",
+             gstinNumber: "",
+             tanNumber: "",
+             vatTinNumber: "",
+             cstTinNumber: "",
+             serviceTax: "",
+             cessNumber: "",
+             cinNumber: "",
+             remarks: "",
+             selectedDate: "",
+           });
+         } else {
+           setSubmitSuccess(false);
+         }
+       })
+       .catch((error) => {
+         console.error("There was an error!", error);
+         setSubmitSuccess(false);
+       });
+   }
+ };
+
 
   return (
     <CardContent>
