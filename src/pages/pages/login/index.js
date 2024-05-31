@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -25,6 +27,9 @@ import EyeOffOutline from 'mdi-material-ui/EyeOffOutline';
 import themeConfig from 'src/configs/themeConfig';
 import BlankLayout from 'src/@core/layouts/BlankLayout';
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration';
+import { SetCenter } from 'mdi-material-ui';
+import Provider from '../../../configs/Provider';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
@@ -65,107 +70,177 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
+    debugger;
+    console.log("click login");
     e.preventDefault();
-
     try {
-      
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
+      // let params = {
+      //   username: values.username,
+      //   password: values.password,
+      // };
+      // console.log('params:**********', params, "*======================*");
+      // Provider.postData(Provider.API_URLS.apilogin, params)
+      //   .then(response => {
+      //     debugger;
+      //     console.log('res--->', response);
+
+      //   });
+      debugger;
+      const formData = {
+        username: values.username,
+        password: values.password,
+      };
+
+
+      axios.post('https://apiforcorners.cubisysit.com/api/api-login.php', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => {
+          debugger;
+          if (response.data.status === 'Success') {
+            // setSubmitSuccess(true);
+            // show('list');
+            // setCompanyName('');
+            // setCompanyCode('');
+            // setCompanyAddress('');
+
+
+            console.log('SUBMMITEDDD DATAAAA');
+          } else {
+            //setSubmitSuccess(false);
+          }
+        })
+        .catch(error => {
+          debugger;
+          console.error('There was an error!', error);
+          //setSubmitSuccess(false);
         });
 
-      
-        if (response.ok) {
-            const data = await response.json();
-            const { user } = data;
-            switch (user.role) {
-                case 'admin':
-                    window.location.href = '/admin-dashboard';
-                    break;
-                case 'employee':
-                    window.location.href = '/employee-dashboard';
-                    break;
-                case 'manager':
-                    window.location.href = '/manager-dashboard';
-                    break;
-                case 'seller':
-                    window.location.href = '/seller-dashboard';
-                    break;
-                default:
-                    console.error('Unknown role:', user.role);
-            }
-        } else {
-            const data = await response.json();
-            setErrorMessage(data.message); 
-        }
+      // axios.post('https://apiforcorners.cubisysit.com/api/api-login.php', JSON.stringify(formData), {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   }
+      // })
+
+      //   .then(response => {
+      //     debugger;
+      //     if (response.data.status === 'Success') {
+      //       // setSubmitSuccess(true);
+      //       // show('list');
+      //       // setCompanyName('');
+      //       // setCompanyCode('');
+      //       // setCompanyAddress('');
+
+
+      //       console.log('SUBMMITEDDD DATAAAA');
+      //     } else {
+      //       //setSubmitSuccess(false);
+      //     }
+      //   })
+      //   .catch(error => {
+      //     debugger;
+      //     console.error('There was an error!', error);
+      //     //setSubmitSuccess(false);
+      //   });
+
+      // const response = await fetch('https://apiforcorners.cubisysit.com/api/api-login.php', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ username, password }),
+      // });
+
+      // if (response.ok) {
+      //   const data = await response.json();
+      //   const { user } = data;
+      //   switch (user.role) {
+      //     case 'admin':
+      //       window.location.href = '/admin-dashboard';
+      //       break;
+      //     case 'employee':
+      //       window.location.href = '/employee-dashboard';
+      //       break;
+      //     case 'manager':
+      //       window.location.href = '/manager-dashboard';
+      //       break;
+      //     case 'seller':
+      //       window.location.href = '/seller-dashboard';
+      //       break;
+      //     default:
+      //       console.error('Unknown role:', user.role);
+      //   }
+      // } else {
+      //   const data = await response.json();
+      //   setErrorMessage(data.message);
+      // }
     } catch (error) {
-        console.error('Login failed:', error);
-        setErrorMessage('Login failed. Please try again later.');
+      debugger;
+      console.error('Login failed:', error);
+      //setErrorMessage('Login failed. Please try again later.');
     }
-};
+  };
   return (
     <Box className='content-center'>
-    <Card sx={{ zIndex: 1 }}>
-      <CardContent sx={{ padding: theme => `${theme.spacing(12, 9, 7)} !important` }}>
-        <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <img src="https://raw.githubusercontent.com/alokkaintura/forcorners/main/logo.png" alt="logo" style={{ maxWidth: '200px' }} />  </Box>
-        <Box sx={{ mb: 6 }}>
-          <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-            Welcome to Four Corner! 👋🏻
-          </Typography>
-          <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
-        </Box>
-        <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-          <TextField
-            autoFocus
-            fullWidth
-            id='username'
-            label='username'
-            sx={{ marginBottom: 4 }}
-            value={values.username}
-            onChange={handleChange('username')}
-          />
-          <FormControl fullWidth>
-            <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
-            <OutlinedInput
-              label='Password'
-              id='auth-login-password'
-              value={values.password}
-              onChange={handleChange('password')}
-              type={values.showPassword ? 'text' : 'password'}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton
-                    edge='end'
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    aria-label='toggle password visibility'
-                  >
-                    {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
-                  </IconButton>
-                </InputAdornment>
-              }
+      <Card sx={{ zIndex: 1 }}>
+        <CardContent sx={{ padding: theme => `${theme.spacing(12, 9, 7)} !important` }}>
+          <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="https://raw.githubusercontent.com/alokkaintura/forcorners/main/logo.png" alt="logo" style={{ maxWidth: '200px' }} />  </Box>
+          <Box sx={{ mb: 6 }}>
+            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5, textAlign: 'center' }}>
+              Welcome to Four Corner!
+            </Typography>
+          </Box>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <TextField
+              autoFocus
+              fullWidth
+              id='username'
+              label='username'
+              sx={{ marginBottom: 4 }}
+              value={values.username}
+              onChange={handleChange('username')}
             />
-          </FormControl>
-          <Button
-            fullWidth
-            
-            size='large'
-            variant='contained'
-            sx={{ marginBottom: 7 , marginTop:5}}
-            type='submit'
-          
-          >
-            Login
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
-    
-  </Box>
+            <FormControl fullWidth>
+              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
+              <OutlinedInput
+                label='Password'
+                id='auth-login-password'
+                value={values.password}
+                onChange={handleChange('password')}
+                type={values.showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      aria-label='toggle password visibility'
+                    >
+                      {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <Button
+              fullWidth
+
+              size='large'
+              variant='contained'
+              sx={{ marginBottom: 7, marginTop: 5 }}
+              type='submit'
+
+            >
+              Login
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+    </Box>
   );
 };
 

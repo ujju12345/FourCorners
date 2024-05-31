@@ -276,6 +276,7 @@ const TabAccount = ({show}) => {
   Status: 1,
   CompanyStatusID: 1,
   Remarks: remarks
+
 };
 
 console.log(formData, 'ALL DATAAAAAAA');
