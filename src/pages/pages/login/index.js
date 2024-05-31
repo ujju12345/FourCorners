@@ -85,7 +85,7 @@ const LoginPage = () => {
           debugger;
           if (response.data.status === 'Success') {
             // setSubmitSuccess(true);
-            // show('list');
+            // show('list');,
             // setCompanyName('');
             // setCompanyCode('');
             // setCompanyAddress('');
@@ -145,14 +145,16 @@ const LoginPage = () => {
     <Box className='content-center'>
       <Card sx={{ zIndex: 1 }}>
         <CardContent sx={{ padding: theme => `${theme.spacing(12, 9, 7)} !important` }}>
-          <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* Your Logo */}
-          </Box>
+
+
+<Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <img src="https://raw.githubusercontent.com/alokkaintura/forcorners/main/logo.png" alt="logo" style={{ maxWidth: '200px' }} />
+</Box>
+
           <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Welcome to Four Corner! 👋🏻
+            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5,textAlign:'center' }}>
+              Welcome to Four Corner 
             </Typography>
-            <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
             <TextField
@@ -190,7 +192,7 @@ const LoginPage = () => {
               fullWidth
               size='large'
               variant='contained'
-              sx={{ marginBottom: 7 }}
+              sx={{ marginBottom: 7 , marginTop: 5}}
               type='submit'
 
             >
@@ -199,7 +201,7 @@ const LoginPage = () => {
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
+   
     </Box>
   );
 };
