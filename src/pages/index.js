@@ -1,12 +1,13 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
-
+import { useRouter } from 'next/router';
+import {useEffect , useState } from 'react';
 // ** Icons Imports
 import Poll from 'mdi-material-ui/Poll'
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
 import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
 import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
-
+import { useCookies } from "react-cookie";
 // ** Custom Components Imports
 import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
 
@@ -24,6 +25,20 @@ import SalesByCountries from 'src/views/dashboard/SalesByCountries'
 import { Typography } from '@mui/material'
 
 const Dashboard = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!cookies || !cookies.amr || !cookies.amr.UserID) {
+      router.push('/pages/login')
+    }
+    else {
+      // SetCookieRoleID(cookies.dfc.RoleID);
+      // SetCookieRolName(cookies.dfc.RoleName);
+      // SetCookieUserName(cookies.dfc.FullName);
+      // SetCookieUseID(cookies.dfc.UserID);
+    }
+  }, []);
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -33,9 +48,9 @@ const Dashboard = () => {
         <Grid item xs={12} md={8}>
           <StatisticsCard />
         </Grid>
-       
-      
-    
+
+
+
         <Grid item xs={12} md={6} >
           <WeeklyOverview />
         </Grid>
@@ -94,7 +109,7 @@ const Dashboard = () => {
         <Grid item xs={12} md={12} lg={8}>
           <DepositWithdraw />
         </Grid>
-     
+
       </Grid>
     </ApexChartWrapper>
   )

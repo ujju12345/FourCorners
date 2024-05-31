@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import {useEffect , useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Box from '@mui/material/Box';
+import { useCookies } from "react-cookie";
+// import MuiSnackbar from '../../../../src/@core/theme/overrides/snackbar';
+import { Snackbar, Alert } from "@mui/material";
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
@@ -50,8 +53,27 @@ const LoginPage = () => {
     password: '',
     showPassword: false
   });
+  const [cookies, setCookie] = useCookies(["amr"]);
   const theme = useTheme();
   const router = useRouter();
+
+
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    debugger;
+    if (cookies && cookies.amr && cookies.amr.UserID) router.push('/');
+  });
+
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setIsSnackbarOpen(false);
+  };
+
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -84,58 +106,35 @@ const LoginPage = () => {
         .then(response => {
           debugger;
           if (response.data.status === 'Success') {
-            // setSubmitSuccess(true);
-            // show('list');,
-            // setCompanyName('');
-            // setCompanyCode('');
-            // setCompanyAddress('');
 
+            const user = {
+              FullName: response.data.data.Name,
+              UserID: response.data.data.userid,
+              RoleID: response.data.data.roleid,
+              RoleName: response.data.data.rolename,
+            };
+       
+            setCookie("amr", JSON.stringify(user), { path: "/" });
+            router.push('/');
             console.log('SUBMMITEDDD DATAAAA');
           } else {
-            //setSubmitSuccess(false);
+            setIsSnackbarOpen(true);
+            setSnackbarMessage(response.data.message);
           }
         })
         .catch(error => {
           debugger;
           console.error('There was an error!', error);
-          //setSubmitSuccess(false);
+          setIsSnackbarOpen(true);
+          setSnackbarMessage('There was an error, Please contact admin');
         });
 
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ username, password }),
-      // });
-
-      // if (response.ok) {
-      //   const data = await response.json();
-      //   const { user } = data;
-      //   switch (user.role) {
-      //     case 'admin':
-      //       window.location.href = '/admin-dashboard';
-      //       break;
-      //     case 'employee':
-      //       window.location.href = '/employee-dashboard';
-      //       break;
-      //     case 'manager':
-      //       window.location.href = '/manager-dashboard';
-      //       break;
-      //     case 'seller':
-      //       window.location.href = '/seller-dashboard';
-      //       break;
-      //     default:
-      //       console.error('Unknown role:', user.role);
-      //   }
-      // } else {
-      //   const data = await response.json();
-      //   setErrorMessage(data.message);
-      // }
+     
     } catch (error) {
       debugger;
       console.error('Login failed:', error);
-      //setErrorMessage('Login failed. Please try again later.');
+      setIsSnackbarOpen(true);
+      setSnackbarMessage('There was an error, Please contact admin');
     }
   };
 
@@ -147,13 +146,13 @@ const LoginPage = () => {
         <CardContent sx={{ padding: theme => `${theme.spacing(12, 9, 7)} !important` }}>
 
 
-<Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-  <img src="https://raw.githubusercontent.com/alokkaintura/forcorners/main/logo.png" alt="logo" style={{ maxWidth: '200px' }} />
-</Box>
+          <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="https://raw.githubusercontent.com/alokkaintura/forcorners/main/logo.png" alt="logo" style={{ maxWidth: '200px' }} />
+          </Box>
 
           <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5,textAlign:'center' }}>
-              Welcome to Four Corner 
+            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5, textAlign: 'center' }}>
+              Welcome to Four Corner
             </Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
@@ -192,7 +191,7 @@ const LoginPage = () => {
               fullWidth
               size='large'
               variant='contained'
-              sx={{ marginBottom: 7 , marginTop: 5}}
+              sx={{ marginBottom: 7, marginTop: 5 }}
               type='submit'
 
             >
@@ -201,8 +200,17 @@ const LoginPage = () => {
           </form>
         </CardContent>
       </Card>
-   
+      <Snackbar open={isSnackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert
+          // onClose={handleSnackbarClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
+
   );
 };
 

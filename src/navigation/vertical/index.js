@@ -18,36 +18,37 @@ const navigation = () => {
       path: '/'
     },
     {
+      sectionTitle: 'User Interface'
+    },
+    {
       title: 'Manage Company',
       icon: AccountCogOutline,
       path: '/account-settings'
     },
 
 
-    {
-      sectionTitle: 'Pages' 
-    },
-    {
-      title: 'Login',
-      icon: Login,
-      path: '/pages/login',
-      openInNewTab: true
-    },
-    {
-      title: 'Register',
-      icon: AccountPlusOutline,
-      path: '/pages/register',
-      openInNewTab: true
-    },
-    {
-      title: 'Error',
-      icon: AlertCircleOutline,
-      path: '/pages/error',
-      openInNewTab: true
-    },
-    {
-      sectionTitle: 'User Interface'
-    },
+    // {
+    //   sectionTitle: 'Pages' 
+    // },
+    // {
+    //   title: 'Login',
+    //   icon: Login,
+    //   path: '/pages/login',
+    //   openInNewTab: true
+    // },
+    // {
+    //   title: 'Register',
+    //   icon: AccountPlusOutline,
+    //   path: '/pages/register',
+    //   openInNewTab: true
+    // },
+    // {
+    //   title: 'Error',
+    //   icon: AlertCircleOutline,
+    //   path: '/pages/error',
+    //   openInNewTab: true
+    // },
+
     {
       title: 'Project Manager',
       icon: FormatLetterCase,
