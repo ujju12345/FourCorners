@@ -66,6 +66,7 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
+    debugger;
     e.preventDefault();
 
     try {
@@ -132,8 +133,9 @@ const LoginPage = () => {
       //   setErrorMessage(data.message);
       // }
     } catch (error) {
+      debugger;
       console.error('Login failed:', error);
-      setErrorMessage('Login failed. Please try again later.');
+      //setErrorMessage('Login failed. Please try again later.');
     }
   };
 
