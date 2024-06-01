@@ -17,16 +17,46 @@ const navigation = () => {
       icon: HomeOutline,
       path: '/'
     },
+
     {
-      sectionTitle: 'User Interface'
-    },
+      sectionTitle: 'Companies'
+    },   
     {
       title: 'Manage Company',
       icon: AccountCogOutline,
       path: '/account-settings'
     },
 
+    {
+      sectionTitle: 'Projects'
+    }, 
+    {
+      title: 'Project Detail',
+      icon: Table,
+      path: '/project-details'
+    },
+    {
+      title: 'Project Manager',
+      icon: FormatLetterCase,
+      path: '/typography'
+    },
 
+    {
+      title: 'Sub Project Details',
+      icon: CreditCardOutline,
+      path: '/subproject-details'
+    },
+       {
+      sectionTitle: 'Enquiries'
+    },
+    {
+      sectionTitle: 'Sales'
+    },
+    {
+      title: 'Car Parking ',
+      icon: CreditCardOutline,
+      path: '/car-parking'
+    },
     // {
     //   sectionTitle: 'Pages' 
     // },
@@ -50,25 +80,12 @@ const navigation = () => {
     // },
 
     {
-      title: 'Project Manager',
-      icon: FormatLetterCase,
-      path: '/typography'
-    },
-    {
       title: 'Customer Details',
       path: '/customer-details',
       icon: GoogleCirclesExtended
-    },  
-    {
-      title: 'Sub Project Details',
-      icon: CreditCardOutline,
-      path: '/subproject-details'
-    },
-    {
-      title: 'Project Detail',
-      icon: Table,
-      path: '/project-details'
     }
+
+ 
     // {
     //   icon: CubeOutline,
     //   title: 'Form Layouts',

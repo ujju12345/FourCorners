@@ -21,6 +21,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios'
 import { PrinterPosCheck } from 'mdi-material-ui'
+import { Card } from '@mui/material'
 
 
 
@@ -309,6 +310,7 @@ console.log(formData, 'ALL DATAAAAAAA');
   };
 
   return (
+    <Card>
     <CardContent>
       <form>
         <Grid container spacing={7}>
@@ -591,6 +593,7 @@ console.log(formData, 'ALL DATAAAAAAA');
         </Grid>
       </form>
     </CardContent>
+    </Card>
   )
 }
 

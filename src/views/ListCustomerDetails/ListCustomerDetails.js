@@ -9,6 +9,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 const ListCustomerDetails = () => {
   const [rows, setRows] = useState([]);
@@ -33,61 +36,64 @@ const ListCustomerDetails = () => {
   };
 
   if (loading) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
+        <CircularProgress />
+      </Grid>
+    );
   }
 
   if (error) {
-    return <Typography>Error fetching data: {error.message}</Typography>;
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
+        <Alert severity="error">Error fetching data: {error.message}</Alert>
+      </Grid>
+    );
   }
 
   return (
-    <Card>
-      <TableContainer>
-        <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
-          <TableHead>
-            <TableRow>
-              <TableCell>Customer ID</TableCell>
-              <TableCell>Title ID</TableCell>
-              <TableCell>Mobile No</TableCell>
-              <TableCell>Party Name</TableCell>
-              <TableCell>Member Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>CLocation</TableCell>
-              
-              {/* Add more table headers here */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.length > 0 ? (
-              rows.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.CompanyID}</Typography>
-                     
-                    </Box>
-                  </TableCell>
-                  <TableCell>{row.CompanyID}</TableCell>
-                  <TableCell>{row.TitleID}</TableCell>
-                  <TableCell>{row.MobileNo}</TableCell>
-                  <TableCell>{row.PartyName}</TableCell>
-                  <TableCell>{row.MemberName}</TableCell>
-                  <TableCell>{row.Email}</TableCell>
-                  <TableCell>{row.CLocation}</TableCell>
-                  {/* Render additional table cells for other data fields */}
-                </TableRow>
-              ))
-            ) : (
+    <Box p={3}>
+      <Card>
+        <TableContainer>
+          <Table sx={{ minWidth: 800 }} aria-label="customer details table">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={8} align="center">
-                  No data available
-                </TableCell>
+                <TableCell>Customer ID</TableCell>
+                <TableCell>Title ID</TableCell>
+                <TableCell>Mobile No</TableCell>
+                <TableCell>Party Name</TableCell>
+                <TableCell>Member Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>CLocation</TableCell>
+                {/* Add more table headers here */}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
+            </TableHead>
+            <TableBody>
+              {rows.length > 0 ? (
+                rows.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row.CompanyID}</TableCell>
+                    <TableCell>{row.TitleID}</TableCell>
+                    <TableCell>{row.MobileNo}</TableCell>
+                    <TableCell>{row.PartyName}</TableCell>
+                    <TableCell>{row.MemberName}</TableCell>
+                    <TableCell>{row.Email}</TableCell>
+                    <TableCell>{row.CLocation}</TableCell>
+                    {/* Render additional table cells for other data fields */}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+    </Box>
   );
 };
 

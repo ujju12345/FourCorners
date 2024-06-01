@@ -199,7 +199,7 @@ const AddProjectDetails = ({show}) => {
 
       axios
         .post(
-          "https://apiforcorners.cubisysit.com/api/api-insert-projectdetails.php",
+          "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectdetails.php",
           body,
           {
             headers: {

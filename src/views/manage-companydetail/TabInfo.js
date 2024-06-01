@@ -12,6 +12,7 @@ import TableContainer from '@mui/material/TableContainer';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { format, parseISO } from 'date-fns';
 
 const TabInfo = ({ setShowTabAccount }) => {
   const [rows, setRows] = useState([]);
@@ -35,6 +36,14 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
+  const formatDate = (dateString) => {
+    try {
+      return format(parseISO(dateString), 'yyyy-MM-dd');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
+  };
   const handleDelete = (companyId) => {
     console.log(`Deleting company with ID ${companyId}`);
   };
@@ -43,7 +52,6 @@ const TabInfo = ({ setShowTabAccount }) => {
     setShowTabAccount(rowData); // Pass selected row data to the parent component
     console.log(`Editing company with ID ${rowData.CompanyID}`);
   };
-
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -58,38 +66,38 @@ const TabInfo = ({ setShowTabAccount }) => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <TableCell>Company Name</TableCell>
-              <TableCell>Company Code</TableCell>
-              <TableCell>Communication Address</TableCell>
-              <TableCell>City ID</TableCell>
-              <TableCell>ERP Live Date</TableCell>
-              <TableCell>Company Status ID</TableCell>
-              <TableCell>State ID</TableCell>
-              <TableCell>Book Beginning From</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Name</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Code</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Communication Address</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>City ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>ERP Live Date</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Status ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>State ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Book Beginning From</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ padding: '8px' }}>
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.CompanyName}</Typography>
+                      <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.CompanyName}</Typography>
                     </Box>
                   </TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.CompanyCode}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.CommAddress}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.CityID}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.ERPLiveDate}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.CompanyStatusID}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.StateID}</TableCell>
-                  <TableCell sx={{ padding: '8px' }}>{row.BookBeginingFrom}</TableCell>
-                  <TableCell sx={{ padding: '8px', display: 'flex', justifyContent: 'space-around' }}>
-                    <IconButton onClick={() => handleEdit(row)} aria-label="edit">
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyCode}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CommAddress}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CityID}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{formatDate(row.ERPLiveDate)}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusID}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.StateID}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{(row.BookBeginingFrom)}</TableCell>
+                  <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
+                    <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete">
+                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -99,7 +107,7 @@ const TabInfo = ({ setShowTabAccount }) => {
               <TableRow>
                 <TableCell colSpan={9} align="center">
                   No data available
-                </TableCell>
+                </TableCell>\
               </TableRow>
             )}
           </TableBody>
@@ -109,4 +117,4 @@ const TabInfo = ({ setShowTabAccount }) => {
   );
 };
 
-export default TabInfo;
+export default TabInfo;
