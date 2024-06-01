@@ -40,6 +40,11 @@ const navigation = () => {
       icon: FormatLetterCase,
       path: '/typography'
     },
+    {
+      title: 'Sub Project Master',
+      icon: CreditCardOutline,
+      path: '/sub-projectmaster'
+    },
 
     {
       title: 'Sub Project Details',
