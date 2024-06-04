@@ -1,4 +1,3 @@
-// ** React Imports
 import { useEffect, useState } from "react";
 
 // ** MUI Imports
@@ -320,7 +319,6 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
 
     console.log(formData, "ALL DATAAAAAAA of company master");
 
-    console.log(formData, "ALL DATAAAAAAA");
 
     axios
       .post(

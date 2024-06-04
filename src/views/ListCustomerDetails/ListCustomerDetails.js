@@ -9,9 +9,6 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
-import Grid from '@mui/material/Grid';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
 
 const ListCustomerDetails = () => {
   const [rows, setRows] = useState([]);
@@ -24,7 +21,7 @@ const ListCustomerDetails = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-customermaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -36,64 +33,58 @@ const ListCustomerDetails = () => {
   };
 
   if (loading) {
-    return (
-      <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-        <CircularProgress />
-      </Grid>
-    );
+    return <Typography>Loading...</Typography>;
   }
 
   if (error) {
-    return (
-      <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-        <Alert severity="error">Error fetching data: {error.message}</Alert>
-      </Grid>
-    );
+    return <Typography>Error fetching data: {error.message}</Typography>;
   }
 
   return (
-    <Box p={3}>
-      <Card>
-        <TableContainer>
-          <Table sx={{ minWidth: 800 }} aria-label="customer details table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Customer ID</TableCell>
-                <TableCell>Title ID</TableCell>
-                <TableCell>Mobile No</TableCell>
-                <TableCell>Party Name</TableCell>
-                <TableCell>Member Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>CLocation</TableCell>
-                {/* Add more table headers here */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.length > 0 ? (
-                rows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.CompanyID}</TableCell>
-                    <TableCell>{row.TitleID}</TableCell>
-                    <TableCell>{row.MobileNo}</TableCell>
-                    <TableCell>{row.PartyName}</TableCell>
-                    <TableCell>{row.MemberName}</TableCell>
-                    <TableCell>{row.Email}</TableCell>
-                    <TableCell>{row.CLocation}</TableCell>
-                    {/* Render additional table cells for other data fields */}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8} align="center">
-                    No data available
+    <Card>
+      <TableContainer>
+        <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Customer ID</TableCell>
+              <TableCell align="left">Title ID</TableCell>
+              <TableCell align="left">Mobile No</TableCell>
+              <TableCell align="left">Party Name</TableCell>
+              <TableCell align="left">Member Name</TableCell>
+              <TableCell align="left">Email</TableCell>
+              <TableCell align="left">Location</TableCell>
+              {/* Add more table headers here */}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.length > 0 ? (
+              rows.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell align="left">
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={{ fontWeight: 500 }}>{row.CustomerID}</Typography>
+                    </Box>
                   </TableCell>
+                  <TableCell align="left">{row.TitleID}</TableCell>
+                  <TableCell align="left">{row.MobileNo}</TableCell>
+                  <TableCell align="left">{row.PartyName}</TableCell>
+                  <TableCell align="left">{row.MemberName}</TableCell>
+                  <TableCell align="left">{row.Email}</TableCell>
+                  <TableCell align="left">{row.CLocation}</TableCell>
+                  {/* Render additional table cells for other data fields */}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Card>
-    </Box>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={8} align="center">
+                  No data available
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Card>
   );
 };
 

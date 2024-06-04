@@ -27,12 +27,20 @@ const ProjectManage = ({show}) => {
   const [selectedCompany, setSelectedCompany] = useState("");
 
   const [companyCode, setCompanyCode] = useState("");
+  const [message, setMessage] = useState('');
 
   const [companyAddress, setCompanyAddress] = useState("");
   const [registeredAddress, setRegisteredAddress] = useState("");
   const [pincode, setPincode] = useState("");
   const [phone, setPhone] = useState("");
   const [mobilePhone, setMobilePhone] = useState("");
+  const [plotArea, setplotarea] = useState('');
+  const [ctsNo, setCtsNumber] = useState('');
+  const [propertyTax, setProperty] = useState('');
+  const [reraRegistration, setRera] = useState('');
+  const [uom, setUom] = useState('');
+  const [broucherLink, setBroucher] = useState('');
+
   const [managerName, setManagerName] = useState("");
   const [price, setPrice] = useState("");
   const [location, setLocation] = useState("");
@@ -102,6 +110,17 @@ const ProjectManage = ({show}) => {
       setErrors((prevErrors) => ({ ...prevErrors, date: "" }));
     }
   };
+
+  const handleChangePlot = (event) => {
+    setplotarea(event.target.value);
+  };
+
+  const handleCtsNumber = (event) => {
+    setCtsNumber(event.target.value);
+   
+  };
+
+
   const handleChange = (event) => {
     
     console.log('Selected Company ID:', event.target.value); // Debugging log
@@ -113,6 +132,12 @@ const ProjectManage = ({show}) => {
     if (event.target.value) {
       setErrors((prevErrors) => ({ ...prevErrors, projectName: "" }));
     }
+  };
+
+  const handleMesage = (event) => {
+    const value = event.target.value;
+   
+    setMessage(value);
   };
 
   const handleCompanyCodeChange = (event) => {
@@ -167,6 +192,26 @@ const ProjectManage = ({show}) => {
     if (selectedCityObject) {
       setSelectedCityId(selectedCityObject.CityID);
     }
+  };
+
+  const handlePropertyTaxChange = (event) => {
+    setProperty(event.target.value);
+   
+  };
+
+  const handleUom = (event) => {
+    const value = event.target.value;
+    setUom(value);
+  };
+
+  const handleReraNumber = (event) => {
+    setRera(event.target.value);
+   
+  };
+
+  const handleBroucherLinkChange = (event) => {
+    setBroucher(event.target.value);
+   
   };
 
   const handleStateChange = (event) => {
@@ -418,6 +463,9 @@ const ProjectManage = ({show}) => {
             </FormControl>
           </Grid>
 
+
+
+
           <Grid item xs={8} sm={4}>
             <TextField
               fullWidth
@@ -430,6 +478,87 @@ const ProjectManage = ({show}) => {
               helperText={errors.projectName}
             />
           </Grid>
+
+          <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label='Plot Area'
+            placeholder='Plot Area'
+            value={plotArea}
+            onChange={handleChangePlot}
+          
+            // error={!!errors.companyCode}
+            // helperText={errors.companyCode}
+          />
+        </Grid>
+
+        
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='url'
+            label='Broucher Link'
+            placeholder='Broucher Link'
+            value={broucherLink}
+            onChange={handleBroucherLinkChange}
+
+          
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='text'
+            label='CTS No'
+            placeholder='CTS No'
+            value={ctsNo}
+            onChange={handleCtsNumber}
+          
+            // error={!!errors.companyAddress}
+            // helperText={errors.companyAddress}
+          />
+        </Grid>
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='text'
+            label='Property Tax No'
+            placeholder='Property Tax No'
+            value={propertyTax}
+            onChange={handlePropertyTaxChange}
+            name = 'property-tax'
+            error={!!errors.registeredAddress}
+            helperText={errors.registeredAddress}
+          />
+        </Grid>
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='text'
+            label='RERA Registration No'
+            placeholder='RERA Registration No'
+            value={reraRegistration}
+            onChange={handleReraNumber}
+
+            error={!!errors.pincode}
+            helperText={errors.pincode}
+          />
+        </Grid>
+
+        
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='text'
+            label='UOM'
+            placeholder='UOM'
+            value={uom}
+            onChange={handleUom}
+           
+          />
+        </Grid>
+          
           <Grid item xs={8} sm={4}>
             <TextField
               fullWidth
@@ -514,6 +643,18 @@ const ProjectManage = ({show}) => {
               onChange={handleLocation}
             />
           </Grid>
+
+          <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            type='text'
+            label='Welcome Message'
+            placeholder='Welcome Message'
+            value={message}
+            onChange={handleMesage}
+          
+          />
+        </Grid>
 
           <Grid item xs={8} sm={4}>
             <TextField

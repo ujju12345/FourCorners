@@ -30,21 +30,21 @@ const navigation = () => {
     {
       sectionTitle: 'Projects'
     }, 
-    {
-      title: 'Project Detail',
-      icon: Table,
-      path: '/project-details'
-    },
+    // {
+    //   title: 'Project Detail',
+    //   icon: Table,
+    //   path: '/project-details'
+    // },
     {
       title: 'Project Manager',
       icon: FormatLetterCase,
       path: '/typography'
     },
-    {
-      title: 'Sub Project Master',
-      icon: CreditCardOutline,
-      path: '/sub-projectmaster'
-    },
+    // {
+    //   title: 'Sub Project Master',
+    //   icon: CreditCardOutline,
+    //   path: '/sub-projectmaster'
+    // },
 
     {
       title: 'Sub Project Details',
@@ -88,7 +88,13 @@ const navigation = () => {
       title: 'Customer Details',
       path: '/customer-details',
       icon: GoogleCirclesExtended
-    }
+    },
+
+    {
+      title: 'Car Parking ',
+      icon: CreditCardOutline,
+      path: '/car-parking'
+    },
 
  
     // {
