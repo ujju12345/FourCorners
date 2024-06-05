@@ -20,33 +20,35 @@ import Button from "@mui/material/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import Card from '@mui/material/Card';
 
 const ProjectManage = ({show}) => {
   // const classes = useStyles();
   const [projectName, setProjectName] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
-
   const [companyCode, setCompanyCode] = useState("");
   const [message, setMessage] = useState('');
-
-  const [companyAddress, setCompanyAddress] = useState("");
+  const [projectTypes, setProjectTypes] = useState([]);
+  const [selectedProjectType, setSelectedProjectType] = useState('');
   const [registeredAddress, setRegisteredAddress] = useState("");
   const [pincode, setPincode] = useState("");
   const [phone, setPhone] = useState("");
-  const [mobilePhone, setMobilePhone] = useState("");
   const [plotArea, setplotarea] = useState('');
   const [ctsNo, setCtsNumber] = useState('');
+  const [unit, setUnit] = useState('');
+
   const [propertyTax, setProperty] = useState('');
   const [reraRegistration, setRera] = useState('');
   const [uom, setUom] = useState('');
   const [broucherLink, setBroucher] = useState('');
-
   const [managerName, setManagerName] = useState("");
   const [price, setPrice] = useState("");
   const [location, setLocation] = useState("");
   const [gstinNumber, setGstinNumber] = useState("");
   const [remarks, setRemarks] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateRera, setSelectedDateRera] = useState(null);
+
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
@@ -59,6 +61,7 @@ const ProjectManage = ({show}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
   useEffect(() => {
     fetchData();
@@ -76,6 +79,25 @@ const ProjectManage = ({show}) => {
       setLoading(false);
     }
   };
+
+
+
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-projecttypemaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA PROJET TYPEEEE");
+          setProjectTypes(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+ 
 
   useEffect(() => {
     axios
@@ -104,12 +126,32 @@ const ProjectManage = ({show}) => {
       });
   }, []);
 
+
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-projecttypemaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          console.log(response.data.data , 'dataa aayaaaa Project type');
+          setCompanyStatus(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
     if (date) {
       setErrors((prevErrors) => ({ ...prevErrors, date: "" }));
     }
   };
+
+  const handleDateChangeRera = (date)=>{
+    setSelectedDateRera(date)
+  }
 
   const handleChangePlot = (event) => {
     setplotarea(event.target.value);
@@ -261,6 +303,14 @@ const ProjectManage = ({show}) => {
     return newErrors;
   };
 
+  const handleChangeProjectTyoe = (event) => {
+    setSelectedProjectType(event.target.value);
+  };
+
+  const handleUnit = (event) => {
+    setUnit(event.target.value);
+  };
+
   const handleSubmitData = (event) => {
     console.log("presss");
     // event.preventDefault();
@@ -270,25 +320,44 @@ const ProjectManage = ({show}) => {
     // } else {
     //   setErrors({});
 
+    
+
       const body = {
-        ProjectName: projectName,
-        ProjectTypeID: 2,
-        ProjectCode: companyCode,
-        ProjectStartDate: selectedDate,
-        ContactNo: phone,
-        GSTINNo: gstinNumber,
-        Location: location,
-        StateID: selectedStateId,
-        CityId: selectedCityId,
-        CountryID: 1,
-        Pincode: pincode,
-        ProjectAddress: registeredAddress,
-        Remarks: remarks,
-        Status: 1,
-        CompanyID: selectedCompany
+        projectname:projectName,
+        CompanyID:selectedCompany ,
+        city: selectedCityId,
+        state: selectedStateId,
+        country: 1,
+        contactdetails: phone,
+        projectmanager: managerName,
+        projecttypeid: selectedProjectType,
+        plotareainsqft:plotArea,
+        brochurelink:broucherLink,
+        ctsno:ctsNo,
+        propertytaxnumber:propertyTax,
+        reraregistrationnumber:reraRegistration,
+        reraregistrationdate:selectedDateRera,
+        UOM:uom,
+        projectcode:companyCode,
+        ContactNo:phone,
+        gstinno: gstinNumber,
+        pincode: pincode,
+        projectaddress:registeredAddress,
+        location: location,
+        welcomemessage:message,
+        remarks: remarks,
+        createuid:1,
+        status: 1,
+        projectstartdate:selectedDate,
+        unitofmeasurement:unit
+
+
+
+
+
       };
 
-      console.log(body, "ALL DATAAAAAAA");
+      console.log(body, "ALL DATAAAAAAA PROJECTTT MASTERERRER");
 
       axios
         .post(
@@ -302,27 +371,27 @@ const ProjectManage = ({show}) => {
         )
         .then((response) => {
           if (response.data.status === "Success") {
-            setSubmitSuccess(true);
-            setSubmitError(false);
+            // setSubmitSuccess(true);
+            // setSubmitError(false);
             show(false)
-            setProjectName("");
-            setCompanyCode("");
-            setCompanyAddress("");
-            setRegisteredAddress("");
-            setPincode("");
-            setPhone("");
-            setMobilePhone("");
-            setManagerName("");
-            setPrice("");
-            setLocation("");
-            setGstinNumber("");
-            setRemarks("");
-            setSelectedDate(null);
-            setSelectedCompany("");
-            setSelectedCity("");
-            setSelectedState("");
-            setSelectedCityId("");
-            setSelectedStateId("");
+            // setProjectName("");
+            // setCompanyCode("");
+            // // setCompanyAddress("");
+            // setRegisteredAddress("");
+            // setPincode("");
+            // setPhone("");
+            // setMobilePhone("");
+            // setManagerName("");
+            // setPrice("");
+            // setLocation("");
+            // setGstinNumber("");
+            // setRemarks("");
+            // setSelectedDate(null);
+            // setSelectedCompany("");
+            // setSelectedCity("");
+            // setSelectedState("");
+            // setSelectedCityId("");
+            // setSelectedStateId("");
 
             console.log("BHAAIII DATAAAA");
           } else {
@@ -332,13 +401,14 @@ const ProjectManage = ({show}) => {
         })
         .catch((error) => {
           console.error("There was an error!", error);
-          setSubmitSuccess(false);
-          setSubmitError(true);
+          // setSubmitSuccess(false);
+          // setSubmitError(true);
         });
     // }
   };
 
   return (
+    <Card>
     <CardContent>
       <form>
         <Grid container spacing={7}>
@@ -384,10 +454,10 @@ const ProjectManage = ({show}) => {
                   <em>None</em>
                 </MenuItem>
                 {rows.map((company) => (
-                  <MenuItem key={company.CompanyID} value={company.CompanyName}>
-                    {company.CompanyName}
-                  </MenuItem>
-                ))}
+  <MenuItem key={company.CompanyID} value={company.CompanyID}>
+    {company.CompanyName}
+  </MenuItem>
+))}
               </Select>
               {errors.companyName && (
                 <Typography variant="caption" color="error">
@@ -454,15 +524,37 @@ const ProjectManage = ({show}) => {
           </Grid>
 
           <Grid item xs={8} sm={4}>
-            <FormControl fullWidth>
-              <InputLabel>Project Type</InputLabel>
-              <Select label="Project Type">
-                <MenuItem value="Residential">Residential Building</MenuItem>
-                <MenuItem value="Commercial">Commercial Building</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
+      <FormControl fullWidth>
+        <InputLabel>Project Type</InputLabel>
+        <Select
+          value={selectedProjectType}
+          onChange={handleChangeProjectTyoe}
+          label="Project Type"
+        >
+          {projectTypes.map((project) => (
+            <MenuItem key={project.ProjectTypeID} value={project.ProjectTypeID}>
+              {project.ProjectTypeName || 'Unnamed Project Type'}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
 
+
+
+
+    <Grid item xs={8} sm={4}>
+            <TextField
+              fullWidth
+              label="Unit of measurement"
+              placeholder="Unit of measurement"
+              value={unit}
+              onChange={handleUnit}
+              name="unit of measurement"
+              error={!!errors.projectName}
+              helperText={errors.projectName}
+            />
+          </Grid>
 
 
 
@@ -545,6 +637,8 @@ const ProjectManage = ({show}) => {
             helperText={errors.pincode}
           />
         </Grid>
+
+ 
 
         
         <Grid item xs={8} sm={4}>
@@ -686,6 +780,26 @@ const ProjectManage = ({show}) => {
               }
             />
           </Grid>
+          <Grid item xs={8} sm={4}>
+            <DatePicker
+              selected={selectedDateRera}
+              onChange={handleDateChangeRera}
+              dateFormat="yyyy-MM-dd"
+              className="form-control"
+              customInput={
+                <TextField
+                  fullWidth
+                  label="Rera Registration Date"
+                  error={!!errors.date}
+                  helperText={errors.date}
+                  InputProps={{
+                    readOnly: true,
+                    sx: { width: "100%" },
+                  }}
+                />
+              }
+            />
+          </Grid>
 
           <Grid item xs={12}>
             <Button
@@ -699,6 +813,7 @@ const ProjectManage = ({show}) => {
         </Grid>
       </form>
     </CardContent>
+    </Card>
   );
 };
 

@@ -1,3 +1,4 @@
+// ** React Imports
 import { useEffect, useState } from "react";
 
 // ** MUI Imports
@@ -48,8 +49,12 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
     const [location, setLocation] = useState("");
     const [compnayLocation, setCompanyLocation] = useState("");
     const [pincode, setPincode] = useState("");
+    const [commpincode, setCommPincode] = useState("");
+
     const [email, setEmail] = useState("");
     const [phoneNo, setPhoneNo] = useState("");
+    const [cMobile, setCMobile] = useState("");
+
     const [commAddress, setCommAddress] = useState("");
     const [dob, setDob] = useState("");
     const [marriageDate, setMarriageDate] = useState("");
@@ -189,8 +194,16 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
     setPincode(event.target.value);
   };
 
+  const handleCommPincode = (event) => {
+    setCommPincode(event.target.value);
+  };
+
   const handleEmail = (event) => {
     setEmail(event.target.value);
+  };
+
+  const handleCmobileNo = (event) => {
+    setCMobile(event.target.value);
   };
 
   const handlePhoneNo = (event) => {
@@ -291,38 +304,46 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
     event.preventDefault();
 
     const formData = {
-      titleId,
-      mobileNum,
-      partyName,
-      memberName,
-      address,
-      location,
-      pincode,
-      email,
-      phoneNo,
-      commAddress,
-      location,
-      dom,
-      memberCode,
-      panNo,
-      directorNo,
-      FundsArrangement,
-      remarks,
-      dob,
-      selectedDate,
-      marriageDate,
-      selectedStateId,
-      selectedCommStateId,
-      selectedCityId,
-      selectedCommCityId,
+      RegisterDate :selectedDate,
+      TitleID:titleId,
+      MobileNo:mobileNum,
+      PartyName:partyName,
+      MemberName:memberName,
+      Address:address,
+      Pincode:pincode,
+      Email:email,
+      PhoneNo:phoneNo,
+      CommAddress: commAddress,
+      Location:location,
+      DOM:dom,
+      ReferenceMemberCode:memberCode,
+      PANNo:panNo,
+      DirectorPANNo:directorNo,
+      FundsArrangement:FundsArrangement,
+      Remarks:remarks,
+      DOB:dob,
+      CountryID:1,
+      StateID: selectedStateId,
+      CStateID:selectedCommStateId,
+      CityID:selectedCityId,
+      CCityID:  selectedCommCityId,
+      CCountryID:1,
+      CMobileNo:cMobile,
+      CLocation:compnayLocation,
+      CPincode:commpincode
+
+
+
+      
     };
 
     console.log(formData, "ALL DATAAAAAAA of company master");
 
+    console.log(formData, "ALL DATAAAAAAA");
 
     axios
       .post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-companymaster.php",
+        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-customermaster.php",
         formData,
         {
           headers: {
@@ -484,6 +505,15 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
+                label="Communitcation Pincode"
+                placeholder="Communitcation Pincode"
+                value={commpincode}
+                onChange={handleCommPincode}
+              />
+            </Grid>
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
                 label="Email"
                 placeholder="Email"
                 value={email}
@@ -497,6 +527,16 @@ const AddCustomerDetails = ({ onSubmitSuccess }) => {
                 placeholder="Phone No"
                 value={phoneNo}
                 onChange={handlePhoneNo}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="CMobile No"
+                placeholder="CMobile No"
+                value={cMobile}
+                onChange={handleCmobileNo}
               />
             </Grid>
             <Grid item xs={8} sm={4}>

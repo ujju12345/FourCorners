@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { format, parseISO } from 'date-fns';
 
-const TabInfo = ({ setShowTabAccount }) => {
+const ListAdditionalCharges = ({ setShowTabAccount }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +25,7 @@ const TabInfo = ({ setShowTabAccount }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-additionalcharges.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -68,14 +68,13 @@ const TabInfo = ({ setShowTabAccount }) => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Code</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Communication Address</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>City ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>ERP Live Date</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Status ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>State ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Book Beginning From</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Project Name</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Sub Project </TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Start Date</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Particulars of Additional Charges</TableCell>
+
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Type of Additional Charges</TableCell>
+           
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -85,17 +84,15 @@ const TabInfo = ({ setShowTabAccount }) => {
                 <TableRow key={index}>
                   <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.CompanyName}</Typography>
+                      <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.projectname}</Typography>
                     </Box>
                   </TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyCode}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CommAddress}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CityID}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{formatDate(row.ERPLiveDate)}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusID}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.StateID}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{(row.BookBeginingFrom)}</TableCell>
-                  <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.subproject}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.startdate}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.particularsofadditionalcharges}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.typeofadditionalcharges}</TableCell>
+               
+                  <TableCell sx={{ padding: '15px' }}>
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
@@ -109,7 +106,7 @@ const TabInfo = ({ setShowTabAccount }) => {
               <TableRow>
                 <TableCell colSpan={9} align="center">
                   No data available
-                </TableCell>\
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -119,4 +116,4 @@ const TabInfo = ({ setShowTabAccount }) => {
   );
 };
 
-export default TabInfo;
+export default ListAdditionalCharges;

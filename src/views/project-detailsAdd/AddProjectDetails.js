@@ -20,7 +20,7 @@ import Button from "@mui/material/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-
+import Card from '@mui/material/Card';
 
 const AddProjectDetails = ({show}) => {
   // const classes = useStyles();
@@ -246,6 +246,7 @@ const AddProjectDetails = ({show}) => {
   };
 
   return (
+    <Card>
     <CardContent>
     <form>
       <Grid container spacing={7}>
@@ -405,6 +406,7 @@ const AddProjectDetails = ({show}) => {
       </Grid>
     </form>
   </CardContent>
+  </Card>
 
   );
 };

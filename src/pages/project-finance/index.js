@@ -3,10 +3,10 @@ import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import ProjectMasterDetails from 'src/views/project-manager/ProjectMasterDetails';
 
-import AddInstallment from 'src/views/add-installment/AddInstallment';
-import ListInstallment from 'src/views/list-installment/ListInstallment';
+import AddProjectFinanceApproval from 'src/views/add-projectFinance/AddProjectFinanceApproval';
+import ListProjectFinance from 'src/views/list-projectFinance/ListProjectFinance';
 
-const Installment = () => {
+const ProjectFinance = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ const Installment = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectfinanceapprovals.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -57,15 +57,15 @@ const Installment = () => {
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
-             <ListInstallment/>
+             <ListProjectFinance/>
             </Grid>
           </Grid>
         </>
       )}
 
-      {showProjectManage && <AddInstallment show={setShowProjectManage} />}
+      {showProjectManage && <AddProjectFinanceApproval show={setShowProjectManage} />}
     </>
   );
 };
 
-export default Installment;
+export default ProjectFinance;

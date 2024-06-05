@@ -13,7 +13,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import axios from 'axios';
-
+import Card from '@mui/material/Card';
 const UpdateCompanyMaster = ({ show, rowData }) => {
   const id = rowData?.CompanyID
   const [companyData, setCompanyData] = useState(null);
@@ -173,104 +173,100 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     return newErrors;
   };
 
- const handleSubmit = (event) => {
-   event.preventDefault();
-   const newErrors = validateFields();
-   if (Object.keys(newErrors).length > 0) {
-     setErrors(newErrors);
-   } else {
-     setErrors({});
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newErrors = validateFields();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      setErrors({});
 
-     const submitData = {
-       CreateUID: 1,
-       CompanyName: formData.companyName,
-       CompanyCode: formData.companyCode,
-       CommAddress: formData.companyAddress,
-       cityID: selectedCityId,
-       StateID: selectedStateId,
-       CountryID: 1,
-       Pincode: formData.pincode,
-       PhoneNo: formData.phone,
-       MobileNo: formData.mobilePhone,
-       Email: formData.email,
-       RegisteredAddress: formData.registeredAddress,
-       ERPLiveDate: formData.selectedDate,
-       BookBeginingFrom: formData.price,
-       PanITNo: formData.panIt,
-       GSTINNo: formData.gstinNumber,
-       TANNo: formData.tanNumber,
-       VATTINNo: formData.vatTinNumber,
-       CSTTINNo: formData.cstTinNumber,
-       ServiceTaxNo: formData.serviceTax,
-       CessNo: formData.cessNumber,
-       CINNo: formData.cinNumber,
-       Status: 1,
-       CompanyStatusID: 1,
-       Remarks: formData.remarks,
-       CompanyID: id,
-     };
+      const submitData = {
+        CreateUID: 1,
+        CompanyName: formData.companyName,
+        CompanyCode: formData.companyCode,
+        CommAddress: formData.companyAddress,
+        cityID: selectedCityId,
+        StateID: selectedStateId,
+        CountryID: 1,
+        Pincode: formData.pincode,
+        PhoneNo: formData.phone,
+        MobileNo: formData.mobilePhone,
+        Email: formData.email,
+        RegisteredAddress: formData.registeredAddress,
+        ERPLiveDate: formData.selectedDate,
+        BookBeginingFrom: formData.price,
+        PanITNo: formData.panIt,
+        GSTINNo: formData.gstinNumber,
+        TANNo: formData.tanNumber,
+        VATTINNo: formData.vatTinNumber,
+        CSTTINNo: formData.cstTinNumber,
+        ServiceTaxNo: formData.serviceTax,
+        CessNo: formData.cessNumber,
+        CINNo: formData.cinNumber,
+        Status: 1,
+        CompanyStatusID: 1,
+        Remarks: formData.remarks,
+        CompanyID:id
+      };
 
-     console.log(submitData, "ALL DATAAAAAAA");
+      console.log(submitData, 'ALL DATAAAAAAA');
 
-     axios
-       .post(
-         "https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php",
-         submitData,
-         {
-           headers: {
-             "Content-Type": "application/json",
-           },
-         }
-       )
-       .then((response) => {
-         if (response.data.status === "Success") {
-           console.log("UPDATEDDDDD");
-           setSubmitSuccess(true);
-           show("list");
-           setFormData({
-             companyName: "",
-             companyCode: "",
-             companyAddress: "",
-             registeredAddress: "",
-             selectedCity: "",
-             selectedState: "",
-             country: "India",
-             pincode: "",
-             phone: "",
-             mobilePhone: "",
-             email: "",
-             price: "",
-             panIt: "",
-             gstinNumber: "",
-             tanNumber: "",
-             vatTinNumber: "",
-             cstTinNumber: "",
-             serviceTax: "",
-             cessNumber: "",
-             cinNumber: "",
-             remarks: "",
-             selectedDate: "",
-           });
-         } else {
-           setSubmitSuccess(false);
-         }
-       })
-       .catch((error) => {
-         console.error("There was an error!", error);
-         setSubmitSuccess(false);
-       });
-   }
- };
-
+      axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php', submitData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => {
+          if (response.data.status === 'Success') {
+            console.log("UPDATEDDDDD");
+            setSubmitSuccess(true);
+            show('list');
+            setFormData({
+              companyName: '',
+              companyCode: '',
+              companyAddress: '',
+              registeredAddress: '',
+              selectedCity: '',
+              selectedState: '',
+              country: 'India',
+              pincode: '',
+              phone: '',
+              mobilePhone: '',
+              email: '',
+              price: '',
+              panIt: '',
+              gstinNumber: '',
+              tanNumber: '',
+              vatTinNumber: '',
+              cstTinNumber: '',
+              serviceTax: '',
+              cessNumber: '',
+              cinNumber: '',
+              remarks: '',
+              selectedDate: '',
+            });
+          } else {
+            setSubmitSuccess(false);
+          }
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+          setSubmitSuccess(false);
+        });
+    }
+  };
 
   return (
+
+    <Card>
     <CardContent>
       <form>
         <Grid container spacing={7}>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box>
               <Typography variant='body2' sx={{ marginTop: 5, fontWeight: 'bold', fontSize: 20 }}>
-                Manage Company Details
+                Edit Company Details
               </Typography>
             </Box>
           </Grid>
@@ -491,16 +487,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   name="cinNumber"
                 />
               </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label='Remarks'
-                  placeholder='Remarks'
-                  value={formData.remarks}
-                  onChange={handleInputChange}
-                  name="remarks"
-                />
-              </Grid>
+          
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -517,6 +504,17 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   helperText={errors.selectedDate}
                 />
               </Grid>
+
+              <Grid item xs={24} sm={14}>
+                <TextField
+                  fullWidth
+                  label='Remarks'
+                  placeholder='Remarks'
+                  value={formData.remarks}
+                  onChange={handleInputChange}
+                  name="remarks"
+                />
+              </Grid>
             </>
           )}
 
@@ -528,6 +526,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
         </Grid>
       </form>
     </CardContent>
+    </Card>
   );
 };
 

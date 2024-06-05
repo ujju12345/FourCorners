@@ -10,7 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-const ListCarparking = () => {
+const ListCarParking = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,4 +86,4 @@ const ListCarparking = () => {
   );
 };
 
-export default ListCarparking;
+export default ListCarParking;

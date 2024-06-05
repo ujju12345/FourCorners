@@ -15,30 +15,30 @@ const Listsubprojectdetails= () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-subprojectdetails.php');
-      console.log('API Response:', response.data);
-      setRows(response.data.data || []);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError(error);
-      setLoading(false);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-subprojectdetails.php');
+  //     console.log('API Response:', response.data);
+  //     setRows(response.data.data || []);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     setError(error);
+  //     setLoading(false);
+  //   }
+  // };
 
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
 
-  if (error) {
-    return <Typography>Error fetching data: {error.message}</Typography>;
-  }
+  // if (error) {
+  //   return <Typography>Error fetching data: {error.message}</Typography>;
+  // }
 
   return (
     <Card>
@@ -67,12 +67,12 @@ const Listsubprojectdetails= () => {
                 <TableRow key={index}>
                   <TableCell>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.CompanyID}</Typography>
+                      <Typography sx={{ fontWeight: 500 }}>sdf</Typography>
                      
                     </Box>
                   </TableCell>
-                  <TableCell>{row.ProjectID}</TableCell>
-                  <TableCell>{row.SubProjectID}</TableCell>
+                  <TableCell>sdf</TableCell>
+                  {/* <TableCell>{row.SubProjectID}</TableCell>
                   <TableCell>{row.TotalCarParking}</TableCell>
                   <TableCell>{row.DefaultCarParkingsPerUnit}</TableCell>
                   <TableCell>{row.Favorof}</TableCell>
@@ -80,7 +80,7 @@ const Listsubprojectdetails= () => {
                   <TableCell>{row.AdditionSubtractionInBasicRate}</TableCell>
                   <TableCell>{row.CCEntries}</TableCell>
                   <TableCell>{row.Particulars}</TableCell>
-                  <TableCell>{row.ResponsiblePerson}</TableCell>
+                  <TableCell>{row.ResponsiblePerson}</TableCell> */}
                 </TableRow>
               ))
             ) : (

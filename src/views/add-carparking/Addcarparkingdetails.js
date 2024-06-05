@@ -19,7 +19,6 @@ import Button from "@mui/material/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import Card from '@mui/material/Card';
 
 const Addcarparkingdetails = ({ show }) => {
   const [date, setDate] = useState(null);
@@ -74,7 +73,7 @@ const Addcarparkingdetails = ({ show }) => {
 
     try {
       const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-carparkingdetails.php",
+        "https://apiforcorners.cubisysit.com/api/api-insert-carparkingdetails.php",
         body,
         {
           headers: {
@@ -120,12 +119,29 @@ const Addcarparkingdetails = ({ show }) => {
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
-                Add Car Parking Details
+                Manage Car Parking Details
               </Typography>
             </Box>
           </Grid>
 
-
+          <Grid item xs={8} sm={4}>
+            <DatePicker
+              selected={date}
+              onChange={(date) => setDate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="form-control"
+              customInput={
+                <TextField
+                  fullWidth
+                  label="Date"
+                  InputProps={{
+                    readOnly: true,
+                    sx: { width: "100%" },
+                  }}
+                />
+              }
+            />
+          </Grid>
 
           <Grid item xs={8} sm={4}>
             <TextField
@@ -156,7 +172,7 @@ const Addcarparkingdetails = ({ show }) => {
               onChange={(e) => setProjectCode(e.target.value)}
             />
           </Grid>
-{/* 
+
           <Grid item xs={8} sm={4}>
             <FormControl fullWidth>
               <InputLabel>Sub Project</InputLabel>
@@ -175,7 +191,7 @@ const Addcarparkingdetails = ({ show }) => {
                 ))}
               </Select>
             </FormControl>
-          </Grid> */}
+          </Grid>
 
           <Grid item xs={8} sm={4}>
             <TextField
@@ -214,24 +230,6 @@ const Addcarparkingdetails = ({ show }) => {
               placeholder="Comments"
               value={comments}
               onChange={(e) => setComments(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={8} sm={4}>
-            <DatePicker
-              selected={date}
-              onChange={(date) => setDate(date)}
-              dateFormat="yyyy-MM-dd"
-              className="form-control"
-              customInput={
-                <TextField
-                  fullWidth
-                  label="Date"
-                  InputProps={{
-                    readOnly: true,
-                    sx: { width: "100%" },
-                  }}
-                />
-              }
             />
           </Grid>
 

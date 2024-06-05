@@ -13,7 +13,7 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-const ListProjectDetails = () => {
+const ListChannelpartner = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ const ListProjectDetails = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectdetails.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-chanelpartner.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -57,19 +57,23 @@ const ListProjectDetails = () => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>ProjectID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>UOM</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>BrochureLink</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>Name of Company</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>Contact person</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>Mobile number</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>Vendor RERA Registration Number</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem', padding: '12px' }}>Action</TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.length > 0 ? (
               rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.ProjectID}</TableCell>
-                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.UOM}</TableCell>
-                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.BrochureLink}</TableCell>
+                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.nameofcompany}</TableCell>
+                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.contactperson}</TableCell>
+                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.mobileno}</TableCell>
+                  <TableCell sx={{ padding: '12px', fontSize: '0.875rem' }}>{row.vendorreraregistrationnumber}</TableCell>
+
                   <TableCell sx={{ padding: '12px' }}>
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
@@ -94,4 +98,4 @@ const ListProjectDetails = () => {
   );
 };
 
-export default ListProjectDetails;
+export default ListChannelpartner;

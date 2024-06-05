@@ -21,7 +21,7 @@ const TypographyPage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-subprojectdetails.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-subprojectmaster.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -36,9 +36,9 @@ const TypographyPage = () => {
     return <CircularProgress />;
   }
 
-  if (error) {
-    return <Alert severity="error">Error fetching data: {error.message}</Alert>;
-  }
+  // if (error) {
+  //   return <Alert severity="error">Error fetching data: {error.message}</Alert>;
+  // }
 
   const handleNavigation = () => {
     setShowProjectDetails(true); // Set to true to show ProjectManage
@@ -60,7 +60,7 @@ const TypographyPage = () => {
 
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            <Listsubprojectdetails /> 
+            <Addsubprojectdetails /> 
           </Grid>
         </Grid>
       </>

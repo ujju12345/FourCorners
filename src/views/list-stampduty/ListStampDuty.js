@@ -9,8 +9,10 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
-
-const ListCustomerDetails = () => {
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+const ListStampDuty = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +23,7 @@ const ListCustomerDetails = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-customermaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-stampdutymaster.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -46,13 +48,16 @@ const ListCustomerDetails = () => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Customer ID</TableCell>
-              <TableCell align="left">Title ID</TableCell>
-              <TableCell align="left">Mobile No</TableCell>
-              <TableCell align="left">Party Name</TableCell>
-              <TableCell align="left">Member Name</TableCell>
-              <TableCell align="left">Email</TableCell>
-              <TableCell align="left">Location</TableCell>
+              <TableCell align="left">Date</TableCell>
+              <TableCell align="left">Project Name</TableCell>
+              <TableCell align="left">Unit Type</TableCell>
+              <TableCell align="left">Start Date</TableCell>
+              <TableCell align="left">End Date</TableCell>
+              <TableCell align="left">Government Rate(Per Sq.Mtr)</TableCell>
+              <TableCell align="left">Stamp Duty Percent</TableCell>
+              <TableCell align="left">Registration Percent</TableCell>
+              <TableCell align="left">Action</TableCell>
+
               {/* Add more table headers here */}
             </TableRow>
           </TableHead>
@@ -62,15 +67,25 @@ const ListCustomerDetails = () => {
                 <TableRow key={index}>
                   <TableCell align="left">
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.CustomerID}</Typography>
+                      <Typography sx={{ fontWeight: 500 }}>{row.Date}</Typography>
                     </Box>
                   </TableCell>
-                  <TableCell align="left">{row.TitleID}</TableCell>
-                  <TableCell align="left">{row.MobileNo}</TableCell>
-                  <TableCell align="left">{row.PartyName}</TableCell>
-                  <TableCell align="left">{row.MemberName}</TableCell>
-                  <TableCell align="left">{row.Email}</TableCell>
-                  <TableCell align="left">{row.CLocation}</TableCell>
+                  <TableCell align="left">{row.ProjectName}</TableCell>
+                  <TableCell align="left">{row.UnitType}</TableCell>
+                  <TableCell align="left">{row.StartDate}</TableCell>
+                  <TableCell align="left">{row.EndDate}</TableCell>
+                  <TableCell align="left">{row.GovernmentRate}</TableCell>
+                  <TableCell align="left">{row.StampDutyPercent}</TableCell>
+                  <TableCell align="left">{row.RegistrationPercent}</TableCell>
+                  <TableCell sx={{ padding: '15px', }}>
+                    <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                 
                   {/* Render additional table cells for other data fields */}
                 </TableRow>
               ))
@@ -88,4 +103,4 @@ const ListCustomerDetails = () => {
   );
 };
 
-export default ListCustomerDetails;
+export default ListStampDuty;

@@ -3,10 +3,10 @@ import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import ProjectMasterDetails from 'src/views/project-manager/ProjectMasterDetails';
 
-import AddInstallment from 'src/views/add-installment/AddInstallment';
-import ListInstallment from 'src/views/list-installment/ListInstallment';
+import AddStampDuty from 'src/views/add-stampduty/AddStampDuty';
+import ListStampDuty from 'src/views/list-stampduty/ListStampDuty';
 
-const Installment = () => {
+const StampDuty = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ const Installment = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-stampdutymaster.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -57,15 +57,15 @@ const Installment = () => {
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
-             <ListInstallment/>
+             <ListStampDuty/>
             </Grid>
           </Grid>
         </>
       )}
 
-      {showProjectManage && <AddInstallment show={setShowProjectManage} />}
+      {showProjectManage && <AddStampDuty show={setShowProjectManage} />}
     </>
   );
 };
 
-export default Installment;
+export default StampDuty;
