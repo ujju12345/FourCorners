@@ -73,7 +73,7 @@ const TabInfo = ({ setShowTabAccount }) => {
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Communication Address</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>City Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>ERP Live Date</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Status ID</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Status Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>State Name</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Book Beginning From</TableCell>
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
@@ -92,7 +92,7 @@ const TabInfo = ({ setShowTabAccount }) => {
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CommAddress}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CityName}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{formatDate(row.ERPLiveDate)}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusID}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusName}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.StateName}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{(row.BookBeginingFrom)}</TableCell>
                   <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
