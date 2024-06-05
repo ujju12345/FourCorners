@@ -83,7 +83,19 @@ const navigation = () => {
     //   path: '/pages/error',
     //   openInNewTab: true
     // },
-
+    {
+      sectionTitle: 'User Interface'
+    },
+    {
+      title: 'Project Manager',
+      icon: FormatLetterCase,
+      path: '/typography'
+    },
+    // {
+    //   title: 'Project Detail',
+    //   icon: Table,
+    //   path: '/project-details'
+    // },
     {
       title: 'Customer Details',
       path: '/customer-details',
@@ -91,17 +103,41 @@ const navigation = () => {
     },
 
     {
-      title: 'Car Parking ',
+      title: 'Sub Project Details',
       icon: CreditCardOutline,
-      path: '/car-parking'
+      path: '/subproject-details'
     },
 
- 
-    // {
-    //   icon: CubeOutline,
-    //   title: 'Form Layouts',
-    //   path: '/form-layouts'
-    // }
+    {
+      icon: CubeOutline,
+      title: 'Car Parking',
+      path: '/car-parking'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Installment',
+      path: '/installment'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Project Finance Approval',
+      path: '/project-finance'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Stamp Duty Master',
+      path: '/stamp-duty'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Additional Charges',
+      path: '/additonal-charges'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Channel Partner',
+      path: '/channel-partner'
+    }
   ]
 }
 
