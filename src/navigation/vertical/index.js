@@ -57,11 +57,11 @@ const navigation = () => {
     {
       sectionTitle: 'Sales'
     },
-    {
-      title: 'Car Parking ',
-      icon: CreditCardOutline,
-      path: '/car-parking'
-    },
+    // {
+    //   title: 'Car Parking ',
+    //   icon: CreditCardOutline,
+    //   path: '/car-parking'
+    // },
     // {
     //   sectionTitle: 'Pages' 
     // },
@@ -102,11 +102,11 @@ const navigation = () => {
       icon: GoogleCirclesExtended
     },
 
-    {
-      title: 'Sub Project Details',
-      icon: CreditCardOutline,
-      path: '/subproject-details'
-    },
+    // {
+    //   title: 'Sub Project Details',
+    //   icon: CreditCardOutline,
+    //   path: '/subproject-details'
+    // },
 
     {
       icon: CubeOutline,

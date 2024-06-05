@@ -52,24 +52,15 @@ const TabAccount = ({ show }) => {
   const [selectedCompanyStatus, setSelectedCompanyStatus] = useState("");
 
 
-  
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [selectedCityId, setSelectedCityId] = useState("");
   const [selectedStateId, setSelectedStateId] = useState("");
 
-  useEffect(() => {
-    axios
-      .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
-      .then((response) => {
-        if (response.data.status === "Success") {
-          console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA");
-          setCities(response.data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  
+  // }, []);
+
 
   useEffect(() => {
     axios
@@ -89,7 +80,7 @@ const TabAccount = ({ show }) => {
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-companystatus.php")
       .then((response) => {
         if (response.data.status === "Success") {
-          console.log(response.data.data , 'dataa aayaaaa');
+          console.log(response.data.data, 'dataa aayaaaa');
           setCompanyStatus(response.data.data);
         }
       })
@@ -99,6 +90,21 @@ const TabAccount = ({ show }) => {
   }, []);
 
 
+  const getCityData = (stateID) => {
+    debugger;
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-singel-citymaster.php?StateID= " + stateID)
+      .then((response) => {
+        debugger;
+        if (response.data.status === "Success") {
+          console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA");
+          setCities(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -220,6 +226,7 @@ const TabAccount = ({ show }) => {
     );
     if (selectedStateObject) {
       setSelectedStateId(selectedStateObject.StateID);
+      getCityData(selectedStateObject.StateID);
     }
   };
   const validateFields = () => {
@@ -257,6 +264,11 @@ const TabAccount = ({ show }) => {
 
   //   }
   // };
+
+
+  const handleNavigation = () => {
+    show('list');
+  };
 
   const handleSubmit = (event) => {
     console.log("presss");
@@ -332,17 +344,23 @@ const TabAccount = ({ show }) => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-              <Box>
-                <Typography
-                  variant="body2"
-                  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-                >
-                  Add Company Details
-                </Typography>
-              </Box>
-            </Grid>
-
+          <Grid item xs={12}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: 'bold', fontSize: 20 }}
+        >
+          Add Company Details
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={handleNavigation}
+          style={{ marginTop: 0 }}
+        >
+          List
+        </Button>
+      </Box>
+    </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -395,21 +413,21 @@ const TabAccount = ({ show }) => {
 
 
             <Grid item xs={8} sm={4}>
-      <FormControl fullWidth>
-        <InputLabel>Company Status</InputLabel>
-        <Select
-          label="Company Status"
-          value={selectedCompanyStatus}
-          onChange={handleCompanyStatusChange}
-        >
-          {companyStatus.map((status) => (
-            <MenuItem key={status.CompanyStatusID} value={status.CompanyStatusID}>
-              {status.CompanyStatusName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid> 
+              <FormControl fullWidth>
+                <InputLabel>Company Status</InputLabel>
+                <Select
+                  label="Company Status"
+                  value={selectedCompanyStatus}
+                  onChange={handleCompanyStatusChange}
+                >
+                  {companyStatus.map((status) => (
+                    <MenuItem key={status.CompanyStatusID} value={status.CompanyStatusID}>
+                      {status.CompanyStatusName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
 
 
