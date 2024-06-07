@@ -1,65 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+// import { useParams, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const UpdateEnquirySource = ({ show, rowData }) => {
-  const id = rowData?.EnquirySourceID;
-  const [enquiryData, setEnquiryData] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+const Updateenquirysource  = () => {
+
   const [formData, setFormData] = useState({
     NameOfCompany: '',
     ProjectName: '',
     Source: '',
-    FromDate: '',
-    ToDate: '',
+    FromDate: null,
+    ToDate: null,
     SourceName: '',
     SourceAddress: '',
-    ActiveTillDate: '',
+    ActiveTillDate: null,
     ContactNumber: '',
     TotalCost: '',
     Status: 1, // Assuming status is always 1
-    CreateUID: 1, // Assuming a default value for CreateUID
-    CreateDate: '', // Assuming this will be set automatically
+    ModifyUID: 1, // Assuming a default value for ModifyUID
+    ModifyDate: '', // Assuming this will be set automatically
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const enquiryId = rowData?.EnquirySourceID;
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-enquirysource.php?enquirysourceid=${enquiryId}`;
-        const response = await axios.get(apiUrl);
-        if (response.data.status === 'Success') {
-          const enquiry = response.data.data[0];
-          setEnquiryData(enquiry);
-          setFormData({
-            NameOfCompany: enquiry['NameOfCompany'],
-            ProjectName: enquiry['ProjectName'],
-            Source: enquiry['Source'],
-            FromDate: enquiry['FromDate'],
-            ToDate: enquiry['ToDate'],
-            SourceName: enquiry['SourceName'],
-            SourceAddress: enquiry['SourceAddress'],
-            ActiveTillDate: enquiry['ActiveTillDate'],
-            ContactNumber: enquiry['ContactNumber'],
-            TotalCost: enquiry['TotalCost'],
-            Status: 1, // Assuming status is always 1
-            CreateUID: 1, // Assuming a default value for CreateUID
-            CreateDate: '', // Assuming this will be set automatically
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching enquiry data:', error);
+    fetchData();
+  }, [id]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://ideacafe-backend.vercel.app/api/proxy/api-fetch-enquirysource.php?enquirysourceid=${id}`);
+      if (response.data.status === 'Success') {
+        const enquiry = response.data.data[0];
+        setFormData({
+          NameOfCompany: enquiry['NameOfCompany'],
+          ProjectName: enquiry['ProjectName'],
+          Source: enquiry['Source'],
+          FromDate: new Date(enquiry['FromDate']),
+          ToDate: new Date(enquiry['ToDate']),
+          SourceName: enquiry['SourceName'],
+          SourceAddress: enquiry['SourceAddress'],
+          ActiveTillDate: new Date(enquiry['ActiveTillDate']),
+          ContactNumber: enquiry['ContactNumber'],
+          TotalCost: enquiry['TotalCost'],
+          Status: 1,
+          ModifyUID: 1,
+          ModifyDate: '',
+        });
+        setLoading(false);
+      } else {
+        setError('Failed to fetch data');
+        setLoading(false);
       }
-    };
-    if (rowData) {
-      fetchData();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(error);
+      setLoading(false);
     }
-  }, [rowData]);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,165 +77,221 @@ const UpdateEnquirySource = ({ show, rowData }) => {
     });
   };
 
-  const validateFields = () => {
-    const newErrors = {};
-    // Validate fields as required
-    return newErrors;
+  const handleDateChange = (name, date) => {
+    setFormData({
+      ...formData,
+      [name]: date,
+    });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const newErrors = validateFields();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      setErrors({});
 
-      const submitData = {
-        ...formData,
-        EnquirySourceID: id,
-        CreateDate: new Date().toISOString(), // Set current date as CreateDate
-      };
+    const body = {
+      ...formData,
+      EnquirySourceID: id,
+      ModifyDate: new Date().toISOString(), // Set current date as ModifyDate
+    };
 
-      axios.post('https://apiforcorners.cubisysit.com/api/api-update-enquirysource.php', submitData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => {
-          if (response.data.status === 'Success') {
-            console.log("UPDATED");
-            setSubmitSuccess(true);
-            show('list');
-            setFormData({
-              NameOfCompany: '',
-              ProjectName: '',
-              Source: '',
-              FromDate: '',
-              ToDate: '',
-              SourceName: '',
-              SourceAddress: '',
-              ActiveTillDate: '',
-              ContactNumber: '',
-              TotalCost: '',
-              Status: 1,
-              CreateUID: 1, 
-              CreateDate: '',
-            });
-          } else {
-            setSubmitSuccess(false);
-          }
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-          setSubmitSuccess(false);
-        });
+    try {
+      const response = await axios.post(
+        'https://ideacafe-backend.vercel.app/api/proxy/api-update-enquirysource.php',
+        body,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.status === 'Success') {
+        console.log('UPDATEEEEE');
+        // setSubmitSuccess(true);
+        // setSubmitError(false);
+        // navigate('/');
+      } else {
+        console.log('ERRPR');
+        // setSubmitSuccess(false);
+        // setSubmitError(true);
+      }
+    } catch (error) {
+      console.error('There was an error!', error);
+      // setSubmitSuccess(false);
+      // setSubmitError(true);
     }
   };
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error fetching data: {error.message}</Typography>;
+  }
 
   return (
     <Card>
       <CardContent>
         <form>
-          <Typography variant='body2' sx={{ marginTop: 5, fontWeight: 'bold', fontSize: 20 }}>
-            Edit Enquiry Source Details
-          </Typography>
+          <Grid container spacing={7}>
+            <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+            <Box>
+            <Typography
+            variant="body2"
+            sx={{ marginTop: 5, fontWeight: 'bold', fontSize: 20 }}
+            >
+            Update Enquiry Source Details
+            </Typography>
+            </Box>
+            </Grid>
+            <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Name of Company"
+            placeholder="Name of Company"
+            value={formData.NameOfCompany}
+            onChange={handleInputChange}
+            name="NameOfCompany"
+          />
+        </Grid>
 
-          {enquiryData && (
-            <>
-              <TextField
-                fullWidth
-                label='Name of Company'
-                placeholder='Name of Company'
-                value={formData.NameOfCompany}
-                onChange={handleInputChange}
-                name="NameOfCompany"
-              />
-              <TextField
-                fullWidth
-                label='Project Name'
-                placeholder='Project Name'
-                value={formData.ProjectName}
-                onChange={handleInputChange}
-                name="ProjectName"
-              />
-              <TextField
-                fullWidth
-                label='Source'
-                placeholder='Source'
-                value={formData.Source}
-                onChange={handleInputChange}
-                name="Source"
-              />
-              <TextField
-                fullWidth
-                type="date"
-                label='From Date'
-                placeholder='From Date'
-                value={formData.FromDate}
-                onChange={handleInputChange}
-                name="FromDate"
-              />
-              <TextField
-                fullWidth
-                type="date"
-                label='To Date'
-                placeholder='To Date'
-                value={formData.ToDate}
-                onChange={handleInputChange}
-                name="ToDate"
-              />
-              <TextField
-                fullWidth
-                label='Source Name'
-                placeholder='Source Name'
-                value={formData.SourceName}
-                onChange={handleInputChange}
-                name="SourceName"
-              />
-              <TextField
-                fullWidth
-                label='Source Address'
-                placeholder='Source Address'
-                value={formData.SourceAddress}
-                onChange={handleInputChange}
-                name="SourceAddress"
-              />
-              <TextField
-                fullWidth
-                type="date"
-                label='Active Till Date'
-                placeholder='Active Till Date'
-                value={formData.ActiveTillDate}
-                onChange={handleInputChange}
-                name="ActiveTillDate"
-              />
-              <TextField
-                fullWidth
-                label='Contact Number'
-                placeholder='Contact Number'
-                value={formData.ContactNumber}
-                onChange={handleInputChange}
-                name="ContactNumber"
-              />
-              <TextField
-                fullWidth
-                label='Total Cost'
-                placeholder='Total Cost'
-                value={formData.TotalCost}
-                onChange={handleInputChange}
-                name="TotalCost"
-              />
-            </>
-          )}
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Project Name"
+            placeholder="Project Name"
+            value={formData.ProjectName}
+            onChange={handleInputChange}
+            name="ProjectName"
+          />
+        </Grid>
 
-          <Button variant='contained' color='primary' onClick={handleSubmit}>
-            Submit
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Source"
+            placeholder="Source"
+            value={formData.Source}
+            onChange={handleInputChange}
+            name="Source"
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <DatePicker
+            selected={formData.FromDate}
+            onChange={(date) => handleDateChange('FromDate', date)}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            customInput={
+              <TextField
+                fullWidth
+                label="From Date"
+                InputProps={{
+                  readOnly: true,
+                  sx: { width: '100%' },
+                }}
+              />
+            }
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <DatePicker
+            selected={formData.ToDate}
+            onChange={(date) => handleDateChange('ToDate', date)}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            customInput={
+              <TextField
+                fullWidth
+                label="To Date"
+                InputProps={{
+                  readOnly: true,
+                  sx: { width: '100%' },
+                }}
+              />
+            }
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Source Name"
+            placeholder="Source Name"
+            value={formData.SourceName}
+            onChange={handleInputChange}
+            name="SourceName"
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Source Address"
+            placeholder="Source Address"
+            value={formData.SourceAddress}
+            onChange={handleInputChange}
+            name="SourceAddress"
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <DatePicker
+            selected={formData.ActiveTillDate}
+            onChange={(date) => handleDateChange('ActiveTillDate', date)}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            customInput={
+              <TextField
+                fullWidth
+                label="Active Till Date"
+                InputProps={{
+                  readOnly: true,
+                  sx: { width: '100%' },
+                }}
+              />
+            }
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Contact Number"
+            placeholder="Contact Number"
+            value={formData.ContactNumber}
+            onChange={handleInputChange}
+            name="ContactNumber"
+          />
+        </Grid>
+
+        <Grid item xs={8} sm={4}>
+          <TextField
+            fullWidth
+            label="Total Cost"
+            placeholder="Total Cost"
+            value={formData.TotalCost}
+            onChange={handleInputChange}
+            name="TotalCost"
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 3.5 }}
+            onClick={handleSubmit}
+          >
+            Update
           </Button>
-        </form>
-      </CardContent>
-    </Card>
-  );
+        </Grid>
+      </Grid>
+    </form>
+  </CardContent>
+</Card>
+);
 };
 
-export default UpdateEnquirySource;
+export default Updateenquirysource;
