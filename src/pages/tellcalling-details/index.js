@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
-import AddInstallment from 'src/views/add-installment/AddInstallment';
-import ListInstallmentDetails from 'src/views/list-installment/ListInstallment';
+import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
+import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
 
-const Installment = () => {
+const Tellecalling = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showProjectManage, setShowProjectManage] = useState(false);
   const [showTabAccount, setShowTabAccount] = useState(false);
   const [editData, setEditData] = useState(null);
 
@@ -68,15 +67,19 @@ const Installment = () => {
           <Grid container spacing={6}>
             <Grid item xs={12}>
               {/* Render the ListInstallmentDetails component */}
-              <ListInstallmentDetails rows={rows} setRows={setRows} onEdit={handleEdit} />
+              {/* <AddTellecallingDetails rows={rows} setRows={setRows} onEdit={handleEdit} /> */}
+              <ListTellecalling  />
+
             </Grid>
           </Grid>
         </>
       )}
 
-      {showTabAccount && <AddInstallment show={handleBack} editData={editData} />}
+      {/* {showTabAccount && <AddTellecallingDetails show={handleBack} editData={editData} />} */}
+      {showTabAccount && <AddTellecallingDetails  />}
+
     </>
   );
 };
 
-export default Installment;
+export default Tellecalling;

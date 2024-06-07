@@ -89,6 +89,8 @@ const TabAccount = ({ show }) => {
       });
   }, []);
 
+  
+
 
   const getCityData = (stateID) => {
     debugger;
@@ -247,7 +249,7 @@ const TabAccount = ({ show }) => {
       newErrors.date = "Date is required";
     }
     if (!price) {
-      newErrors.price = "Bookin from price is required";
+      newErrors.price = "Booking price is required";
     }
     if (!pincode) {
       newErrors.pincode = "Pincode is required";

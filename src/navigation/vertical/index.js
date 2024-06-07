@@ -56,7 +56,10 @@ const navigation = () => {
     },
     {
       sectionTitle: 'Sales'
+
+      
     },
+
     // {
     //   title: 'Car Parking ',
     //   icon: CreditCardOutline,
@@ -86,11 +89,11 @@ const navigation = () => {
     {
       sectionTitle: 'User Interface'
     },
-    {
-      title: 'Project Manager',
-      icon: FormatLetterCase,
-      path: '/typography'
-    },
+    // {
+    //   title: 'Project Manager',
+    //   icon: FormatLetterCase,
+    //   path: '/typography'
+    // },
     // {
     //   title: 'Project Detail',
     //   icon: Table,
@@ -137,7 +140,12 @@ const navigation = () => {
       icon: CubeOutline,
       title: 'Channel Partner',
       path: '/channel-partner'
-    }
+    },
+    {
+      title: 'Telle-calling',
+      icon: CreditCardOutline,
+      path: '/tellcalling-details'
+    },
   ]
 }
 

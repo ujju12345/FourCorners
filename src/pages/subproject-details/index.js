@@ -4,8 +4,6 @@ import axios from 'axios';
 import Listsubprojectdetails from 'src/views/Listsubprojectdetails/Listsubprojectdetails';
 import Addsubprojectdetails from 'src/views/Addsubprojectdetails/Addsubprojectdetails';
 import { useRouter } from 'next/router';
-import Link from 'next/link'
-
 
 const TypographyPage = () => {
   const router = useRouter();
@@ -13,7 +11,7 @@ const TypographyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
-
+  const [editData, setEditData] = useState(null); // New state for editing
 
   useEffect(() => {
     fetchData();
@@ -36,38 +34,48 @@ const TypographyPage = () => {
     return <CircularProgress />;
   }
 
-  // if (error) {
-  //   return <Alert severity="error">Error fetching data: {error.message}</Alert>;
-  // }
+  if (error) {
+    return <Alert severity="error">Error fetching data: {error.message}</Alert>;
+  }
 
   const handleNavigation = () => {
-    setShowProjectDetails(true); // Set to true to show ProjectManage
+    setShowProjectDetails(true);
+  };
+
+  const handleBack = () => {
+    setShowProjectDetails(false);
+    fetchData(); // Refetch data after adding a new subproject
+  };
+
+  const handleEdit = (row) => {
+    setEditData(row);
+    setShowProjectDetails(true);
   };
 
   return (
     <>
-    {!showProjectDetails && (
-      <>
-        <Grid item xs={12} sx={{ mb: 2 }}>
-          <Button
-            variant="contained"
-            sx={{ marginRight: 3.5, mt: -1 }} 
-            onClick={handleNavigation}
-          >
-            Add
-          </Button>
-        </Grid>
-
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Addsubprojectdetails /> 
+      {!showProjectDetails && (
+        <>
+          <Grid item xs={12} sx={{ mb: 2 }}>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 3.5, mt: -1 }}
+              onClick={handleNavigation}
+            >
+              Add
+            </Button>
           </Grid>
-        </Grid>
-      </>
-    )}
 
-    {showProjectDetails && <Addsubprojectdetails show = {setShowProjectDetails} />}
-  </>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Listsubprojectdetails rows={rows} setRows={setRows} onEdit={handleEdit} />
+            </Grid>
+          </Grid>
+        </>
+      )}
+
+      {showProjectDetails && <Addsubprojectdetails show={handleBack} editData={editData} />}
+    </>
   );
 };
 
