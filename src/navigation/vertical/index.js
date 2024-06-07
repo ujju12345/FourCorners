@@ -55,6 +55,11 @@ const navigation = () => {
       sectionTitle: 'Enquiries'
     },
     {
+      title: 'Enquiry Source',
+      icon: CreditCardOutline,
+      path: '/enquiry-source'
+    },
+    {
       sectionTitle: 'Sales'
 
       
