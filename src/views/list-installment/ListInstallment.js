@@ -231,10 +231,10 @@ const ListInstallment = ({ rows, setRows, setShowTabAccount  , onEdit}) => {
                   <TableCell>{row.InstallmentType}</TableCell>
                   <TableCell>{row.Particulars}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => onEdit(row)} aria-label="edit">
+                    <IconButton onClick={() => onEdit(row)} aria-label="edit"sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => setDeleteId(row.InstallmentID)} aria-label="delete">
+                    <IconButton onClick={() => setDeleteId(row.InstallmentID)} aria-label="delete"sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>

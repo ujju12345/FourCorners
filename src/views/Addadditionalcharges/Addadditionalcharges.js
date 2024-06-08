@@ -197,7 +197,7 @@ const InsertAdditionalCharges = ({ show }) => {
               />
             </Grid>
 
-            {/* Add other fields here */}
+       
 
             <Grid item xs={12}>
               <Button

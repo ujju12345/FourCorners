@@ -75,7 +75,9 @@ const TabInfo = ({ setShowTabAccount }) => {
       if (response.data.status === "Success") {
         console.log("Deleted");
         setRows(prevRows => prevRows.filter(row => row.CompanyID !== deleteId));
-      } else {
+        navigate(0);
+        window.location.reload();   
+         } else {
         console.error("Failed to delete:", response.data);
       }
     } catch (error) {

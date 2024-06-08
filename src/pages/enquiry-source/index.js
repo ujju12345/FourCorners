@@ -3,7 +3,7 @@ import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import Listenquirysource from 'src/views/Listenquirysource/Listenquirysource';
 import Addenquirysource from 'src/views/Addenquirysource/Addenquirysource';
-import Updateenquirysource from 'src/views/updateenquirysource/updateenquirysource';
+// import updateenquirysource from 'src/views/updateenquirysource/updateenquirysource';
 
 import { useRouter } from 'next/router';
 import Link from 'next/link'
@@ -15,8 +15,6 @@ const enquirysource = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showenquirysource, setShowenquirysource] = useState(false);
-  const [activeTab, setActiveTab] = useState('list'); // 'list', 'account', 'update'
-  const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
 
 
   useEffect(() => {
@@ -76,20 +74,15 @@ const enquirysource = () => {
       </>
     )}
 
-   
+    {showenquirysource && <Addenquirysource show = {setShowenquirysource} />}
 
-    {activeTab === "account" && (
-        
-        <Addenquirysource show = {setShowenquirysource}/>
-      )}
-
-    {activeTab === "update" && (
-        <Updateenquirysource
+    {/* {activeTab === "update" && (
+        <updateenquirysource
           show={setActiveTab}
           rowData={rowDataToUpdate}
-          // onSubmitSuccess={handleSubmissionSuccess}
+          onSubmitSuccess={handleSubmissionSuccess}
         />
-      )}
+      )} */}
   </>
   );
 };

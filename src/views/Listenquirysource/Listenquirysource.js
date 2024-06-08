@@ -101,10 +101,10 @@ const [rows, setRows] = useState([]);
                   <TableCell>{row.SourceName}</TableCell>
                   <TableCell>{row.ActiveTillDate}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(row)}>
+                    <IconButton onClick={() => handleEdit(row)}sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.EnquirySourceID)}>
+                    <IconButton onClick={() => handleDelete(row.EnquirySourceID)} sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>

@@ -45,8 +45,20 @@ const ListProjectFinance = ({ setShowTabAccount }) => {
     }
   };
 
-  const handleDelete = (companyId) => {
-    console.log(`Deleting company with ID ${companyId}`);
+  const handleDelete = async (financeID) => {
+    try {
+      const response = await axios.post('https://apiforcorners.cubisysit.com/api/api-delete-projectfinanceapprovals.php', {
+        ProjectFinanceID: financeID,
+        DeleteUID: 1,
+      });
+      if (response.data.success) {
+        setRows(rows.filter(row => row.projectFinanceID !== financeID));
+      } else {
+        console.error('Error deleting data:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+    }
   };
 
   const handleEdit = (rowData) => {
@@ -93,7 +105,7 @@ const ListProjectFinance = ({ setShowTabAccount }) => {
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDelete(row.projectFinanceID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
