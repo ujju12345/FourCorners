@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { format, parseISO } from 'date-fns';
 
-const ListAdditionalCharges = ({ setShowTabAccount }) => {
+const ListAdditionalCharges = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,13 +45,13 @@ const ListAdditionalCharges = ({ setShowTabAccount }) => {
     }
   };
 
-  const handleDelete = (companyId) => {
-    console.log(`Deleting company with ID ${companyId}`);
+  const handleDelete = (additionalchargesID) => {
+    console.log(`Deleting Additional charges with ID ${additionalchargesID}`);
   };
 
   const handleEdit = (rowData) => {
     setShowTabAccount(rowData); // Pass selected row data to the parent component
-    console.log(`Editing company with ID ${rowData.CompanyID}`);
+    console.log(`Editing Additional charges with ID ${rowData.AdditionalchargesID}`);
   };
 
   if (loading) {
@@ -96,7 +96,7 @@ const ListAdditionalCharges = ({ setShowTabAccount }) => {
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDelete(row.AdditionalchargesID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
