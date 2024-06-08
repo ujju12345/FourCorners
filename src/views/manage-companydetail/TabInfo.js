@@ -45,9 +45,30 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
-  const handleDelete = (companyId) => {
-    console.log(`Deleting company with ID ${companyId}`);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.post(
+        'https://ideacafe-backend.vercel.app/api/proxy/api-delete-companymaster.php',
+        { CompanyID: id, DeleteUID: 1 },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.status === 'Success') {
+        // Remove the deleted row from the state
+        setRows(rows.filter(row => row.CompanyID !== id));
+      } else {
+        console.error('Error deleting data:', response.data.message);
+      }
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
   };
+
 
   const handleEdit = (rowData) => {
     setShowTabAccount(rowData); // Pass selected row data to the parent component
