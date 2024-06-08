@@ -9,6 +9,15 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const ListCarParking = () => {
   const [rows, setRows] = useState([]);
@@ -55,6 +64,7 @@ const ListCarParking = () => {
               <TableCell>Manual Parking Number</TableCell>
               <TableCell>Parking Level</TableCell>
               <TableCell>Comments</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -70,6 +80,14 @@ const ListCarParking = () => {
                   <TableCell>{row.manualparkingnumber}</TableCell>
                   <TableCell>{row.parkinglevel}</TableCell>
                   <TableCell>{row.comments}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => onEdit(row)} aria-label="edit"sx={{ color: 'blue' }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => setDeleteId(row.id)} aria-label="delete"sx={{ color: 'red' }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

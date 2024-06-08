@@ -39,10 +39,10 @@ const ListTellecalling = () => {
 
   const handleDelete = async (id) => {
     try {
-    
+      debugger;
 
       const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php',
-        { TelecallingID: id, DeleteUID: 1 },
+        { telecallingID: id, DeleteUID: 1 },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -51,14 +51,17 @@ const ListTellecalling = () => {
       );
 
       if (response.data.status === 'Success') {
+        debugger;
         // Remove the deleted row from the state
-        setRows(rows.filter(row => row.TelecallingID !== id));
+        setRows(rows.filter(row => row.telecallingID !== id));
       } else {
+        debugger;
         console.log("hiiiiiiiiiiiiiiiiiiiii  ");
 
         console.error('Error deleting data:', response.data.message);
       }
     } catch (error) {
+      debugger;
       console.log("heeeeeeeeeeeeeeeeeeee  ");
 
       console.error('There was an error!', error);
@@ -111,11 +114,11 @@ const ListTellecalling = () => {
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.TelecallingID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDelete(row.telecallingID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
-                 
+
                   {/* Render additional table cells for other data fields */}
                 </TableRow>
               ))

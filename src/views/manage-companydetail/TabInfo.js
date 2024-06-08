@@ -56,6 +56,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   const [deleteId, setDeleteId] = useState(null);
 
   const handleDelete = async () => {
+    debugger;
     const body = {
       CompanyID: deleteId,
       DeleteUID: 1,
@@ -71,13 +72,11 @@ const TabInfo = ({ setShowTabAccount }) => {
           },
         }
       );
-
+      debugger;
       if (response.data.status === "Success") {
-        console.log("Deleted");
-        setRows(prevRows => prevRows.filter(row => row.CompanyID !== deleteId));
-        navigate(0);
-        window.location.reload();   
-         } else {
+        debugger;
+        setRows(rows.filter(row => row.CompanyID !== deleteId));
+      } else {
         console.error("Failed to delete:", response.data);
       }
     } catch (error) {
@@ -89,6 +88,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   };
 
   const handleOpen = (CompanyID) => {
+    debugger;
     setDeleteId(CompanyID);
     setOpen(true);
   };
@@ -171,7 +171,7 @@ const TabInfo = ({ setShowTabAccount }) => {
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this company ? 
+            Are you sure you want to delete this company ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

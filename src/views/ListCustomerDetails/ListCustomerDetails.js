@@ -9,6 +9,15 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const ListCustomerDetails = () => {
   const [rows, setRows] = useState([]);
@@ -53,6 +62,8 @@ const ListCustomerDetails = () => {
               <TableCell align="left">Member Name</TableCell>
               <TableCell align="left">Email</TableCell>
               <TableCell align="left">Location</TableCell>
+              <TableCell align="left">Action</TableCell>
+
               {/* Add more table headers here */}
             </TableRow>
           </TableHead>
@@ -71,8 +82,17 @@ const ListCustomerDetails = () => {
                   <TableCell align="left">{row.MemberName}</TableCell>
                   <TableCell align="left">{row.Email}</TableCell>
                   <TableCell align="left">{row.CLocation}</TableCell>
-                  {/* Render additional table cells for other data fields */}
+                  <TableCell>
+                    <IconButton onClick={() => onEdit(row)} aria-label="edit"sx={{ color: 'blue' }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => setDeleteId(row.id)} aria-label="delete"sx={{ color: 'red' }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
+                
+                
               ))
             ) : (
               <TableRow>
