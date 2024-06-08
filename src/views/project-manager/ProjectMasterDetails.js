@@ -217,11 +217,11 @@ const ProjectMasterDetails = ({ onEdit }) => {
           <TableHead>
             <TableRow>
               <TableCell>CompanyID</TableCell>
-              <TableCell>ProjectTypeID</TableCell>
+              <TableCell>ProjectType Name</TableCell>
               <TableCell>Project Name</TableCell>
               <TableCell>Project Start Date</TableCell>
               <TableCell>Rera Registration Number</TableCell>
-              <TableCell>State ID</TableCell>
+              <TableCell>State Name</TableCell>
               <TableCell>Project Address</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
@@ -237,11 +237,11 @@ const ProjectMasterDetails = ({ onEdit }) => {
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell>{row.ProjectTypeID}</TableCell>
+                  <TableCell>{row.ProjectTypeName}</TableCell>
                   <TableCell>{row.ProjectName}</TableCell>
                   <TableCell>{row.projectstartdate}</TableCell>
                   <TableCell>{row.ReraRegistrationNumber}</TableCell>
-                  <TableCell>{row.StateID}</TableCell>
+                  <TableCell>{row.StateName}</TableCell>
                   <TableCell>{row.ProjectAddress}</TableCell>
                   <TableCell
                     sx={{
