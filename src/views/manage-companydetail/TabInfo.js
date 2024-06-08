@@ -11,6 +11,12 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
 import { format, parseISO } from 'date-fns';
 
@@ -46,29 +52,49 @@ const TabInfo = ({ setShowTabAccount }) => {
   };
 
 
-  const handleDelete = async (id) => {
+  const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const handleDelete = async () => {
+    const body = {
+      CompanyID: deleteId,
+      DeleteUID: 1,
+    };
+
     try {
       const response = await axios.post(
-        'https://ideacafe-backend.vercel.app/api/proxy/api-delete-companymaster.php',
-        { CompanyID: id, DeleteUID: 1 },
+        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-companymaster.php",
+        body,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
-      if (response.data.status === 'Success') {
-        // Remove the deleted row from the state
-        setRows(rows.filter(row => row.CompanyID !== id));
+      if (response.data.status === "Success") {
+        console.log("Deleted");
+        setRows(prevRows => prevRows.filter(row => row.CompanyID !== deleteId));
       } else {
-        console.error('Error deleting data:', response.data.message);
+        console.error("Failed to delete:", response.data);
       }
     } catch (error) {
-      console.error('There was an error!', error);
+      console.error("There was an error!", error);
+    } finally {
+      setOpen(false);
+      setDeleteId(null);
     }
   };
 
+  const handleOpen = (CompanyID) => {
+    setDeleteId(CompanyID);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDeleteId(null);
+  };
 
   const handleEdit = (rowData) => {
     setShowTabAccount(rowData); // Pass selected row data to the parent component
@@ -120,7 +146,7 @@ const TabInfo = ({ setShowTabAccount }) => {
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleOpen(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -136,6 +162,25 @@ const TabInfo = ({ setShowTabAccount }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this company ? 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };
