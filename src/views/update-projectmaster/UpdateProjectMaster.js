@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
+import {
+  Box,
+  Grid,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  Alert,
+  AlertTitle,
+} from "@mui/material";
 import axios from "axios";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -38,7 +39,7 @@ const UpdateProjectMaster = ({ show, rowData }) => {
     location: "",
     selectedCity: "",
     selectedState: "",
-    country: "India",
+    country: "",
     pincode: "",
     projectAddress: "",
     remarks: "",
@@ -65,15 +66,14 @@ const UpdateProjectMaster = ({ show, rowData }) => {
       const response = await axios.get(
         "https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php"
       );
-      console.log("API Response:", response.data);
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // setError(error);
       setLoading(false);
     }
   };
+
   useEffect(() => {
     axios
       .get(
@@ -81,10 +81,6 @@ const UpdateProjectMaster = ({ show, rowData }) => {
       )
       .then((response) => {
         if (response.data.status === "Success") {
-          console.log(
-            response.data.data,
-            "DATAA AAGAYAAAAAAAAAA PROJET TYPEEEE"
-          );
           setProjectTypes(response.data.data);
         }
       })
@@ -135,7 +131,7 @@ const UpdateProjectMaster = ({ show, rowData }) => {
               .split("T")[0],
             projectManager: project.ProjectManager,
             contactDetails: project.ContactDetails,
-            gstInNo: formData.gstInNo,
+            gstInNo: project.GstInNo,
             location: project.Location,
             selectedCity: project.cityID,
             selectedState: project.StateID,
@@ -148,7 +144,6 @@ const UpdateProjectMaster = ({ show, rowData }) => {
             ctsNo: project.CtsNo,
             propertyTax: project.PropertyTaxNumber,
             reraRegistration: project.ReraRegistrationNumber,
-            // uom: project.UOM,
             projectType: project.ProjectType,
             unitofmeasurement: project.unit,
             message: project.WelcomeMessage,
@@ -223,16 +218,11 @@ const UpdateProjectMaster = ({ show, rowData }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const newErrors = validateFields();
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    // } else {
-    //   setErrors({});
 
     const submitData = {
       createuid: 1,
       projecttypeid: formData.projectType,
-      ProjectID: 2,
+      ProjectID: rowData?.ProjectID || 0,
       projectname: formData.projectName,
       projectcode: formData.projectCode,
       ProjectStartDate: formData.projectStartDate,
@@ -253,10 +243,8 @@ const UpdateProjectMaster = ({ show, rowData }) => {
       reraregistrationnumber: formData.reraRegistration,
       unitofmeasurement: "sdf",
       ProjectType: formData.projectType,
-      // Unit: formData.unit,
       brochurelink: formData.broucherLink,
       welcomemessage: formData.message,
-
       ...(formData.selectedDate && {
         projectstartdate: formData.selectedDate.toISOString().split("T")[0],
       }),
@@ -267,8 +255,6 @@ const UpdateProjectMaster = ({ show, rowData }) => {
       }),
       status: 1,
     };
-
-    console.log(submitData, "AAGAAAYAAAAAA");
 
     axios
       .post(
@@ -305,7 +291,6 @@ const UpdateProjectMaster = ({ show, rowData }) => {
             ctsNo: "",
             propertyTax: "",
             reraRegistration: "",
-            // uom: '',
             projectType: "",
             unit: "",
             message: "",
@@ -322,160 +307,116 @@ const UpdateProjectMaster = ({ show, rowData }) => {
         setSubmitSuccess(false);
         setSubmitError(true);
       });
-    // }
   };
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-
-  //   const submitData = {
-  //     CreateUID: 1,
-  //     ...(formData.projectName && { ProjectName: formData.projectName }),
-  //     ...(formData.projectCode && { ProjectCode: formData.projectCode }),
-  //     ...(formData.projectStartDate && { ProjectStartDate: formData.projectStartDate }),
-  //     ...(formData.projectManager && { ProjectManager: formData.projectManager }),
-  //     ...(formData.contactDetails && { ContactDetails: formData.contactDetails }),
-  //     ...(formData.gstInNo && { GstInNo: formData.gstInNo }),
-  //     ...(formData.location && { Location: formData.location }),
-  //     ...(selectedCityId && { CityID: selectedCityId }),
-  //     ...(selectedStateId && { StateID: selectedStateId }),
-  //     CountryID: 1,
-  //     ...(formData.pincode && { Pincode: formData.pincode }),
-  //     ...(formData.projectAddress && { ProjectAddress: formData.projectAddress }),
-  //     ...(formData.remarks && { Remarks: formData.remarks }),
-  //     ...(formData.companyName && { CompanyName: formData.companyName }),
-  //     ...(formData.plotArea && { PlotArea: formData.plotArea }),
-  //     ...(formData.broucherLink && { BroucherLink: formData.broucherLink }),
-  //     ...(formData.ctsNo && { CTSNo: formData.ctsNo }),
-  //     ...(formData.propertyTax && { PropertyTax: formData.propertyTax }),
-  //     ...(formData.reraRegistration && { ReraRegistration: formData.reraRegistration }),
-  //     ...(formData.uom && { UOM: formData.uom }),
-  //     ...(formData.projectType && { ProjectType: formData.projectType }),
-  //     ...(formData.unit && { Unit: formData.unit }),
-
-  //     ...(formData.message && { Message: formData.message }),
-  //     ...(formData.selectedDate && { ProjectStartDate: formData.selectedDate.toISOString().split('T')[0] }),
-  //     ...(formData.selectedDateRera && { ReraRegistrationDate: formData.selectedDateRera.toISOString().split('T')[0] }),
-  //     Status: 1
-  //   };
-
-  //   axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php', JSON.stringify(submitData), {
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //     .then(response => {
-  //       if (response.data.status === 'Success') {
-  //         setSubmitSuccess(true);
-  //         setSubmitError(false);
-  //         show(false);
-  //         setFormData({
-  //           projectName: '',
-  //           projectCode: '',
-  //           projectStartDate: '',
-  //           projectManager: '',
-  //           contactDetails: '',
-  //           gstInNo: '',
-  //           location: '',
-  //           selectedCity: '',
-  //           selectedState: '',
-  //           country: 'India',
-  //           pincode: '',
-  //           projectAddress: '',
-  //           remarks: '',
-  //           companyName: '',
-  //           plotArea: '',
-  //           broucherLink: '',
-  //           ctsNo: '',
-  //           propertyTax: '',
-  //           reraRegistration: '',
-  //           uom: '',
-  //           projectType: '',
-  //           unit: '',
-  //           message: '',
-  //           selectedDate: null,
-  //           selectedDateRera: null,
-  //         });
-  //       } else {
-  //         setSubmitSuccess(false);
-  //         setSubmitError(true);
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('There was an error!', error);
-  //       setSubmitSuccess(false);
-  //       setSubmitError(true);
-  //     });
-  // };
 
   return (
     <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box>
-              <Typography
-                variant="body2"
-                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-              >
-                Update Project Details
-              </Typography>
-            </Box>
+      <form onSubmit={handleSubmit}>
+        <Typography variant="h4" gutterBottom>
+          Project Master
+        </Typography>
+
+        {submitSuccess && (
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            Project data submitted successfully!
+          </Alert>
+        )}
+
+        {submitError && (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            Failed to submit project data. Please try again.
+          </Alert>
+        )}
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Project Name"
+              name="projectName"
+              value={formData.projectName}
+              onChange={handleInputChange}
+              error={Boolean(errors.projectName)}
+              helperText={errors.projectName}
+            />
           </Grid>
-
-          {submitSuccess && (
-            <Grid item xs={12}>
-              <Alert severity="success">
-                <AlertTitle>Success</AlertTitle>
-                Project details submitted successfully!
-              </Alert>
-            </Grid>
-          )}
-
-          {submitError && (
-            <Grid item xs={12}>
-              <Alert severity="error">
-                <AlertTitle>Error</AlertTitle>
-                There was an error submitting the project details.
-              </Alert>
-            </Grid>
-          )}
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Project Code"
+              name="projectCode"
+              value={formData.projectCode}
+              onChange={handleInputChange}
+              error={Boolean(errors.projectCode)}
+              helperText={errors.projectCode}
+            />
+          </Grid>
+          <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Company Name</InputLabel>
-              <Select
-                value={formData.companyName}
-                onChange={handleInputChange}
-                name="companyName"
-                label="Company Name"
-                error={!!errors.companyName}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {rows.map((company) => (
-                  <MenuItem key={company.CompanyID} value={company.CompanyID}>
-                    {company.CompanyName}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.companyName && (
-                <Typography variant="caption" color="error">
-                  {errors.companyName}
-                </Typography>
-              )}
+              <DatePicker
+                selected={formData.selectedDate}
+                onChange={handleDateChange}
+                placeholderText="Select Date"
+                dateFormat="yyyy-MM-dd"
+                className="react-datepicker__input-text"
+                customInput={<TextField label="Project Start Date" />}
+              />
             </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Project Manager"
+              name="projectManager"
+              value={formData.projectManager}
+              onChange={handleInputChange}
+              error={Boolean(errors.projectManager)}
+              helperText={errors.projectManager}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Contact Details"
+              name="contactDetails"
+              value={formData.contactDetails}
+              onChange={handleInputChange}
+              error={Boolean(errors.contactDetails)}
+              helperText={errors.contactDetails}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="GSTIN No"
+              name="gstInNo"
+              value={formData.gstInNo}
+              onChange={handleInputChange}
+              error={Boolean(errors.gstInNo)}
+              helperText={errors.gstInNo}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              error={Boolean(errors.location)}
+              helperText={errors.location}
+            />
+          </Grid>
+          <Grid item xs={6}>
             <FormControl fullWidth>
               <InputLabel>City</InputLabel>
               <Select
                 label="City"
                 value={formData.selectedCity}
                 onChange={handleCityChange}
-                error={!!errors.city}
+                error={Boolean(errors.selectedCity)}
               >
                 {cities.map((city) => (
                   <MenuItem key={city.CityID} value={city.CityName}>
@@ -483,22 +424,16 @@ const UpdateProjectMaster = ({ show, rowData }) => {
                   </MenuItem>
                 ))}
               </Select>
-              {errors.city && (
-                <Typography variant="caption" color="error">
-                  {errors.city}
-                </Typography>
-              )}
             </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <FormControl fullWidth>
               <InputLabel>State</InputLabel>
               <Select
                 label="State"
                 value={formData.selectedState}
                 onChange={handleStateChange}
-                error={!!errors.state}
+                error={Boolean(errors.selectedState)}
               >
                 {states.map((state) => (
                   <MenuItem key={state.StateID} value={state.StateName}>
@@ -506,315 +441,165 @@ const UpdateProjectMaster = ({ show, rowData }) => {
                   </MenuItem>
                 ))}
               </Select>
-              {errors.state && (
-                <Typography variant="caption" color="error">
-                  {errors.state}
-                </Typography>
-              )}
             </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <FormControl fullWidth>
-              <InputLabel>Country</InputLabel>
-              <Select label="Country" placeholder="Country">
-                <MenuItem value="Residential">India</MenuItem>
-              </Select>
-            </FormControl>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Pincode"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleInputChange}
+              error={Boolean(errors.pincode)}
+              helperText={errors.pincode}
+            />
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Project Address"
+              name="projectAddress"
+              value={formData.projectAddress}
+              onChange={handleInputChange}
+              error={Boolean(errors.projectAddress)}
+              helperText={errors.projectAddress}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Remarks"
+              name="remarks"
+              value={formData.remarks}
+              onChange={handleInputChange}
+              error={Boolean(errors.remarks)}
+              helperText={errors.remarks}
+            />
+          </Grid>
+          <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Project Type</InputLabel>
+              <InputLabel>Company Name</InputLabel>
               <Select
-                value={formData.projectType}
+                label="Company Name"
+                name="companyName"
+                value={formData.companyName}
                 onChange={handleInputChange}
-                name="projectType"
-                label="Project Type"
+                error={Boolean(errors.companyName)}
               >
-                {projectTypes.map((project) => (
-                  <MenuItem
-                    key={project.ProjectTypeID}
-                    value={project.ProjectTypeID}
-                  >
-                    {project.ProjectTypeName || "Unnamed Project Type"}
+                {rows.map((row) => (
+                  <MenuItem key={row.CompanyID} value={row.CompanyID}>
+                    {row.CompanyName}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              label="Unit of measurement"
-              placeholder="Unit of measurement"
-              value={formData.unit} // Update this line
-              onChange={handleInputChange}
-              name="unit" // Update this line
-              error={!!errors.unit}
-              helperText={errors.unit}
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              label="Project Name"
-              placeholder="Project Name"
-              value={formData.projectName}
-              onChange={handleInputChange}
-              name="projectName"
-              error={!!errors.projectName}
-              helperText={errors.projectName}
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
               label="Plot Area In Sqft"
-              placeholder="Plot Area In Sqft"
-              value={formData.plotArea} // Add this line
+              name="plotArea"
+              value={formData.plotArea}
               onChange={handleInputChange}
-              name="plotAreaInSqft" // Add this line
-              error={!!errors.plotAreaInSqft}
-              helperText={errors.plotAreaInSqft}
+              error={Boolean(errors.plotArea)}
+              helperText={errors.plotArea}
             />
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
-              type="url"
-              label="Broucher Link"
-              placeholder="Broucher Link"
+              label="Brochure Link"
+              name="broucherLink"
               value={formData.broucherLink}
               onChange={handleInputChange}
-              name="broucherLink"
+              error={Boolean(errors.broucherLink)}
+              helperText={errors.broucherLink}
             />
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
-              type="text"
               label="CTS No"
-              placeholder="CTS No"
+              name="ctsNo"
               value={formData.ctsNo}
               onChange={handleInputChange}
-              name="ctsNo"
+              error={Boolean(errors.ctsNo)}
+              helperText={errors.ctsNo}
             />
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
-              type="text"
-              label="Property Tax No"
-              placeholder="Property Tax No"
+              label="Property Tax Number"
+              name="propertyTax"
               value={formData.propertyTax}
               onChange={handleInputChange}
-              name="propertyTax"
-              error={!!errors.propertyTax}
+              error={Boolean(errors.propertyTax)}
               helperText={errors.propertyTax}
             />
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
-              type="text"
-              label="RERA Registration No"
-              placeholder="RERA Registration No"
+              label="RERA Registration Number"
+              name="reraRegistration"
               value={formData.reraRegistration}
               onChange={handleInputChange}
-              name="reraRegistration"
-              error={!!errors.reraRegistration}
+              error={Boolean(errors.reraRegistration)}
               helperText={errors.reraRegistration}
             />
           </Grid>
-
-          {/* <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type='text'
-              label='UOM'
-              placeholder='UOM'
-              value={formData.uom}
-              onChange={handleInputChange}
-              name="uom"
-            />
-          </Grid> */}
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              label="Project Code"
-              placeholder="Project Code"
-              value={formData.projectCode}
-              onChange={handleInputChange}
-              name="projectCode"
-              error={!!errors.projectCode}
-              helperText={errors.projectCode}
-            />
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <DatePicker
+                selected={formData.selectedDateRera}
+                onChange={handleDateChangeRera}
+                placeholderText="Select Date"
+                dateFormat="yyyy-MM-dd"
+                className="react-datepicker__input-text"
+                customInput={<TextField label="RERA Registration Date" />}
+              />
+            </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
-              label="Project Manager"
-              placeholder="Project Manager"
-              value={formData.projectManager}
-              onChange={handleInputChange}
-              name="projectManager"
-              required
-            />
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel>Project Type</InputLabel>
+              <Select
+                label="Project Type"
+                name="projectType"
+                value={formData.projectType}
+                onChange={handleInputChange}
+                error={Boolean(errors.projectType)}
+              >
+                {projectTypes.map((projectType) => (
+                  <MenuItem
+                    key={projectType.ProjectTypeID}
+                    value={projectType.ProjectTypeID}
+                  >
+                    {projectType.ProjectTypeName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-
-          <Grid item xs={8} sm={4}>
+          <Grid item xs={6}>
             <TextField
               fullWidth
-              type="tel"
-              label="Contact Detail"
-              placeholder="Contact Detail"
-              value={formData.contactDetails}
-              onChange={handleInputChange}
-              name="contactDetails"
-              inputProps={{ maxLength: 10 }}
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="number"
-              label="GSTIN Number"
-              placeholder="GSTIN Number"
-              value={formData.gstInNo}
-              onChange={handleInputChange}
-              name="gstInNo"
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="tel"
-              label="Pincode"
-              placeholder="Pincode"
-              value={formData.pincode}
-              onChange={handleInputChange}
-              name="pincode"
-              inputProps={{ maxLength: 6 }}
-              error={!!errors.pincode}
-              helperText={errors.pincode}
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
-              label="Project Address"
-              placeholder="Project Address"
-              value={formData.projectAddress}
-              onChange={handleInputChange}
-              name="projectAddress"
-              error={!!errors.projectAddress}
-              helperText={errors.projectAddress}
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
-              label="Location"
-              placeholder="Location"
-              value={formData.location}
-              onChange={handleInputChange}
-              name="location"
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
               label="Welcome Message"
-              placeholder="Welcome Message"
+              name="message"
               value={formData.message}
               onChange={handleInputChange}
-              name="message"
+              error={Boolean(errors.message)}
+              helperText={errors.message}
             />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
-              label="Remarks"
-              placeholder="Remarks"
-              value={formData.remarks}
-              onChange={handleInputChange}
-              name="remarks"
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <DatePicker
-              selected={formData.selectedDate}
-              onChange={handleDateChange}
-              dateFormat="yyyy-MM-dd"
-              className="form-control"
-              customInput={
-                <TextField
-                  fullWidth
-                  label="Start Date"
-                  error={!!errors.startDate}
-                  helperText={errors.startDate}
-                  InputProps={{
-                    readOnly: true,
-                    sx: { width: "100%" },
-                  }}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid item xs={8} sm={4}>
-            <DatePicker
-              selected={formData.selectedDateRera}
-              onChange={handleDateChangeRera}
-              dateFormat="yyyy-MM-dd"
-              className="form-control"
-              customInput={
-                <TextField
-                  fullWidth
-                  label="Rera Registration Date"
-                  error={!!errors.reraRegistrationDate}
-                  helperText={errors.reraRegistrationDate}
-                  InputProps={{
-                    readOnly: true,
-                    sx: { width: "100%" },
-                  }}
-                />
-              }
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
           </Grid>
         </Grid>
+
+        <Box mt={3}>
+          <Button variant="contained" color="primary" type="submit">
+            Update
+          </Button>
+        </Box>
       </form>
     </CardContent>
   );

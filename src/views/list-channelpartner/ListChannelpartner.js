@@ -35,12 +35,12 @@ const ListChannelpartner = () => {
     }
   };
 
-  const handleDelete = (projectId) => {
-    console.log(`Deleting project with ID ${projectId}`);
+  const handleDelete = (channelPartnerID) => {
+    console.log(`Deleting project with ID ${channelPartnerID}`);
   };
 
   const handleEdit = (rowData) => {
-    console.log(`Editing project with ID ${rowData.ProjectID}`);
+    console.log(`Editing project with ID ${rowData.ChannelPartnerID}`);
   };
 
   if (loading) {
@@ -78,7 +78,7 @@ const ListChannelpartner = () => {
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.ProjectID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDelete(row.ChannelPartnerID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -12,7 +12,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Updateenquirysource  = () => {
-
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     NameOfCompany: '',
     ProjectName: '',
@@ -105,19 +106,17 @@ const Updateenquirysource  = () => {
       );
 
       if (response.data.status === 'Success') {
-        console.log('UPDATEEEEE');
-        // setSubmitSuccess(true);
-        // setSubmitError(false);
-        // navigate('/');
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        navigate('/');
       } else {
-        console.log('ERRPR');
-        // setSubmitSuccess(false);
-        // setSubmitError(true);
+        setSubmitSuccess(false);
+        setSubmitError(true);
       }
     } catch (error) {
       console.error('There was an error!', error);
-      // setSubmitSuccess(false);
-      // setSubmitError(true);
+      setSubmitSuccess(false);
+      setSubmitError(true);
     }
   };
 

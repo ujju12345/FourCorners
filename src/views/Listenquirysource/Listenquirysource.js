@@ -95,7 +95,7 @@ const Listenquirysource = ({ onEdit, setShowTabAccount }) => {
                     <IconButton onClick={() => onEdit(row)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.EnquirySourceID)}>
+                    <IconButton onClick={() => handleDelete(row.EnquirySourceID)} sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
