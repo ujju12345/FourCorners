@@ -17,7 +17,7 @@ const Tellecalling = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-installmentdetails.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
@@ -37,18 +37,37 @@ const Tellecalling = () => {
   }
 
   const handleNavigation = () => {
+    setEditData(null); // Clear edit data when navigating to the add form
     setShowTabAccount(true);
   };
 
   const handleBack = () => {
     setShowTabAccount(false);
-    fetchData(); // Refetch data after adding or editing an installment
+    fetchData(); // Refetch data after adding or editing details
   };
 
   const handleEdit = (row) => {
     setEditData(row);
     setShowTabAccount(true);
   };
+
+  const handleDelete = async (id) => {
+    console.log(id , 'id aayaaaaaaa');
+    try {
+      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
+        telecallingID: id,
+        DeleteUID: 1
+      });
+      if (response.data.status === 'Success') {
+        setRows(rows.filter(row => row.telecallingID !== id));
+        console.log('Deleted successfully');
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      setError(error);
+    }
+  };
+  
 
   return (
     <>
@@ -66,18 +85,13 @@ const Tellecalling = () => {
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              {/* Render the ListInstallmentDetails component */}
-              {/* <AddTellecallingDetails rows={rows} setRows={setRows} onEdit={handleEdit} /> */}
-              <ListTellecalling  />
-
+              <ListTellecalling rows={rows} onEdit={handleEdit} onDelete={handleDelete} />
             </Grid>
           </Grid>
         </>
       )}
 
-      {/* {showTabAccount && <AddTellecallingDetails show={handleBack} editData={editData} />} */}
-      {showTabAccount && <AddTellecallingDetails  />}
-
+      {showTabAccount && <AddTellecallingDetails show={handleBack} editData={editData} />}
     </>
   );
 };

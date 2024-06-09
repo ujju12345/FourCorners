@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
@@ -13,11 +12,10 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Listenquirysource = ({setShowTabAccount}) => {
-const [rows, setRows] = useState([]);
+const Listenquirysource = ({ onEdit, setShowTabAccount }) => {
+  const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   useEffect(() => {
     fetchData();
@@ -36,12 +34,6 @@ const [rows, setRows] = useState([]);
     }
   };
 
-  const handleEdit = (rowData) => {
-    
-    setShowTabAccount(rowData); // Pass selected row data to the parent component
-    console.log(`Editing company with ID ${rowData.EnquirySourceID}`);
-  };
-
   const handleDelete = async (id) => {
     try {
       const response = await axios.post(
@@ -55,7 +47,6 @@ const [rows, setRows] = useState([]);
       );
 
       if (response.data.status === 'Success') {
-        // Remove the deleted row from the state
         setRows(rows.filter(row => row.EnquirySourceID !== id));
       } else {
         console.error('Error deleting data:', response.data.message);
@@ -101,7 +92,7 @@ const [rows, setRows] = useState([]);
                   <TableCell>{row.SourceName}</TableCell>
                   <TableCell>{row.ActiveTillDate}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(row)}>
+                    <IconButton onClick={() => onEdit(row)}>
                       <EditIcon />
                     </IconButton>
                     <IconButton onClick={() => handleDelete(row.EnquirySourceID)}>

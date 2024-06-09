@@ -19,33 +19,46 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import { Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
-const AddTellecallingDetails = ({ show }) => {
-  const [date, setDate] = useState(null);
-  const [projectName, setProjectName] = useState("");
-  const [partyName, setPartyName] = useState("");
-  const [selectedProject, setSelectedProject] = useState("");
 
-  const [Mobile, setMobile] = useState("");
-  const [Alternate, setAlternate] = useState("");
-  const [MobileNo, setMobileNo] = useState("");
-  const [TelephoneNo, setTelephoneNo] = useState("");
-  const [AlternateTelephoneNo, setAlternateTelephoneNo] = useState("");
-  const [EMailProjectName, setEMailProjectName] = useState("");
-  const [UnitTypeEstimatedBudget, setUnitTypeEstimatedBudget] = useState("");
-  const [LeadStatus, setLeadStatus] = useState("");
-  const [Location, setLocation] = useState("");
-  const [FollowupThrough, setFollowupThrough] = useState("");
-  const [Source, setSource] = useState("");
-  const [SourceName, setSourceName] = useState("");
-  const [TelecallAttendedBy, setTelecallAttendedBy] = useState("");
-  const [comment, setComment] = useState("");
+const AddTellecallingDetails = ({ show , editData }) => {
+  console.log(editData , 'Tellcalling update data');
+  const [formData, setFormData] = useState({
+    titleprefixID:1,
+    PartyName: '',
+    Mobile: '',
+    AlternateMobileNo:'',
+    TelephoneNo:'',
+    AlternateTelephoneNo:'',
+    Email:'',
+    ProjectID:'',
+    UnitType:'',
+    EstimatedBudget:'',
+    LeadStatus:'',
+    Comments:'',
+    Location:'',
+    FollowupThrough:'',
+    Source:'',
+    SourceName:'',
+    SourceDescription:'',
+    TelecallAttendedBy:'',
+    CreateUID:1,
+    TelecallingID:''
+  });
 
-  const [SourceDescription, setSourceDescription] = useState("");
-  const [rows, setRows] = useState([]);
+
+ 
+  
+  const [projectTypes, setProjectTypes] = useState([]);
+  const [tellecallingID, setTellecallingID] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+
 
   useEffect(() => {
     fetchData();
@@ -56,252 +69,271 @@ const AddTellecallingDetails = ({ show }) => {
       const response = await axios.get(
         "https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php"
       );
-      setRows(response.data.data || []);
+      setProjectTypes(response.data.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setErrors(error);
+      // setErrors(error);
     }
   };
 
   const handleChange = (event) => {
-    const projectId = event.target.value;
-    const selectedProj = rows.find(
-      (project) => project.ProjectID === projectId
-    );
-    setSelectedProject(projectId);
-    setProjectName(selectedProj ? selectedProj.ProjectName : "");
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
   };
 
-  const handleSubmitData = async (event) => {
-    event.preventDefault();
 
-    const body = {
-      titleprefixID: 1,
-      PartyName: partyName,
-      Mobile: Mobile,
-      AlternateMobileNo: Alternate,
-      TelephoneNo: MobileNo,
-      AlternateTelephoneNo: TelephoneNo,
-      Email: EMailProjectName,
-      ProjectID: selectedProject, // You need to define projectID
-      UnitType: UnitTypeEstimatedBudget,
-      EstimatedBudget: LeadStatus, // Assuming LeadStatus represents the EstimatedBudget
-      LeadStatus: LeadStatus,
-      Comments: comment,
-      Location: Location,
-      FollowupThrough: FollowupThrough,
-      Source: Source,
-      SourceName: SourceName,
-      SourceDescription: SourceDescription,
-      TelecallAttendedBy: TelecallAttendedBy,
-      CreateUID: 1,
-    };
+  useEffect(() => {
+    if (editData) {
+      setFormData(editData);
+    }
+  }, [editData]);
+  
 
-    console.log(body);
+  useEffect(() => {
+    fetchDataTellecalling();
+  }, []);
 
+  const fetchDataTellecalling = async () => {
     try {
-      const response = await axios.post(
-        "https://apiforcorners.cubisysit.com/api/api-insert-telecalling.php",
-        body,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
       );
-
-      if (response.data.status === "Success") {
-        console.log("HOGAYAYAYAYAY");
-        // setSubmitSuccess(true);
-        // setSubmitError(false);
-        show(false);
-        // Clear form fields
-        setDate(null);
-        setProjectName("");
-        setNameOfCompany("");
-        setProjectCode("");
-        setSubProject("");
-        setCarParkingType("");
-        setManualParkingNumber("");
-        setParkingLevel("");
-        setComment("");
-      } else {
-        // setSubmitSuccess(false);
-        // setSubmitError(true);
-      }
+      console.log(response.data.data , 'TELECALLINGGG ID');
+      setTellecallingID(response.data.data || []);
     } catch (error) {
-      console.error("There was an error!", error);
-      //   setSubmitSuccess(false);
-      //   setSubmitError(true);
+      console.error("Error fetching data:", error);
+      // setErrors(error);
     }
   };
 
+
+  useEffect(() => {
+    if (tellecallingID.length > 0) {
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        TelecallingID: parseInt(tellecallingID[0].telecallingID) || '' // Use the first SubProjectID from the fetched data
+      }));
+    }
+  }, [tellecallingID]);
+
+  const handleSubmit = async (event) => {
+    console.log("press");
+    event.preventDefault();
+  
+    const url = editData
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
+  
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (response.data.status === "Success") {
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        show(false);
+      } else {
+        setSubmitSuccess(false);
+        setSubmitError(true);
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
+    }
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSubmitSuccess(false);
+    setSubmitError(false);
+  };
   return (
     <Card>
       <CardContent>
-        <form>
-          <Grid container spacing={7}>
+       
             <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-              <Box>
-                <Typography
-                  variant="body2"
-                  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-                >
-                  Add Tellecalling Details
-                </Typography>
-              </Box>
+            <Box>
+              <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
+                {editData ? 'Edit Telecalling Details' : 'Add Telecalling Details'}
+              </Typography>
+            </Box>
             </Grid>
+            <form >
+          <Grid container spacing={7}>
 
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Party Name"
-                placeholder="Party Name"
-                value={partyName}
-                onChange={(e) => setPartyName(e.target.value)}
-              />
-            </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Party Name"
+                  name="PartyName"
+                  value={formData.PartyName}
+                  onChange={handleChange}
+                />
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                type="tel"
-                label="Mobile"
-                placeholder="Mobile"
-                value={Mobile}
-                onChange={(e) => setMobile(e.target.value)}
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Mobile"
+                  name="Mobile"
+                  value={formData.Mobile}
+                  onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="tel"
+                name="AlternateMobileNo"
                 label="Alternate Mobile Number"
                 placeholder="Alternate Mobile Number"
-                value={Alternate}
-                onChange={(e) => setAlternate(e.target.value)}
+                value={formData.AlternateMobileNo}
+                onChange={handleChange}
               />
             </Grid>
+       
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="tel"
-                label="Mobile No"
-                placeholder="Mobile No"
-                value={MobileNo}
-                onChange={(e) => setMobileNo(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                type="tel"
+                name="TelephoneNo"
                 label="Telephone No"
                 placeholder="Telephone No"
-                value={TelephoneNo}
-                onChange={(e) => setTelephoneNo(e.target.value)}
+                value={formData.TelephoneNo}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="tel"
+                name="AlternateTelephoneNo"
                 label="Alternate Telephone No"
                 placeholder="Alternate Telephone No"
-                value={AlternateTelephoneNo}
-                onChange={(e) => setAlternateTelephoneNo(e.target.value)}
+                value={formData.AlternateTelephoneNo}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="E-Mail"
+                name="Email"
                 placeholder="E-Mail "
-                value={EMailProjectName}
-                onChange={(e) => setEMailProjectName(e.target.value)}
+                value={formData.Email}
+                onChange={handleChange}
               />
             </Grid>
 
             <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Project Name</InputLabel>
-                <Select
-                  value={selectedProject}
-                  onChange={handleChange}
+                <FormControl fullWidth>
+                  <InputLabel>Project Name</InputLabel>
+                  <Select
+                    value={formData.ProjectID}
+                    name="ProjectID"
+                    onChange={handleChange}
                   label="Project Name"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {rows.map((project) => (
-                    <MenuItem key={project.ProjectID} value={project.ProjectID}>
-                      {project.ProjectName}
+
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
                     </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                    {projectTypes.map((project) => (
+                      <MenuItem key={project.ProjectID} value={project.ProjectID}>
+                        {project.ProjectName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Unit Type Estimated Budget"
+                name="UnitType"
                 placeholder="Unit Type Estimated Budget"
-                value={UnitTypeEstimatedBudget}
-                onChange={(e) => setUnitTypeEstimatedBudget(e.target.value)}
+                value={formData.UnitType}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label=" Estimated Budget"
+                name="EstimatedBudget"
+                placeholder=" Estimated Budget"
+                value={formData.EstimatedBudget}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" Lead Status"
+                name="LeadStatus"
                 placeholder=" Lead Status"
-                value={LeadStatus}
-                onChange={(e) => setLeadStatus(e.target.value)}
+                value={formData.LeadStatus}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" Location"
+                name="Location"
                 placeholder=" Location"
-                value={Location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={formData.Location}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" Comment"
+                name="Comments"
                 placeholder=" Comment"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                value={formData.Comments}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" Followup Through"
+                name="FollowupThrough"
                 placeholder=" Followup Through"
-                value={FollowupThrough}
-                onChange={(e) => setFollowupThrough(e.target.value)}
+                value={formData.FollowupThrough}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" Source"
+                name="Source"
                 placeholder=" Source"
-                value={Source}
-                onChange={(e) => setSource(e.target.value)}
+                value={formData.Source}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label=" source Name"
+                name="SourceName"
                 placeholder=" Source Name"
-                value={SourceName}
-                onChange={(e) => setSourceName(e.target.value)}
+                value={formData.SourceName}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
@@ -309,8 +341,9 @@ const AddTellecallingDetails = ({ show }) => {
                 fullWidth
                 label=" Source Description"
                 placeholder=" Source Description"
-                value={SourceDescription}
-                onChange={(e) => setSourceDescription(e.target.value)}
+                name="SourceDescription"
+                value={formData.SourceDescription}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={8} sm={4}>
@@ -318,8 +351,9 @@ const AddTellecallingDetails = ({ show }) => {
                 fullWidth
                 label=" Telecall Attended By"
                 placeholder=" Telecall Attended By"
-                value={TelecallAttendedBy}
-                onChange={(e) => setTelecallAttendedBy(e.target.value)}
+                name="TelecallAttendedBy"
+                value={formData.TelecallAttendedBy}
+                onChange={handleChange}
               />
             </Grid>
 
@@ -327,13 +361,25 @@ const AddTellecallingDetails = ({ show }) => {
               <Button
                 variant="contained"
                 sx={{ marginRight: 3.5 }}
-                onClick={handleSubmitData}
+                onClick={handleSubmit}
               >
                 Submit
               </Button>
             </Grid>
           </Grid>
         </form>
+
+        <Snackbar open={submitSuccess} autoHideDuration={6000} onClose={handleAlertClose}>
+          <MuiAlert onClose={handleAlertClose} severity="success" sx={{ width: "100%" }}>
+            Data added successfully!
+          </MuiAlert>
+        </Snackbar>
+        {/* Notification for submission error */}
+        <Snackbar open={submitError} autoHideDuration={6000} onClose={handleAlertClose}>
+          <MuiAlert onClose={handleAlertClose} severity="error" sx={{ width: "100%" }}>
+            Error adding data. Please try again later.
+          </MuiAlert>
+        </Snackbar>
       </CardContent>
     </Card>
   );

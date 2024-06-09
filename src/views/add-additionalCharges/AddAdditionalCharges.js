@@ -17,14 +17,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 
-       
 const AddAdditionalCharges = ({ show }) => {
   const [date, setDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [projectName, setProjectName] = useState("");
   const [voucherTypeName, setVoucherTypeName] = useState("");
   const [nameOfCompany, setNameOfCompany] = useState("");
-  const [ParticularsofAdditionalChargesname, setParticularsofAdditionalChargesname] = useState("");
+  const [
+    ParticularsofAdditionalChargesname,
+    setParticularsofAdditionalChargesname,
+  ] = useState("");
   const [projectCode, setProjectCode] = useState("");
   const [subProject, setSubProject] = useState("");
   const [carParkingType, setCarParkingType] = useState("");
@@ -32,8 +34,10 @@ const AddAdditionalCharges = ({ show }) => {
   const [parkingLevel, setParkingLevel] = useState("");
   const [comments, setComments] = useState("");
 
-  const [includeInPaymentScheduleName, setIncludeInPaymentScheduleName] = useState("");
-  const [typeOfAdditionalChargesName, setTypeOfAdditionalChargesName] = useState("");
+  const [includeInPaymentScheduleName, setIncludeInPaymentScheduleName] =
+    useState("");
+  const [typeOfAdditionalChargesName, setTypeOfAdditionalChargesName] =
+    useState("");
   const [ratePerUoMName, setRatePerUoMName] = useState("");
   const [unitTypeName, setUnitTypeName] = useState("");
   const [unitTypeAmountName, setUnitTypeAmountName] = useState("");
@@ -84,7 +88,8 @@ const AddAdditionalCharges = ({ show }) => {
       fixedamount: fixedAmountName,
       salearea: saleAreaName,
       noofmonths: noOfMonthsName,
-      
+      CreateUID: 1,
+      Status: 1,
     };
 
     try {
@@ -150,15 +155,15 @@ const AddAdditionalCharges = ({ show }) => {
               </Box>
             </Grid>
 
-      
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Include In Payment Schedule"
                 placeholder="Include In Payment Schedule"
                 value={includeInPaymentScheduleName}
-                onChange={(a) => setIncludeInPaymentScheduleName(a.target.value)}
+                onChange={(a) =>
+                  setIncludeInPaymentScheduleName(a.target.value)
+                }
               />
             </Grid>
 
@@ -172,14 +177,16 @@ const AddAdditionalCharges = ({ show }) => {
               />
             </Grid>
             <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              label="Particulars of Additional Charges"
-              placeholder="Particulars of Additional Charges"
-              value={ParticularsofAdditionalChargesname}
-              onChange={(a) => setParticularsofAdditionalChargesname(a.target.value)}
-            />
-          </Grid>
+              <TextField
+                fullWidth
+                label="Particulars of Additional Charges"
+                placeholder="Particulars of Additional Charges"
+                value={ParticularsofAdditionalChargesname}
+                onChange={(a) =>
+                  setParticularsofAdditionalChargesname(a.target.value)
+                }
+              />
+            </Grid>
 
             <Grid item xs={8} sm={4}>
               <TextField
@@ -251,7 +258,6 @@ const AddAdditionalCharges = ({ show }) => {
               />
             </Grid>
 
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -271,10 +277,6 @@ const AddAdditionalCharges = ({ show }) => {
                 onChange={(e) => setSubProject(e.target.value)}
               />
             </Grid>
-      
-
-
-
 
             <Grid item xs={8} sm={4}>
               <DatePicker

@@ -116,10 +116,11 @@ const navigation = () => {
     //   path: '/subproject-details'
     // },
 
+
     {
-      icon: CubeOutline,
-      title: 'Car Parking',
-      path: '/car-parking'
+      title: 'Telle-calling',
+      icon: CreditCardOutline,
+      path: '/tellcalling-details'
     },
     {
       icon: CubeOutline,
@@ -147,10 +148,11 @@ const navigation = () => {
       path: '/channel-partner'
     },
     {
-      title: 'Telle-calling',
-      icon: CreditCardOutline,
-      path: '/tellcalling-details'
+      icon: CubeOutline,
+      title: 'Car Parking',
+      path: '/car-parking'
     },
+ 
   ]
 }
 

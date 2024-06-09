@@ -1,282 +1,215 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Grid, Card, CardContent, Typography } from '@mui/material';
+import axios from 'axios';
 import Box from "@mui/material/Box";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
-const InsertEnquirySource = ({ show }) => {
-  const [formData, setFormData] = useState({
+const Addenquirysource = ({ show, rowData }) => {
+  console.log(rowData , 'SEEE ');
+  const [formState, setFormState] = useState({
     NameOfCompany: '',
     ProjectName: '',
     Source: '',
-    FromDate: null,
-    ToDate: null,
+    FromDate: '', // Empty string for initial state
+    ToDate: '', // Empty string for initial state
     SourceName: '',
-    SourceAddress: '',
-    ActiveTillDate: null,
+    ActiveTillDate: '', // Empty string for initial state
     ContactNumber: '',
     TotalCost: '',
-    Status: 1, // Assuming status is always 1
-    CreateUID: 1, // Assuming a default value for CreateUID
-    CreateDate: '', // Assuming this will be set automatically
+    CreateUID: 1,
+    Status: 1
   });
-  const [errors, setErrors] = useState({});
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
+  
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleDateChange = (name, date) => {
-    setFormData({
-      ...formData,
-      [name]: date,
-    });
-  };
-
-  const validateFields = () => {
-    const newErrors = {};
-    if (!formData.NameOfCompany) newErrors.NameOfCompany = "Name of Company is required";
-    if (!formData.FromDate) newErrors.FromDate = "From Date is required";
-    if (!formData.ToDate) newErrors.ToDate = "To Date is required";
-    if (!formData.SourceName) newErrors.SourceName = "Source Name is required";
-    return newErrors;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const newErrors = validateFields();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+  useEffect(() => {
+    if (rowData && Object.keys(rowData).length !== 0) { // Check if rowData exists and is not empty
+      setFormState({
+        NameOfCompany: rowData.NameOfCompany || '',
+        ProjectName: rowData.ProjectName || '',
+        Source: rowData.Source || '',
+        FromDate: rowData.FromDate || '',
+        ToDate: rowData.ToDate || '',
+        SourceName: rowData.SourceName || '',
+        ActiveTillDate: rowData.ActiveTillDate || '',
+        ContactNumber: rowData.ContactNumber || '',
+        TotalCost: rowData.TotalCost || '',
+        CreateUID: 1,
+        Status: 1
+      });
+    } else {
+      // Set initial form state with empty date fields
+      setFormState({
+        NameOfCompany: '',
+        ProjectName: '',
+        Source: '',
+        FromDate: '', // Empty string for FromDate
+        ToDate: '', // Empty string for ToDate
+        SourceName: '',
+        ActiveTillDate: '',
+        ContactNumber: '',
+        TotalCost: '',
+        CreateUID: 1,
+        Status: 1
+      });
     }
+  }, [rowData]);
+  
 
-    const body = {
-      ...formData,
-      CreateDate: new Date().toISOString(), // Set current date as CreateDate
-    };
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value
+    });
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-enquirysource.php",
-        body,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-    }
-      );
-
-      if (response.data.status === "Success") {
-        setSubmitSuccess(true);
-        setSubmitError(false);
-        show(false);
-        // Clear form fields
-        setFormData({
-          NameOfCompany: '',
-          ProjectName: '',
-          Source: '',
-          FromDate: null,
-          ToDate: null,
-          SourceName: '',
-          SourceAddress: '',
-          ActiveTillDate: null,
-          ContactNumber: '',
-          TotalCost: '',
-          Status: 1,
-          CreateUID: 1,
-          CreateDate: '',
+      let response;
+      if (rowData) {
+        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-enquirysource.php', {
+          ...formState,
+          EnquirySourceID: rowData.EnquirySourceID, // Pass the ID for updating
+          UpdateUID: 1 // Assuming you have a user ID to pass
         });
       } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
+        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-insert-enquirysource.php', {
+          ...formState,
+          // AddUID: 1 // Assuming you have a user ID to pass
+        });
+      }
+
+      if (response.data.status === 'Success') {
+        show(); // Navigate back to the list view
+      } else {
+        console.error('Error submitting data:', response.data.message);
       }
     } catch (error) {
-      console.error("There was an error!", error);
-      setSubmitSuccess(false);
-      setSubmitError(true);
+      console.error('There was an error!', error);
     }
   };
 
   return (
     <Card>
       <CardContent>
-        <form>
-          <Grid container spacing={7}>
-            <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-              <Box>
-                <Typography
-                  variant="body2"
-                  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-                >
-                  Insert Enquiry Source Details
-                </Typography>
-              </Box>
-            </Grid>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: 'bold', fontSize: 20 }}
+        >
+       {rowData ? 'Update Enquiry Source' : 'Add Enquiry Source'}
+        </Typography>
+ 
+      </Box>
+  
+        <form onSubmit={handleSubmit}>
+        <Grid container spacing={7}>
 
+
+        <Grid item xs={12}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+   
+ 
+      </Box>
+    </Grid>
+          <Grid container spacing={4}>
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Name of Company"
-                placeholder="Name of Company"
-                value={formData.NameOfCompany}
-                onChange={handleInputChange}
                 name="NameOfCompany"
-                error={!!errors.NameOfCompany}
-                helperText={errors.NameOfCompany}
+                value={formState.NameOfCompany}
+                onChange={handleChange}
               />
             </Grid>
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Project Name"
-                placeholder="Project Name"
-                value={formData.ProjectName}
-                onChange={handleInputChange}
                 name="ProjectName"
+                value={formState.ProjectName}
+                onChange={handleChange}
               />
             </Grid>
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Source"
-                placeholder="Source"
-                value={formData.Source}
-                onChange={handleInputChange}
                 name="Source"
+                value={formState.Source}
+                onChange={handleChange}
               />
             </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <DatePicker
-                selected={formData.FromDate}
-                onChange={(date) => handleDateChange("FromDate", date)}
-                dateFormat="yyyy-MM-dd"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="From Date"
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                    error={!!errors.FromDate}
-                    helperText={errors.FromDate}
-                  />
-                }
+            <Grid xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="From Date"
+                name="FromDate"
+                value={formState.FromDate}
+                onChange={handleChange}
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <DatePicker
-                selected={formData.ToDate}
-                onChange={(date) => handleDateChange("ToDate", date)}
-                dateFormat="yyyy-MM-dd"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="To Date"
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                    error={!!errors.ToDate}
-                    helperText={errors.ToDate}
-                  />
-                }
+            <Grid xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="To Date"
+                name="ToDate"
+                value={formState.ToDate}
+                onChange={handleChange}
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
+               <TextField
+            fullWidth
+            label="Contact Number"
+            name="ContactNumber"
+            value={formState.ContactNumber}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            label="Total Cost"
+            name="TotalCost"
+            value={formState.TotalCost}
+            onChange={handleChange}
+          />
             </Grid>
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Source Name"
-                placeholder="Source Name"
-                value={formData.SourceName}
-                onChange={handleInputChange}
                 name="SourceName"
-                error={!!errors.SourceName}
-                helperText={errors.SourceName}
+                value={formState.SourceName}
+                onChange={handleChange}
               />
             </Grid>
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Source Address"
-                placeholder="Source Address"
-                value={formData.SourceAddress}
-                onChange={handleInputChange}
-                name="SourceAddress"
+                label="Active Till Date"
+                name="ActiveTillDate"
+                value={formState.ActiveTillDate}
+                onChange={handleChange}
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
-
             <Grid item xs={8} sm={4}>
-              <DatePicker
-                selected={formData.ActiveTillDate}
-                onChange={(date) => handleDateChange("ActiveTillDate", date)}
-                dateFormat="yyyy-MM-dd"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="Active Till Date"
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                  />
-                }
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Contact Number"
-                placeholder="Contact Number"
-                value={formData.ContactNumber}
-                onChange={handleInputChange}
-                name="ContactNumber"
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Total Cost"
-                placeholder="Total Cost"
-                value={formData.TotalCost}
-                onChange={handleInputChange}
-                name="TotalCost"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                sx={{ marginRight: 3.5 }}
-                onClick={handleSubmit}
-              >
-                Submit
+              <Button variant="contained" color="primary" type="submit">
+                {rowData ? 'Update' : 'Add'}
+              </Button>
+              <Button variant="outlined" color="secondary" onClick={show} sx={{ ml: 2 }}>
+                Cancel
               </Button>
             </Grid>
+          </Grid>
           </Grid>
         </form>
       </CardContent>
@@ -284,4 +217,4 @@ const InsertEnquirySource = ({ show }) => {
   );
 };
 
-export default InsertEnquirySource;
+export default Addenquirysource;
