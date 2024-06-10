@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import Addadditionalcharges from 'src/views/Addadditionalcharges/Addadditionalcharges';
-import Listadditionalcharges from 'src/views/list-addadditionalcharges/Listadditionalcharges';
+import Listadditionalcharges from 'src/views/Listadditionalcharges/ListAdditionalCharges';
 
 const TypographyPage = () => {
   const [rows, setRows] = useState([]);
@@ -61,7 +61,7 @@ const TypographyPage = () => {
         </>
       )}
 
-      {showadditionalcharges && <Addadditionalcharges show={setShowadditionalcharges} />}
+      {showProjectManage && <Addadditionalcharges />}
     </>
   );
 };

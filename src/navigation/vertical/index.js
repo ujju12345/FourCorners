@@ -137,11 +137,11 @@ const navigation = () => {
       title: 'Stamp Duty Master',
       path: '/stamp-duty'
     },
-    {
-      icon: CubeOutline,
-      title: 'Additional Charges',
-      path: '/additonal-charges'
-    },
+    // {
+    //   icon: CubeOutline,
+    //   title: 'Additional Charges',
+    //   path: '/additonal-charges'
+    // },
     {
       icon: CubeOutline,
       title: 'Channel Partner',

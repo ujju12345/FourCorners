@@ -10,24 +10,25 @@ import Box from "@mui/material/Box";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const InsertAdditionalCharges = ({ show }) => {
+const Addadditionalcharges = ({ show }) => {
   const [formData, setFormData] = useState({
-    ProjectName: "",
-    SubProject: "",
-    StartDate: null,
-    EndDate: null,
-    VoucherType: "",
-    ParticularsOfAdditionalCharges: "",
-    IncludeInPaymentSchedule: "",
-    TypeOfAdditionalCharges: "",
-    SaleArea: "",
-    RatePerUOM: "",
-    UnitType: "",
-    UnitTypeAmount: "",
-    FixedAmount: "",
-    NoOfMonths: "",
+    projectname: "",
+    subproject: "",
+    startdate: null,
+    enddate: null,
+    vouchertype: "",
+    particularsofadditionalcharges: "",
+    includeinpaymentschedule: "",
+    typeofadditionalcharges: "",
+    salearea: "",
+    rateperuom: "",
+    unittype: "",
+    unittypeamount: "",
+    fixedamount: "",
+    noofmonths: "",
     Status: 1,
   });
+
   const [errors, setErrors] = useState({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -49,10 +50,10 @@ const InsertAdditionalCharges = ({ show }) => {
 
   const validateFields = () => {
     const newErrors = {};
-    if (!formData.ProjectName) newErrors.ProjectName = "Project Name is required";
-    if (!formData.SubProject) newErrors.SubProject = "Sub Project is required";
-    if (!formData.StartDate) newErrors.StartDate = "Start Date is required";
-    if (!formData.EndDate) newErrors.EndDate = "End Date is required";
+    if (!formData.projectname) newErrors.projectname = "Project Name is required";
+    if (!formData.subproject) newErrors.subproject = "Sub Project is required";
+    if (!formData.startdate) newErrors.startdate = "Start Date is required";
+    if (!formData.enddate) newErrors.enddate = "End Date is required";
     return newErrors;
   };
 
@@ -86,20 +87,20 @@ const InsertAdditionalCharges = ({ show }) => {
         show(false);
         // Clear form fields
         setFormData({
-          ProjectName: "",
-          SubProject: "",
-          StartDate: null,
-          EndDate: null,
-          VoucherType: "",
-          ParticularsOfAdditionalCharges: "",
-          IncludeInPaymentSchedule: "",
-          TypeOfAdditionalCharges: "",
-          SaleArea: "",
-          RatePerUOM: "",
-          UnitType: "",
-          UnitTypeAmount: "",
-          FixedAmount: "",
-          NoOfMonths: "",
+          projectname: "",
+          subproject: "",
+          startdate: null,
+          enddate: null,
+          vouchertype: "",
+          particularsofadditionalcharges: "",
+          includeinpaymentschedule: "",
+          typeofadditionalcharges: "",
+          salearea: "",
+          rateperuom: "",
+          unittype: "",
+          unittypeamount: "",
+          fixedamount: "",
+          noofmonths: "",
           Status: 1,
         });
       } else {
@@ -134,11 +135,11 @@ const InsertAdditionalCharges = ({ show }) => {
                 fullWidth
                 label="Project Name"
                 placeholder="Project Name"
-                value={formData.ProjectName}
+                value={formData.projectname}
                 onChange={handleInputChange}
-                name="ProjectName"
-                error={!!errors.ProjectName}
-                helperText={errors.ProjectName}
+                name="projectname"
+                error={!!errors.projectname}
+                helperText={errors.projectname}
               />
             </Grid>
 
@@ -147,30 +148,31 @@ const InsertAdditionalCharges = ({ show }) => {
                 fullWidth
                 label="Sub Project"
                 placeholder="Sub Project"
-                value={formData.SubProject}
+                value={formData.subproject}
                 onChange={handleInputChange}
-                name="SubProject"
-                error={!!errors.SubProject}
-                helperText={errors.SubProject}
+                name="subproject"
+                error={!!errors.subproject}
+                helperText={errors.subproject}
               />
             </Grid>
 
             <Grid item xs={8} sm={4}>
               <DatePicker
-                selected={formData.StartDate}
-                onChange={(date) => handleDateChange("StartDate", date)}
+                selected={formData.startdate}
+                onChange={(date) => handleDateChange("startdate", date)}
                 dateFormat="yyyy-MM-dd"
                 className="form-control"
                 customInput={
                   <TextField
                     fullWidth
+                    name="startdate"
                     label="Start Date"
                     InputProps={{
                       readOnly: true,
                       sx: { width: "100%" },
                     }}
-                    error={!!errors.StartDate}
-                    helperText={errors.StartDate}
+                    error={!!errors.startdate}
+                    helperText={errors.startdate}
                   />
                 }
               />
@@ -178,26 +180,168 @@ const InsertAdditionalCharges = ({ show }) => {
 
             <Grid item xs={8} sm={4}>
               <DatePicker
-                selected={formData.EndDate}
-                onChange={(date) => handleDateChange("EndDate", date)}
+                selected={formData.enddate}
+                onChange={(date) => handleDateChange("enddate", date)}
                 dateFormat="yyyy-MM-dd"
                 className="form-control"
                 customInput={
                   <TextField
                     fullWidth
+                    name="enddate"
                     label="End Date"
                     InputProps={{
                       readOnly: true,
                       sx: { width: "100%" },
                     }}
-                    error={!!errors.EndDate}
-                    helperText={errors.EndDate}
+                    error={!!errors.enddate}
+                    helperText={errors.enddate}
                   />
                 }
               />
             </Grid>
 
-       
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Voucher Type"
+                placeholder="Voucher Type"
+                value={formData.vouchertype}
+                onChange={handleInputChange}
+                name="vouchertype"
+                error={!!errors.vouchertype}
+                helperText={errors.vouchertype}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Particulars of Additional Charges"
+                placeholder="Particulars of Additional Charges"
+                value={formData.particularsofadditionalcharges}
+                onChange={handleInputChange}
+                name="particularsofadditionalcharges"
+                error={!!errors.particularsofadditionalcharges}
+                helperText={errors.particularsofadditionalcharges}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Include in Payment Schedule"
+                placeholder="Include in Payment Schedule"
+                value={formData.includeinpaymentschedule}
+                onChange={handleInputChange}
+                name="includeinpaymentschedule"
+                error={!!errors.includeinpaymentschedule}
+                helperText={errors.includeinpaymentschedule}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Type of Additional Charges"
+                placeholder="Type of Additional Charges"
+                value={formData.typeofadditionalcharges}
+                onChange={handleInputChange}
+                name="typeofadditionalcharges"
+                error={!!errors.typeofadditionalcharges}
+                helperText={errors.typeofadditionalcharges}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Sale Area"
+                placeholder="Sale Area"
+                value={formData.salearea}
+                onChange={handleInputChange}
+                name="salearea"
+                error={!!errors.salearea}
+                helperText={errors.salearea}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Rate per UOM"
+                placeholder="Rate per UOM"
+                value={formData.rateperuom}
+                onChange={handleInputChange}
+                name="rateperuom"
+                error={!!errors.rateperuom}
+                helperText={errors.rateperuom}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Unit Type"
+                placeholder="Unit Type"
+                value={formData.unittype}
+                onChange={handleInputChange}
+                name="unittype"
+                error={!!errors.unittype}
+                helperText={errors.unittype}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Unit Type Amount"
+                placeholder="Unit Type Amount"
+                value={formData.unittypeamount}
+                onChange={handleInputChange}
+                name="unittypeamount"
+                error={!!errors.unittypeamount}
+                helperText={errors.unittypeamount}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Fixed Amount"
+                placeholder="Fixed Amount"
+                value={formData.fixedamount}
+                onChange={handleInputChange}
+                name="fixedamount"
+                error={!!errors.fixedamount}
+                helperText={errors.fixedamount}
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Number of Months"
+                placeholder="Number of Months"
+                value={formData.noofmonths}
+                onChange={handleInputChange}
+                name="noofmonths"
+                error={!!errors.noofmonths}
+                helperText={errors.noofmonths}
+              />
+            </Grid>
+{/* 
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Status"
+                placeholder="Status"
+                value={formData.Status}
+                onChange={handleInputChange}
+                name="Status"
+                error={!!errors.Status}
+                helperText={errors.Status}
+              />
+            </Grid> */}
 
             <Grid item xs={12}>
               <Button
@@ -215,4 +359,4 @@ const InsertAdditionalCharges = ({ show }) => {
   );
 };
 
-export default InsertAdditionalCharges;
+export default Addadditionalcharges;
