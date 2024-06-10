@@ -37,7 +37,7 @@ const AddInstallment = ({ show, editData}) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php"
+        "https://apiforcorners.cubisysit.com/api/api-dropdown-projectmaster.php"
       );
       setRows(response.data.data || []);
     } catch (error) {
