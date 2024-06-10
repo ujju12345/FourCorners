@@ -199,11 +199,16 @@ const ProjectManage = ({ show }) => {
         remarks: remarks,
         projectstartdate: selectedDate
       };
+
+      console.log(body , 'bodyy aaya');
       axios.post("https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php", body)
         .then(response => {
           if (response.data.status === "Success") {
             setSubmitSuccess(true);
             setSubmitError(false);
+            show('list')
+            
+          
           } else {
             setSubmitSuccess(false);
             setSubmitError(true);

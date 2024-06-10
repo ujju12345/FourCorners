@@ -169,8 +169,9 @@ const ListInstallment = ({ rows, setRows, setShowTabAccount  , onEdit}) => {
   const handleDelete = async (InstallmentID) => {
     const body = {
       InstallmentID: InstallmentID,
-      DeleteUID: 1,
+      deleteuid: 1,
     };
+    console.log(body , 'Installment delete');
 
     try {
       const response = await axios.post(

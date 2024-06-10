@@ -158,7 +158,7 @@ const ProjectMasterDetails = ({ onEdit }) => {
       const response = await axios.get(
         "https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php"
       );
-      console.log("API Response:", response.data);
+      console.log("API Response: PROJECT MATER", response.data);
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
@@ -229,6 +229,7 @@ const ProjectMasterDetails = ({ onEdit }) => {
           <TableBody>
             {rows.length > 0 ? (
               rows.map((row, index) => (
+                
                 <TableRow key={index}>
                   <TableCell>
                     <Box sx={{ display: "flex", flexDirection: "column" }}>

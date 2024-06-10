@@ -89,30 +89,14 @@ const Addenquirysource = ({ show, rowData }) => {
   };
 
   return (
-    <Card>
+<Card>
       <CardContent>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography
-          variant="body2"
-          sx={{ fontWeight: 'bold', fontSize: 20 }}
-        >
-       {rowData ? 'Update Enquiry Source' : 'Add Enquiry Source'}
+        <Typography variant="h5" gutterBottom>
+          {rowData ? 'Update Enquiry Source' : 'Add Enquiry Source'}
         </Typography>
- 
-      </Box>
-  
         <form onSubmit={handleSubmit}>
-        <Grid container spacing={7}>
-
-
-        <Grid item xs={12}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-   
- 
-      </Box>
-    </Grid>
-          <Grid container spacing={4}>
-            <Grid item xs={8} sm={4}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Name of Company"
@@ -121,7 +105,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Project Name"
@@ -130,7 +114,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 label="Source"
@@ -139,47 +123,33 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid xs={8} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="From Date"
                 name="FromDate"
+                type="date"
                 value={formState.FromDate}
                 onChange={handleChange}
-                type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </Grid>
-            <Grid xs={8} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="To Date"
                 name="ToDate"
+                type="date"
                 value={formState.ToDate}
                 onChange={handleChange}
-                type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
-               <TextField
-            fullWidth
-            label="Contact Number"
-            name="ContactNumber"
-            value={formState.ContactNumber}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            label="Total Cost"
-            name="TotalCost"
-            value={formState.TotalCost}
-            onChange={handleChange}
-          />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Source Name"
@@ -188,20 +158,38 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Active Till Date"
                 name="ActiveTillDate"
+                type="date"
                 value={formState.ActiveTillDate}
                 onChange={handleChange}
-                type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Contact Number"
+                name="ContactNumber"
+                value={formState.ContactNumber}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Total Cost"
+                name="TotalCost"
+                value={formState.TotalCost}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <Button variant="contained" color="primary" type="submit">
                 {rowData ? 'Update' : 'Add'}
               </Button>
@@ -209,7 +197,6 @@ const Addenquirysource = ({ show, rowData }) => {
                 Cancel
               </Button>
             </Grid>
-          </Grid>
           </Grid>
         </form>
       </CardContent>

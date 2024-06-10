@@ -56,7 +56,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   const [deleteId, setDeleteId] = useState(null);
 
   const handleDelete = async () => {
-    debugger;
+    // debugger;
     const body = {
       CompanyID: deleteId,
       DeleteUID: 1,
@@ -72,9 +72,9 @@ const TabInfo = ({ setShowTabAccount }) => {
           },
         }
       );
-      debugger;
+      // debugger;
       if (response.data.status === "Success") {
-        debugger;
+        // debugger;
         setRows(rows.filter(row => row.CompanyID !== deleteId));
       } else {
         console.error("Failed to delete:", response.data);
@@ -88,7 +88,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   };
 
   const handleOpen = (CompanyID) => {
-    debugger;
+    // debugger;
     setDeleteId(CompanyID);
     setOpen(true);
   };

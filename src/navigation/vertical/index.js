@@ -107,7 +107,7 @@ const navigation = () => {
     {
       title: 'Customer Details',
       path: '/customer-details',
-      icon: GoogleCirclesExtended
+      icon: CubeOutline
     },
 
     // {

@@ -59,7 +59,7 @@ const CustomerDetails = () => {
               <TableCell>Party Name</TableCell>
               <TableCell>Member Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Location</TableCell>
+              <TableCell>CLocation</TableCell>
               
               {/* Add more table headers here */}
             </TableRow>
