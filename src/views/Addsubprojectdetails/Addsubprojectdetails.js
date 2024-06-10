@@ -76,7 +76,7 @@ const Addsubprojectdetails = ({ show, editData }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php");
+      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-dropdown-projectmaster.php");
       setProjectTypes(response.data.data || []);
       setLoading(false);
     } catch (error) {
