@@ -158,7 +158,7 @@ const TabInfo = ({ setShowTabAccount }) => {
               <TableRow>
                 <TableCell colSpan={9} align="center">
                   No data available
-                </TableCell>\
+                </TableCell>
               </TableRow>
             )}
           </TableBody>

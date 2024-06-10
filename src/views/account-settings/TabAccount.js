@@ -93,11 +93,11 @@ const TabAccount = ({ show }) => {
 
 
   const getCityData = (stateID) => {
-    debugger;
+    // debugger;
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-singel-citymaster.php?StateID= " + stateID)
       .then((response) => {
-        debugger;
+        // debugger;
         if (response.data.status === "Success") {
           console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA");
           setCities(response.data.data);
@@ -296,14 +296,6 @@ const TabAccount = ({ show }) => {
         RegisteredAddress: registeredAddress,
         ERPLiveDate: selectedDate, // Ensure the date is in the correct format
         BookBeginingFrom: price, // Make sure to have this field set
-        PanITNo: panIt,
-        GSTINNo: gstinNumber,
-        TANNo: tanNumber,
-        VATTINNo: vatTinNumber,
-        CSTTINNo: cstTinNumber,
-        ServiceTaxNo: serviceTax,
-        CessNo: cessNumber,
-        CINNo: cinNumber,
         Status: 1,
         CompanyStatusID: selectedCompanyStatus,
         Remarks: remarks,
@@ -536,7 +528,7 @@ const TabAccount = ({ show }) => {
                 helperText={errors.price}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -545,8 +537,8 @@ const TabAccount = ({ show }) => {
                 value={panIt}
                 onChange={handlePanIT}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -555,8 +547,8 @@ const TabAccount = ({ show }) => {
                 value={gstinNumber}
                 onChange={handleGstin}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -565,8 +557,8 @@ const TabAccount = ({ show }) => {
                 value={tanNumber}
                 onChange={handleTan}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -585,8 +577,8 @@ const TabAccount = ({ show }) => {
                 value={cstTinNumber}
                 onChange={handleCSTTIN}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -595,8 +587,8 @@ const TabAccount = ({ show }) => {
                 value={serviceTax}
                 onChange={handleServicesTax}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -605,8 +597,8 @@ const TabAccount = ({ show }) => {
                 value={cessNumber}
                 onChange={handleCESS}
               />
-            </Grid>
-            <Grid item xs={8} sm={4}>
+            </Grid> */}
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 type="number"
@@ -615,7 +607,7 @@ const TabAccount = ({ show }) => {
                 value={cinNumber}
                 onChange={handleCIN}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={8} sm={4}>
               <DatePicker
@@ -647,6 +639,10 @@ const TabAccount = ({ show }) => {
                 onChange={handleRemarks}
               />
             </Grid>
+    
+
+
+
 
             <Grid item xs={12}>
               <Button

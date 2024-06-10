@@ -85,8 +85,8 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
             companyCode: company.CompanyCode,
             companyAddress: company.CommAddress,
             registeredAddress: company.RegisteredAddress,
-            selectedCity: '', // Assuming you fetch city and state data separately
-            selectedState: '', // Assuming you fetch city and state data separately
+            selectedCity: company.StateID, // Assuming you fetch city and state data separately
+            selectedState: company.CityID, // Assuming you fetch city and state data separately
             pincode: company.Pincode,
             phone: company.PhoneNo,
             mobilePhone: company.MobileNo,
@@ -139,11 +139,14 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     setFormData({
       ...formData,
       selectedState: selectedStateName,
+      
     });
 
     const selectedStateObject = states.find(state => state.StateName === selectedStateName);
     if (selectedStateObject) {
       setSelectedStateId(selectedStateObject.StateID);
+      getCityData(selectedStateObject.StateID);
+
     }
   };
 
@@ -173,6 +176,22 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     return newErrors;
   };
 
+  const getCityData = (stateID) => {
+    debugger;
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-singel-citymaster.php?StateID= " + stateID)
+      .then((response) => {
+        // debugger;
+        if (response.data.status === "Success") {
+          console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA");
+          setCities(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const newErrors = validateFields();
@@ -186,8 +205,8 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
         CompanyName: formData.companyName,
         CompanyCode: formData.companyCode,
         CommAddress: formData.companyAddress,
-        cityID: selectedCityId,
-        StateID: selectedStateId,
+        CityID: formData.selectedCity,
+        StateID: formData.selectedState,
         CountryID: 1,
         Pincode: formData.pincode,
         PhoneNo: formData.phone,
@@ -209,7 +228,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
         Remarks: formData.remarks,
         CompanyID:id
       };
-
+     
       console.log(submitData, 'ALL DATAAAAAAA');
 
       axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php', submitData, {
@@ -328,6 +347,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                     value={formData.selectedCity}
                     onChange={handleCityChange}
                     name="selectedCity"
+                    label='City'
                   >
                     {cities.map(city => (
                       <MenuItem key={city.CityID} value={city.CityName}>
@@ -344,9 +364,10 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                     value={formData.selectedState}
                     onChange={handleStateChange}
                     name="selectedState"
+                    label='State'
                   >
                     {states.map(state => (
-                      <MenuItem key={state.StateID} value={state.StateName}>
+                      <MenuItem key={state.StateID} value={state.StateID}>
                         {state.StateName}
                       </MenuItem>
                     ))}
@@ -407,7 +428,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   helperText={errors.price}
                 />
               </Grid>
-              <Grid item xs={8} sm={4}>
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label='Pan IT'
@@ -486,7 +507,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   onChange={handleInputChange}
                   name="cinNumber"
                 />
-              </Grid>
+              </Grid> */}
           
               <Grid item xs={8} sm={4}>
                 <TextField
