@@ -32,7 +32,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
-      console.log('API Response:', response.data);
+      console.log('API Response COMPANYYYYY', response.data);
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {

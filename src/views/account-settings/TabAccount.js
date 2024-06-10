@@ -208,6 +208,7 @@ const TabAccount = ({ show }) => {
   };
 
   const handleCityChange = (event) => {
+    // debugger;
     const selectedCityName = event.target.value;
     setSelectedCity(selectedCityName);
 
@@ -215,12 +216,14 @@ const TabAccount = ({ show }) => {
     const selectedCityObject = cities.find(
       (city) => city.CityName === selectedCityName
     );
+    // debugger;
     if (selectedCityObject) {
       setSelectedCityId(selectedCityObject.CityID);
     }
   };
 
   const handleStateChange = (event) => {
+    // debugger;
     const selectedStateName = event.target.value;
     setSelectedState(selectedStateName);
     const selectedStateObject = states.find(
@@ -286,7 +289,7 @@ const TabAccount = ({ show }) => {
         CompanyName: companyName,
         CompanyCode: companyCode,
         CommAddress: companyAddress,
-        cityID: selectedCityId,
+        CityID: selectedCityId,
         StateID: selectedStateId,
         CountryID: 1,
         Pincode: pincode,
@@ -423,7 +426,32 @@ const TabAccount = ({ show }) => {
               </FormControl>
             </Grid>
 
+            <Grid item xs={8} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel>Country</InputLabel>
+                <Select label="State" defaultValue="India">
+                  <MenuItem value="India">India</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
 
+
+            <Grid item xs={8} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel>State</InputLabel>
+                <Select
+                  label="State"
+                  value={selectedState}
+                  onChange={handleStateChange}
+                >
+                  {states.map((state) => (
+                    <MenuItem key={state.StateID} value={state.StateName}>
+                      {state.StateName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
 
             <Grid item xs={8} sm={4}>
@@ -443,31 +471,8 @@ const TabAccount = ({ show }) => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>State</InputLabel>
-                <Select
-                  label="State"
-                  value={selectedState}
-                  onChange={handleStateChange}
-                >
-                  {states.map((state) => (
-                    <MenuItem key={state.StateID} value={state.StateName}>
-                      {state.StateName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Country</InputLabel>
-                <Select label="State" defaultValue="India">
-                  <MenuItem value="India">India</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+    
+      
 
             <Grid item xs={8} sm={4}>
               <TextField

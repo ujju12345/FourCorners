@@ -74,10 +74,11 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     const fetchData = async () => {
       try {
         const companyId = rowData?.CompanyID;
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-companymaster.php?companyid=${companyId}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-companymaster.php?CompanyID=${companyId}`;
 
         const response = await axios.get(apiUrl);
         if (response.data.status === 'Success') {
+          debugger;
           const company = response.data.data[0];
           setCompanyData(company);
           setFormData({
@@ -85,8 +86,8 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
             companyCode: company.CompanyCode,
             companyAddress: company.CommAddress,
             registeredAddress: company.RegisteredAddress,
-            selectedCity: company.StateID, // Assuming you fetch city and state data separately
-            selectedState: company.CityID, // Assuming you fetch city and state data separately
+            selectedCity: company.CityID, // Assuming you fetch city and state data separately
+            selectedState: company.StateID, // Assuming you fetch city and state data separately
             pincode: company.Pincode,
             phone: company.PhoneNo,
             mobilePhone: company.MobileNo,
@@ -103,6 +104,8 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
             remarks: company.Remarks,
             selectedDate: new Date(company.ERPLiveDate).toISOString().split('T')[0],
           });
+          debugger;
+          getCityData(company.StateID);
         }
       } catch (error) {
         console.error('Error fetching company data:', error);
@@ -143,6 +146,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
     });
 
     const selectedStateObject = states.find(state => state.StateName === selectedStateName);
+    debugger;
     if (selectedStateObject) {
       setSelectedStateId(selectedStateObject.StateID);
       getCityData(selectedStateObject.StateID);
@@ -183,6 +187,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
       .then((response) => {
         // debugger;
         if (response.data.status === "Success") {
+          debugger;
           console.log(response.data.data, "DATAA AAGAYAAAAAAAAAA");
           setCities(response.data.data);
         }
@@ -228,7 +233,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
         Remarks: formData.remarks,
         CompanyID:id
       };
-     
+     debugger;
       console.log(submitData, 'ALL DATAAAAAAA');
 
       axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php', submitData, {
@@ -340,23 +345,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   helperText={errors.registeredAddress}
                 />
               </Grid>
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>City</InputLabel>
-                  <Select
-                    value={formData.selectedCity}
-                    onChange={handleCityChange}
-                    name="selectedCity"
-                    label='City'
-                  >
-                    {cities.map(city => (
-                      <MenuItem key={city.CityID} value={city.CityName}>
-                        {city.CityName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>State</InputLabel>
@@ -374,6 +363,24 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>City</InputLabel>
+                  <Select
+                    value={formData.selectedCity}
+                    onChange={handleCityChange}
+                    name="selectedCity"
+                    label='City'
+                  >
+                    {cities.map(city => (
+                      <MenuItem key={city.CityID} value={city.CityID}>
+                        {city.CityName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+        
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
