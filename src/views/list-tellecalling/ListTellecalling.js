@@ -19,6 +19,12 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
     return <Typography>No data available</Typography>;
   }
 
+  const handleEditButtonClick = (row) => {
+    onEdit(row); // Call the onEdit function passed from parent (Tellecalling)
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top of the page
+  };
+ 
+  
   return (
     <Card>
       <TableContainer>
@@ -48,7 +54,7 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
                 <TableCell align="left">{row.SourceName}</TableCell>
                 <TableCell align="left">{row.SourceDescription}</TableCell>
                 <TableCell sx={{ padding: '15px' }}>
-                  <IconButton onClick={() => onEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
+                  <IconButton onClick={() => handleEditButtonClick(row)} aria-label="edit" sx={{ color: 'blue' }}>
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => onDelete(row.telecallingID)} aria-label="delete" sx={{ color: 'red' }}>

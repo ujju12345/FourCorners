@@ -21,8 +21,8 @@ import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
-  console.log(editData, "Tellcalling update data");
-  const [formData, setFormData] = useState({
+  console.log(editData , 'DATA AAYA EDIT ');
+  const initialFormData = {
     titleprefixID: "",
     PartyName: "",
     Mobile: "",
@@ -31,7 +31,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
     AlternateTelephoneNo: "",
     Email: "",
     ProjectID: "",
-    // UnitType: "",
     EstimatedBudget: "",
     LeadStatus: "",
     Comments: "",
@@ -42,11 +41,12 @@ const AddTellecallingDetails = ({ show, editData }) => {
     SourceDescription: "",
     TelecallAttendedBy: "",
     CreateUID: 1,
-    TelecallingID: "",
+    telecallingID: "",
     UnittypeID: "",
-    Countrycode:""
-  });
+    Countrycode: ""
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
   const [projectTypes, setProjectTypes] = useState([]);
   const [tellecallingID, setTellecallingID] = useState([]);
@@ -59,7 +59,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
   useEffect(() => {
     fetchData();
     fetchDataBhk();
+    fetchDataTellecalling();
+    fetchDataTitle();
   }, []);
+
+  useEffect(() => {
+    if (editData) {
+      setFormData(editData);
+    }
+  }, [editData]);
 
   const fetchDataBhk = async () => {
     try {
@@ -69,7 +77,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
       setBhkOptions(response.data.data || []);
     } catch (error) {
       console.error("Error fetching Bhk data:", error);
-      // setErrors(error);
     }
   };
 
@@ -81,31 +88,43 @@ const AddTellecallingDetails = ({ show, editData }) => {
       setProjectTypes(response.data.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // setErrors(error);
+    }
+  };
+
+  const fetchDataTellecalling = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
+      );
+      setTellecallingID(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchDataTitle = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-titleprefix.php"
+      );
+      setTitles(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    // Check if the input is for the Mobile, AlternateMobileNo, TelephoneNo, or AlternateTelephoneNo field
     if (
-      [
-        "Mobile",
-        "AlternateMobileNo",
-        "TelephoneNo",
-        "AlternateTelephoneNo",
-        "Countrycode"
-      ].includes(name)
+      ["Mobile", "AlternateMobileNo", "TelephoneNo", "AlternateTelephoneNo", "Countrycode"].includes(name)
     ) {
-      // Ensure that only numbers are entered
-      const numericValue = value.replace(/\D/g, ""); // Remove any non-numeric characters
+      const numericValue = value.replace(/\D/g, "");
       setFormData({
         ...formData,
         [name]: numericValue,
       });
     } else {
-      // For other fields, directly update the state
       setFormData({
         ...formData,
         [name]: value,
@@ -128,56 +147,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
   };
 
   useEffect(() => {
-    if (editData) {
-      setFormData(editData);
-    }
-  }, [editData]);
-
-  useEffect(() => {
-    fetchDataTellecalling();
-  }, []);
-
-  const fetchDataTellecalling = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
-      );
-      console.log(response.data.data, "TELECALLINGGG ID");
-      setTellecallingID(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      // setErrors(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDataTitle();
-  }, []);
-
-  const fetchDataTitle = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-titleprefix.php"
-      );
-      console.log(response.data.data, "TELECALLINGGG ID");
-      setTitles(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      // setErrors(error);
-    }
-  };
-
-  useEffect(() => {
     if (tellecallingID.length > 0) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        TelecallingID: parseInt(tellecallingID[0].telecallingID) || "", // Use the first SubProjectID from the fetched data
+        telecallingID: parseInt(tellecallingID[0].telecallingID) || "", 
       }));
     }
   }, [tellecallingID]);
 
   const handleSubmit = async (event) => {
-    console.log("press");
     event.preventDefault();
 
     const url = editData
@@ -191,12 +169,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
         },
       });
 
-      console.log(formData, "DARAAAAA");
-
       if (response.data.status === "Success") {
+        setFormData(initialFormData);
         setSubmitSuccess(true);
         setSubmitError(false);
-        show(false);
+        show();
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
@@ -225,9 +202,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
               variant="body2"
               sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
             >
-              {editData
-                ? "Edit Telecalling Details"
-                : "Add Telecalling Details"}
+              {editData ? "Edit Telecalling Details" : "Add Telecalling Details"}
             </Typography>
           </Box>
         </Grid>
@@ -260,7 +235,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
 
-
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -270,7 +244,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.Countrycode}
                 onChange={handleChange}
                 inputProps={{
-                  pattern: "[0-9]*", // Only allow numeric input
+                  pattern: "[0-9]*",
                 }}
               />
             </Grid>
@@ -284,7 +258,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.Mobile}
                 onChange={handleChange}
                 inputProps={{
-                  pattern: "[0-9]*", // Only allow numeric input
+                  pattern: "[0-9]*",
                 }}
               />
             </Grid>
@@ -299,7 +273,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.AlternateMobileNo}
                 onChange={handleChange}
                 inputProps={{
-                  pattern: "[0-9]*", // Only allow numeric input
+                  pattern: "[0-9]*",
                 }}
               />
             </Grid>
@@ -314,7 +288,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.TelephoneNo}
                 onChange={handleChange}
                 inputProps={{
-                  pattern: "[0-9]*", // Only allow numeric input
+                  pattern: "[0-9]*",
                 }}
               />
             </Grid>
@@ -329,7 +303,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.AlternateTelephoneNo}
                 onChange={handleChange}
                 inputProps={{
-                  pattern: "[0-9]*", // Only allow numeric input
+                  pattern: "[0-9]*",
                 }}
               />
             </Grid>
@@ -365,8 +339,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 </Select>
               </FormControl>
             </Grid>
-
-       
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
@@ -489,18 +461,20 @@ const AddTellecallingDetails = ({ show, editData }) => {
         </form>
 
         <Snackbar
-          open={submitSuccess}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <MuiAlert
-            onClose={handleAlertClose}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Data added successfully!
-          </MuiAlert>
-        </Snackbar>
+  open={submitSuccess}
+  autoHideDuration={6000}
+  onClose={handleAlertClose}
+>
+  <MuiAlert
+    onClose={handleAlertClose}
+    severity="success"
+    sx={{ width: "100%", backgroundColor: "green", color: "#ffffff" }}
+  >
+    {editData ? "Data Updated Successfully" : (submitSuccess ? "Data Added Successfully" : "")}
+  </MuiAlert>
+</Snackbar>
+
+
         <Snackbar
           open={submitError}
           autoHideDuration={6000}

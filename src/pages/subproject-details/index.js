@@ -52,6 +52,27 @@ const TypographyPage = () => {
     setShowProjectDetails(true);
   };
 
+  const jsonToCSV = (json) => {
+    const header = Object.keys(json[0]).join(",");
+    const values = json
+      .map((obj) => Object.values(obj).join(","))
+      .join("\n");
+    return `${header}\n${values}`;
+  };
+
+  const handleDownload = () => {
+    const csv = jsonToCSV(rows);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Sub-Project-master.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+  
+
   return (
     <>
       {!showProjectDetails && (
@@ -61,8 +82,17 @@ const TypographyPage = () => {
               variant="contained"
               sx={{ marginRight: 3.5, mt: -1 }}
               onClick={handleNavigation}
+              style={{ marginBottom: "8px", float: "right" }}
             >
               Add
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 3.5 }}
+              onClick={handleDownload}
+              style={{ marginBottom: "8px", float: "right" }}
+            >
+              Download
             </Button>
           </Grid>
 

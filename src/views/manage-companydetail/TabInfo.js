@@ -11,23 +11,53 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import EditIcon from '@mui/icons-material/Edit';
+import TablePagination from '@mui/material/TablePagination';
+import TextField from '@mui/material/TextField';
 import { format, parseISO } from 'date-fns';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
 const TabInfo = ({ setShowTabAccount }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [orderBy, setOrderBy] = useState('');
+  const [order, setOrder] = useState('asc');
+  const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Apply search filter
+    const filteredData = rows.filter((row) => {
+      return (
+        String(row.CompanyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.CompanyCode).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.CommAddress).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.CityName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.ERPLiveDate).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.CompanyStatusName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.StateName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(row.BookBeginingFrom).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+    setFilteredRows(filteredData);
+  }, [searchQuery, rows]);
 
   const fetchData = async () => {
     try {
@@ -51,12 +81,14 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
+  
+  const handleClose = () => {
+    setOpen(false);
+    setDeleteId(null);
+  };
 
-  const [open, setOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
 
   const handleDelete = async () => {
-    // debugger;
     const body = {
       CompanyID: deleteId,
       DeleteUID: 1,
@@ -72,9 +104,7 @@ const TabInfo = ({ setShowTabAccount }) => {
           },
         }
       );
-      // debugger;
       if (response.data.status === "Success") {
-        // debugger;
         setRows(rows.filter(row => row.CompanyID !== deleteId));
       } else {
         console.error("Failed to delete:", response.data);
@@ -87,50 +117,98 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
-  const handleOpen = (CompanyID) => {
-    // debugger;
-    setDeleteId(CompanyID);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setDeleteId(null);
-  };
-
   const handleEdit = (rowData) => {
     setShowTabAccount(rowData); // Pass selected row data to the parent component
     console.log(`Editing company with ID ${rowData.CompanyID}`);
   };
 
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
-  if (error) {
-    return <Typography>Error fetching data: {error.message}</Typography>;
-  }
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const getComparator = (order, sortBy) => {
+    return (a, b) => {
+      if (a[sortBy] < b[sortBy]) return order === 'asc' ? -1 : 1;
+      if (a[sortBy] > b[sortBy]) return order === 'asc' ? 1 : -1;
+      return 0;
+    };
+  };
+
+  const handleSort = (sortBy) => {
+    const isAsc = orderBy === sortBy && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(sortBy);
+    const sortedData = filteredRows.slice().sort(getComparator(order, sortBy));
+    setFilteredRows(sortedData);
+  };
+
+  const SortableTableCell = ({ label, onClick }) => (
+    <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={onClick}>
+        <TableCell sx={{ fontWeight: 'bold' }}>{label}</TableCell>
+        <span>&#8597;</span>
+      </Box>
+    </TableCell>
+  );
+  
+  
+  const handleOpen = (CompanyID) => {
+    setDeleteId(CompanyID);
+    setOpen(true);
+  };
+  
 
   return (
     <Card>
+      <Box sx={{ padding: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+      <TextField
+    size="small" // Set size to small
+    placeholder="Search"
+    variant="outlined"
+    value={searchQuery}
+    onChange={handleSearchChange}
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchIcon color="action" />
+        </InputAdornment>
+      ),
+      sx: {
+        borderRadius: '20px', // Adjust the border radius as needed
+        "& fieldset": {
+          borderRadius: '20px', // Adjust the border radius as needed
+        },
+      },
+    }}
+  />
+      </Box>
       <TableContainer>
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Code</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Communication Address</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>City Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>ERP Live Date</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Company Status Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>State Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Book Beginning From</TableCell>
+            <SortableTableCell label="Company Name" onClick={() => handleSort('CompanyName')} />
+              <SortableTableCell label="Company Code" onClick={() => handleSort('CompanyCode')} />
+              <SortableTableCell label="Communication Address" onClick={() => handleSort('CommAddress')} />
+              <SortableTableCell label="City Name" onClick={() => handleSort('CityName')} />
+              <SortableTableCell label="ERP Live Date" onClick={() => handleSort('ERPLiveDate')} />
+              <SortableTableCell label="Company Status Name" onClick={() => handleSort('CompanyStatusName')} />
+              <SortableTableCell label="State Name" onClick={() => handleSort('StateName')} />
+               <SortableTableCell label="Book Beginning From" onClick={() => handleSort('BookBeginingFrom')} />
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.length > 0 ? (
-              rows.map((row, index) => (
+            {filteredRows.length > 0 ? (
+              filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -143,7 +221,7 @@ const TabInfo = ({ setShowTabAccount }) => {
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{formatDate(row.ERPLiveDate)}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusName}</TableCell>
                   <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.StateName}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{(row.BookBeginingFrom)}</TableCell>
+                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.BookBeginingFrom}</TableCell>
                   <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
@@ -155,15 +233,33 @@ const TabInfo = ({ setShowTabAccount }) => {
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={9} align="center">
-                  No data available
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+    <TableRow>
+      <TableCell colSpan={9} align="center">
+        {/* SVG image */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
+</svg>
+
+
+        {/* Optional message */}
+        <Typography variant="body1">Data not found</Typography>
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
       <Dialog
         open={open}
         onClose={handleClose}
