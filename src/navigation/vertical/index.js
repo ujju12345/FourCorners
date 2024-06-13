@@ -137,11 +137,11 @@ const navigation = () => {
       title: 'Stamp Duty Master',
       path: '/stamp-duty'
     },
-    // {
-    //   icon: CubeOutline,
-    //   title: 'Additional Charges',
-    //   path: '/additonal-charges'
-    // },
+    {
+      icon: CubeOutline,
+      title: 'Additional Charges',
+      path: '/additonal-charges'
+    },
     {
       icon: CubeOutline,
       title: 'Channel Partner',
@@ -152,6 +152,16 @@ const navigation = () => {
       title: 'Car Parking',
       path: '/car-parking'
     },
+    {
+      icon: CubeOutline,
+      title: 'Unit Allocation',
+      path: '/unitallocation'
+    },
+    {
+      icon: CubeOutline,
+      title: 'Receipt',
+      path: '/receipt'
+    }
  
   ]
 }
