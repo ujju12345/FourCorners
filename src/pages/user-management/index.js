@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Grid, CircularProgress, Alert, Box } from '@mui/material';
 import axios from 'axios';
-import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
-import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
+import AddUser from 'src/views/add-usermaster/AddUser';
+import ListUserMaster from 'src/views/list-usermaster/ListUserMaster';
 
-const Tellecalling = () => {
+const UserManager = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,7 +45,6 @@ const Tellecalling = () => {
   };
 
   const handleEdit = (row) => {
-    debugger;
     setEditData(row);
   };
 
@@ -92,7 +91,7 @@ const Tellecalling = () => {
     <>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <AddTellecallingDetails show={handleBack} editData={editData} />
+          <AddUser show={handleBack} editData={editData} />
         </Grid>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
@@ -107,11 +106,11 @@ const Tellecalling = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <ListTellecalling rows={rows} onEdit={handleEdit} onDelete={handleDelete}/>
+          <ListUserMaster rows={rows} onEdit={handleEdit} onDelete={handleDelete}/>
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default Tellecalling;
+export default UserManager;

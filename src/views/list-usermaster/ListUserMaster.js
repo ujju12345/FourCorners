@@ -17,31 +17,55 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
-const ListTellecalling = ({ rows, onEdit, onDelete }) => {
+const ListUserMaster = () => {
+  const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredRows, setFilteredRows] = useState([]);
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('asc');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     setFilteredRows(rows);
   }, [rows]);
 
   useEffect(() => {
-    const filteredData = rows.filter((row) => {
-      return (
-        String(row.PartyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Mobile).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.ProjectID).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Source).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceDescription).toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
+    const filteredData = rows.filter((row) =>
+      String(row.UserRoleID).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.Name).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.MobileNo).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.email).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.username).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.password).toLowerCase().includes(searchQuery.toLowerCase())
+    );
     setFilteredRows(filteredData);
   }, [searchQuery, rows]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php');
+      setRows(response.data.data || []);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = (userID) => {
+    
+  };
+
+  const handleEdit = (rowData) => {
+  };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -54,12 +78,6 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleEditButtonClick = (row) => {
-    debugger;
-    onEdit(row);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSort = (sortBy) => {
@@ -95,6 +113,14 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
     </TableCell>
   );
 
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error fetching data: {error.message}</Typography>;
+  }
+
   return (
     <Card>
       <Box sx={{ padding: '16px', display: 'flex', justifyContent: 'flex-end' }}>
@@ -123,12 +149,12 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-              <SortableTableCell label="Party Name" sortBy="PartyName" />
-              <SortableTableCell label="Mobile" sortBy="Mobile" />
-              <SortableTableCell label="Project Name" sortBy="ProjectID" />
-              <SortableTableCell label="Source" sortBy="Source" />
-              <SortableTableCell label="Source Name" sortBy="SourceName" />
-              <SortableTableCell label="Source Description" sortBy="SourceDescription" />
+              <SortableTableCell label="User Role ID" sortBy="UserRoleID" />
+              <SortableTableCell label="Name" sortBy="Name" />
+              <SortableTableCell label="Mobile Number" sortBy="MobileNo" />
+              <SortableTableCell label="Email" sortBy="email" />
+              <SortableTableCell label="Username" sortBy="username" />
+              <SortableTableCell label="Password" sortBy="password" />
               <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
@@ -136,21 +162,17 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
             {filteredRows.length > 0 ? (
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                 <TableRow key={index}>
+                  <TableCell align="left">{row.UserRoleID}</TableCell>
+                  <TableCell align="left">{row.Name}</TableCell>
+                  <TableCell align="left">{row.MobileNo}</TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">{row.username}</TableCell>
+                  <TableCell align="left">{row.password}</TableCell>
                   <TableCell align="left">
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.PartyName}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align="left">{row.Mobile}</TableCell>
-                  <TableCell align="left">{row.ProjectName}</TableCell>
-                  <TableCell align="left">{row.SourceName}</TableCell>
-                  <TableCell align="left">{row.SourceName}</TableCell>
-                  <TableCell align="left">{row.SourceDescription}</TableCell>
-                  <TableCell sx={{ padding: '15px' }}>
-                    <IconButton onClick={() => handleEditButtonClick(row)} aria-label="edit" sx={{ color: 'blue' }}>
+                    <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => onDelete(row.telecallingID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDelete(row.UserID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -158,18 +180,10 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
               ))
             ) : (
               <TableRow>
-              <TableCell colSpan={9} align="center">
-                {/* SVG image */}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
-          <path d="M0 0h24v24H0z" fill="none"/>
-          <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
-        </svg>
-        
-        
-                {/* Optional message */}
-                <Typography variant="body1">Data not found</Typography>
-              </TableCell>
-            </TableRow>
+                <TableCell colSpan={7} align="center" sx={{ padding: '12px' }}>
+                  No data available
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -187,4 +201,4 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
   );
 };
 
-export default ListTellecalling;
+export default ListUserMaster;

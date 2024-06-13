@@ -33,14 +33,7 @@ const TabAccount = ({ show }) => {
   const [mobilePhone, setMobilePhone] = useState("");
   const [email, setEmail] = useState("");
   const [price, setPrice] = useState("");
-  const [panIt, setPanIt] = useState("");
-  const [gstinNumber, setGstinNumber] = useState("");
-  const [tanNumber, setTanNumber] = useState("");
-  const [vatTinNumber, setVatTinNumber] = useState("");
-  const [cstTinNumber, setCsttinNumber] = useState("");
-  const [serviceTax, setServiceTax] = useState("");
-  const [cessNumber, setCessNumber] = useState("");
-  const [cinNumber, setCinNumber] = useState("");
+ 
   const [remarks, setRemarks] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [errors, setErrors] = useState({});
