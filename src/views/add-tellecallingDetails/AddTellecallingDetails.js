@@ -48,11 +48,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [errors, setErrors] = useState({});
+
   const [projectTypes, setProjectTypes] = useState([]);
+  const [source, setSource] = useState([]);
+
   const [tellecallingID, setTellecallingID] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
@@ -68,6 +72,21 @@ const AddTellecallingDetails = ({ show, editData }) => {
       setFormData(editData);
     }
   }, [editData]);
+
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          console.log(response.data.data, 'dataa aayaaaa');
+          setSource(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const fetchDataBhk = async () => {
     try {
@@ -139,6 +158,13 @@ const AddTellecallingDetails = ({ show, editData }) => {
     });
   };
 
+  const handleSource = (event) => {
+    setFormData({
+      ...formData,
+      Source: event.target.value,
+    });
+  };
+
   const handleTitleChange = (event) => {
     setFormData({
       ...formData,
@@ -191,6 +217,13 @@ const AddTellecallingDetails = ({ show, editData }) => {
     }
     setSubmitSuccess(false);
     setSubmitError(false);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      setErrors((prevErrors) => ({ ...prevErrors, date: "" }));
+    }
   };
 
   return (
@@ -408,14 +441,20 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
             <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Source"
-                name="Source"
-                placeholder="Source"
-                value={formData.Source}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Source</InputLabel>
+                <Select
+                  value={formData.Source}
+                  onChange={handleSource}
+                  label="Source"
+                >
+                  {source.map((bhk) => (
+                    <MenuItem key={bhk.sourceID} value={bhk.sourceID}>
+                      {bhk.sourceName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={8} sm={4}>
               <TextField
@@ -445,6 +484,26 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 name="TelecallAttendedBy"
                 value={formData.TelecallAttendedBy}
                 onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={8} sm={4}>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                dateFormat="yyyy-MM-dd"
+                className="form-control"
+                customInput={
+                  <TextField
+                    fullWidth
+                    label="Next follow up date"
+                    error={!!errors.date}
+                    helperText={errors.date}
+                    InputProps={{
+                      readOnly: true,
+                      sx: { width: "100%" },
+                    }}
+                  />
+                }
               />
             </Grid>
 

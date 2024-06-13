@@ -175,33 +175,7 @@ const TabAccount = ({ show }) => {
       setErrors((prevErrors) => ({ ...prevErrors, price: "" }));
     }
   };
-  const handlePanIT = (event) => {
-    setPanIt(event.target.value);
-  };
-  const handleGstin = (event) => {
-    setGstinNumber(event.target.value);
-  };
-  const handleTan = (event) => {
-    setTanNumber(event.target.value);
-  };
 
-  const handleVatTinNumber = (event) => {
-    setVatTinNumber(event.target.value);
-  };
-
-  const handleCSTTIN = (event) => {
-    setCsttinNumber(event.target.value);
-  };
-  const handleServicesTax = (event) => {
-    setServiceTax(event.target.value);
-  };
-
-  const handleCESS = (event) => {
-    setCessNumber(event.target.value);
-  };
-  const handleCIN = (event) => {
-    setCinNumber(event.target.value);
-  };
 
   const handleRemarks = (event) => {
     setRemarks(event.target.value);
@@ -319,7 +293,7 @@ const TabAccount = ({ show }) => {
         .then((response) => {
           if (response.data.status === "Success") {
             setSubmitSuccess(true);
-            show("list");
+            show();
             setCompanyName("");
             setCompanyCode("");
             setCompanyAddress("");

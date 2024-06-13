@@ -9,7 +9,7 @@ const AccountSettings = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('list'); // 'list', 'account', 'update'
+  const [activeTab, setActiveTab] = useState(); // 'list', 'account', 'update'
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
 
   useEffect(() => {
@@ -72,19 +72,28 @@ const AccountSettings = () => {
         a.click();
         document.body.removeChild(a);
       };
+
+
+      const handleBack = () => {
+        // setEditData(null);
+        fetchData(); // Refetch data after adding or editing details
+      };
   return (
     <>
-      {activeTab === "list" && (
+      {/* {activeTab === "list" && ( */}
         <>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleNavigation}
-              style={{ marginBottom: "8px", float: "right" }}
-            >
-              Add
-            </Button>
+  
+
+
+         
+        
+        <TabAccount
+          show={handleBack}
+          onSubmitSuccess={handleSubmissionSuccess}
+        />
+
+           <Grid item xs={12}>
+        
 
             <Button
               variant="contained"
@@ -95,6 +104,7 @@ const AccountSettings = () => {
               Download
             </Button>
           </Grid>
+     
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -102,15 +112,9 @@ const AccountSettings = () => {
             </Grid>
           </Grid>
         </>
-      )}
+      {/* )} */}
 
-      {activeTab === "account" && (
-        
-        <TabAccount
-          show={setActiveTab}
-          onSubmitSuccess={handleSubmissionSuccess}
-        />
-      )}
+     
 
       {activeTab === "update" && (
         <UpdateCompanyMaster

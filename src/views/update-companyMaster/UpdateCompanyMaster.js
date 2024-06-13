@@ -233,7 +233,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
         Remarks: formData.remarks,
         CompanyID:id
       };
-     debugger;
+    //  debugger;
       console.log(submitData, 'ALL DATAAAAAAA');
 
       axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php', submitData, {
