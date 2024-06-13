@@ -109,6 +109,11 @@ const navigation = () => {
       path: '/customer-details',
       icon: CubeOutline
     },
+    {
+      title: 'User Management',
+      path: '/user-management',
+      icon: CubeOutline
+    },
 
     // {
     //   title: 'Sub Project Details',
