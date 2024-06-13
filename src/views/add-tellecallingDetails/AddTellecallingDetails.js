@@ -26,8 +26,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
     AlternateTelephoneNo: null,
     Email: "",
     ProjectID: "",
-    EstimatedBudget: "",
-    LeadstatusID: "",
+    EstimatedbudgetID: "",
+    leadstatusID: "",
     Comments: "",
     Location: "",
     FollowupThrough: "",
@@ -48,6 +48,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
+  const [estimatedBudget, setEstimatedBudget] = useState([]);
+
   const [leadStatus, setLeadStatus] = useState([]);
 
   const [userMaster, setUserMaster] = useState([]);
@@ -63,34 +65,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
     fetchDataTellecalling();
     fetchDataTitle();
   }, []);
-
   useEffect(() => {
     if (editData) {
-      debugger;
-      const { NextFollowUpDate } = editData;
-      let formattedDate = null;
-
-      if (NextFollowUpDate) {
-        const parsedDate = new Date(NextFollowUpDate);
-        if (!isNaN(parsedDate.getTime())) {
-          formattedDate = parsedDate;
-        }
-      }
-debugger;
       setFormData({
         ...editData,
-        NextFollowUpDate: formattedDate,
+        NextFollowUpDate: editData.NextFollowUpDate
+          ? new Date(editData.NextFollowUpDate)
+          : null,
       });
-      debugger;     
     }
-
-    // if (editData) {
-    //   setFormData({
-    //     ...editData,
-    //     NextFollowUpDate: editData.SalesGoLiveDate ? new Date(editData.SalesGoLiveDate) : null,
-    //     Date: editData.Date ? new Date(editData.Date) : null,
-    //   });
-    // }
   }, [editData]);
 
   useEffect(() => {
@@ -99,6 +82,19 @@ debugger;
       .then((response) => {
         if (response.data.status === "Success") {
           setSource(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-estimatedbudget.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setEstimatedBudget(response.data.data);
         }
       })
       .catch((error) => {
@@ -208,6 +204,13 @@ debugger;
     });
   };
 
+  const handleEstimatedBudget = (event) => {
+    setFormData({
+      ...formData,
+      EstimatedbudgetID: event.target.value,
+    });
+  };
+
   const handleTelecaller = (event) => {
     setFormData({
       ...formData,
@@ -225,7 +228,7 @@ debugger;
   const handleLeadStatus = (event) => {
     setFormData({
       ...formData,
-      LeadstatusID: event.target.value,
+      leadstatusID: event.target.value,
     });
   };
 
@@ -419,21 +422,30 @@ debugger;
               </FormControl>
             </Grid>
 
+
+
+
             <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Estimated Budget"
-                name="EstimatedBudget"
-                placeholder="Estimated Budget"
-                value={formData.EstimatedBudget}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Estimated Budget</InputLabel>
+                <Select
+                  value={formData.EstimatedbudgetID}
+                  onChange={handleEstimatedBudget}
+                  label="Estimated Budget"
+                >
+                  {estimatedBudget.map((bhk) => (
+                    <MenuItem key={bhk.EstimatedbudgetID} value={bhk.EstimatedbudgetID}>
+                      {bhk.EstimatedbudgetName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Lead Status</InputLabel>
                 <Select
-                  value={formData.LeadstatusID}
+                  value={formData.leadstatusID}
                   onChange={handleLeadStatus}
                   label="Lead Status"
                 >
@@ -517,8 +529,10 @@ debugger;
             <Grid item xs={8} sm={4}>
               <DatePicker
                 selected={formData.NextFollowUpDate}
-                onChange={(date) => setFormData({ ...formData, NextFollowUpDate: date })}
-                dateFormat="yyyy-MM-dd"
+                onChange={(date) =>
+                  setFormData({ ...formData, NextFollowUpDate: date })
+                }
+                dateFormat="dd-MM-yyyy"
                 className="form-control"
                 customInput={
                   <TextField
