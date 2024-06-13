@@ -57,6 +57,7 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
   };
 
   const handleEditButtonClick = (row) => {
+    debugger;
     onEdit(row);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -141,8 +142,8 @@ const ListTellecalling = ({ rows, onEdit, onDelete }) => {
                     </Box>
                   </TableCell>
                   <TableCell align="left">{row.Mobile}</TableCell>
-                  <TableCell align="left">{row.ProjectID}</TableCell>
-                  <TableCell align="left">{row.Source}</TableCell>
+                  <TableCell align="left">{row.ProjectName}</TableCell>
+                  <TableCell align="left">{row.SourceName}</TableCell>
                   <TableCell align="left">{row.SourceName}</TableCell>
                   <TableCell align="left">{row.SourceDescription}</TableCell>
                   <TableCell sx={{ padding: '15px' }}>

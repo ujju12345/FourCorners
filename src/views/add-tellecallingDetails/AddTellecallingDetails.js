@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Alert from "@mui/material/Alert";
 import Select from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
-import AlertTitle from "@mui/material/AlertTitle";
-import IconButton from "@mui/material/IconButton";
 import CardContent from "@mui/material/CardContent";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
@@ -21,39 +17,40 @@ import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
-  console.log(editData , 'DATA AAYA EDIT ');
   const initialFormData = {
     titleprefixID: "",
     PartyName: "",
     Mobile: "",
     AlternateMobileNo: "",
-    TelephoneNo: "",
-    AlternateTelephoneNo: "",
+    TelephoneNo: null,
+    AlternateTelephoneNo: null,
     Email: "",
     ProjectID: "",
     EstimatedBudget: "",
-    LeadStatus: "",
+    LeadstatusID: "",
     Comments: "",
     Location: "",
     FollowupThrough: "",
-    Source: "",
+    NextFollowUpDate: null,
+    SourceID: "",
     SourceName: "",
     SourceDescription: "",
-    TelecallAttendedBy: "",
+    TelecallAttendedByID: "",
     CreateUID: 1,
     telecallingID: "",
     UnittypeID: "",
-    Countrycode: ""
+    Countrycode: "",
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [errors, setErrors] = useState({});
 
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
+  const [leadStatus, setLeadStatus] = useState([]);
 
+  const [userMaster, setUserMaster] = useState([]);
   const [tellecallingID, setTellecallingID] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,18 +66,65 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   useEffect(() => {
     if (editData) {
-      setFormData(editData);
-    }
-  }, [editData]);
+      debugger;
+      const { NextFollowUpDate } = editData;
+      let formattedDate = null;
 
+      if (NextFollowUpDate) {
+        const parsedDate = new Date(NextFollowUpDate);
+        if (!isNaN(parsedDate.getTime())) {
+          formattedDate = parsedDate;
+        }
+      }
+debugger;
+      setFormData({
+        ...editData,
+        NextFollowUpDate: formattedDate,
+      });
+      debugger;     
+    }
+
+    // if (editData) {
+    //   setFormData({
+    //     ...editData,
+    //     NextFollowUpDate: editData.SalesGoLiveDate ? new Date(editData.SalesGoLiveDate) : null,
+    //     Date: editData.Date ? new Date(editData.Date) : null,
+    //   });
+    // }
+  }, [editData]);
 
   useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
       .then((response) => {
         if (response.data.status === "Success") {
-          console.log(response.data.data, 'dataa aayaaaa');
           setSource(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-leadstatus.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setLeadStatus(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setUserMaster(response.data.data);
         }
       })
       .catch((error) => {
@@ -136,7 +180,13 @@ const AddTellecallingDetails = ({ show, editData }) => {
     const { name, value } = event.target;
 
     if (
-      ["Mobile", "AlternateMobileNo", "TelephoneNo", "AlternateTelephoneNo", "Countrycode"].includes(name)
+      [
+        "Mobile",
+        "AlternateMobileNo",
+        "TelephoneNo",
+        "AlternateTelephoneNo",
+        "Countrycode",
+      ].includes(name)
     ) {
       const numericValue = value.replace(/\D/g, "");
       setFormData({
@@ -158,10 +208,24 @@ const AddTellecallingDetails = ({ show, editData }) => {
     });
   };
 
+  const handleTelecaller = (event) => {
+    setFormData({
+      ...formData,
+      TelecallAttendedByID: event.target.value,
+    });
+  };
+
   const handleSource = (event) => {
     setFormData({
       ...formData,
-      Source: event.target.value,
+      SourceID: event.target.value,
+    });
+  };
+
+  const handleLeadStatus = (event) => {
+    setFormData({
+      ...formData,
+      LeadstatusID: event.target.value,
     });
   };
 
@@ -176,7 +240,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     if (tellecallingID.length > 0) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        telecallingID: parseInt(tellecallingID[0].telecallingID) || "", 
+        telecallingID: parseInt(tellecallingID[0].telecallingID) || "",
       }));
     }
   }, [tellecallingID]);
@@ -219,13 +283,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
     setSubmitError(false);
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    if (date) {
-      setErrors((prevErrors) => ({ ...prevErrors, date: "" }));
-    }
-  };
-
   return (
     <Card>
       <CardContent>
@@ -235,7 +292,9 @@ const AddTellecallingDetails = ({ show, editData }) => {
               variant="body2"
               sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
             >
-              {editData ? "Edit Telecalling Details" : "Add Telecalling Details"}
+              {editData
+                ? "Edit Telecalling Details"
+                : "Add Telecalling Details"}
             </Typography>
           </Box>
         </Grid>
@@ -314,36 +373,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                type="tel"
-                name="TelephoneNo"
-                label="Telephone No"
-                placeholder="Telephone No"
-                value={formData.TelephoneNo}
-                onChange={handleChange}
-                inputProps={{
-                  pattern: "[0-9]*",
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                type="tel"
-                name="AlternateTelephoneNo"
-                label="Alternate Telephone No"
-                placeholder="Alternate Telephone No"
-                value={formData.AlternateTelephoneNo}
-                onChange={handleChange}
-                inputProps={{
-                  pattern: "[0-9]*",
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
                 label="E-Mail"
                 name="Email"
                 placeholder="E-Mail "
@@ -401,15 +430,26 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
             <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Lead Status"
-                name="LeadStatus"
-                placeholder="Lead Status"
-                value={formData.LeadStatus}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Lead Status</InputLabel>
+                <Select
+                  value={formData.LeadstatusID}
+                  onChange={handleLeadStatus}
+                  label="Lead Status"
+                >
+                  <MenuItem value="">{/* <em>None</em> */}</MenuItem>
+                  {leadStatus.map((project) => (
+                    <MenuItem
+                      key={project.leadstatusID}
+                      value={project.leadstatusID}
+                    >
+                      {project.leadstatusName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -420,37 +460,18 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Comment"
-                name="Comments"
-                placeholder="Comment"
-                value={formData.Comments}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Followup Through"
-                name="FollowupThrough"
-                placeholder="Followup Through"
-                value={formData.FollowupThrough}
-                onChange={handleChange}
-              />
-            </Grid>
+
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Source</InputLabel>
                 <Select
-                  value={formData.Source}
+                  value={formData.SourceID}
                   onChange={handleSource}
                   label="Source"
                 >
                   {source.map((bhk) => (
-                    <MenuItem key={bhk.sourceID} value={bhk.sourceID}>
-                      {bhk.sourceName}
+                    <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                      {bhk.SourceName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -477,25 +498,32 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
             <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Telecall Attended By"
-                placeholder="Telecall Attended By"
-                name="TelecallAttendedBy"
-                value={formData.TelecallAttendedBy}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Telecall Attended By</InputLabel>
+                <Select
+                  value={formData.TelecallAttendedByID}
+                  onChange={handleTelecaller}
+                  label="TelecallAttendedBy"
+                >
+                  {userMaster.map((bhk) => (
+                    <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                      {bhk.Name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <DatePicker
-                selected={selectedDate}
-                onChange={handleDateChange}
+                selected={formData.NextFollowUpDate}
+                onChange={(date) => setFormData({ ...formData, NextFollowUpDate: date })}
                 dateFormat="yyyy-MM-dd"
                 className="form-control"
                 customInput={
                   <TextField
                     fullWidth
-                    label="Next follow up date"
+                    label="Next Follow Up Date"
                     error={!!errors.date}
                     helperText={errors.date}
                     InputProps={{
@@ -504,6 +532,17 @@ const AddTellecallingDetails = ({ show, editData }) => {
                     }}
                   />
                 }
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                label="Comment"
+                name="Comments"
+                placeholder="Comment"
+                value={formData.Comments}
+                onChange={handleChange}
               />
             </Grid>
 
@@ -520,19 +559,22 @@ const AddTellecallingDetails = ({ show, editData }) => {
         </form>
 
         <Snackbar
-  open={submitSuccess}
-  autoHideDuration={6000}
-  onClose={handleAlertClose}
->
-  <MuiAlert
-    onClose={handleAlertClose}
-    severity="success"
-    sx={{ width: "100%", backgroundColor: "green", color: "#ffffff" }}
-  >
-    {editData ? "Data Updated Successfully" : (submitSuccess ? "Data Added Successfully" : "")}
-  </MuiAlert>
-</Snackbar>
-
+          open={submitSuccess}
+          autoHideDuration={6000}
+          onClose={handleAlertClose}
+        >
+          <MuiAlert
+            onClose={handleAlertClose}
+            severity="success"
+            sx={{ width: "100%", backgroundColor: "green", color: "#ffffff" }}
+          >
+            {editData
+              ? "Data Updated Successfully"
+              : submitSuccess
+              ? "Data Added Successfully"
+              : ""}
+          </MuiAlert>
+        </Snackbar>
 
         <Snackbar
           open={submitError}
@@ -544,7 +586,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
             severity="error"
             sx={{ width: "100%" }}
           >
-            Error adding data. Please try again later.
+            {submitError.message}
           </MuiAlert>
         </Snackbar>
       </CardContent>

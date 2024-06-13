@@ -45,6 +45,7 @@ const Tellecalling = () => {
   };
 
   const handleEdit = (row) => {
+    debugger;
     setEditData(row);
   };
 
