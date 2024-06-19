@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import Listenquirysource from 'src/views/Listenquirysource/Listenquirysource';
 import Addenquirysource from 'src/views/Addenquirysource/Addenquirysource';
-
+import { Button, Grid, CircularProgress, Alert, Box } from '@mui/material';
 const Enquirysource = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +34,22 @@ const Enquirysource = () => {
   if (error) {
     return <Alert severity="error">Error fetching data: {error.message}</Alert>;
   }
-
+  const handleDelete = async (id) => {
+    console.log(id, 'id aayaaaaaaa');
+    try {
+      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-enquirysource.php', {
+        EnquirySourceID: id,
+        DeleteUID: 1
+      });
+      if (response.data.status === 'Success') {
+        setRows(rows.filter(row => row.EnquirySourceID !== id));
+        console.log('Deleted successfully');
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      setError(error);
+    }
+  };
   const handleAddNavigation = () => {
     setActiveTab('add'); // Show AddEnquirysource component
     setRowDataToUpdate(null); // Clear any row data for update
@@ -45,6 +59,25 @@ const Enquirysource = () => {
     setActiveTab('add'); // Show AddEnquirysource component for update
     setRowDataToUpdate(rowData); // Pass the selected row data
   };
+  const jsonToCSV = (json) => {
+    const header = Object.keys(json[0]).join(",");
+    const values = json
+      .map((obj) => Object.values(obj).join(","))
+      .join("\n");
+    return `${header}\n${values}`;
+  };
+
+  const handleDownload = () => {
+    const csv = jsonToCSV(rows);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "enquirysource.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const handleBack = () => {
     setActiveTab('list');
@@ -53,31 +86,29 @@ const Enquirysource = () => {
 
   return (
     <>
-      {activeTab === 'list' && (
-        <>
-          <Grid item xs={12} sx={{ mb: 2 }}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5, mt: -1 }} 
-              onClick={handleAddNavigation}
-            >
-              Add
-            </Button>
-          </Grid>
-
-          <Grid container spacing={6}>
-            <Grid item xs={12}>
-              <Listenquirysource onEdit={handleEdit} setShowTabAccount={handleBack}/> 
-            </Grid>
-          </Grid>
-        </>
-      )}
-
-      {activeTab === 'add' && (
-        <Addenquirysource show={handleBack} rowData={rowDataToUpdate} />
-      )}
+    <Grid container spacing={6}>
+  <Grid item xs={12}>
+    <Addenquirysource show={handleBack} editData={rowDataToUpdate} />
+  </Grid>
+  <Grid item xs={12}>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+      <Button
+        variant="contained"
+        sx={{ marginRight: 3.5 }}
+        onClick={handleDownload}
+      >
+        Download List
+      </Button>
+   
+    </Box>
+  </Grid>
+  <Grid item xs={12}>
+    <Listenquirysource rows={rows} onEdit={handleEdit} setShowTabAccount={handleBack}  onDelete={handleDelete}/>
+  </Grid>
+</Grid>
     </>
   );
+
 };
 
 export default Enquirysource;

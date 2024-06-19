@@ -12,6 +12,7 @@ const Addenquirysource = ({ show, rowData }) => {
     FromDate: '', // Empty string for initial state
     ToDate: '', // Empty string for initial state
     SourceName: '',
+    SourceAddress: '',
     ActiveTillDate: '', // Empty string for initial state
     ContactNumber: '',
     TotalCost: '',
@@ -29,6 +30,7 @@ const Addenquirysource = ({ show, rowData }) => {
         FromDate: rowData.FromDate || '',
         ToDate: rowData.ToDate || '',
         SourceName: rowData.SourceName || '',
+        SourceAddress: rowData.SourceAddress || '',
         ActiveTillDate: rowData.ActiveTillDate || '',
         ContactNumber: rowData.ContactNumber || '',
         TotalCost: rowData.TotalCost || '',
@@ -44,6 +46,7 @@ const Addenquirysource = ({ show, rowData }) => {
         FromDate: '', // Empty string for FromDate
         ToDate: '', // Empty string for ToDate
         SourceName: '',
+        SourceAddress: '',
         ActiveTillDate: '',
         ContactNumber: '',
         TotalCost: '',
@@ -96,7 +99,7 @@ const Addenquirysource = ({ show, rowData }) => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Name of Company"
@@ -105,7 +108,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Project Name"
@@ -114,7 +117,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Source"
@@ -123,7 +126,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="From Date"
@@ -136,7 +139,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="To Date"
@@ -149,7 +152,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Source Name"
@@ -158,7 +161,16 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}sm={4}>
+              <TextField
+                fullWidth
+                label="Source Address"
+                name="SourceAddress"
+                value={formState.SourceAddress}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Active Till Date"
@@ -171,7 +183,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Contact Number"
@@ -180,7 +192,7 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}sm={4}>
               <TextField
                 fullWidth
                 label="Total Cost"
@@ -189,13 +201,11 @@ const Addenquirysource = ({ show, rowData }) => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <Button variant="contained" color="primary" type="submit">
                 {rowData ? 'Update' : 'Add'}
               </Button>
-              <Button variant="outlined" color="secondary" onClick={show} sx={{ ml: 2 }}>
-                Cancel
-              </Button>
+          
             </Grid>
           </Grid>
         </form>
