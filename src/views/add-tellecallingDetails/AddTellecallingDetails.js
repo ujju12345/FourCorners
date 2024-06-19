@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Select from "@mui/material/Select";
@@ -13,7 +13,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
-import { Snackbar } from "@mui/material";
+import {
+  Snackbar,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  FormLabel,
+} from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
@@ -32,26 +38,27 @@ const AddTellecallingDetails = ({ show, editData }) => {
     Location: "",
     FollowupThrough: "",
     NextFollowUpDate: null,
+    NextFollowUpTime: "14:30:00",
     SourceID: "",
     SourceName: "",
     SourceDescription: "",
     TelecallAttendedByID: "",
+    SmsNotification: 0,
+    EmailNotification: 0,
     CreateUID: 1,
     telecallingID: "",
     UnittypeID: "",
     Countrycode: "",
+    Status:1
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
-
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
   const [estimatedBudget, setEstimatedBudget] = useState([]);
-
   const [leadStatus, setLeadStatus] = useState([]);
-
   const [userMaster, setUserMaster] = useState([]);
   const [tellecallingID, setTellecallingID] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
@@ -65,6 +72,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     fetchDataTellecalling();
     fetchDataTitle();
   }, []);
+
   useEffect(() => {
     if (editData) {
       setFormData({
@@ -72,11 +80,14 @@ const AddTellecallingDetails = ({ show, editData }) => {
         NextFollowUpDate: editData.NextFollowUpDate
           ? new Date(editData.NextFollowUpDate)
           : null,
+        NextFollowUpTime: editData.NextFollowUpTime || "",
       });
     }
   }, [editData]);
 
-  useEffect(() => {
+  // Fetch source, estimated budget, lead status, and user master data (similar to your existing useEffects)
+
+    useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
       .then((response) => {
@@ -171,6 +182,16 @@ const AddTellecallingDetails = ({ show, editData }) => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const handleNotificationChange = (event) => {
+    const value = event.target.value === "sms" ? 1 : 0;
+    setFormData({
+      ...formData,
+      SmsNotification: value,
+      EmailNotification: value === 1 ? 0 : 1,
+    });
+  };
+  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -287,9 +308,69 @@ const AddTellecallingDetails = ({ show, editData }) => {
   };
 
   return (
-    <Card>
+    <>
+
+
+<Grid
+              container
+              justifyContent="center"
+              spacing={2}
+              // sx={{ marginTop: 5 }}
+            >
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Edit Details
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Download
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Group Transfer
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Convert to Lead
+                </Button>
+              </Grid>
+            </Grid>
+
+    <Card sx={{ height: "83vh", ml: -3 , mt:5}}>
       <CardContent>
         <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+          
           <Box>
             <Typography
               variant="body2"
@@ -299,9 +380,12 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 ? "Edit Telecalling Details"
                 : "Add Telecalling Details"}
             </Typography>
+
+            
+        
           </Box>
         </Grid>
-        <form>
+        <form style={{ marginTop: "50px" }}>
           <Grid container spacing={7}>
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
@@ -378,7 +462,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 fullWidth
                 label="E-Mail"
                 name="Email"
-                placeholder="E-Mail "
+                placeholder="E-Mail"
                 value={formData.Email}
                 onChange={handleChange}
               />
@@ -422,9 +506,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
               </FormControl>
             </Grid>
 
-
-
-
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Estimated Budget</InputLabel>
@@ -434,13 +515,17 @@ const AddTellecallingDetails = ({ show, editData }) => {
                   label="Estimated Budget"
                 >
                   {estimatedBudget.map((bhk) => (
-                    <MenuItem key={bhk.EstimatedbudgetID} value={bhk.EstimatedbudgetID}>
+                    <MenuItem
+                      key={bhk.EstimatedbudgetID}
+                      value={bhk.EstimatedbudgetID}
+                    >
                       {bhk.EstimatedbudgetName}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Lead Status</InputLabel>
@@ -449,7 +534,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
                   onChange={handleLeadStatus}
                   label="Lead Status"
                 >
-                  <MenuItem value="">{/* <em>None</em> */}</MenuItem>
                   {leadStatus.map((project) => (
                     <MenuItem
                       key={project.leadstatusID}
@@ -489,6 +573,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -499,6 +584,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 onChange={handleChange}
               />
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -509,6 +595,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 onChange={handleChange}
               />
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Telecall Attended By</InputLabel>
@@ -552,6 +639,17 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
+                label="Next Follow-Up Time"
+                type="time" // Use type="time" for time input
+                name="NextFollowUpTime"
+                value={formData.NextFollowUpTime}
+                onChange={handleChange} // Implement handleChange to update formData
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
                 label="Comment"
                 name="Comments"
                 placeholder="Comment"
@@ -560,10 +658,41 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
 
+            <Grid item xs={8} sm={4}>
+  <FormControl component="fieldset">
+    <FormLabel component="legend">
+      Notification Preferences
+    </FormLabel>
+    <RadioGroup
+      aria-label="notification"
+      name="notification"
+      value={formData.SmsNotification === 1 ? "sms" : "notification"}
+      onChange={handleNotificationChange}
+    >
+      <FormControlLabel
+        value="sms"
+        control={<Radio />}
+        label="Send on SMS"
+      />
+      <FormControlLabel
+        value="notification"
+        control={<Radio />}
+        label="Send on Notification"
+      />
+    </RadioGroup>
+  </FormControl>
+</Grid>
+
+
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                sx={{ marginRight: 3.5 }}
+                sx={{
+                  marginRight: 3.5,
+                  marginTop: 5,
+                  backgroundColor: "#2563EB",
+                  color: "#FFFFFF",
+                }}
                 onClick={handleSubmit}
               >
                 Submit
@@ -580,7 +709,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
           <MuiAlert
             onClose={handleAlertClose}
             severity="success"
-            sx={{ width: "100%", backgroundColor: "green", color: "#ffffff" }}
+            sx={{
+              width: "100%",
+              backgroundColor: "green",
+              color: "#ffffff",
+            }}
           >
             {editData
               ? "Data Updated Successfully"
@@ -605,6 +738,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
         </Snackbar>
       </CardContent>
     </Card>
+    </>
   );
 };
 

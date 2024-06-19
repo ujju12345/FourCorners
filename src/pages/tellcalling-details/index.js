@@ -3,6 +3,7 @@ import { Button, Grid, CircularProgress, Alert, Box } from '@mui/material';
 import axios from 'axios';
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
 import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
+import Sidebar from 'src/views/TellecallingSidebar/Sidebar';
 
 const Tellecalling = () => {
   const [rows, setRows] = useState([]);
@@ -27,30 +28,16 @@ const Tellecalling = () => {
     }
   };
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Alert severity="error">Error fetching data: {error.message}</Alert>;
-  }
-
-  const handleNavigation = () => {
-    setEditData(null); // Clear edit data when navigating to the add form
-  };
-
   const handleBack = () => {
     setEditData(null);
     fetchData(); // Refetch data after adding or editing details
   };
 
   const handleEdit = (row) => {
-    debugger;
     setEditData(row);
   };
 
   const handleDelete = async (id) => {
-    console.log(id, 'id aayaaaaaaa');
     try {
       const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
         telecallingID: id,
@@ -86,31 +73,35 @@ const Tellecalling = () => {
     document.body.removeChild(a);
   };
 
-
-
   return (
-    <>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <AddTellecallingDetails show={handleBack} editData={editData} />
-        </Grid>
-        <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleDownload}
-            >
-              Download List
-            </Button>
-         
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <ListTellecalling rows={rows} onEdit={handleEdit} onDelete={handleDelete}/>
-        </Grid>
+    <Grid container spacing={6}>
+      <Grid item xs={4}>
+        <Sidebar rows={rows} />
       </Grid>
-    </>
+    
+
+      <Grid item xs={8}>
+        {loading && <CircularProgress />}
+        {error && (
+          <Alert severity="error">Error fetching data: {error.message}</Alert>
+        )}
+        {!loading && !error && (
+          <>
+            <AddTellecallingDetails show={handleBack} editData={editData} />
+            {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+              <Button
+                variant="contained"
+                sx={{ marginRight: 3.5 }}
+                onClick={handleDownload}
+              >
+                Download List
+              </Button>
+            </Box> */}
+            {/* <ListTellecalling rows={rows} onEdit={handleEdit} onDelete={handleDelete} /> */}
+          </>
+        )}
+      </Grid>
+    </Grid>
   );
 };
 
