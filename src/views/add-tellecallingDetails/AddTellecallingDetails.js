@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Select from "@mui/material/Select";
@@ -13,7 +13,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
-import { Snackbar } from "@mui/material";
+import {
+  Snackbar,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  FormLabel,
+} from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
@@ -26,30 +32,33 @@ const AddTellecallingDetails = ({ show, editData }) => {
     AlternateTelephoneNo: null,
     Email: "",
     ProjectID: "",
-    EstimatedBudget: "",
-    LeadstatusID: "",
+    EstimatedbudgetID: "",
+    leadstatusID: "",
     Comments: "",
     Location: "",
     FollowupThrough: "",
     NextFollowUpDate: null,
+    NextFollowUpTime: "14:30:00",
     SourceID: "",
     SourceName: "",
     SourceDescription: "",
     TelecallAttendedByID: "",
+    SmsNotification: 0,
+    EmailNotification: 0,
     CreateUID: 1,
     telecallingID: "",
     UnittypeID: "",
     Countrycode: "",
+    Status:1
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
-
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
+  const [estimatedBudget, setEstimatedBudget] = useState([]);
   const [leadStatus, setLeadStatus] = useState([]);
-
   const [userMaster, setUserMaster] = useState([]);
   const [tellecallingID, setTellecallingID] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
@@ -66,39 +75,37 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   useEffect(() => {
     if (editData) {
-      debugger;
-      const { NextFollowUpDate } = editData;
-      let formattedDate = null;
-
-      if (NextFollowUpDate) {
-        const parsedDate = new Date(NextFollowUpDate);
-        if (!isNaN(parsedDate.getTime())) {
-          formattedDate = parsedDate;
-        }
-      }
-debugger;
       setFormData({
         ...editData,
-        NextFollowUpDate: formattedDate,
+        NextFollowUpDate: editData.NextFollowUpDate
+          ? new Date(editData.NextFollowUpDate)
+          : null,
+        NextFollowUpTime: editData.NextFollowUpTime || "",
       });
-      debugger;     
     }
-
-    // if (editData) {
-    //   setFormData({
-    //     ...editData,
-    //     NextFollowUpDate: editData.SalesGoLiveDate ? new Date(editData.SalesGoLiveDate) : null,
-    //     Date: editData.Date ? new Date(editData.Date) : null,
-    //   });
-    // }
   }, [editData]);
 
-  useEffect(() => {
+  // Fetch source, estimated budget, lead status, and user master data (similar to your existing useEffects)
+
+    useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
       .then((response) => {
         if (response.data.status === "Success") {
           setSource(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-estimatedbudget.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setEstimatedBudget(response.data.data);
         }
       })
       .catch((error) => {
@@ -176,6 +183,16 @@ debugger;
     }
   };
 
+  const handleNotificationChange = (event) => {
+    const value = event.target.value === "sms" ? 1 : 0;
+    setFormData({
+      ...formData,
+      SmsNotification: value,
+      EmailNotification: value === 1 ? 0 : 1,
+    });
+  };
+  
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -208,6 +225,13 @@ debugger;
     });
   };
 
+  const handleEstimatedBudget = (event) => {
+    setFormData({
+      ...formData,
+      EstimatedbudgetID: event.target.value,
+    });
+  };
+
   const handleTelecaller = (event) => {
     setFormData({
       ...formData,
@@ -225,7 +249,7 @@ debugger;
   const handleLeadStatus = (event) => {
     setFormData({
       ...formData,
-      LeadstatusID: event.target.value,
+      leadstatusID: event.target.value,
     });
   };
 
@@ -284,9 +308,69 @@ debugger;
   };
 
   return (
-    <Card>
+    <>
+
+
+<Grid
+              container
+              justifyContent="center"
+              spacing={2}
+              // sx={{ marginTop: 5 }}
+            >
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Edit Details
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Download
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Group Transfer
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#2563EB",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Convert to Lead
+                </Button>
+              </Grid>
+            </Grid>
+
+    <Card sx={{ height: "83vh", ml: -3 , mt:5}}>
       <CardContent>
         <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+          
           <Box>
             <Typography
               variant="body2"
@@ -296,9 +380,12 @@ debugger;
                 ? "Edit Telecalling Details"
                 : "Add Telecalling Details"}
             </Typography>
+
+            
+        
           </Box>
         </Grid>
-        <form>
+        <form style={{ marginTop: "50px" }}>
           <Grid container spacing={7}>
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
@@ -375,7 +462,7 @@ debugger;
                 fullWidth
                 label="E-Mail"
                 name="Email"
-                placeholder="E-Mail "
+                placeholder="E-Mail"
                 value={formData.Email}
                 onChange={handleChange}
               />
@@ -420,24 +507,33 @@ debugger;
             </Grid>
 
             <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Estimated Budget"
-                name="EstimatedBudget"
-                placeholder="Estimated Budget"
-                value={formData.EstimatedBudget}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Estimated Budget</InputLabel>
+                <Select
+                  value={formData.EstimatedbudgetID}
+                  onChange={handleEstimatedBudget}
+                  label="Estimated Budget"
+                >
+                  {estimatedBudget.map((bhk) => (
+                    <MenuItem
+                      key={bhk.EstimatedbudgetID}
+                      value={bhk.EstimatedbudgetID}
+                    >
+                      {bhk.EstimatedbudgetName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Lead Status</InputLabel>
                 <Select
-                  value={formData.LeadstatusID}
+                  value={formData.leadstatusID}
                   onChange={handleLeadStatus}
                   label="Lead Status"
                 >
-                  <MenuItem value="">{/* <em>None</em> */}</MenuItem>
                   {leadStatus.map((project) => (
                     <MenuItem
                       key={project.leadstatusID}
@@ -477,6 +573,7 @@ debugger;
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -487,6 +584,7 @@ debugger;
                 onChange={handleChange}
               />
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
@@ -497,6 +595,7 @@ debugger;
                 onChange={handleChange}
               />
             </Grid>
+
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Telecall Attended By</InputLabel>
@@ -517,8 +616,10 @@ debugger;
             <Grid item xs={8} sm={4}>
               <DatePicker
                 selected={formData.NextFollowUpDate}
-                onChange={(date) => setFormData({ ...formData, NextFollowUpDate: date })}
-                dateFormat="yyyy-MM-dd"
+                onChange={(date) =>
+                  setFormData({ ...formData, NextFollowUpDate: date })
+                }
+                dateFormat="dd-MM-yyyy"
                 className="form-control"
                 customInput={
                   <TextField
@@ -538,6 +639,17 @@ debugger;
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
+                label="Next Follow-Up Time"
+                type="time" // Use type="time" for time input
+                name="NextFollowUpTime"
+                value={formData.NextFollowUpTime}
+                onChange={handleChange} // Implement handleChange to update formData
+              />
+            </Grid>
+
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
                 label="Comment"
                 name="Comments"
                 placeholder="Comment"
@@ -546,10 +658,41 @@ debugger;
               />
             </Grid>
 
+            <Grid item xs={8} sm={4}>
+  <FormControl component="fieldset">
+    <FormLabel component="legend">
+      Notification Preferences
+    </FormLabel>
+    <RadioGroup
+      aria-label="notification"
+      name="notification"
+      value={formData.SmsNotification === 1 ? "sms" : "notification"}
+      onChange={handleNotificationChange}
+    >
+      <FormControlLabel
+        value="sms"
+        control={<Radio />}
+        label="Send on SMS"
+      />
+      <FormControlLabel
+        value="notification"
+        control={<Radio />}
+        label="Send on Notification"
+      />
+    </RadioGroup>
+  </FormControl>
+</Grid>
+
+
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                sx={{ marginRight: 3.5 }}
+                sx={{
+                  marginRight: 3.5,
+                  marginTop: 5,
+                  backgroundColor: "#2563EB",
+                  color: "#FFFFFF",
+                }}
                 onClick={handleSubmit}
               >
                 Submit
@@ -566,7 +709,11 @@ debugger;
           <MuiAlert
             onClose={handleAlertClose}
             severity="success"
-            sx={{ width: "100%", backgroundColor: "green", color: "#ffffff" }}
+            sx={{
+              width: "100%",
+              backgroundColor: "green",
+              color: "#ffffff",
+            }}
           >
             {editData
               ? "Data Updated Successfully"
@@ -591,6 +738,7 @@ debugger;
         </Snackbar>
       </CardContent>
     </Card>
+    </>
   );
 };
 

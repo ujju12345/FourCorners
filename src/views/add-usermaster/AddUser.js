@@ -80,7 +80,7 @@ const AddUser = ({ show, rowData }) => {
         formData.append('UpdateUID', 1); // Assuming you have a user ID to pass
         response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-usermaster.php', formData);
       } else {
-        formData.append('AddUID', 1); // Assuming you have a user ID to pass
+        formData.append('AddUID', 1); // Assuming you have a user ID to pass              
         response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-insert-usermaster.php', formData);
       }
 
