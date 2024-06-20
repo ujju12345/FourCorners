@@ -17,6 +17,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import Swal from 'sweetalert2';
 import {
   Snackbar,
   FormControlLabel,
@@ -291,34 +292,53 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
-
+  
     try {
       const response = await axios.post(url, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.data.status === "Success") {
         setFormData(initialFormData);
         setSubmitSuccess(true);
         setSubmitError(false);
         show(false);
-        // updateRows(tellecallingID); 
+  
+        Swal.fire({
+          icon: 'success',
+          title: editData ? 'Data Updated Successfully' : 'Data Added Successfully',
+          showConfirmButton: false,
+          timer: 1500
+        });
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
       }
     } catch (error) {
       console.error("There was an error!", error);
       setSubmitSuccess(false);
       setSubmitError(true);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+      });
     }
   };
+  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {

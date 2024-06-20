@@ -182,7 +182,7 @@ const ListTellecalling  = ({ item, onDelete }) => {
             },
           }}
         >
-          Convert to Lead
+          Next FollowUp 
         </Button>
       </Grid>
       <Modal
@@ -234,6 +234,16 @@ const ListTellecalling  = ({ item, onDelete }) => {
             type="time"
             name="NextFollowUpTime"
             value={formData.NextFollowUpTime}
+            onChange={handleChange}
+            sx={{ mt: 3 }}
+            InputLabelProps={{ sx: { mb: 1 } }}
+          />
+           <TextField
+            fullWidth
+            // label="Next Follow-Up Time"
+            type="time"
+            name="comment"
+            value={formData.comment}
             onChange={handleChange}
             sx={{ mt: 3 }}
             InputLabelProps={{ sx: { mb: 1 } }}
