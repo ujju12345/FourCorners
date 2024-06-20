@@ -1,189 +1,485 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Avatar from "@mui/material/Avatar";
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import TableRow from '@mui/material/TableRow';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import TablePagination from '@mui/material/TablePagination';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import {  Modal ,TextField , IconButton } from '@mui/material'
+import CancelIcon from '@mui/icons-material/Cancel';
+const ListTellecalling  = ({ item, onDelete }) => {
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    NextFollowUpDate: '',
+    NextFollowUpTime: '',
+  });
 
-const ListTellecalling = ({ rows, onEdit, onDelete }) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredRows, setFilteredRows] = useState([]);
-  const [orderBy, setOrderBy] = useState('');
-  const [order, setOrder] = useState('asc');
+  const [ setRowDataToUpdate] = useState(null);
+  
+  
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    // Handle saving the selected date and time
+    console.log(formData);
+    setOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
 
   useEffect(() => {
-    setFilteredRows(rows);
-  }, [rows]);
+    const fetchData = async () => {
+      if (!item) return; // Exit if no item is provided
+      try {
+        const apiUrl ='https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}';
 
-  useEffect(() => {
-    const filteredData = rows.filter((row) => {
-      return (
-        String(row.PartyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Mobile).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.ProjectID).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Source).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceDescription).toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    setFilteredRows(filteredData);
-  }, [searchQuery, rows]);
-
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleEditButtonClick = (row) => {
-    debugger;
-    onEdit(row);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleSort = (sortBy) => {
-    const isAsc = orderBy === sortBy && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(sortBy);
-    const sortedData = filteredRows.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
-    setFilteredRows(sortedData);
-  };
-
-  const getComparator = (order, sortBy) => {
-    return (a, b) => {
-      if (a[sortBy] < b[sortBy]) return order === 'asc' ? -1 : 1;
-      if (a[sortBy] > b[sortBy]) return order === 'asc' ? 1 : -1;
-      return 0;
+        const response = await axios.get(apiUrl);
+        
+        if (response.data.status === "Success") {
+          console.log(response.data.data[0], 'Single telecalling data fetched');
+          // Update item state with fetched data
+          setRowDataToUpdate(response.data.data[0]);
+        }
+      } catch (error) {
+        
+      }
     };
-  };
+    fetchData();
+  }, [item]);
 
-  const SortableTableCell = ({ label, sortBy }) => (
-    <TableCell onClick={() => handleSort(sortBy)} sx={{ fontWeight: 'bold', cursor: 'pointer' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <span>{label}</span>
-        {orderBy === sortBy ? (
-          order === 'asc' ? (
-            <span>&#9650;</span> // Up arrow
-          ) : (
-            <span>&#9660;</span> // Down arrow
-          )
-        ) : (
-          <span>&#8597;</span> // Up and down arrow
-        )}
-      </Box>
-    </TableCell>
-  );
+
 
   return (
-    <Card>
-      <Box sx={{ padding: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-        <TextField
-          size="small"
-          placeholder="Search"
-          variant="outlined"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-            sx: {
-              borderRadius: '20px',
-              "& fieldset": {
-                borderRadius: '20px',
-              },
+    
+
+      <Card sx={{ mt: 8 }}>
+  <>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleOpen}
+          startIcon={<PersonAddIcon />}
+          sx={{
+            mr:30,
+            backgroundColor: '#f0f0f0',
+            color: '#333333',
+            fontSize: '0.6rem',
+            minWidth: 'auto',
+            minHeight: 20,
+            '&:hover': {
+              backgroundColor: '#dcdcdc',
             },
           }}
-        />
-      </Box>
-      <TableContainer>
-        <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
-          <TableHead>
-            <TableRow>
-              <SortableTableCell label="Party Name" sortBy="PartyName" />
-              <SortableTableCell label="Mobile" sortBy="Mobile" />
-              <SortableTableCell label="Project Name" sortBy="ProjectID" />
-              <SortableTableCell label="Source" sortBy="Source" />
-              <SortableTableCell label="Source Name" sortBy="SourceName" />
-              <SortableTableCell label="Source Description" sortBy="SourceDescription" />
-              <TableCell align="left">Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows.length > 0 ? (
-              filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell align="left">
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500 }}>{row.PartyName}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell align="left">{row.Mobile}</TableCell>
-                  <TableCell align="left">{row.ProjectName}</TableCell>
-                  <TableCell align="left">{row.SourceName}</TableCell>
-                  <TableCell align="left">{row.SourceName}</TableCell>
-                  <TableCell align="left">{row.SourceDescription}</TableCell>
-                  <TableCell sx={{ padding: '15px' }}>
-                    <IconButton onClick={() => handleEditButtonClick(row)} aria-label="edit" sx={{ color: 'blue' }}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => onDelete(row.telecallingID)} aria-label="delete" sx={{ color: 'red' }}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-              <TableCell colSpan={9} align="center">
-                {/* SVG image */}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
-          <path d="M0 0h24v24H0z" fill="none"/>
-          <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
-        </svg>
+        >
+          Convert to Lead
+        </Button>
+      </Grid>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            minWidth: 400,
+            maxWidth: 500,
+            mt: 5,
+            mx: 2,
+          }}
+
+        >
+           <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: 'absolute', top: 6, right:10 , }}
+          >
+            <CancelIcon sx={{color:'red'}}/>
+          </IconButton>
+          <Typography id="modal-modal-title" variant="h7" component="h3" gutterBottom>
+            Select Next Follow-Up Date and Time
+          </Typography>
+
+          <TextField
+            fullWidth
+            // label="Next Follow-Up Date"
+            type="date"
+            name="NextFollowUpDate"
+            value={formData.NextFollowUpDate}
+            onChange={handleChange}
+            sx={{ mt: 3 }}
+            InputLabelProps={{ sx: { mb: 1 } }}
+          />
+          <TextField
+            fullWidth
+            // label="Next Follow-Up Time"
+            type="time"
+            name="NextFollowUpTime"
+            value={formData.NextFollowUpTime}
+            onChange={handleChange}
+            sx={{ mt: 3 }}
+            InputLabelProps={{ sx: { mb: 1 } }}
+          />
+          <Box sx={{ textAlign: 'left' }}>
+          <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  marginRight: 3.5,
+                  marginTop: 5,
+                  backgroundColor: "#9155FD",
+                  color: "#FFFFFF",
+                }}
+                // onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+        {/* {filteredRows.map((row, index) => ( */}
+        <Paper>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              padding: 5,
+            }}
+          >
+            <Avatar
+              alt="Ujjawal"
+              src="/images/avatars/4.png"
+              sx={{ width: 60, height: 60, mr: 6 }}
+            />
+            <Box sx={{ flex: "1 1" }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+              >
+                {item?.PartyName}
+              </Typography>
+              <Typography  sx={{ fontSize: "0.9rem" }}>
+                {item?.Mobile}
+              </Typography>
+            </Box>
+          </Box>
+          {/* Source and its number */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+            
+              alignItems: "center",
+              ml: 20,
+              mt: 5,
+            }}
+          >
+            <Card sx={{ marginRight: 3 }}>
+              <Typography
+                
+                sx={{ fontSize: "0.9rem", marginLeft: 2 }}
+              >
+                • {item?.SourceName}
+              </Typography>
+            </Card>
+            <Card sx={{ marginRight: 5 }}>
+              <Typography
+                
+                sx={{ fontSize: "0.9rem", marginLeft: 2 }}
+              >
+               • {item?.Location}
+              </Typography>
+            </Card>
+            <Card sx={{ marginRight: 5 }}>
+              <Typography
+                
+                sx={{ fontSize: "0.9rem", marginLeft: 2 }}
+              >
+               • {item?.TelecallAttendedByName}
+              </Typography>
+            </Card>
+          </Box>
+          {/* Email and API email data */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 15,
+            }}
+          >
+            <Grid container spacing={3}>
+              {/* Email text */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
+                  >
+                    Email 
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.Email}</Typography>
+                </Card>
+              </Grid>
+              {/* API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                    Project Name
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.ProjectName}</Typography>
+                </Card>
+              </Grid>
+              {/* Another API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                    Unit Type
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.UnittypeName}</Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
         
-        
-                {/* Optional message */}
-                <Typography variant="body1">Data not found</Typography>
-              </TableCell>
-            </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={filteredRows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Card>
+
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+              {/* Email text */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
+                  >
+                    Estimated budget 
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.EstimatedbudgetName}</Typography>
+                </Card>
+              </Grid>
+              {/* API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                    Lead Status
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.leadstatusName}</Typography>
+                </Card>
+              </Grid>
+              {/* Another API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                   Next Follow Up-Date
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.NextFollowUpDate}</Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+              {/* Email text */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
+                  >
+                   Source Description
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.SourceDescription}</Typography>
+                </Card>
+              </Grid>
+              {/* API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                    Telecall Attended By
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.TelecallAttendedByName}</Typography>
+                </Card>
+              </Grid>
+              {/* Another API email data */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                  Alternate Mobile Number
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.AlternateMobileNo}</Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+          
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+              {/* Email text */}
+              <Grid item xs={4}>
+                <Card>
+                  <Typography
+                    
+                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
+                  >
+                    Comments
+                  </Typography>
+                  {/* Render email data from API below */}
+                  <Typography variant="body2">{item?.Comments}</Typography>
+                </Card>
+              </Grid>
+              {/* API email data */}
+           
+            </Grid>
+          </Box>
+      
+        </Paper>
+        {/* ))} */}
+        {/* <CardContent sx={{ pt: theme => ${theme.spacing(2.25)} !important }}>
+        <Box sx={{ mb: 1.5, display: 'flex', alignItems: 'center' }}>
+          <Typography variant='h4' sx={{ fontWeight: 600, fontSize: '2.125rem !important' }}>
+            $24,895
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', color: 'success.main' }}>
+            <MenuUp sx={{ fontSize: '1.875rem', verticalAlign: 'middle' }} />
+            <Typography variant='body2' sx={{ fontWeight: 600, color: 'success.main' }}>
+              10%
+            </Typography>
+          </Box>
+        </Box>
+
+        <Typography component='p' variant='caption' sx={{ mb: 10 }}>
+          Compared to $84,325 last year
+        </Typography>
+
+        {data.map((item, index) => {
+          return (
+            <Box
+              key={item.title}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                ...(index !== data.length - 1 ? { mb: 8.5 } : {})
+              }}
+            >
+              <Avatar
+                variant='rounded'
+                sx={{
+                  mr: 3,
+                  width: 40,
+                  height: 40,
+                  backgroundColor: theme => rgba(${theme.palette.customColors.main}, 0.04)
+                }}
+              >
+                <img src={item.imgSrc} alt={item.title} height={item.imgHeight} />
+              </Avatar>
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
+                    {item.title}
+                  </Typography>
+                  <Typography variant='caption'>{item.subtitle}</Typography>
+                </Box>
+
+                <Box sx={{ minWidth: 85, display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant='body2' sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
+                    {item.amount}
+                  </Typography>
+                  <LinearProgress color={item.color} value={item.progress} variant='determinate' />
+                </Box>
+              </Box>
+            </Box>
+          )
+        })}
+      </CardContent> */}
+      </Card>
+
+   
   );
 };
 
