@@ -79,19 +79,17 @@ const UserManager = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "telecalling.csv";
+    a.download = "UserProfile.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   };
 
-
-
   return (
     <>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <AddUser show={handleBack} editData={editData} />
+          <AddUser show={handleBack} editData={editData} fetchDataUser={fetchData} />
         </Grid>
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
@@ -102,7 +100,6 @@ const UserManager = () => {
             >
               Download List
             </Button>
-         
           </Box>
         </Grid>
         <Grid item xs={12}>
