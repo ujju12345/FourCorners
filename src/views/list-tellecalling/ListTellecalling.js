@@ -241,7 +241,7 @@ const ListTellecalling  = ({ item, onDelete }) => {
            <TextField
             fullWidth
             // label="Next Follow-Up Time"
-            type="time"
+            type="text"
             name="comment"
             value={formData.comment}
             onChange={handleChange}
