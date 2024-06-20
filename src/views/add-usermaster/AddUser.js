@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Card, CardContent, Typography, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
-const AddUser = ({ show, editData, fetchDataUser }) => {
+const AddUser = ({ show, rowData }) => {
   const [formState, setFormState] = useState({
     UserRoleID: '',
     Name: '',
@@ -11,29 +10,27 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
     email: '',
     username: '',
     password: '',
+    ProfilePhoto: null,
     CreateUID: 1,
-    UserID: '',
-    ModifyUID: 1
+    Status: 1
   });
-
   const [designation, setDesignation] = useState([]);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
-    if (editData && Object.keys(editData).length !== 0) {
+    if (rowData && Object.keys(rowData).length !== 0) { // Check if rowData exists and is not empty
       setFormState({
-        UserRoleID: editData.UserRoleID || '',
-        Name: editData.Name || '',
-        MobileNo: editData.MobileNo || '',
-        email: editData.email || '',
-        username: editData.username || '',
-        password: editData.password || '',
+        UserRoleID: rowData.UserRoleID || '',
+        Name: rowData.Name || '',
+        MobileNo: rowData.MobileNo || '',
+        email: rowData.email || '',
+        username: rowData.username || '',
+        password: rowData.password || '',
+        ProfilePhoto: rowData.ProfilePhoto || null,
         CreateUID: 1,
-        UserID: editData.UserID || '',
-        ModifyUID: 1
+        Status: 1
       });
     } else {
+      // Set initial form state with empty fields
       setFormState({
         UserRoleID: '',
         Name: '',
@@ -41,18 +38,18 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
         email: '',
         username: '',
         password: '',
+        ProfilePhoto: null,
         CreateUID: 1,
-        UserID: '',
-        ModifyUID: 1
+        Status: 1
       });
     }
-  }, [editData]);
+  }, [rowData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     setFormState({
       ...formState,
-      [name]: value
+      [name]: files ? files[0] : value // Handle file input
     });
   };
 
@@ -69,69 +66,31 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
       });
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const url = editData
-      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-usermaster.php"
-      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-usermaster.php";
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(url, formState, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      let response;
+      const formData = new FormData();
+      for (const key in formState) {
+        formData.append(key, formState[key]);
+      }
 
-      if (response.data.status === "Success") {
-        setFormState({
-          UserRoleID: '',
-          Name: '',
-          MobileNo: '',
-          email: '',
-          username: '',
-          password: '',
-          CreateUID: 1,
-          UserID: '',
-          ModifyUID: 1
-        });
-        fetchDataUser(); // Fetch updated user data
-        show(false); // Navigate back to the list view or close the form
-
-        // Show success alert using SweetAlert2
-        Swal.fire({
-          title: 'Success!',
-          text: `User has been successfully ${editData ? 'updated' : 'added'}!`,
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
-
-        setSubmitSuccess(true);
-        setSubmitError(false);
+      if (rowData) {
+        formData.append('UserID', rowData.UserID); // Pass the ID for updating
+        formData.append('UpdateUID', 1); // Assuming you have a user ID to pass
+        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-usermaster.php', formData);
       } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
-        
-        // Show error alert using SweetAlert2
-        Swal.fire({
-          title: 'Error!',
-          text: 'There was an error submitting the form.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        formData.append('AddUID', 1); // Assuming you have a user ID to pass              
+        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-insert-usermaster.php', formData);
+      }
+
+      if (response.data.status === 'Success') {
+        show(); // Navigate back to the list view
+      } else {
+        console.error('Error submitting data:', response.data.message);
       }
     } catch (error) {
-      console.error("There was an error!", error);
-      setSubmitSuccess(false);
-      setSubmitError(true);
-      
-      // Show error alert using SweetAlert2
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error submitting the form.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      console.error('There was an error!', error);
     }
   };
 
@@ -146,7 +105,7 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
     <Card>
       <CardContent>
         <Typography variant="h5" gutterBottom>
-          {editData ? 'Update User' : 'Add User'}
+          {rowData ? 'Update User' : 'Add User'}
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
@@ -191,6 +150,7 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
                 fullWidth
                 label="Password"
                 name="password"
+                type="password"
                 value={formState.password}
                 onChange={handleChange}
               />
@@ -212,9 +172,18 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Profile Photo"
+                name="ProfilePhoto"
+                type="file"
+                onChange={handleChange}
+              />
+            </Grid>
             <Grid item xs={12}>
               <Button variant="contained" color="primary" type="submit">
-                {editData ? 'Update' : 'Add'}
+                {rowData ? 'Update' : 'Add'}
               </Button>
             </Grid>
           </Grid>
