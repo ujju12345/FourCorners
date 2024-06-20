@@ -9,6 +9,10 @@ import InputLabel from "@mui/material/InputLabel";
 import CardContent from "@mui/material/CardContent";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
+import EditIcon from '@mui/icons-material/Edit';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import GroupIcon from '@mui/icons-material/Group';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -23,6 +27,7 @@ import {
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
+  console.log(editData , 'Edit data aaya');
   const initialFormData = {
     titleprefixID: "",
     PartyName: "",
@@ -37,16 +42,16 @@ const AddTellecallingDetails = ({ show, editData }) => {
     Comments: "",
     Location: "",
     FollowupThrough: "",
-    NextFollowUpDate: null,
-    NextFollowUpTime: "14:30:00",
+    NextFollowUpDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
+    NextFollowUpTime:getCurrentTime(),
     SourceID: "",
     SourceName: "",
     SourceDescription: "",
     TelecallAttendedByID: "",
     SmsNotification: 0,
     EmailNotification: 0,
-    CreateUID: 1,
-    telecallingID: "",
+    ModifyUID: 1,
+    Tid: "",
     UnittypeID: "",
     Countrycode: "",
     Status:1
@@ -218,6 +223,21 @@ const AddTellecallingDetails = ({ show, editData }) => {
     }
   };
 
+  function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+  useEffect(() => {
+    // Set the default value to current time when the component mounts
+    setFormData((prev) => ({
+      ...prev,
+      NextFollowUpTime: getCurrentTime(),
+    }));
+  }, []);
+
+
   const handleBhkChange = (event) => {
     setFormData({
       ...formData,
@@ -264,7 +284,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     if (tellecallingID.length > 0) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        telecallingID: parseInt(tellecallingID[0].telecallingID) || "",
+        Tid: parseInt(tellecallingID[0].Tid) || "",
       }));
     }
   }, [tellecallingID]);
@@ -287,7 +307,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
         setFormData(initialFormData);
         setSubmitSuccess(true);
         setSubmitError(false);
-        show();
+        show(false);
+        // updateRows(tellecallingID); 
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
@@ -306,68 +327,103 @@ const AddTellecallingDetails = ({ show, editData }) => {
     setSubmitSuccess(false);
     setSubmitError(false);
   };
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      NextFollowUpDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000), // 2 days ahead
+    }));
+  }, []);
+
+
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, NextFollowUpDate: date });
+  };
 
   return (
     <>
 
 
-<Grid
-              container
-              justifyContent="center"
-              spacing={2}
-              // sx={{ marginTop: 5 }}
-            >
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  sx={{
-                    backgroundColor: "#2563EB",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Edit Details
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  sx={{
-                    backgroundColor: "#2563EB",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Download
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  sx={{
-                    backgroundColor: "#2563EB",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Group Transfer
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit}
-                  sx={{
-                    backgroundColor: "#2563EB",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Convert to Lead
-                </Button>
-              </Grid>
-            </Grid>
+{/* <Grid container justifyContent="center" spacing={2} sx={{ marginBottom: 5 }}>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          startIcon={<EditIcon />}
+          sx={{
+            backgroundColor: "#f0f0f0", // Light gray background color
+            color: "#333333", // Dark gray text color
+            fontSize: "0.6rem",
+            minWidth: "auto",
+            minHeight: 20, // Decrease button height
+            "&:hover": {
+              backgroundColor: "#dcdcdc", // Darken background on hover
+            },
+          }}
+        >
+          Edit Details
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          startIcon={<GetAppIcon />}
+          sx={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+            fontSize: "0.6rem",
+            minWidth: "auto",
+            minHeight: 20,
+            "&:hover": {
+              backgroundColor: "#dcdcdc",
+            },
+          }}
+        >
+          Download
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          startIcon={<GroupIcon />}
+          sx={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+            fontSize: "0.6rem",
+            minWidth: "auto",
+            minHeight: 20,
+            "&:hover": {
+              backgroundColor: "#dcdcdc",
+            },
+          }}
+        >
+          Group Transfer
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          startIcon={<PersonAddIcon />}
+          sx={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+            fontSize: "0.6rem",
+            minWidth: "auto",
+            minHeight: 20,
+            "&:hover": {
+              backgroundColor: "#dcdcdc",
+            },
+          }}
+        >
+          Convert to Lead
+        </Button>
+      </Grid>
+    </Grid> */}
 
-    <Card sx={{ height: "83vh", ml: -3 , mt:5}}>
+    <Card sx={{ height:"auto" }}>
+   
       <CardContent>
         <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
           
@@ -614,38 +670,39 @@ const AddTellecallingDetails = ({ show, editData }) => {
             </Grid>
 
             <Grid item xs={8} sm={4}>
-              <DatePicker
-                selected={formData.NextFollowUpDate}
-                onChange={(date) =>
-                  setFormData({ ...formData, NextFollowUpDate: date })
-                }
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="Next Follow Up Date"
-                    error={!!errors.date}
-                    helperText={errors.date}
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                  />
-                }
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Next Follow-Up Time"
-                type="time" // Use type="time" for time input
-                name="NextFollowUpTime"
-                value={formData.NextFollowUpTime}
-                onChange={handleChange} // Implement handleChange to update formData
-              />
-            </Grid>
+      <DatePicker
+        selected={formData.NextFollowUpDate}
+        onChange={handleDateChange}
+        dateFormat="dd-MM-yyyy"
+        className="form-control"
+        customInput={
+          <TextField
+            fullWidth
+            label="Next Follow Up Date"
+            InputProps={{
+              readOnly: true,
+              sx: { width: '100%' },
+            }}
+          />
+        }
+      />
+    </Grid>
+    <Grid item xs={8} sm={4}>
+      <TextField
+        fullWidth
+        label="Next Follow-Up Time"
+        type="time"
+        name="NextFollowUpTime"
+        value={formData.NextFollowUpTime}
+        onChange={handleChange}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputProps={{
+          step: 300, // 5 minute intervals
+        }}
+      />
+    </Grid>
 
             <Grid item xs={8} sm={4}>
               <TextField
@@ -690,7 +747,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 sx={{
                   marginRight: 3.5,
                   marginTop: 5,
-                  backgroundColor: "#2563EB",
+                  backgroundColor: "#9155FD",
                   color: "#FFFFFF",
                 }}
                 onClick={handleSubmit}
