@@ -16,17 +16,28 @@ import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
-const ListUserMaster = () => {
+
+const ListUserMaster = ({onEdit}) => {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('asc');
+  const [deleteId, setDeleteId] = useState(null);
+  const [open, setOpen] = useState(false);
+
 
   useEffect(() => {
     fetchData();
@@ -60,11 +71,43 @@ const ListUserMaster = () => {
     }
   };
 
-  const handleDelete = (userID) => {
-    
+  const handleClose = () => {
+    setOpen(false);
+    setDeleteId(null);
   };
 
-  const handleEdit = (rowData) => {
+  const handleDeleteUser = (UserID) => {
+    setDeleteId(UserID);
+    setOpen(true);
+  };
+
+  const handleDelete = async () => {
+    const body = {
+      UserID: deleteId,
+      DeleteUID: 1,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-usermaster.php",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data.status === "Success") {
+        setRows(rows.filter(row => row.UserID !== deleteId));
+      } else {
+        console.error("Failed to delete:", response.data);
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+    } finally {
+      setOpen(false);
+      setDeleteId(null);
+    }
   };
 
   const handleSearchChange = (event) => {
@@ -154,7 +197,7 @@ const ListUserMaster = () => {
               <SortableTableCell label="Mobile Number" sortBy="MobileNo" />
               <SortableTableCell label="Email" sortBy="email" />
               <SortableTableCell label="Username" sortBy="username" />
-              <SortableTableCell label="Password" sortBy="password" />
+              {/* <SortableTableCell label="Password" sortBy="password" /> */}
               <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
@@ -162,17 +205,17 @@ const ListUserMaster = () => {
             {filteredRows.length > 0 ? (
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell align="left">{row.UserRoleID}</TableCell>
+                  <TableCell align="left">{row.UserRole}</TableCell>
                   <TableCell align="left">{row.Name}</TableCell>
                   <TableCell align="left">{row.MobileNo}</TableCell>
                   <TableCell align="left">{row.email}</TableCell>
                   <TableCell align="left">{row.username}</TableCell>
-                  <TableCell align="left">{row.password}</TableCell>
+                  {/* <TableCell align="left">{row.password}</TableCell> */}
                   <TableCell align="left">
-                    <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
+                    <IconButton onClick={() => onEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.UserID)} aria-label="delete" sx={{ color: 'red' }}>
+                    <IconButton onClick={() => handleDeleteUser(row.UserID)} aria-label="delete" sx={{ color: 'red' }}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -197,6 +240,26 @@ const ListUserMaster = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
+<Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this company ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

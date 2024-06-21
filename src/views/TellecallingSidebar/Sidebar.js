@@ -34,7 +34,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 
-const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
+const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -128,8 +128,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
     setDeleteId(id);
     setConfirmDelete(true);
   };
-  
-    const handleListItemClick = (item) => {
+
+  const handleListItemClick = (item) => {
     onItemClick(item);
   };
 
@@ -192,7 +192,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
     const values = json
       .map((obj) => Object.values(obj).join(","))
       .join("\n");
-    return `${header}\n${values}`;
+      return `${header}\n${values}`;
   };
 
   const handleDownload = () => {
@@ -207,15 +207,12 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
     document.body.removeChild(a);
   };
 
-
-
   return (
     <Card
       sx={{
         width: 330,
         padding: 5,
-        height: "auto",
-        minHeight: 800,
+        height: 700,
         overflowY: "auto",
       }}
     >
@@ -225,6 +222,13 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
             All Telecaller
           </Typography>
           <Box display="flex" alignItems="center">
+          <IconButton
+              aria-label="filter"
+              sx={{ color: "grey" }}
+              onClick={onCreate}
+            >
+              <AddIcon />
+            </IconButton>
             <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
@@ -269,13 +273,13 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
             >
               <MoreVertIcon />
             </IconButton>
-            <Menu
+            <Popover
               id="menu"
               anchorEl={anchorElDots}
               open={Boolean(anchorElDots)}
               onClose={handleDotsMenuClose}
               anchorOrigin={{
-                vertical: "top",
+                vertical: "bottom",
                 horizontal: "right",
               }}
               transformOrigin={{
@@ -289,7 +293,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
                 </ListItemIcon>
                 Download All Data
               </MenuItem>
-            </Menu>
+            </Popover>
           </Box>
         </Box>
       </Grid>
@@ -355,63 +359,62 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  }) => {
               .map((item) => (
                 <React.Fragment key={item.Tid}>
                   <Card sx={{marginBottom:2}}>
-                  <ListItem disablePadding onClick={() => handleListItemClick(item)}>
-  <ListItemAvatar>
-    <Avatar
-      alt="John Doe"
-      sx={{ width: 40, height: 40, margin: 2 }}
-      src="/images/avatars/1.png"
-    />
-  </ListItemAvatar>
-  <ListItemText
-    primary={
-      <Typography
-        variant="subtitle1"
-        style={{ fontWeight: "bold" }}
-      >
-        {item.PartyName}
-      </Typography>
-    }
-    secondary={
-      <>
-        <Typography variant="body2" style={{ fontSize: 10 }}>
-          Phone: {item.Mobile}
-        </Typography>
-        <Typography variant="body2" style={{ fontSize: 10 }}>
-          Next follow Up: {item.NextFollowUpDate}
-        </Typography>
-      </>
-    }
-    secondaryTypographyProps={{ variant: "body2" }}
-  />
-  <Box
-    display="flex"
-    flexDirection="column"
-    alignItems="flex-end"
-  >
-    <IconButton
-      aria-label="edit"
-      onClick={(event) => {
-        event.stopPropagation();
-        onEdit(item);
-      }}
-      sx={{ color: "blue" }}
-    >
-      <EditIcon />
-    </IconButton>
-    <IconButton
-      aria-label="delete"
-      onClick={(event) => {
-        event.stopPropagation();
-        handleOpenConfirmDelete(item.Tid);
-      }}
-      sx={{ color: "red" }}
-    >
-      <DeleteIcon />
-    </IconButton>
-  </Box>
-</ListItem>
-
+                   <ListItem disablePadding onClick={() => handleListItemClick(item)}>
+                      <ListItemAvatar>
+                        <Avatar
+                          alt="John Doe"
+                          sx={{ width: 40, height: 40, margin: 2 }}
+                          src="/images/avatars/1.png"
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="subtitle1"
+                            style={{ fontWeight: "bold" }}
+                          >
+                            {item.PartyName}
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            <Typography variant="body2" style={{ fontSize: 10 }}>
+                              Phone: {item.Mobile}
+                            </Typography>
+                            <Typography variant="body2" style={{ fontSize: 10 }}>
+                              Next follow Up: {item.NextFollowUpDate}
+                            </Typography>
+                          </>
+                        }
+                        secondaryTypographyProps={{ variant: "body2" }}
+                      />
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="flex-end"
+                      >
+                        <IconButton
+                          aria-label="edit"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onEdit(item);
+                          }}
+                          sx={{ color: "blue" }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleOpenConfirmDelete(item.Tid);
+                          }}
+                          sx={{ color: "red" }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </ListItem>
                   </Card>
                 </React.Fragment>
               ))}

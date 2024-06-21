@@ -4,7 +4,6 @@ import axios from 'axios';
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
 import Sidebar from 'src/views/TellecallingSidebar/Sidebar';
 import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const Tellecalling = () => {
   const [rows, setRows] = useState([]);
@@ -32,28 +31,15 @@ const Tellecalling = () => {
     }
   };
 
-  const handleBack = () => {
-    setEditData(null);
-    setShowAddDetails(false); // Hide AddTellecallingDetails
-    fetchData(); // Refetch data after adding or editing details
-  };
-
-  const handleEdit = (row) => {
-    setEditData(row);
-    setRowDataToUpdate(null); // Reset rowDataToUpdate when editing
-    setShowAddDetails(true); // Hide AddTellecallingDetails
-  };
-
-
-
+ 
   const handleDelete = async (id) => {
     try {
       const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
-        telecallingID: id,
+        Tid: id,
         DeleteUID: 1
       });
       if (response.data.status === 'Success') {
-        setRows(rows.filter(row => row.telecallingID !== id));
+        setRows(rows.filter(row => row.Tid !== id));
         console.log('Deleted successfully');
         setRowDataToUpdate(null); // Reset rowDataToUpdate after deletion
         setShowAddDetails(false); // Hide AddTellecallingDetails after deletion
@@ -63,55 +49,50 @@ const Tellecalling = () => {
       setError(error);
     }
   };
-  const updateRows = (newRows) => {
-    setRows(newRows);
+
+
+
+  const handleBack = () => {
+    setEditData(null);
+    setShowAddDetails(false); // Hide AddTellecallingDetails
+    fetchData(); // Refetch data after adding or editing details
   };
+
+  const handleEdit = (row) => {
+    setEditData(row);
+    setRowDataToUpdate(null); // Reset rowDataToUpdate when editing
+    setShowAddDetails(true); // Show AddTellecallingDetails
+  };
+
+
   const handleShow = (item) => {
-   // Show ListTellecalling component
+    // Show ListTellecalling component
     setRowDataToUpdate(item); // Set item to display details in ListTellecalling
     setShowAddDetails(false); // Hide AddTellecallingDetails
   };
 
   const handleAddTelecaller = () => {
     setShowAddDetails(true); // Show AddTellecallingDetails
-    setRowDataToUpdate(null); // Reset rowDataToUpdate
+    // setRowDataToUpdate(null); // Reset rowDataToUpdate
   };
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <Sidebar rows={rows} onItemClick={handleShow}  onEdit={handleEdit}   />
+        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
         {error && (
           <Alert severity="error">Error fetching data: {error.message}</Alert>
         )}
-        {!loading && !error && !showAddDetails && rows.length > 0 && (
-          <>
-          <Button
-            variant="contained"
-            sx={{
-              marginTop: "50px",
-              marginBottom: "20px", // Space between button and ListTellecalling
-              backgroundColor: "#9155FD",
-              color: "#FFFFFF",
-            }}
-            onClick={handleAddTelecaller}
-          >
-            Add Telecaller
-          </Button>
 
-       
-          </>
-          
-        )}
-        {!loading && !error && !showAddDetails && rows.length === 0 && (
+        {!loading && !error && !showAddDetails && !rowDataToUpdate && (
           <Button
             variant="contained"
             sx={{
               marginTop: "50px",
-              marginBottom: "20px", // Space between button and ListTellecalling
+              marginBottom: "20px",
               backgroundColor: "#9155FD",
               color: "#FFFFFF",
             }}
@@ -124,20 +105,21 @@ const Tellecalling = () => {
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
         {!loading && !error && (
-  <>
-    {rowDataToUpdate && (
-      <ListTellecalling
-        item={rowDataToUpdate} // Pass the selected item to ListTellecalling
-       // Ensure this is correctly passed
-        onDelete={handleDelete}
-      />
-    )}
-  </>
-)}
-
+          <>
+            {rowDataToUpdate && (
+              <ListTellecalling
+                item={rowDataToUpdate} // Pass the selected item to ListTellecalling
+                onDelete={handleDelete}
+                // onCreate={handleAddTelecaller} // Pass the onCreate handler
+             
+                />
+            )}
+          </>
+        )}
       </Grid>
     </Grid>
   );
+
 };
 
 export default Tellecalling;
