@@ -14,7 +14,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {  Modal ,TextField , IconButton } from '@mui/material'
 import CancelIcon from '@mui/icons-material/Cancel';
-const ListTellecalling  = ({ item, onDelete ,onEdit }) => {
+const ListTellecalling  = ({ item, onDelete , onEdit }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     NextFollowUpDate: '',
@@ -151,7 +151,10 @@ const ListTellecalling  = ({ item, onDelete ,onEdit }) => {
       <Grid item>
         <Button
           variant="contained"
-          onClick={handleEdit}
+          onClick={(event) => {
+            event.stopPropagation();
+            onEdit(item);
+          }}
           startIcon={<EditIcon />}
           sx={{
             backgroundColor: "#f0f0f0", // Light gray background color

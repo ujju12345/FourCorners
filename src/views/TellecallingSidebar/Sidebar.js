@@ -34,7 +34,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 
-const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
+const Sidebar = ({ onEdit, onItemClick, onAdd }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -219,13 +219,13 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Telecaller
+            All Lead
           </Typography>
           <Box display="flex" alignItems="center">
           <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
-              onClick={onCreate}
+              onClick={onAdd}
             >
               <AddIcon />
             </IconButton>
@@ -345,7 +345,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            onClick={onCreate}
+            onClick={onAdd}
             sx={{ mt: 2 }}
           >
             Create Telecalling
