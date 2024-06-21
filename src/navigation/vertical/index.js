@@ -127,6 +127,15 @@ const navigation = () => {
       icon: CreditCardOutline,
       path: '/tellcalling-details'
     },
+
+
+    {
+      title: 'Opportunity',
+      icon: CreditCardOutline,
+      path: '/'
+    },
+
+
     {
       icon: CubeOutline,
       title: 'Installment',

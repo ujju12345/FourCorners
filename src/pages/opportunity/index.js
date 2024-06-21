@@ -7,7 +7,7 @@ import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
 import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import Box from "@mui/material/Box";
 
-const Tellecalling = () => {
+const Opportunity = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -148,4 +148,4 @@ const Tellecalling = () => {
   );
 };
 
-export default Tellecalling;
+export default Opportunity;
