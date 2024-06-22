@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, CircularProgress, Alert, Button, Typography } from '@mui/material';
 import axios from 'axios';
-import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
-import Sidebar from 'src/views/TellecallingSidebar/Sidebar';
-import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
+import AddContact from 'src/views/add-contact/AddContact';
+import SidebarContactDetails from 'src/views/sidebarContacts/SidebarContactDetails';
+import ListContact from 'src/views/list-contact/ListContact';
 import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import Box from "@mui/material/Box";
 
-const Opportunity = () => {
+const Contact = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -85,7 +85,7 @@ const Opportunity = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <SidebarContactDetails rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
@@ -109,20 +109,20 @@ const Opportunity = () => {
         )}
 
         {showAddDetails && (
-          <AddTellecallingDetails show={handleBack} editData={editData} />
+          <AddContact show={handleBack} editData={editData} />
         )}
 
         {!loading && !error && (
           <>
             {rowDataToUpdate && !showHistory && (
-              <ListTellecalling
+              <ListContact
                 item={rowDataToUpdate}
                 onDelete={handleDelete}
                 onHistoryClick={handleShowHistory} // Pass the handler to show history
               />
             )}
 
-            {showHistory && (
+            {/* {showHistory && (
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
                      <Box>
             <Typography
@@ -140,7 +140,7 @@ const Opportunity = () => {
                   onBack={handleBack} // Pass any necessary handlers
                 />
               </div>
-            )}
+            )} */}
           </>
         )}
       </Grid>
@@ -148,4 +148,4 @@ const Opportunity = () => {
   );
 };
 
-export default Opportunity;
+export default Contact;

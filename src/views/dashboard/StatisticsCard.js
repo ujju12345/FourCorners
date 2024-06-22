@@ -15,6 +15,7 @@ import DotsVertical from 'mdi-material-ui/DotsVertical'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 
+
 const salesData = [
   {
     stats: '245k',
@@ -41,6 +42,14 @@ const salesData = [
     icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
   }
 ]
+
+const pieData = [
+  { name: 'Sales', value: 245000, color: '#3f51b5' },
+  { name: 'Customers', value: 12500, color: '#4caf50' },
+  { name: 'Products', value: 1540, color: '#ff9800' },
+  { name: 'Revenue', value: 88000, color: '#00acc1' }
+]
+
 
 const renderStats = () => {
   return salesData.map((item, index) => (

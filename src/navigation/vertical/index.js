@@ -130,6 +130,14 @@ const navigation = () => {
 
 
     {
+      title: 'Contacts',
+      icon: CreditCardOutline,
+      path: '/contact'
+    },
+
+
+
+    {
       title: 'Opportunity',
       icon: CreditCardOutline,
       path: '/'
