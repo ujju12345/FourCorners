@@ -170,191 +170,192 @@ export default function HistoryTelecalling({ item }) {
     }
   };
 
-
   return (
-    <>
-      <CustomTimeline align="alternate">
-        {rowData.length > 0 ? rowData.map((data, index) => (
-          <TimelineItem key={index}>
-            <TimelineOppositeContent>
-              <Typography variant="body2" color="textSecondary">
-                {data.NextFollowUpDate}
-              </Typography>
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot style={{ backgroundColor: 'green' }}>
-                <CheckCircleIcon style={{ color: 'white' }} />
-              </TimelineDot>
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <CustomPaper elevation={3}>
-                <Typography variant="h6" component="h1" style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <PersonIcon style={{ marginRight: 8 }} />
-                    <span style={{ fontWeight: 'bold' }}>
-                      {data.UserRole}
-                    </span>
-                  </span>
-                  <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
-                    Time: {data.NextFollowUpTime}
-                  </Typography>
+    <Box
+    // Adjust height as needed
+    >
+      <Box width="100%">
+        <CustomTimeline align="alternate">
+          {rowData.length > 0 ? rowData.map((data, index) => (
+            <TimelineItem key={index}>
+              <TimelineOppositeContent>
+                <Typography variant="body2" color="textSecondary">
+                  {data.NextFollowUpDate}
                 </Typography>
-                <Typography>Note: {data.Note}</Typography>
-              </CustomPaper>
-            </TimelineContent>
-          </TimelineItem>
-        )) : (
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
-            {/* <img src={NoDataSVG} alt="No Data" style={{ width: '200px', height: '200px' }} /> */}
-            <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
-              No data available
-            </Typography>
-          </Box>
-        )}
-      </CustomTimeline>
-      <Button 
-        variant="contained" 
-        color="primary" 
-        fullWidth 
-        style={{ marginTop: '16px' }}
-        onClick={handleAddFollowUpClick}
-      >
-        Add New Follow Up
-      </Button>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            minWidth: 500,
-            maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
-            mt: 5,
-            mx: 2,
-            minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: 'auto', 
-          }}
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineDot style={{ backgroundColor: 'green' }}>
+                  <CheckCircleIcon style={{ color: 'white' }} />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent>
+                <CustomPaper elevation={3}>
+                  <Typography variant="h6" component="h1" style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <PersonIcon style={{ marginRight: 8 }} />
+                      <span style={{ fontWeight: 'bold' }}>
+                        {data.UserRole}
+                      </span>
+                    </span>
+                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
+                      Time: {data.NextFollowUpTime}
+                    </Typography>
+                  </Typography>
+                  <Typography>Note: {data.Note}</Typography>
+                </CustomPaper>
+              </TimelineContent>
+            </TimelineItem>
+          )) : (
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
+              {/* <img src={NoDataSVG} alt="No Data" style={{ width: '200px', height: '200px' }} /> */}
+              <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
+                No data available
+              </Typography>
+            </Box>
+          )}
+        </CustomTimeline>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          fullWidth 
+          style={{ marginTop: '16px' }}
+          onClick={handleAddFollowUpClick}
         >
-          <IconButton
-            aria-label="cancel"
-            onClick={handleClose}
-            sx={{ position: "absolute", top: 6, right: 10 }}
-          >
-            <CancelIcon sx={{ color: "red" }} />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h7"
-            component="h3"
-            gutterBottom
-          >
-            Select Next Follow-Up Date and Time
-          </Typography>
+          Add New Follow Up
+        </Button>
 
-          <Grid container spacing={2} mt={8}>
-     
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              minWidth: 500,
+              maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
+              mt: 5,
+              mx: 2,
+              minHeight: 400, // Adjust the minHeight to increase the height of the modal
+              height: 'auto', 
+            }}
+          >
+            <IconButton
+              aria-label="cancel"
+              onClick={handleClose}
+              sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton>
+            <Typography
+              id="modal-modal-title"
+              variant="h7"
+              component="h3"
+              gutterBottom
+            >
+              Select Next Follow-Up Date and Time
+            </Typography>
 
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel>Current Update</InputLabel>
-                <Select
-                  value={formData.CurrentUpdateID}
-                  onChange={handleCurrentUpdate}
-                  label="Current Update"
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 180, // Adjust as needed
+            <Grid container spacing={2} mt={8}>
+              <Grid item xs={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Current Update</InputLabel>
+                  <Select
+                    value={formData.CurrentUpdateID}
+                    onChange={handleCurrentUpdate}
+                    label="Current Update"
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 180, // Adjust as needed
+                        },
                       },
-                    },
+                    }}
+                  >
+                    {currentUpdate.map((bhk) => (
+                      <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
+                        {bhk.CurrentUpdateName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  // label="Next Follow-Up Date"
+                  type="date"
+                  name="NextFollowUpDate"
+                  value={formData.NextFollowUpDate}
+                  onChange={handleChange}
+                  InputLabelProps={{ sx: { mb: 1 } }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  // label="Next Follow-Up Time"
+                  type="time"
+                  name="NextFollowUpTime"
+                  value={formData.NextFollowUpTime}
+                  onChange={handleChange}
+                  InputLabelProps={{ sx: { mb: 1 } }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Interest In"
+                  type="text"
+                  name="Interest"
+                  value={formData.Interest}
+                  onChange={handleChange}
+                  InputLabelProps={{ sx: { mb: 1 } }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Note"
+                  type="text"
+                  name="Note"
+                  value={formData.Note}
+                  onChange={handleChange}
+                  InputLabelProps={{ sx: { mb: 1 } }}
+                />
+              </Grid>
+            </Grid>
+
+            <Box sx={{ textAlign: "left" }}>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginRight: 3.5,
+                    marginTop: 15,
+                    backgroundColor: "#9155FD",
+                    color: "#FFFFFF",
                   }}
-                  
+                  onClick={handleSubmit}
                 >
-                  {currentUpdate.map((bhk) => (
-                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
-                      {bhk.CurrentUpdateName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                // label="Next Follow-Up Date"
-                type="date"
-                name="NextFollowUpDate"
-                value={formData.NextFollowUpDate}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                // label="Next Follow-Up Time"
-                type="time"
-                name="NextFollowUpTime"
-                value={formData.NextFollowUpTime}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Interest In"
-                type="text"
-                name="Interest"
-                value={formData.Interest}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Note"
-                type="text"
-                name="Note"
-                value={formData.Note}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-          </Grid>
-
-          <Box sx={{ textAlign: "left" }}>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                sx={{
-                  marginRight: 3.5,
-                  marginTop: 15,
-                  backgroundColor: "#9155FD",
-                  color: "#FFFFFF",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Grid>
+                  Submit
+                </Button>
+              </Grid>
+            </Box>
           </Box>
-        </Box>
-      </Modal>
-    </>
+        </Modal>
+      </Box>
+    </Box>
   );
-}
+};
+
+
