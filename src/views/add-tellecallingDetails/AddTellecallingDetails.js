@@ -79,6 +79,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
     fetchDataTitle();
   }, []);
 
+
+  
   useEffect(() => {
     if (editData) {
       setFormData({
@@ -223,6 +225,12 @@ const AddTellecallingDetails = ({ show, editData }) => {
       });
     }
   };
+  const RequiredIndicator = () => {
+    return (
+      <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
+    );
+  };
+  
 
   function getCurrentTime() {
     const now = new Date();
@@ -465,7 +473,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
           <Grid container spacing={7}>
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Title</InputLabel>
+                <InputLabel>Title  <RequiredIndicator /></InputLabel>
                 <Select
                   value={formData.titleprefixID}
                   onChange={handleTitleChange}
@@ -483,17 +491,26 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Party Name"
+                label={
+                  <>
+                    Party Name <RequiredIndicator />
+                  </>
+                }
                 name="PartyName"
                 value={formData.PartyName}
                 onChange={handleChange}
+                
               />
             </Grid>
 
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Country Code"
+                label={
+                  <>
+                    Country Code <RequiredIndicator />
+                  </>
+                }
                 type="tel"
                 name="Countrycode"
                 value={formData.Countrycode}
@@ -507,13 +524,19 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Mobile"
+                label={
+                  <>
+                    Mobile <RequiredIndicator />
+                  </>
+                }
                 type="tel"
                 name="Mobile"
                 value={formData.Mobile}
                 onChange={handleChange}
                 inputProps={{
                   pattern: "[0-9]*",
+                 maxLength: 10
+
                 }}
               />
             </Grid>
@@ -529,6 +552,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 onChange={handleChange}
                 inputProps={{
                   pattern: "[0-9]*",
+                 maxLength: 10
+
                 }}
               />
             </Grid>
@@ -536,7 +561,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="E-Mail"
+                label={
+                  <>
+                    Email <RequiredIndicator />
+                  </>
+                }
                 name="Email"
                 placeholder="E-Mail"
                 value={formData.Email}
@@ -546,12 +575,16 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Project Name</InputLabel>
+                <InputLabel>Project Name <RequiredIndicator /></InputLabel>
                 <Select
                   value={formData.ProjectID}
                   name="ProjectID"
                   onChange={handleChange}
-                  label="Project Name"
+                  label={
+                    <>
+                      Project Name  
+                    </>
+                  }
                 >
                   <MenuItem value="">
                     <em>None</em>
@@ -567,11 +600,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Unit Type</InputLabel>
+                <InputLabel>Unit Type <RequiredIndicator /></InputLabel>
                 <Select
                   value={formData.UnittypeID}
                   onChange={handleBhkChange}
-                  label="Unit Type"
+                  label={
+                    <>
+                      Unit Type <RequiredIndicator />
+                    </>
+                  }
                 >
                   {bhkOptions.map((bhk) => (
                     <MenuItem key={bhk.UnittypeID} value={bhk.UnittypeID}>
@@ -588,7 +625,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 <Select
                   value={formData.EstimatedbudgetID}
                   onChange={handleEstimatedBudget}
-                  label="Estimated Budget"
+                  label={
+                    <>
+                      Estimated Budget <RequiredIndicator />
+                    </>
+                  }
                 >
                   {estimatedBudget.map((bhk) => (
                     <MenuItem
@@ -604,11 +645,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Lead Status</InputLabel>
+                <InputLabel>Lead Status <RequiredIndicator /></InputLabel>
                 <Select
                   value={formData.leadstatusID}
                   onChange={handleLeadStatus}
-                  label="Lead Status"
+                  label={
+                    <>
+                      Lead Status <RequiredIndicator />
+                    </>
+                  }
                 >
                   {leadStatus.map((project) => (
                     <MenuItem
@@ -625,7 +670,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Location"
+                label={
+                  <>
+                    Location  <RequiredIndicator />
+                  </>
+                }
                 name="Location"
                 placeholder="Location"
                 value={formData.Location}
@@ -635,7 +684,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Source</InputLabel>
+                <InputLabel>Source <RequiredIndicator/></InputLabel>
                 <Select
                   value={formData.SourceID}
                   onChange={handleSource}
@@ -653,7 +702,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
             <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
-                label="Source Name"
+                label={
+                  <>
+                    Source Name <RequiredIndicator />
+                  </>
+                }
                 name="SourceName"
                 placeholder="Source Name"
                 value={formData.SourceName}
@@ -674,11 +727,12 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
-                <InputLabel>Telecall Attended By</InputLabel>
+                <InputLabel>Telecall Attended By<RequiredIndicator/></InputLabel>
                 <Select
                   value={formData.TelecallAttendedByID}
                   onChange={handleTelecaller}
-                  label="TelecallAttendedBy"
+                  label="Telecall Attended By"
+                 
                 >
                   {userMaster.map((bhk) => (
                     <MenuItem key={bhk.UserID} value={bhk.UserID}>
@@ -698,7 +752,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
         customInput={
           <TextField
             fullWidth
-            label="Next Follow Up Date"
+            label={
+              <>
+                Next follow up-date <RequiredIndicator />
+              </>
+            }
             InputProps={{
               readOnly: true,
               sx: { width: '100%' },
@@ -710,7 +768,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
     <Grid item xs={8} sm={4}>
       <TextField
         fullWidth
-        label="Next Follow-Up Time"
+        label={
+          <>
+            Next Follow Up-Time <RequiredIndicator />
+          </>
+        }
         type="time"
         name="NextFollowUpTime"
         value={formData.NextFollowUpTime}

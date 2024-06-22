@@ -108,7 +108,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid}`;
 
         const response = await axios.get(apiUrl);
 
@@ -481,7 +481,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 variant="h6"
                 sx={{ fontWeight: 600, fontSize: "1.5rem" }}
               >
-                {item?.PartyName}
+                {item?.CName}
               </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {item?.Mobile}
@@ -517,7 +517,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 Source Name: {item?.SourceName}
               </Typography>
             </div>
-            <div style={{ marginRight: 5 }}>
+            {/* <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -537,7 +537,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
               >
                 Location: {item?.Location}
               </Typography>
-            </div>
+            </div> */}
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
@@ -556,7 +556,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Attended By: {item?.TelecallAttendedByName}
+                Attended By: {item?.Name}
               </Typography>
             </div>
           </Box>
@@ -588,9 +588,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Project Name
+                    Customer Type Name
                   </Typography>
-                  <Typography variant="body2">{item?.ProjectName}</Typography>
+                  <Typography variant="body2">{item?.CustomerTypeName}</Typography>
                 </div>
               </Grid>
               <Grid item xs={4}>
@@ -599,9 +599,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Unit Type
+                    Contact Name
                   </Typography>
-                  <Typography variant="body2">{item?.UnittypeName}</Typography>
+                  <Typography variant="body2">{item?.ContactName}</Typography>
                 </div>
               </Grid>
             </Grid>
@@ -623,10 +623,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "1.0rem" }}
                   >
-                    Estimated Budget
+                    Alternate Mobile Number
                   </Typography>
                   <Typography variant="body2">
-                    {item?.EstimatedbudgetName}
+                    {item?.OtherNumbers}
                   </Typography>
                 </div>
               </Grid>
@@ -636,10 +636,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Lead Status
+                    Country Name
                   </Typography>
                   <Typography variant="body2">
-                    {item?.leadstatusName}
+                    {item?.CountryName}
                   </Typography>
                 </div>
               </Grid>
@@ -649,10 +649,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Next Follow Up-Date
+                   City Name
                   </Typography>
                   <Typography variant="body2">
-                    {item?.NextFollowUpDate}
+                    {item?.CityName}
                   </Typography>
                 </div>
               </Grid>
@@ -675,10 +675,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "1.0rem" }}
                   >
-                    Source Description
+                    Source Name
                   </Typography>
                   <Typography variant="body2">
-                    {item?.SourceDescription}
+                    {item?.SourceName}
                   </Typography>
                 </div>
               </Grid>
@@ -688,10 +688,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Telecall Attended By
+                    Source Type Name
                   </Typography>
                   <Typography variant="body2">
-                    {item?.TelecallAttendedByName}
+                    {item?.SourceTypename}
                   </Typography>
                 </div>
               </Grid>
@@ -727,9 +727,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "1.0rem" }}
                   >
-                    Comments
+                    Telecall Attended By 
                   </Typography>
-                  <Typography variant="body2">{item?.Comments}</Typography>
+                  <Typography variant="body2">{item?.Name}</Typography>
                 </div>
               </Grid>
             </Grid>

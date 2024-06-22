@@ -34,6 +34,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 
+
 const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -411,7 +412,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           }}
                           sx={{ color: "red" }}
                         >
-                          <DeleteIcon />
+                          {/* <DeleteIcon /> */}
                         </IconButton>
                       </Box>
                     </ListItem>

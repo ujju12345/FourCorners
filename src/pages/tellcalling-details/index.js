@@ -46,11 +46,12 @@ const salesData = [
 ]
 
 const pieData = [
-  { name: 'Sales', value: 245000, color: '#3f51b5' },
-  { name: 'Customers', value: 12500, color: '#4caf50' },
+  { name: 'Sales', value: 2000, color: '#3f51b5' },
+  { name: 'Customers', value: 1200, color: '#4caf50' },
   { name: 'Products', value: 1540, color: '#ff9800' },
-  { name: 'Revenue', value: 88000, color: '#00acc1' }
+  { name: 'Revenue', value: 8000, color: '#00acc1' }
 ]
+
 
 const renderStats = () => {
   return salesData.map((item, index) => (

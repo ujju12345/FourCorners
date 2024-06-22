@@ -19,13 +19,11 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  Menu,
-  ListItemIcon,
   Popover,
+  ListItemIcon,
 } from "@mui/material";
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
-import { Divider } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -33,7 +31,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
-
+import Swal from 'sweetalert2';
 const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +53,7 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
+        "https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php"
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -68,27 +66,31 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   };
 
   useEffect(() => {
-    setFilteredRows(rows);
-  }, [rows]);
-
-  useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase().trim();
     if (lowerCaseQuery === "") {
-      setFilteredRows(rows);
+      setFilteredRows(rows); // Reset to show all rows if searchQuery is empty
     } else {
-      const filteredData = rows.filter(
-        (item) =>
-          item.PartyName.toLowerCase().includes(lowerCaseQuery) ||
-          item.Mobile.toLowerCase().includes(lowerCaseQuery)
-      );
-      setFilteredRows(filteredData);
+      const filteredData = rows.filter((item) => {
+        // Check if item exists and has CName and Mobile properties
+        if (item && item.CName && typeof item.Mobile === "string") {
+          return (
+            item.CName.toLowerCase().includes(lowerCaseQuery) ||
+            item.Mobile.toLowerCase().includes(lowerCaseQuery)
+          );
+        }
+        return false; // Exclude items that don't have required properties or incorrect Mobile type
+      });
+      setFilteredRows(filteredData); // Filter rows based on searchQuery
     }
-    setPage(0);
+    setPage(0); // Reset pagination to the first page
   }, [searchQuery, rows]);
+  
 
   const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
+    const { value } = event.target;
+    setSearchQuery(value);
   };
+  
 
   const handleClearSearch = () => {
     setSearchQuery("");
@@ -107,20 +109,32 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php",
+        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-contacts.php",
         {
-          Tid: deleteId,
+          Cid: deleteId,
           DeleteUID: 1,
         }
       );
       if (response.data.status === "Success") {
-        setRows(rows.filter((row) => row.Tid !== deleteId));
+        setRows(rows.filter((row) => row.Cid !== deleteId));
         console.log("Deleted successfully");
         setConfirmDelete(false);
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Your data has been deleted.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
       }
     } catch (error) {
       console.error("Error deleting data:", error);
       setError(error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error deleting the data.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   };
 
@@ -165,21 +179,29 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
+        sortedRows.sort((a, b) => {
+          if (a && a.CName && b && b.CName) {
+            return a.CName.localeCompare(b.CName);
+          }
+          return 0; // or handle differently, e.g., put items without Name at the end
+        });
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
+        sortedRows.sort((a, b) => {
+          if (a && a.CName && b && b.CName) {
+            return b.CName.localeCompare(a.CName);
+          }
+          return 0; // or handle differently, e.g., put items without Name at the end
+        });
         break;
       default:
         break;
@@ -189,10 +211,8 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
 
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
-    const values = json
-      .map((obj) => Object.values(obj).join(","))
-      .join("\n");
-      return `${header}\n${values}`;
+    const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
+    return `${header}\n${values}`;
   };
 
   const handleDownload = () => {
@@ -201,7 +221,7 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "Telecalling.csv";
+    a.download = "Contact.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -219,10 +239,10 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Telecaller
+            All Contacts
           </Typography>
           <Box display="flex" alignItems="center">
-          <IconButton
+            <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
               onClick={onCreate}
@@ -357,9 +377,12 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
             {filteredRows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
-                <React.Fragment key={item.Tid}>
-                  <Card sx={{marginBottom:2}}>
-                   <ListItem disablePadding onClick={() => handleListItemClick(item)}>
+                <React.Fragment key={item.Cid}>
+                  <Card sx={{ marginBottom: 2 }}>
+                    <ListItem
+                      disablePadding
+                      onClick={() => handleListItemClick(item)}
+                    >
                       <ListItemAvatar>
                         <Avatar
                           alt="John Doe"
@@ -373,16 +396,22 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                             variant="subtitle1"
                             style={{ fontWeight: "bold" }}
                           >
-                            {item.PartyName}
+                            {item.CName}
                           </Typography>
                         }
                         secondary={
                           <>
-                            <Typography variant="body2" style={{ fontSize: 10 }}>
+                            <Typography
+                              variant="body2"
+                              style={{ fontSize: 10 }}
+                            >
                               Phone: {item.Mobile}
                             </Typography>
-                            <Typography variant="body2" style={{ fontSize: 10 }}>
-                              Next follow Up: {item.NextFollowUpDate}
+                            <Typography
+                              variant="body2"
+                              style={{ fontSize: 10 }}
+                            >
+                              City: {item.CityName}
                             </Typography>
                           </>
                         }
@@ -407,11 +436,11 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                           aria-label="delete"
                           onClick={(event) => {
                             event.stopPropagation();
-                            handleOpenConfirmDelete(item.Tid);
+                            handleOpenConfirmDelete(item.Cid);
                           }}
                           sx={{ color: "red" }}
                         >
-                          <DeleteIcon />
+                          {/* <DeleteIcon /> */}
                         </IconButton>
                       </Box>
                     </ListItem>
