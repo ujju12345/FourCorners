@@ -479,7 +479,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+                sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
                 {item?.CName}
               </Typography>
@@ -514,10 +514,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Source Name: {item?.SourceName}
+                Source: {item?.SourceName}
               </Typography>
             </div>
-            {/* <div style={{ marginRight: 5 }}>
+             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -535,9 +535,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Location: {item?.Location}
+                City: {item?.CityName}
               </Typography>
-            </div> */}
+            </div> 
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
@@ -579,7 +579,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   >
                     Email
                   </Typography>
-                  <Typography variant="body2">{item?.Email}</Typography>
+                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.Email}</Typography>
                 </div>
               </Grid>
               <Grid item xs={4}>
@@ -588,9 +588,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Customer Type Name
+                    Customer Type
                   </Typography>
-                  <Typography variant="body2">{item?.CustomerTypeName}</Typography>
+                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.CustomerTypeName}</Typography>
                 </div>
               </Grid>
               <Grid item xs={4}>
@@ -599,9 +599,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Contact Name
+                    Contact Type
                   </Typography>
-                  <Typography variant="body2">{item?.ContactName}</Typography>
+                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.ContactName}</Typography>
                 </div>
               </Grid>
             </Grid>
@@ -625,7 +625,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   >
                     Alternate Mobile Number
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>
                     {item?.OtherNumbers}
                   </Typography>
                 </div>
@@ -636,9 +636,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Country Name
+                    Country Code
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>
                     {item?.CountryName}
                   </Typography>
                 </div>
@@ -651,7 +651,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   >
                    City Name
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                     {item?.CityName}
                   </Typography>
                 </div>
@@ -675,9 +675,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "1.0rem" }}
                   >
-                    Source Name
+                    Source 
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                     {item?.SourceName}
                   </Typography>
                 </div>
@@ -688,9 +688,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontSize: "1.0rem", fontWeight: 600 }}
                   >
-                    Source Type Name
+                    Source Type
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                     {item?.SourceTypename}
                   </Typography>
                 </div>
@@ -699,37 +699,11 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 <div>
                   <Typography
                     variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Alternate Mobile Number
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.AlternateMobileNo}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
                     sx={{ fontWeight: 600, fontSize: "1.0rem" }}
                   >
                     Telecall Attended By 
                   </Typography>
-                  <Typography variant="body2">{item?.Name}</Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
                 </div>
               </Grid>
             </Grid>

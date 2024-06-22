@@ -421,6 +421,7 @@ const AddContact = ({ show, editData }) => {
           showConfirmButton: false,
           timer: 1500
         });
+        window.location.reload();
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);

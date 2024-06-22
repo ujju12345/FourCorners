@@ -179,12 +179,12 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.CreateDate) - new Date(b.CreateDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.CreateDate) - new Date(a.CreateDate)
         );
         break;
       case "a-z":
