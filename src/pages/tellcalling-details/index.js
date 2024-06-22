@@ -249,6 +249,7 @@ const Tellecalling = () => {
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
+            onEdit={handleEdit}
           />
         )}
 
