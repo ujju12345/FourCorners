@@ -371,85 +371,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
     <>
 
 
-{/* <Grid container justifyContent="center" spacing={2} sx={{ marginBottom: 5 }}>
-      <Grid item>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          startIcon={<EditIcon />}
-          sx={{
-            backgroundColor: "#f0f0f0", // Light gray background color
-            color: "#333333", // Dark gray text color
-            fontSize: "0.6rem",
-            minWidth: "auto",
-            minHeight: 20, // Decrease button height
-            "&:hover": {
-              backgroundColor: "#dcdcdc", // Darken background on hover
-            },
-          }}
-        >
-          Edit Details
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          startIcon={<GetAppIcon />}
-          sx={{
-            backgroundColor: "#f0f0f0",
-            color: "#333333",
-            fontSize: "0.6rem",
-            minWidth: "auto",
-            minHeight: 20,
-            "&:hover": {
-              backgroundColor: "#dcdcdc",
-            },
-          }}
-        >
-          Download
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          startIcon={<GroupIcon />}
-          sx={{
-            backgroundColor: "#f0f0f0",
-            color: "#333333",
-            fontSize: "0.6rem",
-            minWidth: "auto",
-            minHeight: 20,
-            "&:hover": {
-              backgroundColor: "#dcdcdc",
-            },
-          }}
-        >
-          Group Transfer
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          startIcon={<PersonAddIcon />}
-          sx={{
-            backgroundColor: "#f0f0f0",
-            color: "#333333",
-            fontSize: "0.6rem",
-            minWidth: "auto",
-            minHeight: 20,
-            "&:hover": {
-              backgroundColor: "#dcdcdc",
-            },
-          }}
-        >
-          Convert to Lead
-        </Button>
-      </Grid>
-    </Grid> */}
-
     <Card sx={{ height:"auto" }}>
    
       <CardContent>
@@ -714,7 +635,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid>
 
-            <Grid item xs={8} sm={4}>
+            {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Source Description"
@@ -723,7 +644,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 value={formData.SourceDescription}
                 onChange={handleChange}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={8} sm={4}>
               <FormControl fullWidth>

@@ -24,6 +24,7 @@ import {
   Popover,
 } from "@mui/material";
 import axios from "axios";
+import { Chip } from '@mui/material';
 import PersonIcon from "@mui/icons-material/Person";
 import { Divider } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -370,12 +371,28 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <Typography
-                            variant="subtitle1"
-                            style={{ fontWeight: "bold" }}
-                          >
-                            {item.PartyName}
-                          </Typography>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography
+                              variant="subtitle1"
+                              style={{ fontWeight: 600, fontSize: 13 }}
+                            >
+                              {item.PartyName}
+                            </Typography>
+                            {item.leadstatusName && (
+                              <Chip
+                                label={item.leadstatusName}
+                                size="small"
+                                style={{
+                                  fontSize:8  ,
+                                  marginLeft: 8,
+                                  height:12,
+                                  p:3,
+                                  backgroundColor: getChipColor(item.leadstatusName),
+                                  color: "#000000", // Adjust text color for better contrast if needed
+                                }}
+                              />
+                            )}
+                          </div>
                         }
                         secondary={
                           <>
@@ -404,7 +421,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         >
                           <EditIcon />
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           aria-label="delete"
                           onClick={(event) => {
                             event.stopPropagation();
@@ -412,8 +429,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           }}
                           sx={{ color: "red" }}
                         >
-                          {/* <DeleteIcon /> */}
-                        </IconButton>
+                          <DeleteIcon />
+                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>
@@ -443,4 +460,17 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   );
 };
 
+// Function to get chip color based on leadstatusName
+const getChipColor = (leadstatusName) => {
+  switch (leadstatusName) {
+    case "Warm":
+      return "#FFD700"; // Yellow
+    case "Hot":
+      return "#FF6347"; // Red
+    case "Cold":
+      return "#87CEEB"; // Blue
+    default:
+      return "#FFFFFF"; // Default color
+  }
+};
 export default Sidebar;
