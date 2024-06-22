@@ -298,6 +298,7 @@ const AddContact = ({ show, editData }) => {
     });
   };
   
+
   const handleChange = (event) => {
     const { name, value } = event.target;
   
@@ -456,7 +457,7 @@ const AddContact = ({ show, editData }) => {
   };
 
 
-  const handleSubmit = async (event) => {
+const handleSubmit = async (event) => {
 
   
     event.preventDefault();
@@ -486,12 +487,14 @@ const AddContact = ({ show, editData }) => {
         show(false); // Hide the modal or close form
   
         Swal.fire({
-          icon: 'success',
-          title: editData ? 'Data Updated Successfully' : 'Data Added Successfully',
+          icon: "success",
+          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
-        window.location.reload();
+
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
@@ -511,10 +514,10 @@ const AddContact = ({ show, editData }) => {
         icon: 'error',
         title: 'Oops...',
         text: 'Something went wrong!',
-      });
-    }
-  };
-  
+      });
+    }
+  };
+
   
 
   const handleAlertClose = (event, reason) => {

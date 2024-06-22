@@ -355,46 +355,45 @@ const AddTellecallingDetails = ({ show, editData }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     // Validate form
     const isValid = validateForm();
-
+  
     if (isValid) {
       const url = editData
         ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
         : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
-
+  
       try {
         const response = await axios.post(url, formData, {
           headers: {
             "Content-Type": "application/json",
           },
         });
-
+  
         if (response.data.status === "Success") {
           setFormData(initialFormData);
           setSubmitSuccess(true);
           setSubmitError(false);
           show(false);
-
+  
           setErrors({});
-
+  
           Swal.fire({
             icon: "success",
-            title: editData
-              ? "Data Updated Successfully"
-              : "Data Added Successfully",
+            title: editData ? "Data Updated Successfully" : "Data Added Successfully",
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1000,
+          }).then(() => {
+            window.location.reload();
           });
-          window.location.reload();
+  
         } else {
           setSubmitSuccess(false);
           setSubmitError(true);
-
+  
           Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -405,7 +404,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
         console.error("There was an error!", error);
         setSubmitSuccess(false);
         setSubmitError(true);
-
+  
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -415,8 +414,9 @@ const AddTellecallingDetails = ({ show, editData }) => {
     } else {
       // Handle validation errors if any
       console.log("Form validation failed");
-    }
-  };
+    }
+  };
+
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
