@@ -240,7 +240,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <Grid item>
           <Button
             variant="contained"
-            onClick={handleEdit}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(item);
+            }}
             startIcon={<EditIcon />}
             sx={{
               backgroundColor: "#f0f0f0", // Light gray background color
@@ -471,11 +474,11 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-            <Avatar
-              alt="Ujjawal"
-              src="/images/avatars/4.png"
-              sx={{ width: 60, height: 60, mr: 6 }}
-            />
+                 <Avatar
+                          alt="John Doe"
+                          sx={{ width: 60, height: 60, mr: 6 }}
+                          src="/images/avatars/1.png"
+                        />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
@@ -562,178 +565,125 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Box>
 
           <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 15,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Email
-                  </Typography>
-                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.Email}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Customer Type
-                  </Typography>
-                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.CustomerTypeName}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Contact Type
-                  </Typography>
-                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>{item?.ContactName}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    mt: 15,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Email
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Email}</Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Customer Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.CustomerTypeName}</Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Contact Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.ContactName}</Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Alternate Mobile Number
-                  </Typography>
-                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>
-                    {item?.OtherNumbers}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Country Code
-                  </Typography>
-                  <Typography variant="body2" sx={{  fontSize: "0.8rem" }}>
-                    {item?.CountryName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                   City Name
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                    {item?.CityName}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+<Box
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+  
+    mt: 12,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Alternate Mobile Number
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.OtherNumbers}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Country Code
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.CountryName}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          City Name
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.CityName}
+        </Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Source 
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                    {item?.SourceName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Source Type
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                    {item?.SourceTypename}
-                  </Typography>
-                </div>
-              </Grid>
-              {/* <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Alternate Mobile Number
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.AlternateMobileNo}
-                  </Typography>
-                </div>
-              </Grid> */}
-            </Grid>
-          </Box>
+<Box
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+   
+    mt: 12,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Source
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.SourceName}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Source Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.SourceTypename}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Telecall Attended By
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Telecall Attended By 
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
         </Paper>
       </Card>
     </>

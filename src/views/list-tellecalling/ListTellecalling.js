@@ -474,11 +474,11 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-            <Avatar
-              alt="Ujjawal"
-              src="/images/avatars/4.png"
-              sx={{ width: 60, height: 60, mr: 6 }}
-            />
+                  <Avatar
+                          alt="John Doe"
+                          sx={{ width: 60, height: 60, mr: 6 }}
+                          src="/images/avatars/1.png"
+                        />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"

@@ -108,7 +108,20 @@ const AddOpportunityDetails = ({ show }) => {
         console.error("Error fetching data:", error);
       });
   }, []);
-
+  useEffect(() => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-propertyage.php"
+      )
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setPropertyAges(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")

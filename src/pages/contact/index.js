@@ -241,7 +241,7 @@ const Tellecalling = () => {
         )}
 
         {showAddDetails && (
-          <AddContact show={handleBack} editData={editData} />
+          <AddContact show={handleBack} editData={editData}  />
         )}
 
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
@@ -249,6 +249,7 @@ const Tellecalling = () => {
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
+            onEdit={handleEdit}
           />
         )}
 

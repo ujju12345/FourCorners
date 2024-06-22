@@ -257,22 +257,7 @@ const AddOpportunityDetails = ({ show }) => {
                 onChange={(e) => setName(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="Country Code"
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="Mobile"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-              />
-            </Grid>
+          
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
@@ -324,38 +309,7 @@ const AddOpportunityDetails = ({ show }) => {
                 onChange={(e) => setLeadStatus(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="State"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="Pincode"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                label="Profession"
-                value={profession}
-                onChange={(e) => setProfession(e.target.value)}
-              />
-            </Grid>
+         
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
