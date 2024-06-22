@@ -140,7 +140,7 @@ const navigation = () => {
     {
       title: 'Opportunity',
       icon: CreditCardOutline,
-      path: '/'
+      path: '/opportunity'
     },
 
 

@@ -243,9 +243,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{
-              backgroundColor: "#f0f0f0", // Light gray background color
+            // Light gray background color
               color: "#333333", // Dark gray text color
               fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
               minWidth: "auto",
               minHeight: 20, // Decrease button height
               "&:hover": {
@@ -262,9 +263,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             onClick={downloadCSV}
             startIcon={<GetAppIcon />}
             sx={{
-              backgroundColor: "#f0f0f0",
+           
               color: "#333333",
               fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
               minWidth: "auto",
               minHeight: 20,
               "&:hover": {
@@ -280,8 +282,9 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
         variant="contained"
         startIcon={<ArrowForwardIosIcon />}
         sx={{
-          backgroundColor: "#f0f0f0",
+       
           color: "#333333",
+          backgroundColor: "#f0f0f0",
           fontSize: "0.6rem",
           minWidth: "auto",
           minHeight: 20,
@@ -300,9 +303,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             startIcon={<PersonAddIcon />}
             sx={{
               mr: 30,
-              backgroundColor: "#f0f0f0",
+           
               color: "#333333",
               fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
               minWidth: "auto",
               minHeight: 20,
               "&:hover": {
@@ -478,11 +482,11 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+                sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
                 {item?.PartyName}
               </Typography>
-              <Typography sx={{ fontSize: "0.9rem" }}>
+              <Typography sx={{ fontSize: "0.8rem" }}>
                 {item?.Mobile}
               </Typography>
             </Box>
@@ -500,11 +504,12 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  backgroundColor: "#f0f0f0",
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
                   padding: "5px",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
@@ -520,7 +525,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  backgroundColor: "#f0f0f0",
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -528,7 +533,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
-
+                  backgroundColor: "#f0f0f0",
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
@@ -541,7 +546,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  backgroundColor: "#f0f0f0",
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -549,7 +554,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
-
+                  backgroundColor: "#f0f0f0",
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
@@ -561,178 +566,230 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Box>
 
           <Box
+      sx={{
+        width: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ml: 12,
+        mt: 15,
+      }}
+    >
+      <Grid container spacing={3}>
+        {/* Email */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 15,
+              borderRadius: 1,
+              padding: "10px",
             }}
           >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Email
-                  </Typography>
-                  <Typography variant="body2">{item?.Email}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Project Name
-                  </Typography>
-                  <Typography variant="body2">{item?.ProjectName}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Unit Type
-                  </Typography>
-                  <Typography variant="body2">{item?.UnittypeName}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Email
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.Email}
+            </Typography>
+          </Card>
+        </Grid>
 
-          <Box
+        {/* Project Name */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
+              borderRadius: 1,
+              padding: "10px",
             }}
           >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Estimated Budget
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.EstimatedbudgetName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Lead Status
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.leadstatusName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Next Follow Up-Date
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.NextFollowUpDate}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Project Name
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.ProjectName}
+            </Typography>
+          </Card>
+        </Grid>
 
-          <Box
+        {/* Unit Type */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
+              borderRadius: 1,
+              padding: "10px",
             }}
           >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Source Description
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.SourceDescription}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Telecall Attended By
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.TelecallAttendedByName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Alternate Mobile Number
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.AlternateMobileNo}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Unit Type
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.UnittypeName}
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+    <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Estimated Budget
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.EstimatedbudgetName}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Lead Status
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.leadstatusName}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Next Follow-Up Date
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.NextFollowUpDate}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Comments
-                  </Typography>
-                  <Typography variant="body2">{item?.Comments}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Source Description
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.SourceDescription}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Telecall Attended By
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.TelecallAttendedByName}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Alternate Mobile Number
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.AlternateMobileNo}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Comments */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Comments
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.Comments}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
         </Paper>
       </Card>
     </>
