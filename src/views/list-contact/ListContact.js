@@ -695,6 +695,32 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   </Typography>
                 </div>
               </Grid>
+              {/* <Grid item xs={4}>
+                <div>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
+                  >
+                    Alternate Mobile Number
+                  </Typography>
+                  <Typography variant="body2">
+                    {item?.AlternateMobileNo}
+                  </Typography>
+                </div>
+              </Grid> */}
+            </Grid>
+          </Box>
+
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
               <Grid item xs={4}>
                 <div>
                   <Typography

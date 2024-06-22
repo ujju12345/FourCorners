@@ -396,7 +396,7 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                             variant="subtitle1"
                             style={{ fontWeight: "bold" }}
                           >
-                            {item.CName}
+                           {item.TitleName} {item.CName}
                           </Typography>
                         }
                         secondary={

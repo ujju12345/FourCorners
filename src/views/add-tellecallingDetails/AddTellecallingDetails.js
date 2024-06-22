@@ -9,15 +9,15 @@ import InputLabel from "@mui/material/InputLabel";
 import CardContent from "@mui/material/CardContent";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
-import EditIcon from '@mui/icons-material/Edit';
-import GetAppIcon from '@mui/icons-material/GetApp';
-import GroupIcon from '@mui/icons-material/Group';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import EditIcon from "@mui/icons-material/Edit";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import GroupIcon from "@mui/icons-material/Group";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import {
   Snackbar,
   FormControlLabel,
@@ -28,7 +28,7 @@ import {
 import MuiAlert from "@mui/material/Alert";
 
 const AddTellecallingDetails = ({ show, editData }) => {
-  console.log(editData , 'Edit data aaya');
+  console.log(editData, "Edit data aaya");
   const initialFormData = {
     titleprefixID: "",
     PartyName: "",
@@ -44,7 +44,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     Location: "",
     FollowupThrough: "",
     NextFollowUpDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
-    NextFollowUpTime:getCurrentTime(),
+    NextFollowUpTime: getCurrentTime(),
     SourceID: "",
     SourceName: "",
     SourceDescription: "",
@@ -55,7 +55,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     Tid: "",
     UnittypeID: "",
     Countrycode: "",
-    Status:1
+    Status: 1,
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -79,8 +79,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
     fetchDataTitle();
   }, []);
 
-
-  
   useEffect(() => {
     if (editData) {
       setFormData({
@@ -95,7 +93,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   // Fetch source, estimated budget, lead status, and user master data (similar to your existing useEffects)
 
-    useEffect(() => {
+  useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
       .then((response) => {
@@ -110,7 +108,9 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   useEffect(() => {
     axios
-      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-estimatedbudget.php")
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-dropdown-estimatedbudget.php"
+      )
       .then((response) => {
         if (response.data.status === "Success") {
           setEstimatedBudget(response.data.data);
@@ -199,10 +199,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
       EmailNotification: value === 1 ? 0 : 1,
     });
   };
-  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    // Clear error for the field when it's being edited
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined,
+    }));
 
     if (
       [
@@ -225,17 +230,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
       });
     }
   };
+
   const RequiredIndicator = () => {
-    return (
-      <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
-    );
+    return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
   };
-  
 
   function getCurrentTime() {
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
   useEffect(() => {
@@ -245,7 +248,6 @@ const AddTellecallingDetails = ({ show, editData }) => {
       NextFollowUpTime: getCurrentTime(),
     }));
   }, []);
-
 
   const handleBhkChange = (event) => {
     setFormData({
@@ -262,31 +264,61 @@ const AddTellecallingDetails = ({ show, editData }) => {
   };
 
   const handleTelecaller = (event) => {
+    const { value } = event.target;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      TelecallAttendedByID: undefined,
+    }));
+
     setFormData({
       ...formData,
-      TelecallAttendedByID: event.target.value,
+      TelecallAttendedByID: value,
     });
   };
 
   const handleSource = (event) => {
+    const { value } = event.target;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      SourceID: undefined,
+    }));
+
     setFormData({
       ...formData,
-      SourceID: event.target.value,
+      SourceID: value,
     });
   };
 
   const handleLeadStatus = (event) => {
+    const { value } = event.target;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      leadstatusID: undefined,
+    }));
+
     setFormData({
       ...formData,
-      leadstatusID: event.target.value,
+      leadstatusID: value,
     });
   };
 
   const handleTitleChange = (event) => {
+    const { value } = event.target;
+
+    // Update form data with the new value
     setFormData({
       ...formData,
-      titleprefixID: event.target.value,
+      titleprefixID: value,
     });
+
+    // Clear error message for titseprefixID
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      titleprefixID: undefined,
+    }));
   };
 
   useEffect(() => {
@@ -298,56 +330,93 @@ const AddTellecallingDetails = ({ show, editData }) => {
     }
   }, [tellecallingID]);
 
+  const validateForm = () => {
+    const newErrors = {};
+    const requiredFields = [
+      "titleprefixID",
+      "PartyName",
+      "Mobile",
+      "Countrycode",
+      "Email",
+      "ProjectID",
+      "UnittypeID",
+      "leadstatusID",
+      "Location",
+      "SourceID",
+      "TelecallAttendedByID",
+    ];
+
+    requiredFields.forEach((field) => {
+      if (!formData[field]) {
+        newErrors[field] = "This field is required";
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    const url = editData
-      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
-      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
-  
-    try {
-      const response = await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
-      if (response.data.status === "Success") {
-        setFormData(initialFormData);
-        setSubmitSuccess(true);
-        setSubmitError(false);
-        show(false);
-  
-        Swal.fire({
-          icon: 'success',
-          title: editData ? 'Data Updated Successfully' : 'Data Added Successfully',
-          showConfirmButton: false,
-          timer: 1500
+
+    // Validate form
+    const isValid = validateForm();
+
+    if (isValid) {
+      const url = editData
+        ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
+        : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
+
+      try {
+        const response = await axios.post(url, formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
-        window.location.reload();
-      } else {
+
+        if (response.data.status === "Success") {
+          setFormData(initialFormData);
+          setSubmitSuccess(true);
+          setSubmitError(false);
+          show(false);
+
+          setErrors({});
+
+          Swal.fire({
+            icon: "success",
+            title: editData
+              ? "Data Updated Successfully"
+              : "Data Added Successfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          window.location.reload();
+        } else {
+          setSubmitSuccess(false);
+          setSubmitError(true);
+
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }
+      } catch (error) {
+        console.error("There was an error!", error);
         setSubmitSuccess(false);
         setSubmitError(true);
-  
+
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
         });
       }
-    } catch (error) {
-      console.error("There was an error!", error);
-      setSubmitSuccess(false);
-      setSubmitError(true);
-  
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!',
-      });
+    } else {
+      // Handle validation errors if any
+      console.log("Form validation failed");
     }
   };
-  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -359,10 +428,11 @@ const AddTellecallingDetails = ({ show, editData }) => {
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      NextFollowUpDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000), // 2 days ahead
+      NextFollowUpDate: new Date(
+        new Date().getTime() + 2 * 24 * 60 * 60 * 1000
+      ), // 2 days ahead
     }));
   }, []);
-
 
   const handleDateChange = (date) => {
     setFormData({ ...formData, NextFollowUpDate: date });
@@ -370,273 +440,322 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
   return (
     <>
+      <Card sx={{ height: "auto" }}>
+        <CardContent>
+          <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+              >
+                {editData
+                  ? "Edit Telecalling Details"
+                  : "Add Telecalling Details"}
+              </Typography>
+            </Box>
+          </Grid>
+          <form style={{ marginTop: "50px" }}>
+            <Grid container spacing={7}>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Title <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.titleprefixID}
+                    onChange={handleTitleChange}
+                    label="Title"
+                  >
+                    {titles.map((title) => (
+                      <MenuItem key={title.TitleID} value={title.TitleID}>
+                        {title.TitleName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.titleprefixID && (
+                    <Typography variant="caption" color="error">
+                      {errors.titleprefixID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
 
-
-    <Card sx={{ height:"auto" }}>
-   
-      <CardContent>
-        <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-          
-          <Box>
-            <Typography
-              variant="body2"
-              sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-            >
-              {editData
-                ? "Edit Telecalling Details"
-                : "Add Telecalling Details"}
-            </Typography>
-
-            
-        
-          </Box>
-        </Grid>
-        <form style={{ marginTop: "50px" }}>
-          <Grid container spacing={7}>
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Title  <RequiredIndicator /></InputLabel>
-                <Select
-                  value={formData.titleprefixID}
-                  onChange={handleTitleChange}
-                  label="Title"
-                >
-                  {titles.map((title) => (
-                    <MenuItem key={title.TitleID} value={title.TitleID}>
-                      {title.TitleName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Party Name <RequiredIndicator />
-                  </>
-                }
-                name="PartyName"
-                value={formData.PartyName}
-                onChange={handleChange}
-                
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Country Code <RequiredIndicator />
-                  </>
-                }
-                type="tel"
-                name="Countrycode"
-                value={formData.Countrycode}
-                onChange={handleChange}
-                inputProps={{
-                  pattern: "[0-9]*",
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Mobile <RequiredIndicator />
-                  </>
-                }
-                type="tel"
-                name="Mobile"
-                value={formData.Mobile}
-                onChange={handleChange}
-                inputProps={{
-                  pattern: "[0-9]*",
-                 maxLength: 10
-
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                type="tel"
-                name="AlternateMobileNo"
-                label="Alternate Mobile Number"
-                placeholder="Alternate Mobile Number"
-                value={formData.AlternateMobileNo}
-                onChange={handleChange}
-                inputProps={{
-                  pattern: "[0-9]*",
-                 maxLength: 10
-
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Email <RequiredIndicator />
-                  </>
-                }
-                name="Email"
-                placeholder="E-Mail"
-                value={formData.Email}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Project Name <RequiredIndicator /></InputLabel>
-                <Select
-                  value={formData.ProjectID}
-                  name="ProjectID"
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={
+                    <>
+                      Party Name <RequiredIndicator />
+                    </>
+                  }
+                  name="PartyName"
+                  value={formData.PartyName}
                   onChange={handleChange}
+                />
+                {errors.PartyName && (
+                  <Typography variant="caption" color="error">
+                    {errors.PartyName}
+                  </Typography>
+                )}
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
                   label={
                     <>
-                      Project Name  
+                      Country Code <RequiredIndicator />
                     </>
                   }
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {projectTypes.map((project) => (
-                    <MenuItem key={project.ProjectID} value={project.ProjectID}>
-                      {project.ProjectName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  type="tel"
+                  name="Countrycode"
+                  value={formData.Countrycode}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                  }}
+                />
+                {errors.Countrycode && (
+                  <Typography variant="caption" color="error">
+                    {errors.Countrycode}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Unit Type <RequiredIndicator /></InputLabel>
-                <Select
-                  value={formData.UnittypeID}
-                  onChange={handleBhkChange}
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
                   label={
                     <>
-                      Unit Type <RequiredIndicator />
+                      Mobile <RequiredIndicator />
                     </>
                   }
-                >
-                  {bhkOptions.map((bhk) => (
-                    <MenuItem key={bhk.UnittypeID} value={bhk.UnittypeID}>
-                      {bhk.UnittypeName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  type="tel"
+                  name="Mobile"
+                  value={formData.Mobile}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                    maxLength: 10,
+                  }}
+                />
+                {errors.Mobile && (
+                  <Typography variant="caption" color="error">
+                    {errors.Mobile}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Estimated Budget</InputLabel>
-                <Select
-                  value={formData.EstimatedbudgetID}
-                  onChange={handleEstimatedBudget}
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  type="tel"
+                  name="AlternateMobileNo"
+                  label="Alternate Mobile Number"
+                  placeholder="Alternate Mobile Number"
+                  value={formData.AlternateMobileNo}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                    maxLength: 10,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
                   label={
                     <>
-                      Estimated Budget <RequiredIndicator />
+                      Email <RequiredIndicator />
                     </>
                   }
-                >
-                  {estimatedBudget.map((bhk) => (
-                    <MenuItem
-                      key={bhk.EstimatedbudgetID}
-                      value={bhk.EstimatedbudgetID}
-                    >
-                      {bhk.EstimatedbudgetName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  name="Email"
+                  placeholder="E-Mail"
+                  value={formData.Email}
+                  onChange={handleChange}
+                />
+                {errors.Email && (
+                  <Typography variant="caption" color="error">
+                    {errors.Email}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Lead Status <RequiredIndicator /></InputLabel>
-                <Select
-                  value={formData.leadstatusID}
-                  onChange={handleLeadStatus}
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Project Name <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.ProjectID}
+                    name="ProjectID"
+                    onChange={handleChange}
+                    label={<>Project Name</>}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {projectTypes.map((project) => (
+                      <MenuItem
+                        key={project.ProjectID}
+                        value={project.ProjectID}
+                      >
+                        {project.ProjectName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.ProjectID && (
+                    <Typography variant="caption" color="error">
+                      {errors.ProjectID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Unit Type <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.UnittypeID}
+                    onChange={handleBhkChange}
+                    label={
+                      <>
+                        Unit Type <RequiredIndicator />
+                      </>
+                    }
+                  >
+                    {bhkOptions.map((bhk) => (
+                      <MenuItem key={bhk.UnittypeID} value={bhk.UnittypeID}>
+                        {bhk.UnittypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.UnittypeID && (
+                    <Typography variant="caption" color="error">
+                      {errors.ProjectID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Estimated Budget</InputLabel>
+                  <Select
+                    value={formData.EstimatedbudgetID}
+                    onChange={handleEstimatedBudget}
+                    label={
+                      <>
+                        Estimated Budget <RequiredIndicator />
+                      </>
+                    }
+                  >
+                    {estimatedBudget.map((bhk) => (
+                      <MenuItem
+                        key={bhk.EstimatedbudgetID}
+                        value={bhk.EstimatedbudgetID}
+                      >
+                        {bhk.EstimatedbudgetName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.EstimatedbudgetID && (
+                    <Typography variant="caption" color="error">
+                      {errors.EstimatedbudgetID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Lead Status <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.leadstatusID}
+                    onChange={handleLeadStatus}
+                    label={
+                      <>
+                        Lead Status <RequiredIndicator />
+                      </>
+                    }
+                  >
+                    {leadStatus.map((project) => (
+                      <MenuItem
+                        key={project.leadstatusID}
+                        value={project.leadstatusID}
+                      >
+                        {project.leadstatusName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.leadstatusID && (
+                    <Typography variant="caption" color="error">
+                      {errors.leadstatusID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
                   label={
                     <>
-                      Lead Status <RequiredIndicator />
+                      Location <RequiredIndicator />
                     </>
                   }
-                >
-                  {leadStatus.map((project) => (
-                    <MenuItem
-                      key={project.leadstatusID}
-                      value={project.leadstatusID}
-                    >
-                      {project.leadstatusName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  name="Location"
+                  placeholder="Location"
+                  value={formData.Location}
+                  onChange={handleChange}
+                />
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Location  <RequiredIndicator />
-                  </>
-                }
-                name="Location"
-                placeholder="Location"
-                value={formData.Location}
-                onChange={handleChange}
-              />
-            </Grid>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Source <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.SourceID}
+                    onChange={handleSource}
+                    label="Source"
+                  >
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.SourceID && (
+                    <Typography variant="caption" color="error">
+                      {errors.SourceID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Source <RequiredIndicator/></InputLabel>
-                <Select
-                  value={formData.SourceID}
-                  onChange={handleSource}
-                  label="Source"
-                >
-                  {source.map((bhk) => (
-                    <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
-                      {bhk.SourceName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={
+                    <>
+                      Source Name <RequiredIndicator />
+                    </>
+                  }
+                  name="SourceName"
+                  placeholder="Source Name"
+                  value={formData.SourceName}
+                  onChange={handleChange}
+                />
+              </Grid>
 
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Source Name <RequiredIndicator />
-                  </>
-                }
-                name="SourceName"
-                placeholder="Source Name"
-                value={formData.SourceName}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            {/* <Grid item xs={8} sm={4}>
+              {/* <Grid item xs={8} sm={4}>
               <TextField
                 fullWidth
                 label="Source Description"
@@ -647,158 +766,166 @@ const AddTellecallingDetails = ({ show, editData }) => {
               />
             </Grid> */}
 
-            <Grid item xs={8} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Telecall Attended By<RequiredIndicator/></InputLabel>
-                <Select
-                  value={formData.TelecallAttendedByID}
-                  onChange={handleTelecaller}
-                  label="Telecall Attended By"
-                 
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Telecall Attended By
+                    <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.TelecallAttendedByID}
+                    onChange={handleTelecaller}
+                    label="Telecall Attended By"
+                  >
+                    {userMaster.map((bhk) => (
+                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                        {bhk.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.TelecallAttendedByID && (
+                    <Typography variant="caption" color="error">
+                      {errors.TelecallAttendedByID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.NextFollowUpDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                          Next follow up-date <RequiredIndicator />
+                        </>
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={
+                    <>
+                      Next Follow Up-Time <RequiredIndicator />
+                    </>
+                  }
+                  type="time"
+                  name="NextFollowUpTime"
+                  value={formData.NextFollowUpTime}
+                  onChange={handleChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, // 5 minute intervals
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Comment"
+                  name="Comments"
+                  placeholder="Comment"
+                  value={formData.Comments}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Notification Preferences
+                  </FormLabel>
+                  <RadioGroup
+                    aria-label="notification"
+                    name="notification"
+                    value={
+                      formData.SmsNotification === 1 ? "sms" : "notification"
+                    }
+                    onChange={handleNotificationChange}
+                  >
+                    <FormControlLabel
+                      value="sms"
+                      control={<Radio />}
+                      label="Send on SMS"
+                    />
+                    <FormControlLabel
+                      value="notification"
+                      control={<Radio />}
+                      label="Send on Notification"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginRight: 3.5,
+                    marginTop: 5,
+                    backgroundColor: "#9155FD",
+                    color: "#FFFFFF",
+                  }}
+                  onClick={handleSubmit}
                 >
-                  {userMaster.map((bhk) => (
-                    <MenuItem key={bhk.UserID} value={bhk.UserID}>
-                      {bhk.Name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
+          </form>
 
-            <Grid item xs={8} sm={4}>
-      <DatePicker
-        selected={formData.NextFollowUpDate}
-        onChange={handleDateChange}
-        dateFormat="dd-MM-yyyy"
-        className="form-control"
-        customInput={
-          <TextField
-            fullWidth
-            label={
-              <>
-                Next follow up-date <RequiredIndicator />
-              </>
-            }
-            InputProps={{
-              readOnly: true,
-              sx: { width: '100%' },
-            }}
-          />
-        }
-      />
-    </Grid>
-    <Grid item xs={8} sm={4}>
-      <TextField
-        fullWidth
-        label={
-          <>
-            Next Follow Up-Time <RequiredIndicator />
-          </>
-        }
-        type="time"
-        name="NextFollowUpTime"
-        value={formData.NextFollowUpTime}
-        onChange={handleChange}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 minute intervals
-        }}
-      />
-    </Grid>
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Comment"
-                name="Comments"
-                placeholder="Comment"
-                value={formData.Comments}
-                onChange={handleChange}
-              />
-            </Grid>
-
-            <Grid item xs={8} sm={4}>
-  <FormControl component="fieldset">
-    <FormLabel component="legend">
-      Notification Preferences
-    </FormLabel>
-    <RadioGroup
-      aria-label="notification"
-      name="notification"
-      value={formData.SmsNotification === 1 ? "sms" : "notification"}
-      onChange={handleNotificationChange}
-    >
-      <FormControlLabel
-        value="sms"
-        control={<Radio />}
-        label="Send on SMS"
-      />
-      <FormControlLabel
-        value="notification"
-        control={<Radio />}
-        label="Send on Notification"
-      />
-    </RadioGroup>
-  </FormControl>
-</Grid>
-
-
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                sx={{
-                  marginRight: 3.5,
-                  marginTop: 5,
-                  backgroundColor: "#9155FD",
-                  color: "#FFFFFF",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-
-        <Snackbar
-          open={submitSuccess}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <MuiAlert
+          <Snackbar
+            open={submitSuccess}
+            autoHideDuration={6000}
             onClose={handleAlertClose}
-            severity="success"
-            sx={{
-              width: "100%",
-              backgroundColor: "green",
-              color: "#ffffff",
-            }}
           >
-            {editData
-              ? "Data Updated Successfully"
-              : submitSuccess
-              ? "Data Added Successfully"
-              : ""}
-          </MuiAlert>
-        </Snackbar>
+            <MuiAlert
+              onClose={handleAlertClose}
+              severity="success"
+              sx={{
+                width: "100%",
+                backgroundColor: "green",
+                color: "#ffffff",
+              }}
+            >
+              {editData
+                ? "Data Updated Successfully"
+                : submitSuccess
+                ? "Data Added Successfully"
+                : ""}
+            </MuiAlert>
+          </Snackbar>
 
-        <Snackbar
-          open={submitError}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <MuiAlert
+          <Snackbar
+            open={submitError}
+            autoHideDuration={6000}
             onClose={handleAlertClose}
-            severity="error"
-            sx={{ width: "100%" }}
           >
-            {submitError.message}
-          </MuiAlert>
-        </Snackbar>
-      </CardContent>
-    </Card>
+            <MuiAlert
+              onClose={handleAlertClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              {submitError.message}
+            </MuiAlert>
+          </Snackbar>
+        </CardContent>
+      </Card>
     </>
   );
 };

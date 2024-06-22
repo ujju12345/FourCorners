@@ -67,10 +67,12 @@ const AddContact = ({ show, editData }) => {
   const [dynamicSourceID, setDynamicSourceID] = useState("");
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
   const [projectTypes, setProjectTypes] = useState([]);
   const [customerType, setCustomerType] = useState([]);
-
+  const requiredFields = ['TitleID', 'CName', 'CustomerTypeID', 'ContactTypeID', 'CountryCodeID', 'Mobile', 'Email', 'CityID', 'LocationID', 'PinCode', 'SourceID', 'SourceTypeID', 'UserID'];
+  const [errors, setErrors] = useState({});
+  
   const [source, setSource] = useState([]);
   const [estimatedBudget, setEstimatedBudget] = useState([]);
   const [leadStatus, setLeadStatus] = useState([]);
@@ -296,20 +298,17 @@ const AddContact = ({ show, editData }) => {
     });
   };
   
-
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    if (
-      [
-        "Mobile",
-        "OtherNumbers",
-        "TelephoneNo",
-        "AlternateTelephoneNo",
-        "Countrycode",
-        "PinCode"
-      ].includes(name)
-    ) {
+  
+    // Clear the error for the current field when user starts typing
+    setErrors({
+      ...errors,
+      [name]: "", // Clearing the error for the current field
+    });
+  
+    // Handle numeric input formatting or other specific input manipulations
+    if (["Mobile", "OtherNumbers", "TelephoneNo", "AlternateTelephoneNo", "Countrycode", "PinCode"].includes(name)) {
       const numericValue = value.replace(/\D/g, "");
       setFormData({
         ...formData,
@@ -321,12 +320,14 @@ const AddContact = ({ show, editData }) => {
         [name]: value,
       });
     }
+  
+    // Handle specific state updates based on input changes (e.g., dynamic source types)
     if (name === 'SourceID') {
       setDynamicSourceID(value);
     }
-    
-    
   };
+  
+  
 
   function getCurrentTime() {
     const now = new Date();
@@ -351,6 +352,12 @@ const AddContact = ({ show, editData }) => {
 
   const handleContactType = (event) => {
     const contactTypeID = event.target.value;
+
+  setErrors((prevErrors) => ({
+      ...prevErrors,
+      ContactTypeID: undefined,
+    }));
+
     setFormData({
       ...formData,
       ContactTypeID: contactTypeID,
@@ -359,6 +366,12 @@ const AddContact = ({ show, editData }) => {
 
   const handleCustomerType = (event) => {
     const customerTypeID = event.target.value;
+
+    
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      CustomerTypeID: undefined,
+    }));
     setFormData({
       ...formData,
       CustomerTypeID: customerTypeID,
@@ -376,9 +389,16 @@ const AddContact = ({ show, editData }) => {
   };
 
   const handleTitleChange = (event) => {
+    const { value } = event.target;
+
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      TitleID: undefined,
+    }));
     setFormData({
       ...formData,
-      TitleID: event.target.value,
+      TitleID: value,
     });
   };
 
@@ -391,13 +411,62 @@ const AddContact = ({ show, editData }) => {
     }
   }, [rows]);
 
+  const validateForm = (data) => {
+    const errors = {};
+    if (!data.TitleID) {
+      errors.TitleID = "Title is required";
+    }
+    if (!data.CName) {
+      errors.CName = "Customer Name is required";
+    }
+    if (!data.CustomerTypeID) {
+      errors.CustomerTypeID = "Customer Type is required";
+    }
+    if (!data.ContactTypeID) {
+      errors.ContactTypeID = "Contact Type is required";
+    }
+    if (!data.CountryCodeID) {
+      errors.CountryCodeID = "Country Code is required";
+    }
+    if (!data.Mobile) {
+      errors.Mobile = "Mobile is required";
+    }
+    if (!data.Email) {
+      errors.Email = "Email is required";
+    }
+    if (!data.CityID) {
+      errors.CityID = "City is required";
+    }
+    if (!data.LocationID) {
+      errors.LocationID = "Location is required";
+    }
+    if (!data.PinCode) {
+      errors.PinCode = "Pin Code is required";
+    }
+    if (!data.SourceID) {
+      errors.SourceID = "Source is required";
+    }
+    if (!data.SourceTypeID) {
+      errors.SourceTypeID = "Source Type is required";
+    }
+    if (!data.UserID) {
+      errors.UserID = "User is required";
+    }
+    return errors;
+  };
 
 
   const handleSubmit = async (event) => {
+
+  
     event.preventDefault();
-
-
-  console.log(formData , 'aagaya data contact');
+    const newErrors = validateForm(formData);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+  
+    // Prepare API URL based on editData flag
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-contacts.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-contacts.php";
@@ -410,10 +479,11 @@ const AddContact = ({ show, editData }) => {
       });
   
       if (response.data.status === "Success") {
-        setFormData(initialFormData);
+        setFormData(initialFormData); // Reset form data after successful submission
+        setErrors({});
         setSubmitSuccess(true);
         setSubmitError(false);
-        show(false);
+        show(false); // Hide the modal or close form
   
         Swal.fire({
           icon: 'success',
@@ -445,6 +515,7 @@ const AddContact = ({ show, editData }) => {
     }
   };
   
+  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -467,6 +538,11 @@ const AddContact = ({ show, editData }) => {
     );
   };
   const handleCountryCode = (event) => {
+
+       setErrors((prevErrors) => ({
+      ...prevErrors,
+      CountryCodeID: undefined,
+    }));
     setFormData({
       ...formData,
       CountryCodeID: event.target.value,
@@ -482,6 +558,14 @@ const AddContact = ({ show, editData }) => {
   
 
   const handleTelecaller = (event) => {
+
+    const { value } = event.target;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      UserID: undefined,
+    }));
+
     setFormData({
       ...formData,
       UserID: event.target.value,
@@ -523,6 +607,9 @@ const AddContact = ({ show, editData }) => {
                   value={formData.TitleID}
                   onChange={handleTitleChange}
                   label="Title"
+                  error={!!errors.TitleID}
+                  helperText={errors.TitleID}
+              
                 >
                   {titles.map((title) => (
                     <MenuItem key={title.TitleID} value={title.TitleID}>
@@ -539,13 +626,16 @@ const AddContact = ({ show, editData }) => {
                 fullWidth
                 label={
                   <>
-                    First Name <RequiredIndicator />
+                    Full Name <RequiredIndicator />
                   </>
                 }
                 type="text"
                 name="CName"
                 value={formData.CName}
                 onChange={handleChange}
+                error={!!errors.CName}
+                helperText={errors.CName}
+            
               
               />
             </Grid>
@@ -558,6 +648,8 @@ const AddContact = ({ show, editData }) => {
             value={formData.CustomerTypeID}
             onChange={handleCustomerType}
             label="Customer Type"
+            error={!!errors.CustomerTypeID}
+            helperText={errors.CustomerTypeID}
           >
             {customerType.map((type) => (
               <MenuItem key={type.CustomerTypeID} value={type.CustomerTypeID}>
@@ -574,6 +666,8 @@ const AddContact = ({ show, editData }) => {
             value={formData.ContactTypeID}
             onChange={handleContactType}
             label="Contact Type"
+            error={!!errors.ContactTypeID}
+            helperText={errors.ContactTypeID}
           >
             {contactTypes.map((type) => (
               <MenuItem key={type.ContactTypeID} value={type.ContactTypeID}>
@@ -592,6 +686,8 @@ const AddContact = ({ show, editData }) => {
       onChange={handleCountryCode}
       label="Country Code"
       name="CountryCodeID"
+      error={!!errors.CountryCodeID}
+      helperText={errors.CountryCodeID}
     >
       {countryCodes.map((country) => (
         <MenuItem key={country.CountryCode} value={country.CountryCode}>
@@ -615,6 +711,8 @@ const AddContact = ({ show, editData }) => {
                 name="Mobile"
                 value={formData.Mobile}
                 onChange={handleChange}
+                error={!!errors.Mobile}
+                helperText={errors.Mobile}
                 inputProps={{
                   pattern: "[0-9]*",
                   maxLength: 10
@@ -630,6 +728,7 @@ const AddContact = ({ show, editData }) => {
                 label="Alternate Mobile Number"
                 placeholder="Alternate Mobile Number"
                 value={formData.OtherNumbers}
+                
                 onChange={handleChange}
                 inputProps={{
                   pattern: "[0-9]*",
@@ -650,6 +749,8 @@ const AddContact = ({ show, editData }) => {
                 name="Email"
                 placeholder="E-Mail"
                 value={formData.Email}
+                error={!!errors.Email}
+                helperText={errors.Email}
                 onChange={handleChange}
               />
             </Grid>
@@ -657,7 +758,8 @@ const AddContact = ({ show, editData }) => {
             <Grid item xs={8} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>City <RequiredIndicator /></InputLabel>
-                  <Select name="CityID" value={formData.CityID} label='City' onChange={handleCityChange}>
+                  <Select name="CityID"          error={!!errors.CityID}
+            helperText={errors.CityID} value={formData.CityID} label='City' onChange={handleCityChange}>
                     {cities.map((city) => (
                       <MenuItem key={city.CityID} value={city.CityID}>
                         {city.CityName}
@@ -683,6 +785,8 @@ const AddContact = ({ show, editData }) => {
                 placeholder="Location"
                 value={formData.LocationID}
                 onChange={handleChange}
+                error={!!errors.LocationID}
+                helperText={errors.LocationID}
               />
             </Grid>
 
@@ -697,6 +801,8 @@ const AddContact = ({ show, editData }) => {
     name="PinCode"
     placeholder="Pincode"
     value={formData.PinCode}
+    error={!!errors.PinCode}
+    helperText={errors.PinCode}
     onChange={handleChange}
     inputProps={{
       pattern: "[0-9]*",
@@ -710,6 +816,8 @@ const AddContact = ({ show, editData }) => {
           <FormControl fullWidth>
             <InputLabel>Source <RequiredIndicator /></InputLabel>
             <Select
+                     error={!!errors.SourceID}
+                     helperText={errors.SourceID}
               value={formData.SourceID}
               name="SourceID"
               onChange={handleChange}
@@ -730,6 +838,8 @@ const AddContact = ({ show, editData }) => {
             <Select
               value={formData.SourceTypeID} // Assuming SourceName is the selected source type
               name="SourceTypeID"
+              error={!!errors.SourceTypeID}
+              helperText={errors.SourceTypeID}
               onChange={handleChange}
               label="Source Type"
             >
@@ -753,6 +863,8 @@ const AddContact = ({ show, editData }) => {
                   value={formData.UserID}
                   onChange={handleTelecaller}
                   label="TelecallAttendedBy"
+                  error={!!errors.UserID}
+                  helperText={errors.UserID}
                 >
                   {userMaster.map((bhk) => (
                     <MenuItem key={bhk.UserID} value={bhk.UserID}>

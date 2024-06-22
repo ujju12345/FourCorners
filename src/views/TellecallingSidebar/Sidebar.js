@@ -350,7 +350,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
             onClick={onCreate}
             sx={{ mt: 2 }}
           >
-            Create Telecalling
+            Create Contact
           </Button>
         </Box>
       ) : (
