@@ -142,7 +142,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const Tellecalling = () => {
+const Contact = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -266,4 +266,4 @@ const Tellecalling = () => {
   );
 };
 
-export default Tellecalling;
+export default Contact;
