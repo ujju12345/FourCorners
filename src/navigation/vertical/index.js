@@ -123,7 +123,7 @@ const navigation = () => {
 
 
     {
-      title: 'Telle-calling',
+      title: 'Lead',
       icon: CreditCardOutline,
       path: '/tellcalling-details'
     },

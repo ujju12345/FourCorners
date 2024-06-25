@@ -1,47 +1,70 @@
-import React, { useEffect, useRef, useState } from 'react';
-import enLocale from '@fullcalendar/core/locales/en-gb';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import FullCalendar from '@fullcalendar/react';
+import React, { useEffect, useRef, useState } from "react";
+import enLocale from "@fullcalendar/core/locales/en-gb";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import {
+  Avatar,
+  Typography,
+} from "@mui/material";
 
 const WeeklyOverview = () => {
   const calendar = useRef(null);
-  const [initialView, setInitialView] = useState('dayGridMonth');
+  const [initialView, setInitialView] = useState("dayGridMonth");
   const [appointments, setAppointments] = useState([]);
   const [clickedDate, setClickedDate] = useState(null);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [dateAppointments, setDateAppointments] = useState([]);
+  const [modalDetails, setModalDetails] = useState(null);
 
   useEffect(() => {
     async function fetchAppointments() {
       try {
-        const response = await fetch('https://apiforcorners.cubisysit.com/api/api-fetch-telecalender.php');
+        const response = await fetch(
+          "https://apiforcorners.cubisysit.com/api/api-fetch-telecalender.php"
+        );
         const result = await response.json();
         if (result.code === 200) {
-          const data = result.data.map(item => ({
-            title: `Appointment ${item.Nid}`,
-            start: item.NextFollowUpDate,
-            color: "#87CEEB"  // Set the color to #87CEEB
-          }));
+          const today = new Date().setHours(0, 0, 0, 0); // Current date without time
+          const data = result.data.map((item) => {
+            const startDate = new Date(item.NextFollowUpDate).setHours(0, 0, 0, 0);
+            let backgroundColor = "#f0f0f0"; // Default color
+
+            if (startDate < today) {
+              backgroundColor = "#FF6347"; // Red for past dates
+            } else if (startDate > today) {
+              backgroundColor = "#32CD32"; // Green for future dates
+            } else {
+              backgroundColor = "#FFD700"; // Yellow for current date
+            }
+
+            return {
+              title: item.CName,
+              start: item.NextFollowUpDate,
+              color: "#87CEEB",
+              backgroundColor: backgroundColor, // Set the background color
+              Nid: item.Nid,
+            };
+          });
           setAppointments(data);
         } else {
-          console.error('Error fetching appointments:', result.message);
+          console.error("Error fetching appointments:", result.message);
         }
       } catch (error) {
-        console.error('Error fetching appointments:', error);
+        console.error("Error fetching appointments:", error);
       }
     }
     fetchAppointments();
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       function handleResize() {
         setInitialView(setCalendarViewByWidth());
       }
-      window.addEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
       return () => {
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener("resize", handleResize);
       };
     }
   }, []);
@@ -49,21 +72,41 @@ const WeeklyOverview = () => {
   function setCalendarViewByWidth() {
     const screenWidth = window.innerWidth;
     if (screenWidth < 600) {
-      return 'dayGridDay';
+      return "dayGridDay";
     } else if (screenWidth < 960) {
-      return 'dayGridWeek';
+      return "dayGridWeek";
     } else {
-      return 'dayGridMonth';
+      return "dayGridMonth";
+    }
+  }
+
+  async function fetchAppointmentDetails(Nid) {
+    try {
+      const response = await fetch(
+        `https://ideacafe-backend.vercel.app/api/proxy/api-singel-telecalender.php?Nid=${Nid}`
+      );
+      const result = await response.json();
+      if (result.code === 200) {
+        console.log(result.data, "data ayaa");
+        setModalDetails(result.data[0]);
+      } else {
+        console.error("Error fetching appointment details:", result.message);
+      }
+    } catch (error) {
+      console.error("Error fetching appointment details:", error);
     }
   }
 
   function handleEventClick(clickInfo) {
     const formattedDate = new Date(clickInfo.event.start).toLocaleDateString();
-    const eventsOnDate = appointments.filter(app => app.start === clickInfo.event.startStr);
+    const eventsOnDate = appointments.filter(
+      (app) => app.start === clickInfo.event.startStr
+    );
     if (eventsOnDate.length > 0) {
       setClickedDate(formattedDate);
       setDateAppointments(eventsOnDate);
       setIsDateModalOpen(true);
+      fetchAppointmentDetails(clickInfo.event.extendedProps.Nid);
     }
   }
 
@@ -77,7 +120,7 @@ const WeeklyOverview = () => {
             border-color: #9155fd !important;
           }
           .modal {
-            display: ${isDateModalOpen ? 'block' : 'none'};
+            display: ${isDateModalOpen ? "block" : "none"};
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -134,48 +177,69 @@ const WeeklyOverview = () => {
           .fc-button-toggleDay:before {
             content: '\\f017'; /* Clock icon */
           }
+          .legend {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+          .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            font-weight: bold;
+          }
+          .red {
+            color: #FF6347;
+          }
+          .green {
+            color: #32CD32;
+          }
+          .yellow {
+            color: #FFD700;
+          }
         `}
       </style>
       <FullCalendar
         ref={calendar}
         fixedWeekCount={false}
-        height={'auto'}
+        height={"auto"}
         locale={enLocale}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView={initialView}
         headerToolbar={{
-          start: 'prev today next',
-          center: 'title',
-          end: 'newAppointment',
+          start: "prev today next",
+          center: "title",
+          end: "newAppointment",
         }}
         footerToolbar={{
-          center: 'toggleMonth toggleWeek toggleDay',
+          center: "toggleMonth toggleWeek toggleDay",
         }}
         customButtons={{
           newAppointment: {
-            text: 'New Appointment',
+            text: "New Appointment",
             click: () => {
               // Handle new appointment creation
             },
-            className: 'fc-button-custom',
+            className: "fc-button-custom",
           },
           toggleDay: {
-            text: 'Today',
+            text: "Today",
             click: () => {
-              calendar.current.getApi().changeView('dayGridDay');
+              calendar.current.getApi().changeView("dayGridDay");
             },
-            className: 'fc-button-custom',
+            className: "fc-button-custom",
           },
           toggleWeek: {
-            text: 'Week',
+            text: "Week",
             click: () => {
-              calendar.current.getApi().changeView('dayGridWeek');
+              calendar.current.getApi().changeView("dayGridWeek");
             },
           },
           toggleMonth: {
-            text: 'Month',
+            text: "Month",
             click: () => {
-              calendar.current.getApi().changeView('dayGridMonth');
+              calendar.current.getApi().changeView("dayGridMonth");
             },
           },
         }}
@@ -185,25 +249,53 @@ const WeeklyOverview = () => {
           // await getEvents(dateInfo.startStr.split('T')[0], dateInfo.endStr.split('T')[0]);
         }}
         eventsSet={(events) => {
-          console.log('Events set: ', events);
+          console.log("Events set: ", events);
         }}
         eventClick={(e) => handleEventClick(e)}
       />
       {isDateModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setIsDateModalOpen(false)}>&times;</span>
-            <h2>Details for {clickedDate}</h2>
-            <ul>
-              {dateAppointments.map((appointment, index) => (
-                <li key={index}>
-                  <strong>{appointment.title}</strong> - {new Date(appointment.start).toLocaleTimeString()}
-                </li>
-              ))}
-            </ul>
+            <span className="close" onClick={() => setIsDateModalOpen(false)}>
+              &times;
+            </span>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Avatar
+                alt="Avatar"
+                sx={{ width: 60, height: 60, margin: 2 }}
+                src="/images/avatars/1.png"
+              />
+              <div style={{ textAlign: "center" }}>
+                <Typography variant="body2">
+                  <strong>Customer Name:</strong>{" "}
+                  {modalDetails ? modalDetails.CName : "Loading..."}
+                </Typography>
+
+                {modalDetails && (
+                  <div>
+                    <Typography variant="body2">
+                      <strong>Phone Number:</strong> {modalDetails.Mobile}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Next Follow-Up Date:</strong>{" "}
+                      {modalDetails.NextFollowUpDate}
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
+
+
     </div>
   );
 };
