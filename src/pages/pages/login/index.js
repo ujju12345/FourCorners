@@ -116,7 +116,8 @@ const LoginPage = () => {
        
             setCookie("amr", JSON.stringify(user), { path: "/" });
             router.push('/');
-            console.log('SUBMMITEDDD DATAAAA');
+            console.log('SUBMMITEDDD DATAAAA----->',user);
+            localStorage.setItem("userRoleId", user.RoleID);
           } else {
             setIsSnackbarOpen(true);
             setSnackbarMessage(response.data.message);

@@ -26,7 +26,7 @@ import { Typography } from '@mui/material'
 
 const Dashboard = () => {
   const router = useRouter();
-
+  const userRoleId = localStorage.getItem("userRoleId");
   useEffect(() => {
     if (!cookies || !cookies.amr || !cookies.amr.UserID) {
       router.push('/pages/login')
@@ -41,6 +41,7 @@ const Dashboard = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   return (
     <ApexChartWrapper>
+      {userRoleId == 1 ?
       <Grid container spacing={6}>
         <Grid item xs={12} md={4}>
           <Trophy />
@@ -111,6 +112,13 @@ const Dashboard = () => {
         </Grid>
 
       </Grid>
+      :
+      <div>
+        <h3>
+          Different user role dashboard
+        </h3>
+      </div>
+      }
     </ApexChartWrapper>
   )
 }

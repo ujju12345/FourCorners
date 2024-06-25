@@ -58,10 +58,12 @@ const VerticalLayout = props => {
 
   // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
+  const userRoleId = localStorage.getItem("userRoleId");
 
   return (
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
+        {userRoleId==1 ?
         <Navigation
           navWidth={navWidth}
           navVisible={navVisible}
@@ -69,6 +71,13 @@ const VerticalLayout = props => {
           toggleNavVisibility={toggleNavVisibility}
           {...props}
         />
+        :
+        <div style={{height:'100vh',backgroundColor:'#ffbf09',padding:10}} >
+          <h3>
+            Different navbar
+            </h3>
+          </div>
+        } 
         <MainContentWrapper className='layout-content-wrapper'>
           <AppBar toggleNavVisibility={toggleNavVisibility} {...props} />
 
