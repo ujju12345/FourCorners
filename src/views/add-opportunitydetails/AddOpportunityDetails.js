@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -14,43 +16,38 @@ import {
   Snackbar,
   Alert as MuiAlert,
 } from "@mui/material";
-import DatePicker from "react-datepicker";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-import "react-datepicker/dist/react-datepicker.css";
-import { HandExtended } from "mdi-material-ui";
-import { status } from "nprogress";
-
 const AddOpportunityDetails = ({ show, editData }) => {
-  console.log(editData , 'opportunity data for edit');
+  console.log(editData , 'AAGAYA');
   const [formData, setFormData] = useState({
-    lookingForId: "",
-    estimatedBudgetId: "",
-    areaFrom: "",
-    areaTo: "",
-    scaleId: "",
-    cityId: "",
-    locationId: "",
-    unitTypeId: "",
-    propertyAgeId: "",
-    purposeId: "",
-    scheduleDate: null,
-    scheduleTime: "",
-    keywordId: "",
-    sourceId: "",
-    sourceTypeId: "",
-    opportunityAttendedById: "",
-    description: "",
+    LookingForID: "",
+    EstimatedbudgetID: "",
+    AreaFrom: "",
+    AreaTo: "",
+    ScaleID: "",
+    CityID: "",
+    LocationID: "",
+    UnittypeID: "",
+    PropertyAgeID: "",
+    PurposeID: "",
+    ScheduleDate: null,
+    ScheduleTime: "",
+    KeywordID: "",
+    SourceID: "",
+    SourceNameID: "",
+    OpportunityAttendedByID: "",
+    Description: "",
     Cid: "",
     Status: 1,
+    CreateUID: 1,
     ModifyUID: 1,
-    Oid:""
+    Oid: ""
   });
 
 
   const [rows, setRows] = useState([]);
-
   const [lookingForOptions, setLookingForOptions] = useState([]);
   const [estimatedBudgets, setEstimatedBudgets] = useState([]);
   const [cities, setCities] = useState([]);
@@ -63,54 +60,57 @@ const AddOpportunityDetails = ({ show, editData }) => {
   const [contacts, setContacts] = useState([]);
   const [submitError, setSubmitError] = useState(false);
   const [errors, setErrors] = useState({});
-
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  
+  const isUpdate = formData.Oid !== "";
+
+  // Function to create the payload
+  const createPayload = () => {
+    const payload = { ...formData };
+
+    if (!isUpdate) {
+      // Remove ModifyUID and Oid for insert operation
+      delete payload.ModifyUID;
+      delete payload.Oid;
+    }
+
+    return payload;
+  };
+
 
 
   useEffect(() => {
     if (editData) {
-      // Destructure editData to access necessary properties
-      const { lookingForId, estimatedBudgetId, areaFrom, areaTo, scaleId, cityId, locationId, unitTypeId, propertyAgeId, purposeId, scheduleDate, scheduleTime, keywordId, sourceId, sourceTypeId, opportunityAttendedById, description, Cid ,Status, ModifyUID ,Oid} = editData;
-  
-      // Set the form data using editData values
-      setFormData({
-        lookingForId: lookingForId || "",
-        estimatedBudgetId: estimatedBudgetId || "",
-        areaFrom: areaFrom || "",
-        areaTo: areaTo || "",
-        scaleId: scaleId || "",
-        cityId: cityId || "",
-        locationId: locationId || "",
-        unitTypeId: unitTypeId || "",
-        propertyAgeId: propertyAgeId || "",
-        purposeId: purposeId || "",
-        scheduleDate: scheduleDate || "",
-        scheduleTime: scheduleTime || "",
-        keywordId: keywordId || "",
-        sourceId: sourceId || "",
-        sourceTypeId: sourceTypeId || "",
-        opportunityAttendedById: opportunityAttendedById || "",
-        description: description || "",
-        Oid: Oid || "",
-        Status: Status || 1,
-        // CreateUID: CreateUID || 1,
-        Cid: Cid || "",
-        ModifyUID: ModifyUID || 1,
-       
-      });
+      // Merge formData and editData
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        LookingForID: editData.LookingForID || prevFormData.LookingForID,
+        EstimatedbudgetID: editData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
+        AreaFrom: editData.AreaFrom || prevFormData.AreaFrom,
+        AreaTo: editData.AreaTo || prevFormData.AreaTo,
+        ScaleID: editData.ScaleID || prevFormData.ScaleID,
+        CityID: editData.CityID || prevFormData.CityID,
+        LocationID: editData.LocationID || prevFormData.LocationID,
+        UnittypeID: editData.UnittypeID || prevFormData.UnittypeID,
+        PropertyAgeID: editData.PropertyAgeID || prevFormData.PropertyAgeID,
+        PurposeID: editData.PurposeID || prevFormData.PurposeID,
+        ScheduleDate: editData.ScheduleDate || prevFormData.ScheduleDate,
+        ScheduleTime: editData.ScheduleTime || prevFormData.ScheduleTime,
+        KeywordID: editData.KeywordID || prevFormData.KeywordID,
+        SourceID: editData.SourceID || prevFormData.SourceID,
+        SourceNameID:1 || 1,
+        OpportunityAttendedByID: editData.OpportunityAttendedByID || prevFormData.OpportunityAttendedByID,
+        Description: editData.Description || prevFormData.Description,
+        Cid: editData.Cid || prevFormData.Cid,
+        Status: editData.Status || prevFormData.Status,
+        CreateUID: editData.CreateUID || prevFormData.CreateUID,
+        ModifyUID: editData.ModifyUID || prevFormData.ModifyUID,
+        Oid: editData.Oid || prevFormData.Oid
+      }));
   
       // Fetch contact types based on customer type if CustomerTypeID is available
-      // if (CustomerTypeID) {
-      //   fetchContactTypes(CustomerTypeID);
-      // }
-  
-      // // Fetch source types based on source if SourceID is available
-      // if (SourceID) {
-      //   setDynamicSourceID(SourceID);
-      // }
+
     }
   }, [editData]);
 
@@ -162,19 +162,16 @@ const AddOpportunityDetails = ({ show, editData }) => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     fetchDataOpportunity();
   }, []);
 
   const fetchDataOpportunity = async () => {
     setLoading(true);
-    // setError(null);
     try {
       const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php');
       setRows(response.data.data || []);
     } catch (error) {
-      // setError(error);
       console.log('err');
     } finally {
       setLoading(false);
@@ -190,110 +187,54 @@ const AddOpportunityDetails = ({ show, editData }) => {
     }
   }, [rows]);
 
-
   const handleSourceChange = (event) => {
     const selectedSourceId = event.target.value;
-    setFormData({ ...formData, sourceId: selectedSourceId });
+    setFormData({ ...formData, SourceID: selectedSourceId });
 
     axios
       .get(
         `https://apiforcorners.cubisysit.com/api/api-fetch-sourcetype.php?SourceID=${selectedSourceId}`
       )
       .then((response) => {
-        if (response.data.status === "Success") {
-          setSourceTypes(response.data.data);
-        }
+        setSourceTypes(response.data.data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching source types:", error);
       });
-  };
-
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, scheduleDate: date });
-    if (date) {
-      setErrors((prevErrors) => ({ ...prevErrors, scheduleDate: "" }));
-    }
-  };
-
-  const validateFields = () => {
-    const newErrors = {};
-    if (!formData.contactId) {
-      newErrors.contactId = "Contact is required";
-    }
-    if (!formData.lookingForId) {
-      newErrors.lookingForId = "Looking For is required";
-    }
-    if (!formData.estimatedBudgetId) {
-      newErrors.estimatedBudgetId = "Estimated Budget is required";
-    }
-    if (!formData.cityId) {
-      newErrors.cityId = "City is required";
-    }
-    if (!formData.scheduleDate) {
-      newErrors.scheduleDate = "Schedule Date is required";
-    }
-    return newErrors;
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    // Clear error for the field when it's being edited
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: undefined,
-    }));
-
-    if (["areaFrom", "areaTo"].includes(name)) {
-      const numericValue = value.replace(/\D/g, "");
-      setFormData({
-        ...formData,
-        [name]: numericValue,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({ ...formData, [name]: value });
   };
-
   const RequiredIndicator = () => {
     return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
   };
-
   const handleSubmit = async (event) => {
-    console.log("press");
     event.preventDefault();
-    // const newErrors = validateFields();
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   return;
-    // }
-
-    console.log(formData, "all data of opportunity");
-
+    const payload = createPayload();
+  
     try {
       const url = editData
         ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-opportunity.php"
         : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunity.php";
-      const response = await axios.post(url, formData, {
+  
+      const response = await axios.post(url, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+  
+      console.log("API Response:", response.data);
+  
       if (response.data.status === "Success") {
         setSubmitSuccess(true);
         setSubmitError(false);
         show(false);
-        console.log("data submitted");
+        console.log('data submitted');
         Swal.fire({
           icon: "success",
-          title: editData
-            ? "Data Updated Successfully"
-            : "Data Added Successfully",
+          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -305,7 +246,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Something went wrong!",
+          text: response.data.message || "Something went wrong!",
         });
       }
     } catch (error) {
@@ -315,11 +256,15 @@ const AddOpportunityDetails = ({ show, editData }) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Something went wrong!",
+        text: error.message || "Something went wrong!",
       });
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setSubmitError(false);
+    setSubmitSuccess(false);
+  };
   return (
     <Card>
       <CardContent>
@@ -357,9 +302,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 fullWidth
                 label="Schedule Time"
                 type="time"
-                value={formData.scheduleTime}
+                value={formData.ScheduleTime}
                 onChange={(e) =>
-                  setFormData({ ...formData, scheduleTime: e.target.value })
+                  setFormData({ ...formData, ScheduleTime: e.target.value })
                 }
                 InputLabelProps={{
                   shrink: true,
@@ -371,13 +316,13 @@ const AddOpportunityDetails = ({ show, editData }) => {
             </Grid>
 
             <Grid item xs={4}>
-              <FormControl fullWidth error={!!errors.lookingForId}>
+              <FormControl fullWidth error={!!errors.LookingForID}>
                 <InputLabel>Looking For</InputLabel>
                 <Select
                   label="Looking For"
-                  value={formData.lookingForId}
+                  value={formData.LookingForID}
                   onChange={(e) =>
-                    setFormData({ ...formData, lookingForId: e.target.value })
+                    setFormData({ ...formData, LookingForID: e.target.value })
                   }
                 >
                   {lookingForOptions.map((option) => (
@@ -389,24 +334,24 @@ const AddOpportunityDetails = ({ show, editData }) => {
                     </MenuItem>
                   ))}
                 </Select>
-                {!!errors.lookingForId && (
+                {!!errors.LookingForID && (
                   <Typography variant="caption" color="error">
-                    {errors.lookingForId}
+                    {errors.LookingForID}
                   </Typography>
                 )}
               </FormControl>
             </Grid>
 
             <Grid item xs={4}>
-              <FormControl fullWidth error={!!errors.estimatedBudgetId}>
+              <FormControl fullWidth error={!!errors.EstimatedbudgetID}>
                 <InputLabel>Estimated Budget</InputLabel>
                 <Select
                   label="Estimated Budget"
-                  value={formData.estimatedBudgetId}
+                  value={formData.EstimatedbudgetID}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      estimatedBudgetId: e.target.value,
+                      EstimatedbudgetID: e.target.value,
                     })
                   }
                 >
@@ -427,25 +372,26 @@ const AddOpportunityDetails = ({ show, editData }) => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 label="Area From"
-                value={formData.areaFrom}
-                 name="areaFrom"
+                value={formData.AreaFrom}
+                name="AreaFrom"
                 onChange={(e) =>
-                  setFormData({ ...formData, areaFrom: e.target.value })
+                  setFormData({ ...formData, AreaFrom: e.target.value })
                 }
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
+                name="AreaTo"
                 label="Area To"
-                value={formData.areaTo}
+                value={formData.AreaTo}
                 onChange={(e) =>
-                  setFormData({ ...formData, areaTo: e.target.value })
+                  setFormData({ ...formData, AreaTo: e.target.value })
                 }
               />
             </Grid>
@@ -454,9 +400,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 <InputLabel>Scale</InputLabel>
                 <Select
                   label="Scale"
-                  value={formData.scaleId}
+                  value={formData.ScaleID}
                   onChange={(e) =>
-                    setFormData({ ...formData, scaleId: e.target.value })
+                    setFormData({ ...formData, ScaleID: e.target.value })
                   }
                 >
                   {scales.map((scale) => (
@@ -468,13 +414,13 @@ const AddOpportunityDetails = ({ show, editData }) => {
               </FormControl>
             </Grid>
             <Grid item xs={4}>
-              <FormControl fullWidth error={!!errors.cityId}>
+              <FormControl fullWidth error={!!errors.CityID}>
                 <InputLabel>City</InputLabel>
                 <Select
                   label="City"
-                  value={formData.cityId}
+                  value={formData.CityID}
                   onChange={(e) =>
-                    setFormData({ ...formData, cityId: e.target.value })
+                    setFormData({ ...formData, CityID: e.target.value })
                   }
                 >
                   {cities.map((city) => (
@@ -483,20 +429,20 @@ const AddOpportunityDetails = ({ show, editData }) => {
                     </MenuItem>
                   ))}
                 </Select>
-                {!!errors.cityId && (
+                {!!errors.CityID && (
                   <Typography variant="caption" color="error">
-                    {errors.cityId}
+                    {errors.CityID}
                   </Typography>
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 label="Location"
-                value={formData.locationId}
+                value={formData.LocationID}
                 onChange={(e) =>
-                  setFormData({ ...formData, locationId: e.target.value })
+                  setFormData({ ...formData, LocationID: e.target.value })
                 }
               />
             </Grid>
@@ -505,9 +451,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 <InputLabel>Unit Type</InputLabel>
                 <Select
                   label="Unit Type"
-                  value={formData.unitTypeId}
+                  value={formData.UnittypeID}
                   onChange={(e) =>
-                    setFormData({ ...formData, unitTypeId: e.target.value })
+                    setFormData({ ...formData, UnittypeID: e.target.value })
                   }
                 >
                   {units.map((unit) => (
@@ -523,9 +469,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 <InputLabel>Property Age</InputLabel>
                 <Select
                   label="Property Age"
-                  value={formData.propertyAgeId}
+                  value={formData.PropertyAgeID}
                   onChange={(e) =>
-                    setFormData({ ...formData, propertyAgeId: e.target.value })
+                    setFormData({ ...formData, PropertyAgeID: e.target.value })
                   }
                 >
                   {propertyAges.map((age) => (
@@ -541,9 +487,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 <InputLabel>Purpose</InputLabel>
                 <Select
                   label="Purpose"
-                  value={formData.purposeId}
+                  value={formData.PurposeID}
                   onChange={(e) =>
-                    setFormData({ ...formData, purposeId: e.target.value })
+                    setFormData({ ...formData, PurposeID: e.target.value })
                   }
                 >
                   {purposes.map((purpose) => (
@@ -563,10 +509,10 @@ const AddOpportunityDetails = ({ show, editData }) => {
                   </>
                 }
                 type="date"
-                name="scheduleDate"
-                value={formData.scheduleDate}
+                name="ScheduleDate"
+                value={formData.ScheduleDate}
                 onChange={(e) =>
-                  setFormData({ ...formData, scheduleDate: e.target.value })
+                  setFormData({ ...formData, ScheduleDate: e.target.value })
                 }
                 InputLabelProps={{
                   shrink: true,
@@ -577,22 +523,22 @@ const AddOpportunityDetails = ({ show, editData }) => {
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 label="Keyword"
-                value={formData.keywordId}
+                value={formData.KeywordID}
                 onChange={(e) =>
-                  setFormData({ ...formData, keywordId: e.target.value })
+                  setFormData({ ...formData, KeywordID: e.target.value })
                 }
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Source</InputLabel>
                 <Select
                   label="Source"
-                  value={formData.sourceId}
+                  value={formData.SourceID}
                   onChange={handleSourceChange}
                 >
                   {sources.map((source) => (
@@ -603,14 +549,14 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Source Type</InputLabel>
                 <Select
                   label="Source Type"
-                  value={formData.sourceTypeId}
+                  value={formData.SourceNameID}
                   onChange={(e) =>
-                    setFormData({ ...formData, sourceTypeId: e.target.value })
+                    setFormData({ ...formData, SourceNameID: e.target.value })
                   }
                 >
                   {sourceTypes.map((sourceType) => (
@@ -624,16 +570,16 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Opportunity Attended By</InputLabel>
                 <Select
                   label="Opportunity Attended By"
-                  value={formData.opportunityAttendedById}
+                  value={formData.OpportunityAttendedByID}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      opportunityAttendedById: e.target.value,
+                      OpportunityAttendedByID: e.target.value,
                     })
                   }
                 >
@@ -651,9 +597,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 label="Description"
                 multiline
                 rows={4}
-                value={formData.description}
+                value={formData.Description}
                 onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
+                  setFormData({ ...formData, Description: e.target.value })
                 }
               />
             </Grid>
@@ -695,5 +641,5 @@ const AddOpportunityDetails = ({ show, editData }) => {
     </Card>
   );
 };
-
 export default AddOpportunityDetails;
+

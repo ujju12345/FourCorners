@@ -94,7 +94,7 @@ const StatisticsCard = () => {
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
               Total 48.5% growth
             </Box>{' '}
-            😎 this month
+            ðŸ˜Ž this month
           </Typography>
         }
         titleTypographyProps={{

@@ -24,6 +24,7 @@ import {
   RadioGroup,
   Radio,
   FormLabel,
+  Autocomplete
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
@@ -31,7 +32,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
   console.log(editData, "Edit data aaya");
   const initialFormData = {
     titleprefixID: "",
-    PartyName: "",
+    Cid: "",
+    CName: "",
     Mobile: "",
     AlternateMobileNo: "",
     TelephoneNo: null,
@@ -63,6 +65,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
   const [errors, setErrors] = useState({});
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
+  const [cNames, setCNames] = useState([]);
+  const [selectedCid, setSelectedCid] = useState("");
   const [estimatedBudget, setEstimatedBudget] = useState([]);
   const [leadStatus, setLeadStatus] = useState([]);
   const [userMaster, setUserMaster] = useState([]);
@@ -71,6 +75,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
   const [loading, setLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [item, setItem] = useState(null);
+  const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -99,6 +105,19 @@ const AddTellecallingDetails = ({ show, editData }) => {
       .then((response) => {
         if (response.data.status === "Success") {
           setSource(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-cid.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setCNames(response.data.data);
         }
       })
       .catch((error) => {
@@ -191,6 +210,87 @@ const AddTellecallingDetails = ({ show, editData }) => {
     }
   };
 
+  const handleSelectChange = async (event) => {
+    const selectedCid = event.target.value;
+    setSelectedCid(selectedCid);
+
+    try {
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
+      const response = await axios.get(apiUrl);
+
+      if (response.data.status === "Success") {
+        console.log(
+          "Single telecalling data fetched for telecalling:",
+          response.data
+        );
+        const fetchedData = response.data.data;
+
+        // Update formData state with all fetched data
+        setFormData({
+          titleprefixID: fetchedData.TitleID || "",
+          Cid: fetchedData.Cid || "",
+          CName: fetchedData.CName || "",
+          Mobile: fetchedData.Mobile || "",
+          AlternateMobileNo: fetchedData.OtherNumbers || "",
+          TelephoneNo: null, // Set as null if not available in fetched data
+          AlternateTelephoneNo: null, // Set as null if not available in fetched data
+          Email: fetchedData.Email || "",
+          ProjectID: "", // Assuming ProjectID is not available in fetched data
+          EstimatedbudgetID: "", // Assuming EstimatedbudgetID is not available in fetched data
+          leadstatusID: "", // Assuming leadstatusID is not available in fetched data
+          Comments: "", // Assuming Comments are not available in fetched data
+          Location: fetchedData.LocationID || "",
+          FollowupThrough: "", // Assuming FollowupThrough is not available in fetched data
+          NextFollowUpDate: new Date(
+            new Date().getTime() + 2 * 24 * 60 * 60 * 1000
+          ),
+          NextFollowUpTime: getCurrentTime(),
+          SourceID: fetchedData.SourceID || "",
+          SourceName: fetchedData.SourceName || "",
+          SourceDescription: "", // Assuming SourceDescription is not available in fetched data
+          TelecallAttendedByID: fetchedData.UserID || "",
+          SmsNotification: 0, // Assuming SmsNotification default value
+          EmailNotification: 0, // Assuming EmailNotification default value
+          ModifyUID: 1, // Assuming ModifyUID is constant
+          Tid: "", // Assuming Tid is not available in fetched data
+          UnittypeID: "", // Assuming UnittypeID is not available in fetched data
+          Countrycode: fetchedData.CountryCode || "",
+          Status: 1, // Assuming Status default value
+        });
+      } else {
+        console.error("API response status not success:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching single telecalling data:", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!item) return; // Exit if no item is provided
+  //     try {
+  //       const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid}`;
+  //       const response = await axios.get(apiUrl);
+
+  //       console.log("seee this", response.data); // Log the API response to debug
+
+  //       if (response.data.status === "Success") {
+  //         console.log(
+  //           response.data,
+  //           "Single telecalling data fetched for telecalling"
+  //         );
+  //         // Update item state with fetched data
+  //         setRowDataToUpdate(response.data);
+  //       } else {
+  //         console.error("API response status not success:", response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching single telecalling data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [item]);
+
   const handleNotificationChange = (event) => {
     const value = event.target.value === "sms" ? 1 : 0;
     setFormData({
@@ -209,25 +309,19 @@ const AddTellecallingDetails = ({ show, editData }) => {
       [name]: undefined,
     }));
 
-    if (
-      [
-        "Mobile",
-        "AlternateMobileNo",
-        "TelephoneNo",
-        "AlternateTelephoneNo",
-        "Countrycode",
-      ].includes(name)
-    ) {
-      const numericValue = value.replace(/\D/g, "");
-      setFormData({
-        ...formData,
+    // Update formData state based on the field name
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+
+    // Handle specific formatting or validation logic if needed
+    if (name === "Mobile" || name === "AlternateMobileNo") {
+      const numericValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         [name]: numericValue,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      }));
     }
   };
 
@@ -357,66 +451,69 @@ const AddTellecallingDetails = ({ show, editData }) => {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Validate form
-    const isValid = validateForm();
-  
-    if (isValid) {
-      const url = editData
-        ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
-        : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
-  
-      try {
-        const response = await axios.post(url, formData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    // const isValid = validateForm();
+
+    // if (isValid) {
+    const url = editData
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
+
+    console.log(formData, "ALL the data of telecalling");
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log(response, "ye res h ");
+      if (response.data.status === "Success") {
+        setFormData(initialFormData);
+
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        show(false);
+
+        setErrors({});
+
+        Swal.fire({
+          icon: "success",
+          title: editData
+            ? "Data Updated Successfully"
+            : "Data Added Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
-  
-        if (response.data.status === "Success") {
-          setFormData(initialFormData);
-          setSubmitSuccess(true);
-          setSubmitError(false);
-          show(false);
-  
-          setErrors({});
-  
-          Swal.fire({
-            icon: "success",
-            title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-            showConfirmButton: false,
-            timer: 1000,
-          }).then(() => {
-            window.location.reload();
-          });
-  
-        } else {
-          setSubmitSuccess(false);
-          setSubmitError(true);
-  
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-          });
-        }
-      } catch (error) {
-        console.error("There was an error!", error);
+      } else {
         setSubmitSuccess(false);
         setSubmitError(true);
-  
+
         Swal.fire({
           icon: "error",
           title: "Oops...",
           text: "Something went wrong!",
         });
       }
-    } else {
-      // Handle validation errors if any
-      console.log("Form validation failed");
-    }
-  };
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
 
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+    }
+    // } else {
+    //   // Handle validation errors if any
+    //   console.log("Form validation failed");
+    // }
+  };
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -481,22 +578,38 @@ const AddTellecallingDetails = ({ show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
+                <FormControl fullWidth>
+                  {editData ? (
+                    // Display full name as a non-editable text when in edit mode
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {formData.CName}
+                    </Box>
+                  ) : (
+                    // Display Select component when not in edit mode
                     <>
-                      Party Name <RequiredIndicator />
+                      <InputLabel id="select-cname-label">Full name</InputLabel>
+                      <Select
+                        labelId="select-cname-label"
+                        id="select-cname"
+                        value={selectedCid}
+                        onChange={handleSelectChange}
+                      >
+                        {cNames.map((item) => (
+                          <MenuItem key={item.Cid} value={item.Cid}>
+                            {item.CName || ""}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </>
-                  }
-                  name="PartyName"
-                  value={formData.PartyName}
-                  onChange={handleChange}
-                />
-                {errors.PartyName && (
-                  <Typography variant="caption" color="error">
-                    {errors.PartyName}
-                  </Typography>
-                )}
+                  )}
+                </FormControl>
               </Grid>
 
               <Grid item xs={8} sm={4}>
@@ -521,8 +634,22 @@ const AddTellecallingDetails = ({ show, editData }) => {
                   </Typography>
                 )}
               </Grid>
-
               <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Mobile"
+                  name="Mobile"
+                  value={formData.Mobile || ""}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                    maxLength: 10,
+                  }}
+                />
+                {/* Add error handling for Mobile if needed */}
+              </Grid>
+
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={
@@ -544,9 +671,24 @@ const AddTellecallingDetails = ({ show, editData }) => {
                     {errors.Mobile}
                   </Typography>
                 )}
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Alternate Mobile Number"
+                  name="AlternateMobileNo"
+                  value={formData.AlternateMobileNo || ""}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                    maxLength: 10,
+                  }}
+                />
+                {/* Add error handling for Alternate Mobile Number if needed */}
+              </Grid>
+
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   type="tel"
@@ -560,9 +702,20 @@ const AddTellecallingDetails = ({ show, editData }) => {
                     maxLength: 10,
                   }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="Email"
+                  value={formData.Email || ""}
+                  onChange={handleChange}
+                />
+                {/* Add error handling for Email if needed */}
+              </Grid>
+
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={
@@ -580,7 +733,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
                     {errors.Email}
                   </Typography>
                 )}
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>

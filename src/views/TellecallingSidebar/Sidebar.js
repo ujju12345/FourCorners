@@ -376,7 +376,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                               variant="subtitle1"
                               style={{ fontWeight: 600, fontSize: 13 }}
                             >
-                              {item.PartyName}
+                              {item.CName}
                             </Typography>
                             {item.leadstatusName && (
                               <Chip

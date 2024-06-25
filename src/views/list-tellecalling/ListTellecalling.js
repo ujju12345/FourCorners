@@ -192,7 +192,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
   const downloadCSV = () => {
     const csvData = [
       {
-        "Party Name": item.PartyName,
+        "C Name ": item.CName,
         Mobile: item.Mobile,
         Email: item.Email,
         "Project Name": item.ProjectName,
@@ -484,7 +484,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 variant="h6"
                 sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
-                {item?.PartyName}
+                {item?.CName}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem" }}>
                 {item?.Mobile}
