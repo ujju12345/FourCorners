@@ -76,7 +76,7 @@ const navigation = () => {
     {
       title: 'Backlog Lead',
       icon: CubeOutlineIcon,
-      path: '',
+      path: '/tellcalling-details/Backlog',
     },    {
       title: 'Open Lead',
       icon: CubeOutlineIcon,

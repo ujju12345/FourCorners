@@ -55,20 +55,20 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     });
   };
 
-//   useEffect(() => {
-//     fetchDataCurrent();
-//   }, []);
+  useEffect(() => {
+    fetchDataCurrent();
+  }, []);
 
-//   const fetchDataCurrent = async () => {
-//     try {
-//       const response = await axios.get(
-//         "https://apiforcorners.cubisysit.com/api/api-fetch-currentupdate.php"
-//       );
-//       setCurrentUpdate(response.data.data || []);
-//     } catch (error) {
-//       console.error("Error fetching Bhk data:", error);
-//     }
-//   };
+  const fetchDataCurrent = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-currentupdate.php"
+      );
+      setCurrentUpdate(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching Bhk data:", error);
+    }
+  };
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
