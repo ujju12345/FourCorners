@@ -63,8 +63,8 @@ const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item.NextFollowUpDate.toLowerCase().includes(lowerCaseQuery) ||
-          item.NextFollowUpTime.toLowerCase().includes(lowerCaseQuery)
+          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.NextFollowUpDate?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }

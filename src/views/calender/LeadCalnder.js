@@ -243,7 +243,7 @@ const LeadCalnder = () => {
             },
           },
         }}
-        dateClick={(e) => handleDateClick(e)}
+        // dateClick={(e) => handleDateClick(e)}
         events={appointments}
         datesSet={async (dateInfo) => {
           // await getEvents(dateInfo.startStr.split('T')[0], dateInfo.endStr.split('T')[0]);

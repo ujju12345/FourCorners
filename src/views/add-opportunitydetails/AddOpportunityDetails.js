@@ -210,15 +210,43 @@ const AddOpportunityDetails = ({ show, editData }) => {
   const RequiredIndicator = () => {
     return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
   };
+
+
+
+  const validate = () => {
+    let tempErrors = {};
+    tempErrors.Cid = formData.Cid ? "" : "This field is required.";
+    tempErrors.LookingForID = formData.LookingForID ? "" : "This field is required.";
+    tempErrors.EstimatedbudgetID = formData.EstimatedbudgetID ? "" : "This field is required.";
+    tempErrors.AreaFrom = formData.AreaFrom ? "" : "This field is required.";
+    tempErrors.AreaTo = formData.AreaTo ? "" : "This field is required.";
+    tempErrors.ScaleID = formData.ScaleID ? "" : "This field is required.";
+    tempErrors.CityID = formData.CityID ? "" : "This field is required.";
+    tempErrors.LocationID = formData.LocationID ? "" : "This field is required.";
+    tempErrors.UnittypeID = formData.UnittypeID ? "" : "This field is required.";
+    tempErrors.PropertyAgeID = formData.PropertyAgeID ? "" : "This field is required.";
+    tempErrors.PurposeID = formData.PurposeID ? "" : "This field is required.";
+    tempErrors.ScheduleDate = formData.ScheduleDate ? "" : "This field is required.";
+    tempErrors.ScheduleTime = formData.ScheduleTime ? "" : "This field is required.";
+    tempErrors.KeywordID = formData.KeywordID ? "" : "This field is required.";
+    tempErrors.SourceID = formData.SourceID ? "" : "This field is required.";
+    tempErrors.SourceNameID = formData.SourceNameID ? "" : "This field is required.";
+    tempErrors.OpportunityAttendedByID = formData.OpportunityAttendedByID ? "" : "This field is required.";
+    tempErrors.Description = formData.Description ? "" : "This field is required.";
+
+    setErrors({ ...tempErrors });
+    return Object.values(tempErrors).every((x) => x === "");
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+  
     const payload = createPayload();
+    const url = editData
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-opportunity.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunity.php";
   
     try {
-      const url = editData
-        ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-opportunity.php"
-        : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunity.php";
-  
       const response = await axios.post(url, payload, {
         headers: {
           "Content-Type": "application/json",
@@ -230,8 +258,6 @@ const AddOpportunityDetails = ({ show, editData }) => {
       if (response.data.status === "Success") {
         setSubmitSuccess(true);
         setSubmitError(false);
-        show(false);
-        console.log('data submitted');
         Swal.fire({
           icon: "success",
           title: editData ? "Data Updated Successfully" : "Data Added Successfully",
@@ -241,13 +267,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
           window.location.reload();
         });
       } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: response.data.message || "Something went wrong!",
-        });
+        throw new Error(response.data.message || "Something went wrong!");
       }
     } catch (error) {
       console.error("There was an error!", error);
@@ -260,6 +280,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
       });
     }
   };
+  
 
   const handleCloseSnackbar = () => {
     setSubmitError(false);
@@ -271,7 +292,14 @@ const AddOpportunityDetails = ({ show, editData }) => {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography variant="h5">Add Opportunity Details</Typography>
+            <Typography
+                variant="body2"
+                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+              >
+                {editData
+                  ? "Edit Opportunity Details"
+                  : "Add Opportunity Details"}
+              </Typography>
             </Grid>
             <Grid item xs={4}>
               <FormControl fullWidth error={!!errors.contactId}>
@@ -289,7 +317,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                     </MenuItem>
                   ))}
                 </Select>
-                {!!errors.contactId && (
+                {!!errors.Cid && (
                   <Typography variant="caption" color="error">
                     {errors.contactId}
                   </Typography>
