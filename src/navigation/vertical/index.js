@@ -1,4 +1,3 @@
-
 import CubeOutlineIcon from 'mdi-material-ui/CubeOutline';
 // ** Icon imports
 import Login from 'mdi-material-ui/Login'
@@ -64,7 +63,7 @@ const navigation = () => {
       sectionTitle: 'Leads'
     },
     {
-      title: 'Leads',
+      title: 'Lead',
       icon: PhoneIcon,
       path: '/tellcalling-details'
     },
@@ -77,16 +76,16 @@ const navigation = () => {
     {
       title: 'Backlog Lead',
       icon: CubeOutlineIcon,
-      path: '/tellcalling-details/Backlog',
+      path: '',
     },    {
       title: 'Open Lead',
       icon: CubeOutlineIcon,
-      path: '',
+      path: '/tellcalling-details/OpenLead',
     },
     {
       title: 'Calendar',
       icon: CubeOutlineIcon,
-      path: '',
+      path: '/tellcalling-details/Leadcalender',
     },
     {
       sectionTitle: 'Opportunity'
