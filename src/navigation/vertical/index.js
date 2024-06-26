@@ -64,7 +64,7 @@ const navigation = () => {
       sectionTitle: 'Leads'
     },
     {
-      title: 'Lead',
+      title: 'Leads',
       icon: PhoneIcon,
       path: '/tellcalling-details'
     },
@@ -77,7 +77,7 @@ const navigation = () => {
     {
       title: 'Backlog Lead',
       icon: CubeOutlineIcon,
-      path: '',
+      path: '/tellcalling-details/Backlog',
     },    {
       title: 'Open Lead',
       icon: CubeOutlineIcon,
