@@ -17,10 +17,10 @@ import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
+const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
   const intialName = {
-    Tid: "",
+    Nid: "",
     CurrentUpdateID: "",
     NextFollowUpDate: "",
     NextFollowUpTime: "",
@@ -70,10 +70,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
       console.error("Error fetching Bhk data:", error);
     }
   };
-
-
-
-
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
@@ -108,7 +104,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-mylead.php?Nid=${item.Nid}`;
 
         const response = await axios.get(apiUrl);
 
@@ -127,30 +123,26 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    // Ensure item and Tid are available
-    if (!item || !item.Tid) {
-      console.error('No valid item or Tid found.');
+    // Ensure item and Nid are available
+    if (!item || !item.Nid) {
+      console.error('No valid item or Nid found.');
       return;
     }
   
-    // Add Tid to formData
-    const formDataWithTid = {
+    // Add Nid to formData
+    const formDataWithNid = {
       ...formData,
-      Tid: item.Tid
+      Nid: item.Nid
     };
-
-    console.log(formDataWithTid , 'sdf');
   
     const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
   
     try {
-      const response = await axios.post(url, formDataWithTid, {
+      const response = await axios.post(url, formDataWithNid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(formDataWithTid ,  'sdf');
-      
   
       if (response.data.status === "Success") {
         setFormData(intialName);
@@ -522,7 +514,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Source Name: {item?.SourceName}
+                NextFollowUpDate: {item?.NextFollowUpDate}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
@@ -543,7 +535,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Location: {item?.Location}
+               NextFollowUpTime: {item?.NextFollowUpTime}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
@@ -564,7 +556,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Attended By: {item?.TelecallAttendedByName}
+                Phone:  {item?.Mobile}
               </Typography>
             </div>
           </Box>
@@ -579,73 +571,16 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
         mt: 15,
       }}
     >
-      <Grid container spacing={3}>
-        {/* Email */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
-            sx={{
-              borderRadius: 1,
-              padding: "10px",
-            }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Email
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.Email}
-            </Typography>
-          </Card>
-        </Grid>
 
-        {/* Project Name */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
-            sx={{
-              borderRadius: 1,
-              padding: "10px",
-            }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Project Name
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.ProjectName}
-            </Typography>
-          </Card>
-        </Grid>
+        {/* Email */}
+
+
+    
 
         {/* Unit Type */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
-            sx={{
-              borderRadius: 1,
-              padding: "10px",
-            }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Unit Type
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.UnittypeName}
-            </Typography>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
-    <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
+    
         <Grid container spacing={3}>
-          <Grid item xs={4}>
+        <Grid item xs={4}>
             <Card
               variant="outlined" // Use outlined variant for a border without shadow
               sx={{
@@ -655,27 +590,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Estimated Budget
+              Current Update Name
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.EstimatedbudgetName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Lead Status
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.leadstatusName}
+                {item?.CurrentUpdateName}
               </Typography>
             </Card>
           </Grid>
@@ -696,73 +614,27 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               </Typography>
             </Card>
           </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Next Follow-Up Time
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.NextFollowUpTime}
+              </Typography>
+            </Card>
+          </Grid>
         </Grid>
       </Box>
 
-      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Source Description
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.SourceDescription}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Telecall Attended By
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.TelecallAttendedByName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Alternate Mobile Number
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.AlternateMobileNo}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+
 
       {/* Comments */}
       <Box
@@ -775,6 +647,24 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
         }}
       >
         <Grid container spacing={3}>
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1, 
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+             Interest
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.Interest}
+            </Typography>
+          </Card>
+        </Grid>
+
+  
           <Grid item xs={4}>
             <Card
               variant="outlined" // Use outlined variant for a border without shadow
@@ -785,10 +675,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Comments
+                Note
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.Comments}
+                {item?.Note}
               </Typography>
             </Card>
           </Grid>
@@ -800,4 +690,4 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
   );
 };
 
-export default ListTellecalling;
+export default Listmyopportunity;

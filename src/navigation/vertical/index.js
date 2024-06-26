@@ -99,7 +99,7 @@ const navigation = () => {
     {
       title: 'My Opportunity',
       icon: CubeOutlineIcon,
-      path: '',
+      path: '/opportunity/MyOpportunity',
     },
     {
       title: 'Backlog',
