@@ -60,7 +60,7 @@ const navigation = () => {
     },
 
     {
-      sectionTitle: 'Leads'
+      sectionTitle: 'Data Management'
     },
     {
       title: 'Lead',

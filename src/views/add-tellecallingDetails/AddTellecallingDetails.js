@@ -546,8 +546,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
                 {editData
-                  ? "Edit Telecalling Details"
-                  : "Add Telecalling Details"}
+                  ? "Edit Lead Details"
+                  : "Add Lead Details"}
               </Typography>
             </Box>
           </Grid>
