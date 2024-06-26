@@ -95,16 +95,16 @@ const navigation = () => {
       icon: TrendingUpIcon,
       path: '/opportunity',
     },
-    {
-      title: 'My Opportunity',
-      icon: CubeOutlineIcon,
-      path: '/opportunity/MyOpportunity',
-    },
-    {
-      title: 'Backlog',
-      icon: CubeOutlineIcon,
-      path: '',
-    },  
+    // {
+    //   title: 'My Opportunity',
+    //   icon: CubeOutlineIcon,
+    //   path: '/opportunity/MyOpportunity',
+    // },
+    // {
+    //   title: 'Backlog',
+    //   icon: CubeOutlineIcon,
+    //   path: '',
+    // },  
     {
       sectionTitle: 'Enquiries'
     },
