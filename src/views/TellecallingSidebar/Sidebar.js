@@ -221,7 +221,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Telecaller
+            All Lead
           </Typography>
           <Box display="flex" alignItems="center">
           <IconButton

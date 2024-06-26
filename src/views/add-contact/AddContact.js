@@ -431,6 +431,8 @@ const AddContact = ({ show, editData }) => {
     }
     if (!data.Mobile) {
       errors.Mobile = "Mobile is required";
+    }else if (data.Mobile.length < 10) {
+      errors.Mobile = "Mobile number must be 10 digits";
     }
     if (!data.Email) {
       errors.Email = "Email is required";
