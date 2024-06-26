@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   List,
   ListItem,
@@ -18,13 +19,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Chip,
   Button,
   Menu,
   ListItemIcon,
   Popover,
 } from "@mui/material";
-import axios from "axios";
-import { Chip } from '@mui/material';
 import PersonIcon from "@mui/icons-material/Person";
 import { Divider } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -421,7 +421,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         >
                           <EditIcon />
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           aria-label="delete"
                           onClick={(event) => {
                             event.stopPropagation();
@@ -430,7 +430,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           sx={{ color: "red" }}
                         >
                           <DeleteIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>
