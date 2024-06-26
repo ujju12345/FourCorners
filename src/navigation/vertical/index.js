@@ -69,18 +69,19 @@ const navigation = () => {
     },
 
      {
-      title: 'My Lead',
+      title: 'Todays Folowup',
       icon: CubeOutlineIcon,
       path: '/tellcalling-details/Mylead',
     },
     {
-      title: 'Backlog Lead',
-      icon: CubeOutlineIcon,
-      path: '/tellcalling-details/Backlog',
-    },    {
       title: 'Open Lead',
       icon: CubeOutlineIcon,
       path: '/tellcalling-details/OpenLead',
+    },
+    {
+      title: 'Backlog Pending',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/Backlog',
     },
     {
       title: 'Calendar',
