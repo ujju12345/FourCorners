@@ -102,12 +102,12 @@ const navigation = () => {
       path: '/opportunity',
     },
     {
-      title: 'My Opportunity',
+      title: 'Todays Followup',
       icon: CubeOutlineIcon,
       path: '/opportunity/MyOpportunity',
     },
     {
-      title: 'Backlog Opportunity',
+      title: 'Backlog Pending',
       icon: CubeOutlineIcon,
       path: '/opportunity/BacklogOpportunity',
     },  
