@@ -26,9 +26,12 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
+
 const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
+  console.log(item , 'item hasi ye');
   const intialName = {
-    Tid: "",
+    Oid: "",
     CurrentUpdateID: "",
     NextFollowUpDate: "",
     NextFollowUpTime: "",
@@ -110,11 +113,27 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     fetchData();
   }, [item]);
 
+
+  useEffect(() => {
+    fetchDataCurrent();
+  }, []);
+
+  const fetchDataCurrent = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-currentupdate.php"
+      );
+      setCurrentUpdate(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching Bhk data:", error);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     // Ensure item and Tid are available
-    if (!item || !item.Tid) {
+    if (!item || !item.Oid) {
       console.error("No valid item or Tid found.");
       return;
     }
@@ -122,11 +141,13 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     // Add Tid to formData
     const formDataWithTid = {
       ...formData,
-      Tid: item.Tid,
+      Oid: item.Oid,
     };
 
+    console.log(formDataWithTid , 'follow up opportunut');
+
     const url =
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunityfollowup.php";
 
     try {
       const response = await axios.post(url, formDataWithTid, {
@@ -141,10 +162,14 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         setSubmitSuccess(true);
         setSubmitError(false);
         // Show success message using SweetAlert
+      
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Follow-up details saved successfully.",
+          title: "Follow Up detail saved successfully",        
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
       } else {
         setSubmitSuccess(false);
@@ -282,6 +307,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<PersonAddIcon />}
+            onClick={handleDropdownClick}
             sx={{
               mr: 30,
 
@@ -302,17 +328,151 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             open={Boolean(anchorEl)}
             onClose={handleDropdownClose}
           >
-            <MenuItem>
+            <MenuItem onClick={handleAddFollowUpClick}>
               <AddIcon sx={{ mr: 1 }} />
               Add Follow Up
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleHistoryClick}>
               <HistoryIcon sx={{ mr: 1 }} />
               History
             </MenuItem>
           </Menu>
         </Grid>
       </Grid>
+
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            minWidth: 500,
+            maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
+            mt: 5,
+            mx: 2,
+            minHeight: 400, // Adjust the minHeight to increase the height of the modal
+            height: 'auto', 
+          }}
+        >
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h7"
+            component="h3"
+            gutterBottom
+          >
+            Select Next Follow-Up Date and Time
+          </Typography>
+
+          <Grid container spacing={2} mt={8}>
+     
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel>Current Update</InputLabel>
+                <Select
+                  value={formData.CurrentUpdateID}
+                  onChange={handleCurrentUpdate}
+                  label="Current Update"
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 180, // Adjust as needed
+                      },
+                    },
+                  }}
+                  
+                >
+                  {currentUpdate.map((bhk) => (
+                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
+                      {bhk.CurrentUpdateName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                // label="Next Follow-Up Date"
+                type="date"
+                name="NextFollowUpDate"
+                value={formData.NextFollowUpDate}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                // label="Next Follow-Up Time"
+                type="time"
+                name="NextFollowUpTime"
+                value={formData.NextFollowUpTime}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Interest In"
+                type="text"
+                name="Interest"
+                value={formData.Interest}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Note"
+                type="text"
+                name="Note"
+                value={formData.Note}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+          </Grid>
+
+          <Box sx={{ textAlign: "left" }}>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  marginRight: 3.5,
+                  marginTop: 15,
+                  backgroundColor: "#9155FD",
+                  color: "#FFFFFF",
+                }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Box>
+        </Box>
+      </Modal>
 
       <Card sx={{}}>
         <Paper sx={{ padding: 5 }}>

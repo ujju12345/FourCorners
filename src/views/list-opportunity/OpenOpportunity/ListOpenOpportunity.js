@@ -13,41 +13,42 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
+import {
+  Modal,
+  TextField,
+  IconButton,
+  Menu,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Swal from 'sweetalert2';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
+import Swal from "sweetalert2";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
+
+const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const intialName = {
-    Oid: "",
+    Tid: "",
     CurrentUpdateID: "",
     NextFollowUpDate: "",
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
     CreateUID: 1,
-  }
-
-
-
-
+  };
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
-
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-
   const [bhkOptions, setBhkOptions] = useState([]);
   const [currentUpdate, setCurrentUpdate] = useState([]);
-
   const [setRowDataToUpdate] = useState(null);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
 
   const handleCurrentUpdate = (event) => {
     setFormData({
@@ -104,12 +105,12 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-mylead.php?Oid=${item.Oid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-mylead.php?Nid=${item.Nid}`;
 
         const response = await axios.get(apiUrl);
 
         if (response.data.status === "Success") {
-          console.log(response.data.data[0], "dekh ye ");
+          console.log(response.data.data[0], "Single telecalling data fetched");
           // Update item state with fetched data
           setRowDataToUpdate(response.data.data[0]);
         }
@@ -122,28 +123,29 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Ensure item and Nid are available
-    if (!item || !item.Oid) {
-      console.error('No valid item or Nid found.');
+    if (!item || !item.Nid) {
+      console.error("No valid item or Nid found.");
       return;
     }
-  
+
     // Add Nid to formData
     const formDataWithNid = {
       ...formData,
-      Oid: item.Oid
+      Tid: item.Tid,
     };
-  
-    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunityfollowup.php";
-  
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+
     try {
       const response = await axios.post(url, formDataWithNid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.data.status === "Success") {
         setFormData(intialName);
         setOpen(false);
@@ -151,32 +153,32 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
         setSubmitError(false);
         // Show success message using SweetAlert
         Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Follow-up details saved successfully.',
+          icon: "success",
+          title: "Success!",
+          text: "Follow-up details saved successfully.",
         });
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
         // Show error message using SweetAlert
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong! Please try again later.',
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
         });
       }
     } catch (error) {
       console.error("There was an error!", error);
       setSubmitSuccess(false);
       setSubmitError(true);
+      // Show error message using SweetAlert
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong! Please try again later.',
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
       });
     }
   };
-  
 
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
@@ -222,8 +224,6 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
 
-
-
   return (
     <>
       <Grid
@@ -232,100 +232,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
         spacing={2}
         sx={{ marginBottom: 5 }}
       >
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={handleEdit}
-            startIcon={<EditIcon />}
-            sx={{
-            // Light gray background color
-              color: "#333333", // Dark gray text color
-              fontSize: "0.6rem",
-              backgroundColor: "#f0f0f0",
-              minWidth: "auto",
-              minHeight: 20, // Decrease button height
-              "&:hover": {
-                backgroundColor: "#dcdcdc", // Darken background on hover
-              },
-            }}
-          >
-            Edit Details
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={downloadCSV}
-            startIcon={<GetAppIcon />}
-            sx={{
-           
-              color: "#333333",
-              fontSize: "0.6rem",
-              backgroundColor: "#f0f0f0",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Download
-          </Button>
-        </Grid>
-        <Grid item>
-      <Button
-        variant="contained"
-        startIcon={<ArrowForwardIosIcon />}
-        sx={{
-       
-          color: "#333333",
-          backgroundColor: "#f0f0f0",
-          fontSize: "0.6rem",
-          minWidth: "auto",
-          minHeight: 20,
-          "&:hover": {
-            backgroundColor: "#dcdcdc",
-          },
-        }}
-      >
-        Opportunity
-      </Button>
-    </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={handleDropdownClick}
-            startIcon={<PersonAddIcon />}
-            sx={{
-              mr: 30,
-           
-              color: "#333333",
-              fontSize: "0.6rem",
-              backgroundColor: "#f0f0f0",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Next FollowUp
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleDropdownClose}
-          >
-            <MenuItem onClick={handleAddFollowUpClick}>
-              <AddIcon sx={{ mr: 1 }} />
-              Add Follow Up
-            </MenuItem>
-            <MenuItem onClick={handleHistoryClick}>
-              <HistoryIcon sx={{ mr: 1 }} />
-              History
-            </MenuItem>
-          </Menu>
-        </Grid>
+     
       </Grid>
       <Modal
         open={open}
@@ -347,7 +254,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
             mt: 5,
             mx: 2,
             minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: 'auto', 
+            height: "auto",
           }}
         >
           <IconButton
@@ -367,8 +274,6 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Typography>
 
           <Grid container spacing={2} mt={8}>
-     
-
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel>Current Update</InputLabel>
@@ -383,17 +288,18 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                       },
                     },
                   }}
-                  
                 >
                   {currentUpdate.map((bhk) => (
-                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
+                    <MenuItem
+                      key={bhk.CurrentUpdateID}
+                      value={bhk.CurrentUpdateID}
+                    >
                       {bhk.CurrentUpdateName}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-
 
             <Grid item xs={6}>
               <TextField
@@ -411,7 +317,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 fullWidth
                 // label="Next Follow-Up Time"
                 type="time"
-                name="NextFollowUpTime"
+                name="NextFollowUpTime"                               
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}
@@ -469,11 +375,11 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-                  <Avatar
-                          alt="John Doe"
-                          sx={{ width: 60, height: 60, mr: 6 }}
-                          src="/images/avatars/1.png"
-                        />
+            <Avatar
+              alt="John Doe"
+              sx={{ width: 60, height: 60, mr: 6 }}
+              src="/images/avatars/1.png"
+            />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
@@ -499,7 +405,6 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -520,7 +425,6 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -534,14 +438,13 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-               NextFollowUpTime: {item?.NextFollowUpTime}
+                NextFollowUpTime: {item?.NextFollowUpTime}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -555,138 +458,146 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Phone:  {item?.Mobile}
+                Phone: {item?.Mobile}
               </Typography>
             </div>
           </Box>
 
           <Box
-      sx={{
-        width: "auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ml: 12,
-        mt: 15,
-      }}
-    >
-
-        {/* Email */}
-
-
-    
-
-        {/* Unit Type */}
-    
-        <Grid container spacing={3}>
-        <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Current Update Name
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.CurrentUpdateName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Next Follow-Up Date
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.NextFollowUpDate}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Next Follow-Up Time
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.NextFollowUpTime}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-
-
-
-      {/* Comments */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              borderRadius: 1, 
-              padding: "10px",
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ml: 12,
+              mt: 15,
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-             Interest
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.Interest}
-            </Typography>
-          </Card>
-        </Grid>
+            {/* Email */}
 
-  
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Note
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.Note}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+            {/* Unit Type */}
+
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Current Update Name
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.CurrentUpdateName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Next Follow-Up Date
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.NextFollowUpDate}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Next Follow-Up Time
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.NextFollowUpTime}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Comments */}
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Interest
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Interest}
+                  </Typography>
+                </Card>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Note
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Note}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
         </Paper>
       </Card>
     </>
   );
 };
 
-export default Listmyopportunity;
+export default ListOpenOpportunity;

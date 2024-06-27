@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, CircularProgress, Alert, Typography, Box } from '@mui/material';
 import axios from 'axios';
+import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
+import MyleadSidebar from 'src/views/TellecallingSidebar/Mylead/MyleadSidebar';
+import Listmylead from 'src/views/list-tellecalling/Mylead/Listmylead';
+import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import Card from '@mui/material/Card'
+import TrendingUp from 'mdi-material-ui/TrendingUp'
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+import DotsVertical from 'mdi-material-ui/DotsVertical'
+import CellphoneLink from 'mdi-material-ui/CellphoneLink'
+import AccountOutline from 'mdi-material-ui/AccountOutline'
 import CardContent from '@mui/material/CardContent'
+
 import AddIcon from "@mui/icons-material/Add";
 import CardHeader from '@mui/material/CardHeader'
 import Avatar from '@mui/material/Avatar'
@@ -12,10 +22,9 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CancelIcon from '@mui/icons-material/Cancel';
+import MyOpportunitySidebar from 'src/views/opportunitysidebar/MyOpportunity/MyOpportunitySidebar';
 import Listmyopportunity from 'src/views/list-opportunity/MyOpportunity/Listmyopportunity';
-import MyOpportunitySidebar from 'src/views/opportunitysidebar/MyOpportunitySidebar/MyOpportunitySidebar';
-
-
+import HistoryOpportunitylead from 'src/views/history-apportunity/HistoryOppoerunityLead/HistoryOpportunitylead';
 const salesData = [
   {
     stats: '50',
@@ -239,14 +248,30 @@ const MyOpportunity = () => {
 
         )}
 
-   
+        {showAddDetails && (
+          <AddTellecallingDetails show={handleBack} editData={editData} />
+        )}
 
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <Listmyopportunity            item={rowDataToUpdate}
+          <Listmyopportunity
+            item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />
+        )}
+
+{!loading && !error && showHistory && (
+          <Box display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh">
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
+              User History
+            </Typography>
+            <HistoryOpportunitylead item={rowDataToUpdate} onBack={handleBack} />
+          </Box>
         )}
 
       </Grid>

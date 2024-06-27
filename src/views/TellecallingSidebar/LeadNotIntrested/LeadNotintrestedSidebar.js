@@ -22,7 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
-const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
+const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,14 +39,8 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-mylead.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        "https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php",
+   
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -148,7 +142,7 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "Telecalling.csv";
+    a.download = "mylead.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -166,7 +160,7 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-          My Lead
+        Not Interested
           </Typography>
           <Box display="flex" alignItems="center">
             {/* <IconButton
@@ -340,4 +334,4 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   );
 };
 
-export default MyOpportunitySidebar;
+export default LeadNotintrestedSidebar;

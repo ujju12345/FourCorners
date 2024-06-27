@@ -22,7 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
-const BacklogSidebar = ({ onItemClick, onCreate }) => {
+const OpenOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,14 +39,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunityopenlead.php",
+    
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -69,8 +63,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item.CName.toLowerCase().includes(lowerCaseQuery) ||
-          item.Mobile.toLowerCase().includes(lowerCaseQuery)
+          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.NextFollowUpDate?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }
@@ -123,10 +117,10 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.CName.localeCompare(b.CName));
+        sortedRows.sort((a, b) => a?.NextFollowUpDate?.localeCompare(b.NextFollowUpDate));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.CName.localeCompare(a.CName));
+        sortedRows.sort((a, b) => b?.NextFollowUpDate.localeCompare(a.NextFollowUpDate));
         break;
       default:
         break;
@@ -148,7 +142,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "mylead.csv";
+    a.download = "Telecalling.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -166,7 +160,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-          My Backlog
+         Open Opportunity Lead
           </Typography>
           <Box display="flex" alignItems="center">
             {/* <IconButton
@@ -291,10 +285,10 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
       ) : (
         <List>
           {filteredRows.map((item) => (
-            <React.Fragment key={item.Tid}>
+            <React.Fragment key={item.Oid}>
                   <Card sx={{ marginBottom: 2 }}>
             <ListItem
-              key={item.Tid}
+              key={item.Oid}
               disablePadding   
               onClick={() => onItemClick(item)}
 
@@ -312,7 +306,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
                   style={{ fontWeight: "bold" }}
                 >
                   
-                  {item.CName}
+                {item?.TitleName} {item.CName}
                   </Typography>
                 }
                 secondary={ <>
@@ -320,13 +314,13 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                    Phone: {item.Mobile}
+                    Next FollowUp Date: {item.NextFollowUpDate}
                   </Typography>
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                  Next follow Up time {item.NextFollowUpTime}
                   </Typography>
                 </>}
               />
@@ -340,4 +334,4 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   );
 };
 
-export default BacklogSidebar;
+export default OpenOpportunitySidebar;

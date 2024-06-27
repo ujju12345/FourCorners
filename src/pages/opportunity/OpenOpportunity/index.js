@@ -22,7 +22,10 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CancelIcon from '@mui/icons-material/Cancel';
-import HistoryLead from 'src/views/history-telecalling/HistoryLead/HistoryLead';
+import OpenLeadSidebar from 'src/views/TellecallingSidebar/OpenLead/OpenLeadSidebar';
+import ListOpenLead from 'src/views/list-tellecalling/OpenLead/ListOpenLead';
+import OpenOpportunitySidebar from 'src/views/opportunitysidebar/OpenOpportunity/OpenOpportunitySidebar';
+import ListOpenOpportunity from 'src/views/list-opportunity/OpenOpportunity/ListOpenOpportunity';
 const salesData = [
   {
     stats: '50',
@@ -138,7 +141,7 @@ const WelcomeScreen = () => {
       <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
         <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
         <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-          Welcome to My Lead Dashboard
+          Welcome to Open Lead Dashboard
         </Typography>
         <Grid variant="body1" sx={{ marginTop: 10 , marginLeft:20}}>
           <StatisticsCard/>
@@ -148,7 +151,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const Tellecalling = () => {
+const OpenOpportunity = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -235,7 +238,7 @@ const Tellecalling = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <MyleadSidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <OpenOpportunitySidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
@@ -246,12 +249,10 @@ const Tellecalling = () => {
 
         )}
 
-        {showAddDetails && (
-          <AddTellecallingDetails show={handleBack} editData={editData} />
-        )}
+     
 
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <Listmylead
+          <ListOpenOpportunity
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
@@ -259,22 +260,9 @@ const Tellecalling = () => {
           />
         )}
 
-{!loading && !error && showHistory && (
-          <Box display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
-              User History
-            </Typography>
-            <HistoryLead item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
-        )}
-
       </Grid>
     </Grid>
   );
 };
 
-export default Tellecalling;
+export default OpenOpportunity;

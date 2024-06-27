@@ -17,6 +17,7 @@ import CardHeader from '@mui/material/CardHeader'
 import IconButton from '@mui/material/IconButton'
 import Avatar from '@mui/material/Avatar'
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
+import HistoryOpportunity from 'src/views/history-apportunity/HistoryOpportunity';
 
 const salesData = [ 
   {
@@ -263,7 +264,7 @@ const Tellecalling = () => {
             <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
               User History
             </Typography>
-            <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
+            <HistoryOpportunity item={rowDataToUpdate} onBack={handleBack} />
           </Box>
         )}
       </Grid>

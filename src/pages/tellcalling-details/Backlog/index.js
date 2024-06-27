@@ -22,6 +22,8 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CancelIcon from '@mui/icons-material/Cancel';
+import HistoryLead from 'src/views/history-telecalling/HistoryLead/HistoryLead';
+import HistoryBooking from 'src/views/history-telecalling/HistoryBacklog/HistoryBooking';
 const salesData = [
   {
     stats: '50',
@@ -257,6 +259,20 @@ const Tellecalling = () => {
             onEdit={handleEdit}
           />
         )}
+
+{!loading && !error && showHistory && (
+          <Box display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh">
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
+              User History
+            </Typography>
+            <HistoryBooking item={rowDataToUpdate} onBack={handleBack} />
+          </Box>
+        )}
+
 
       </Grid>
     </Grid>

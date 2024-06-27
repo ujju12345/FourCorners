@@ -39,14 +39,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php",
+
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);

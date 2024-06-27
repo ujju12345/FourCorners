@@ -22,7 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
-const BacklogSidebar = ({ onItemClick, onCreate }) => {
+const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,14 +39,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        "https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php",
+   
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -166,7 +160,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-          My Backlog
+        Not Interested
           </Typography>
           <Box display="flex" alignItems="center">
             {/* <IconButton
@@ -340,4 +334,4 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   );
 };
 
-export default BacklogSidebar;
+export default OpportunityNotinterested;

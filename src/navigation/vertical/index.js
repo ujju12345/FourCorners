@@ -89,6 +89,11 @@ const navigation = () => {
       path: '/tellcalling-details/Leadcalender',
     },
     {
+      title: 'Not Interested',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/NotInterested',
+    },
+    {
       sectionTitle: 'Opportunity'
     },
     {
@@ -96,16 +101,35 @@ const navigation = () => {
       icon: TrendingUpIcon,
       path: '/opportunity',
     },
-    // {
-    //   title: 'My Opportunity',
-    //   icon: CubeOutlineIcon,
-    //   path: '/opportunity/MyOpportunity',
-    // },
-    // {
-    //   title: 'Backlog',
-    //   icon: CubeOutlineIcon,
-    //   path: '',
-    // },  
+    {
+      title: 'My Opportunity',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/MyOpportunity',
+    },
+    {
+      title: 'Backlog Opportunity',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/BacklogOpportunity',
+    },  
+
+    {
+      title: 'Open Opportunity',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/OpenOpportunity',
+    }, 
+    {
+      title: 'Calendar',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/OpportunityCalender',
+    },
+
+
+    {
+      title: 'Not Intrested',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/NotInterested',
+    },
+
     {
       sectionTitle: 'Enquiries'
     },
