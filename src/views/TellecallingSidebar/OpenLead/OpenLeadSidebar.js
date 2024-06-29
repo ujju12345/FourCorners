@@ -310,17 +310,23 @@ const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
                   </Typography>
                 }
                 secondary={ <>
-                  <Typography
+                      <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                    Next FollowUp Date: {item.NextFollowUpDate}
+                Phone: {item.Mobile}
                   </Typography>
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                  Next follow Up time {item.NextFollowUpTime}
+                 FollowUp: {item.NextFollowUpDate}  {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+               Assign By:  {item.AttendedByName}
                   </Typography>
                 </>}
               />

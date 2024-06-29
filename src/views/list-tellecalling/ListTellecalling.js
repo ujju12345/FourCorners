@@ -407,12 +407,13 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                // label="Next Follow-Up Date"
+               
                 type="date"
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -423,7 +424,9 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
+              
                 InputLabelProps={{ sx: { mb: 1 } }}
+              
               />
             </Grid>
             <Grid item xs={6}>

@@ -69,8 +69,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item.CName.toLowerCase().includes(lowerCaseQuery) ||
-          item.Mobile.toLowerCase().includes(lowerCaseQuery)
+          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.Mobile?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }
@@ -326,7 +326,13 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                   Date: {item.NextFollowUpDate}  {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Assign By: {item.AttendedByName}
                   </Typography>
                 </>}
               />

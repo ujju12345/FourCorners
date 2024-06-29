@@ -300,7 +300,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               },
             }}
           >
-            Opportunity
+            Booking
           </Button>
         </Grid>
         <Grid item>
@@ -771,21 +771,6 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                 </Card>
               </Grid>
-              
-            </Grid>
-          </Box>
-
-          {/* Comments */}
-          <Box
-            sx={{
-              width: "auto",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
               <Grid item xs={4}>
                 <Card
                   variant="outlined" // Use outlined variant for a border without shadow
@@ -808,6 +793,9 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
             </Grid>
           </Box>
+
+        
+       
         </Paper>
       </Card>
     </>

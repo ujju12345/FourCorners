@@ -326,7 +326,13 @@ const MyleadSidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                   Followup: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Assign By: {item.Name}
                   </Typography>
                 </>}
               />

@@ -412,11 +412,12 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         }
                         secondary={
                            <>
+                        
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                              Period : {item.PropertyAgeName}
+                             Follow up: {item.ScheduleDate} {item.ScheduleTime}
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             City: {item.CityName}
+                              Assign By : {item.Name}
                             </Typography>
                            </>
                         }

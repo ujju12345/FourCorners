@@ -310,17 +310,23 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
                   </Typography>
                 }
                 secondary={ <>
-                  <Typography
+                 <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
                     Phone: {item.Mobile}
                   </Typography>
+                   <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                  </Typography>
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                   Assign By: {item.OpportunityAttendedByName}
                   </Typography>
                 </>}
               />

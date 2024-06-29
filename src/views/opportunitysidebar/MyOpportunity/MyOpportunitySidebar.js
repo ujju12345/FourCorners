@@ -320,7 +320,13 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                   Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Assign By: {item.OpportunityAttendedByName}
                   </Typography>
                 </>}
               />

@@ -88,6 +88,50 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  const convertToLead = async () => {
+    const formData = {
+      Tid: item?.Tid // Assuming formData is defined somewhere else in your code
+    };
+  console.log(formData , 'data aagaya');
+    try {
+      const response = await axios.post(
+        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convertolead.php",
+        formData, // Corrected: formData should be passed as the second argument
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      console.log(item?.Tid, 'see thisss');
+  
+      if (response.data.status === "Success") {
+        // Handle success
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Converted to lead successfully."
+        });
+      } else {
+        // Handle error
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to convert to lead. Please try again later."
+        });
+      }
+    } catch (error) {
+      console.error("Error converting to lead:", error);
+      // Handle error
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to convert to lead. Please try again later."
+      });
+    }
+  };
+  
 
   const handleSave = () => {
     console.log(formData);
@@ -248,6 +292,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
             backgroundColor: "#dcdcdc",
           },
         }}
+        onClick={convertToLead}
       >
         Convert to Lead
       </Button>
@@ -618,6 +663,18 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}
                   </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+             
                 </Card>
               </Grid>
             </Grid>
