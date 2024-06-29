@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
+import TransformIcon from '@mui/icons-material/Transform';
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import HistoryIcon from "@mui/icons-material/History";
@@ -16,6 +17,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
+import EmailIcon from '@mui/icons-material/Email';
 
 const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
@@ -91,7 +93,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+const handlenavigate =() => {
+  window.location.href = "/tellcalling-details/";
 
+}
   const handleSave = () => {
     console.log(formData);
     setOpen(false);
@@ -108,7 +113,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid}`;
 
         const response = await axios.get(apiUrl);
 
@@ -240,7 +245,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <Grid item>
           <Button
             variant="contained"
-            onClick={handleEdit}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(item);
+            }}
             startIcon={<EditIcon />}
             sx={{
               backgroundColor: "#f0f0f0", // Light gray background color
@@ -278,8 +286,8 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <Grid item>
           <Button
             variant="contained"
-            // onClick={handleSubmit}
-            startIcon={<GroupIcon />}
+             onClick={handlenavigate}
+            startIcon={<TransformIcon />}
             sx={{
               backgroundColor: "#f0f0f0",
               color: "#333333",
@@ -291,10 +299,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
               },
             }}
           >
-            Group Transfer
+           Convert To Lead
           </Button>
         </Grid>
-        <Grid item>
+        {/* <Grid item>
           <Button
             variant="contained"
             onClick={handleDropdownClick}
@@ -327,9 +335,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
               History
             </MenuItem>
           </Menu>
-        </Grid>
+        </Grid> */}
       </Grid>
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -460,7 +468,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
             </Grid>
           </Box>
         </Box>
-      </Modal>
+      </Modal> */}
       <Card sx={{}}>
         <Paper sx={{ padding: 5 }}>
           <Box
@@ -471,17 +479,17 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-            <Avatar
-              alt="Ujjawal"
-              src="/images/avatars/4.png"
-              sx={{ width: 60, height: 60, mr: 6 }}
-            />
+                 <Avatar
+                          alt="John Doe"
+                          sx={{ width: 60, height: 60, mr: 6 }}
+                          src="/images/avatars/1.png"
+                        />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+                sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
-                {item?.PartyName}
+                {item?.CName}
               </Typography>
               <Typography sx={{ fontSize: "0.9rem" }}>
                 {item?.Mobile}
@@ -514,9 +522,30 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Source Name: {item?.SourceName}
+                Source: {item?.SourceName}
               </Typography>
             </div>
+             <div style={{ marginRight: 5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  backgroundColor: "#f0f0f0",
+                  color: "#333333",
+                  fontSize: "0.7rem",
+                  minWidth: "auto",
+                  padding: "5px",
+                  borderRadius: 2,
+                  minHeight: 20,
+                  marginLeft: 2,
+
+                  "&:hover": {
+                    backgroundColor: "#dcdcdc",
+                  },
+                }}
+              >
+                City: {item?.CityName}
+              </Typography>
+            </div> 
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
@@ -535,205 +564,131 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Location: {item?.Location}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Attended By: {item?.TelecallAttendedByName}
+                Attended By: {item?.Name}
               </Typography>
             </div>
           </Box>
 
           <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 15,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Email
-                  </Typography>
-                  <Typography variant="body2">{item?.Email}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Project Name
-                  </Typography>
-                  <Typography variant="body2">{item?.ProjectName}</Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Unit Type
-                  </Typography>
-                  <Typography variant="body2">{item?.UnittypeName}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    mt: 15,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem",alignContent:"center"}}>
+Email
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Email}</Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Customer Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.CustomerTypeName}</Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Contact Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.ContactName}</Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Estimated Budget
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.EstimatedbudgetName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Lead Status
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.leadstatusName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Next Follow Up-Date
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.NextFollowUpDate}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+<Box
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+  
+    mt: 12,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Alternate Mobile Number
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.OtherNumbers}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Country Code
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.CountryName}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          City Name
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.CityName}
+        </Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Source Description
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.SourceDescription}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Telecall Attended By
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.TelecallAttendedByName}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: "1.0rem", fontWeight: 600 }}
-                  >
-                    Alternate Mobile Number
-                  </Typography>
-                  <Typography variant="body2">
-                    {item?.AlternateMobileNo}
-                  </Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
+<Box
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+   
+    mt: 12,
+  }}
+>
+  <Grid container spacing={3}>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Source
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.SourceName}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Source Type
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.SourceTypename}
+        </Typography>
+      </Card>
+    </Grid>
+    <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
+          Telecall Attended By
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
+      </Card>
+    </Grid>
+  </Grid>
+</Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <div>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "1.0rem" }}
-                  >
-                    Comments
-                  </Typography>
-                  <Typography variant="body2">{item?.Comments}</Typography>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
         </Paper>
       </Card>
     </>

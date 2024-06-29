@@ -1,3 +1,4 @@
+import CubeOutlineIcon from 'mdi-material-ui/CubeOutline';
 // ** Icon imports
 import Login from 'mdi-material-ui/Login'
 import Table from 'mdi-material-ui/Table'
@@ -7,8 +8,18 @@ import FormatLetterCase from 'mdi-material-ui/FormatLetterCase'
 import AccountCogOutline from 'mdi-material-ui/AccountCogOutline'
 import CreditCardOutline from 'mdi-material-ui/CreditCardOutline'
 import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import PhoneIcon from '@mui/icons-material/Phone';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import LanguageIcon from '@mui/icons-material/Language';
 import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
+
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import BusinessIcon from '@mui/icons-material/Business';
 
 const navigation = () => {
   return [
@@ -17,175 +28,162 @@ const navigation = () => {
       icon: HomeOutline,
       path: '/'
     },
-
     {
       sectionTitle: 'Companies'
-    },   
+    },
     {
       title: 'Manage Company',
-      icon: AccountCogOutline,
+      icon: BusinessIcon,
       path: '/account-settings'
     },
 
     {
       sectionTitle: 'Projects'
-    }, 
-    // {
-    //   title: 'Project Detail',
-    //   icon: Table,
-    //   path: '/project-details'
-    // },
+    },
     {
       title: 'Project Manager',
-      icon: FormatLetterCase,
+      icon: AssignmentIcon,
       path: '/typography'
     },
-    // {
-    //   title: 'Sub Project Master',
-    //   icon: CreditCardOutline,
-    //   path: '/sub-projectmaster'
-    // },
-
-    {
-      title: 'Sub Project Details',
-      icon: CreditCardOutline,
-      path: '/subproject-details'
-    },
-       {
-      sectionTitle: 'Enquiries'
-    },
-    {
-      title: 'Enquiry Source',
-      icon: CreditCardOutline,
-      path: '/enquiry-source'
-    },
-    {
-      sectionTitle: 'Sales'
-
-      
-    },
-
-    // {
-    //   title: 'Car Parking ',
-    //   icon: CreditCardOutline,
-    //   path: '/car-parking'
-    // },
-    // {
-    //   sectionTitle: 'Pages' 
-    // },
-    // {
-    //   title: 'Login',
-    //   icon: Login,
-    //   path: '/pages/login',
-    //   openInNewTab: true
-    // },
-    // {
-    //   title: 'Register',
-    //   icon: AccountPlusOutline,
-    //   path: '/pages/register',
-    //   openInNewTab: true
-    // },
-    // {
-    //   title: 'Error',
-    //   icon: AlertCircleOutline,
-    //   path: '/pages/error',
-    //   openInNewTab: true
-    // },
     {
       sectionTitle: 'User Interface'
-    },
-    // {
-    //   title: 'Project Manager',
-    //   icon: FormatLetterCase,
-    //   path: '/typography'
-    // },
-    // {
-    //   title: 'Project Detail',
-    //   icon: Table,
-    //   path: '/project-details'
-    // },
-    {
-      title: 'Customer Details',
-      path: '/customer-details',
-      icon: CubeOutline
     },
     {
       title: 'User Management',
       path: '/user-management',
-      icon: CubeOutline
+      icon: SupervisorAccountIcon
     },
-
-    // {
-    //   title: 'Sub Project Details',
-    //   icon: CreditCardOutline,
-    //   path: '/subproject-details'
-    // },
-
-
-    {
-      title: 'Telle-calling',
-      icon: CreditCardOutline,
-      path: '/tellcalling-details'
-    },
-
-
     {
       title: 'Contacts',
-      icon: CreditCardOutline,
+      icon: ContactPhoneIcon,
       path: '/contact'
     },
 
+    {
+      sectionTitle: 'Data Management'
+    },
+    {
+      title: 'Lead',
+      icon: PhoneIcon,
+      path: '/tellcalling-details'
+    },
 
-
+     {
+      title: 'Todays Folowup',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/Mylead',
+    },
+    {
+      title: 'Open Lead',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/OpenLead',
+    },
+    {
+      title: 'Backlog Pending',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/Backlog',
+    },
+    {
+      title: 'Calendar',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/Leadcalender',
+    },
+    {
+      title: 'Not Interested',
+      icon: CubeOutlineIcon,
+      path: '/tellcalling-details/NotInterested',
+    },
+    {
+      sectionTitle: 'Opportunity'
+    },
     {
       title: 'Opportunity',
-      icon: CreditCardOutline,
-      path: '/'
+      icon: TrendingUpIcon,
+      path: '/opportunity',
+    },
+    {
+      title: 'Todays Followup',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/MyOpportunity',
+    },
+    {
+      title: 'Backlog Pending',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/BacklogOpportunity',
+    },  
+
+    {
+      title: 'Open Opportunity',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/OpenOpportunity',
+    }, 
+    {
+      title: 'Calendar',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/OpportunityCalender',
     },
 
 
     {
-      icon: CubeOutline,
+      title: 'Not Intrested',
+      icon: CubeOutlineIcon,
+      path: '/opportunity/NotInterested',
+    },
+
+    {
+      sectionTitle: 'Enquiries'
+    },
+    {
+      title: 'Enquiry Source',
+      icon: LanguageIcon,
+      path: '/enquiry-source'
+    },
+    {
+      sectionTitle: 'Sales'
+    },
+    {
+      icon: PaymentsIcon,
       title: 'Installment',
       path: '/installment'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Project Finance Approval',
       path: '/project-finance'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Stamp Duty Master',
       path: '/stamp-duty'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Additional Charges',
       path: '/additonal-charges'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Channel Partner',
       path: '/channel-partner'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Car Parking',
       path: '/car-parking'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Unit Allocation',
       path: '/unitallocation'
     },
     {
-      icon: CubeOutline,
+      icon: CubeOutlineIcon,
       title: 'Receipt',
       path: '/receipt'
-    }
- 
-  ]
-}
+    },
+  
+    
+  ];
+};
 
-export default navigation
+export default navigation;

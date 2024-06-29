@@ -14,13 +14,15 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Modal, TextField, IconButton,Grid, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
+import { Modal, TextField, IconButton, Grid, Menu, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 
 // Styled component for Paper
 const CustomPaper = styled(Paper)({
   padding: '6px 16px',
+  maxWidth: '600px',  
+  margin: '0 auto',   // Center the cards
 });
 
 // Custom styling for the Timeline
@@ -33,18 +35,16 @@ const CustomTimeline = styled(Timeline)({
 const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
 
 export default function HistoryTelecalling({ item }) {
+  const intialName = {
+    Tid: "",
+    CurrentUpdateID: "",
+    NextFollowUpDate: "",
+    NextFollowUpTime: "",
+    Interest: "",
+    Note: "",
+    CreateUID: 1,
+  }
 
-    const intialName = {
-        Tid: "",
-        CurrentUpdateID: "",
-        NextFollowUpDate: "",
-        NextFollowUpTime: "",
-        Interest: "",
-        Note: "",
-        CreateUID: 1,
-      }
-    
-    
   const [rowData, setRowDataToUpdate] = useState([]);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
@@ -52,18 +52,13 @@ export default function HistoryTelecalling({ item }) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
-
   const handleAddFollowUpClick = () => {
     setOpen(true);
   };
 
-
   const handleClose = () => {
     setOpen(false);
   };
-
-
-
 
   useEffect(() => {
     fetchDataCurrent();
@@ -79,14 +74,13 @@ export default function HistoryTelecalling({ item }) {
       console.error("Error fetching Bhk data:", error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!item) return;
       try {
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${item.Tid}`;
-
         const response = await axios.get(apiUrl);
-
         if (response.data.status === 'Success') {
           console.log(response.data.data, 'Single telecalling data fetched Lol');
           setRowDataToUpdate(response.data.data);
@@ -97,7 +91,6 @@ export default function HistoryTelecalling({ item }) {
     };
     fetchData();
   }, [item]);
-
 
   const handleCurrentUpdate = (event) => {
     setFormData({
@@ -111,37 +104,28 @@ export default function HistoryTelecalling({ item }) {
     setFormData({ ...formData, [name]: value });
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Ensure item and Tid are available
     if (!item || !item.Tid) {
       console.error('No valid item or Tid found.');
       return;
     }
-  
-    // Add Tid to formData
     const formDataWithTid = {
       ...formData,
       Tid: item.Tid
     };
-  
     const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
-  
     try {
       const response = await axios.post(url, formDataWithTid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
       if (response.data.status === "Success") {
         setFormData(intialName);
         setOpen(false);
         setSubmitSuccess(true);
         setSubmitError(false);
-        // Show success message using SweetAlert
         Swal.fire({
           icon: 'success',
           title: 'Success!',
@@ -150,7 +134,6 @@ export default function HistoryTelecalling({ item }) {
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
-        // Show error message using SweetAlert
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -161,7 +144,6 @@ export default function HistoryTelecalling({ item }) {
       console.error("There was an error!", error);
       setSubmitSuccess(false);
       setSubmitError(true);
-      // Show error message using SweetAlert
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -171,9 +153,7 @@ export default function HistoryTelecalling({ item }) {
   };
 
   return (
-    <Box
-    // Adjust height as needed
-    >
+    <Box>
       <Box width="100%">
         <CustomTimeline align="alternate">
           {rowData.length > 0 ? rowData.map((data, index) => (
@@ -208,7 +188,6 @@ export default function HistoryTelecalling({ item }) {
             </TimelineItem>
           )) : (
             <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
-              {/* <img src={NoDataSVG} alt="No Data" style={{ width: '200px', height: '200px' }} /> */}
               <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
                 No data available
               </Typography>
@@ -224,7 +203,6 @@ export default function HistoryTelecalling({ item }) {
         >
           Add New Follow Up
         </Button>
-
         <Modal
           open={open}
           onClose={handleClose}
@@ -241,10 +219,10 @@ export default function HistoryTelecalling({ item }) {
               boxShadow: 24,
               p: 4,
               minWidth: 500,
-              maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
+              maxWidth: 700,
               mt: 5,
               mx: 2,
-              minHeight: 400, // Adjust the minHeight to increase the height of the modal
+              minHeight: 400,
               height: 'auto', 
             }}
           >
@@ -263,7 +241,6 @@ export default function HistoryTelecalling({ item }) {
             >
               Select Next Follow-Up Date and Time
             </Typography>
-
             <Grid container spacing={2} mt={8}>
               <Grid item xs={6}>
                 <FormControl fullWidth>
@@ -275,7 +252,7 @@ export default function HistoryTelecalling({ item }) {
                     MenuProps={{
                       PaperProps: {
                         style: {
-                          maxHeight: 180, // Adjust as needed
+                          maxHeight: 180,
                         },
                       },
                     }}
@@ -288,11 +265,9 @@ export default function HistoryTelecalling({ item }) {
                   </Select>
                 </FormControl>
               </Grid>
-
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  // label="Next Follow-Up Date"
                   type="date"
                   name="NextFollowUpDate"
                   value={formData.NextFollowUpDate}
@@ -303,7 +278,6 @@ export default function HistoryTelecalling({ item }) {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  // label="Next Follow-Up Time"
                   type="time"
                   name="NextFollowUpTime"
                   value={formData.NextFollowUpTime}
@@ -334,7 +308,6 @@ export default function HistoryTelecalling({ item }) {
                 />
               </Grid>
             </Grid>
-
             <Box sx={{ textAlign: "left" }}>
               <Grid item xs={12}>
                 <Button
@@ -356,6 +329,4 @@ export default function HistoryTelecalling({ item }) {
       </Box>
     </Box>
   );
-};
-
-
+}

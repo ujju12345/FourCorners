@@ -24,7 +24,10 @@ import {
   Popover,
 } from "@mui/material";
 import axios from "axios";
+import { Chip } from '@mui/material';
 import PersonIcon from "@mui/icons-material/Person";
+import FaceIcon from '@mui/icons-material/Face';
+
 import { Divider } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,6 +36,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
+
 
 const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -78,8 +82,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item.PartyName.toLowerCase().includes(lowerCaseQuery) ||
-          item.Mobile.toLowerCase().includes(lowerCaseQuery)
+          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.Mobile?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }
@@ -123,12 +127,26 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       setError(error);
     }
   };
-
   const handleOpenConfirmDelete = (id) => {
     setDeleteId(id);
     setConfirmDelete(true);
   };
-
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
+  };
+  
   const handleListItemClick = (item) => {
     onItemClick(item);
   };
@@ -219,7 +237,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Telecaller
+            All Lead
           </Typography>
           <Box display="flex" alignItems="center">
           <IconButton
@@ -348,7 +366,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
             onClick={onCreate}
             sx={{ mt: 2 }}
           >
-            Create Telecalling
+            Create Contact
           </Button>
         </Box>
       ) : (
@@ -368,14 +386,31 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={
+                       primary={
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
                           <Typography
                             variant="subtitle1"
-                            style={{ fontWeight: "bold" }}
+                            style={{ fontWeight: 600, fontSize: 13 }}
                           >
-                            {item.PartyName}
+                          {item?.TitleName}  {item.CName}
                           </Typography>
-                        }
+                          {item.leadstatusName && (
+                            <Chip
+                              label={item.leadstatusName}
+                              size="small"
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 12,
+                                p: 3,
+                                backgroundColor: getChipColor(item.leadstatusName),
+                                color: "#000000", // Adjust text color for better contrast if needed
+                              }}
+                            />
+                          )}
+                          
+                        </div>
+                      }
                         secondary={
                           <>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
@@ -395,15 +430,24 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       >
                         <IconButton
                           aria-label="edit"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onEdit(item);
-                          }}
+                         
                           sx={{ color: "blue" }}
-                        >
-                          <EditIcon />
+                        >      
+                    {getDateStatus(item.ContactCreateDate) && (
+                            <Chip
+                              label={getDateStatus(item.ContactCreateDate)}
+                              size="small"
+                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 20,
+                              }}
+                            />
+                          )}
+
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           aria-label="delete"
                           onClick={(event) => {
                             event.stopPropagation();
@@ -412,7 +456,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           sx={{ color: "red" }}
                         >
                           <DeleteIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>
@@ -442,4 +486,17 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   );
 };
 
+// Function to get chip color based on leadstatusName
+const getChipColor = (leadstatusName) => {
+  switch (leadstatusName) {
+    case "Warm":
+      return "#FFD700"; // Yellow
+    case "Hot":
+      return "#FF6347"; // Red
+    case "Cold":
+      return "#87CEEB"; // Blue
+    default:
+      return "#FFFFFF"; // Default color
+  }
+};
 export default Sidebar;

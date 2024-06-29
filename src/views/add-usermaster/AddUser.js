@@ -100,10 +100,14 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
 
         // Show success alert using SweetAlert2
         Swal.fire({
-          title: 'Success!',
-          text: `User has been successfully ${editData ? 'updated' : 'added'}!`,
-          icon: 'success',
-          confirmButtonText: 'OK'
+          icon: "success",
+          title: editData
+            ? "Data Updated Successfully"
+            : "Data Added Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
 
         setSubmitSuccess(true);
