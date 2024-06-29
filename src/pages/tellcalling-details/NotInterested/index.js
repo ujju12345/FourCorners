@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, CircularProgress, Alert, Typography, Box } from '@mui/material';
 import axios from 'axios';
-import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
-import MyleadSidebar from 'src/views/TellecallingSidebar/Mylead/MyleadSidebar';
-import Listmylead from 'src/views/list-tellecalling/Mylead/Listmylead';
-import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import Card from '@mui/material/Card'
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+
 import CardContent from '@mui/material/CardContent'
 
 import AddIcon from "@mui/icons-material/Add";

@@ -93,7 +93,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+const handlenavigate =() => {
+  window.location.href = "/tellcalling-details/";
 
+}
   const handleSave = () => {
     console.log(formData);
     setOpen(false);
@@ -283,7 +286,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <Grid item>
           <Button
             variant="contained"
-            // onClick={handleSubmit}
+             onClick={handlenavigate}
             startIcon={<TransformIcon />}
             sx={{
               backgroundColor: "#f0f0f0",

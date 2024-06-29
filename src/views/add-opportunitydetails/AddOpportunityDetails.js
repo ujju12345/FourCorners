@@ -545,9 +545,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                inputProps={{
-                  step: 300, // 5 minute intervals
-                }}
+                // inputProps={{
+                //   step: 300, // 5 minute intervals
+                // }}
               />
             </Grid>
 

@@ -249,7 +249,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         <Grid item>
           <Button
             variant="contained"
-            // onClick={handleEdit}
+            onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{
               // Light gray background color

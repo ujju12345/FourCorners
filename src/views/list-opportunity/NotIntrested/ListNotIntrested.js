@@ -7,17 +7,10 @@ import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import HistoryIcon from "@mui/icons-material/History";
-import EditIcon from "@mui/icons-material/Edit";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import GroupIcon from "@mui/icons-material/Group";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {
   Modal,
   TextField,
   IconButton,
-  Menu,
   MenuItem,
   FormControl,
   InputLabel,
@@ -226,6 +219,35 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   return (
     <>
+    <Grid
+        container
+        justifyContent="center"
+        spacing={2}
+        sx={{ marginBottom: 5 }}
+      >
+
+        <Grid item>
+      <Button
+        variant="contained"
+        startIcon={<ArrowForwardIosIcon />}
+        sx={{
+       
+          color: "#333333",
+          backgroundColor: "#f0f0f0",
+          fontSize: "0.6rem",
+          minWidth: "auto",
+          minHeight: 20,
+          "&:hover": {
+            backgroundColor: "#dcdcdc",
+          },
+        }}
+      >
+        Convert to Opportunity
+      </Button>
+    </Grid>
+       
+      </Grid>
+   
       <Grid
         container
         justifyContent="center"
