@@ -451,16 +451,6 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           )}
 
                         </IconButton>
-                        {/* <IconButton
-                          aria-label="delete"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleOpenConfirmDelete(item.Tid);
-                          }}
-                          sx={{ color: "red" }}
-                        >
-                          <DeleteIcon />
-                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>

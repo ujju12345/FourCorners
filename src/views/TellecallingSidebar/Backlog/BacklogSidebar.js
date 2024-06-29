@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
+import { Chip } from '@mui/material';
+
 import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -84,7 +86,21 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
     setSearchQuery("");
     setFilteredRows(rows);
   };
-
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
+  };
   const handleFilterMenuOpen = (event) => {
     setAnchorElFilter(event.currentTarget);
   };
@@ -336,6 +352,31 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
                   </Typography>
                 </>}
               />
+                   <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="flex-end"
+                      >
+                        <IconButton
+                          aria-label="edit"
+                         
+                          sx={{ color: "blue" }}
+                        >      
+                    {getDateStatus(item.ContactCreateDate) && (
+                            <Chip
+                              label={getDateStatus(item.ContactCreateDate)}
+                              size="small"
+                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 20,
+                              }}
+                            />
+                          )}
+
+                        </IconButton>
+                      </Box>
             </ListItem>
             </Card>
                 </React.Fragment>
