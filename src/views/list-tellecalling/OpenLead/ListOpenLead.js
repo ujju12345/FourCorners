@@ -585,7 +585,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Note
+                    Remakrs
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}

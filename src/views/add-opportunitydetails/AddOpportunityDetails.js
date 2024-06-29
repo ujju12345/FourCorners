@@ -54,6 +54,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
   const [units, setUnits] = useState([]);
   const [scales, setScales] = useState([]);
   const [sources, setSources] = useState([]);
+  const [userMaster, setUserMaster] = useState([]);
   const [sourceTypes, setSourceTypes] = useState([]);
   const [propertyAges, setPropertyAges] = useState([]);
   const [purposes, setPurposes] = useState([]);
@@ -113,6 +114,20 @@ const AddOpportunityDetails = ({ show, editData }) => {
 
     }
   }, [editData]);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setUserMaster(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -611,11 +626,11 @@ const AddOpportunityDetails = ({ show, editData }) => {
                     })
                   }
                 >
-                  {contacts.map((contact) => (
-                    <MenuItem key={contact.Cid} value={contact.Cid}>
-                      {contact.CName}
-                    </MenuItem>
-                  ))}
+             {userMaster.map((bhk) => (
+                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                        {bhk.Name}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>

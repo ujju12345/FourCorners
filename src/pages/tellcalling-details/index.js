@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, CircularProgress, Alert, Typography, Box } from '@mui/material';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
 import Sidebar from 'src/views/TellecallingSidebar/Sidebar';
 import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
 import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import PieChartIcon from '@mui/icons-material/PieChart';
-import Card from '@mui/material/Card'
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import IconButton from '@mui/material/IconButton'
-import Avatar from '@mui/material/Avatar'
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
+import Card from '@mui/material/Card';
+import TrendingUp from 'mdi-material-ui/TrendingUp';
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
+import DotsVertical from 'mdi-material-ui/DotsVertical';
+import CellphoneLink from 'mdi-material-ui/CellphoneLink';
+import AccountOutline from 'mdi-material-ui/AccountOutline';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 const salesData = [
   {
@@ -43,15 +44,14 @@ const salesData = [
     title: 'Revenue',
     icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
   }
-]
+];
 
 const pieData = [
   { name: 'Sales', value: 2000, color: '#3f51b5' },
   { name: 'Customers', value: 1200, color: '#4caf50' },
   { name: 'Products', value: 1540, color: '#ff9800' },
   { name: 'Revenue', value: 8000, color: '#00acc1' }
-]
-
+];
 
 const renderStats = () => {
   return salesData.map((item, index) => (
@@ -76,19 +76,14 @@ const renderStats = () => {
         </Box>
       </Box>
     </Grid>
-  ))
-}
+  ));
+};
 
 const StatisticsCard = () => {
   return (
     <>
       <CardHeader
         title='Statistics Card'
-        // action={
-        //   <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-        //     <DotsVertical />
-        //   </IconButton>
-        // }
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -124,8 +119,8 @@ const StatisticsCard = () => {
         </Grid>
       </CardContent>
     </>
-  )
-}
+  );
+};
 
 const WelcomeScreen = () => {
   return (
@@ -135,8 +130,8 @@ const WelcomeScreen = () => {
         <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
           Welcome to Telecalling Dashboard
         </Typography>
-        <Grid variant="body1" sx={{ marginTop: 10 , marginLeft:20}}>
-          <StatisticsCard/>
+        <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
+          <StatisticsCard />
         </Grid>
       </Box>
     </Card>
@@ -144,6 +139,9 @@ const WelcomeScreen = () => {
 };
 
 const Tellecalling = () => {
+  const router = useRouter();
+  const { lead } = router.query;
+  const leadData = lead ? JSON.parse(lead) : null;
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -156,6 +154,12 @@ const Tellecalling = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (leadData) {
+      console.log('Converted Lead:', leadData);
+    }
+  }, [leadData]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -226,7 +230,6 @@ const Tellecalling = () => {
     setFirstVisit(false);
   };
 
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
@@ -236,9 +239,18 @@ const Tellecalling = () => {
         {loading && <CircularProgress />}
         {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
 
-        {firstVisit && !loading && !error && (
+        {firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />
+        )}
 
+        {leadData && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Converted Lead Details
+            </Typography>
+            {/* Render lead data details */}
+            <pre>{JSON.stringify(leadData, null, 2)}</pre>
+          </Box>
         )}
 
         {showAddDetails && (
@@ -255,12 +267,14 @@ const Tellecalling = () => {
         )}
 
         {!loading && !error && showHistory && (
-          <Box display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            minHeight="100vh"
+          >
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
               User History
             </Typography>
             <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />

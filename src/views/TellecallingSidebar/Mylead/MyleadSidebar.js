@@ -312,7 +312,7 @@ const MyleadSidebar = ({ onItemClick, onCreate }) => {
                   style={{ fontWeight: "bold" }}
                 >
                   
-                  {item.CName}
+                 {item?.TitleName} {item.CName}
                   </Typography>
                 }
                 secondary={ <>

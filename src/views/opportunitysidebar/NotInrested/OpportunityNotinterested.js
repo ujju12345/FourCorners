@@ -306,7 +306,7 @@ const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
                   style={{ fontWeight: "bold" }}
                 >
                   
-                  {item.CName}
+                 {item?.TitlePrefixName} {item.CName}
                   </Typography>
                 }
                 secondary={ <>

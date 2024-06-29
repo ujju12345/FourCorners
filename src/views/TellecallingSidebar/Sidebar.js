@@ -392,7 +392,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                             variant="subtitle1"
                             style={{ fontWeight: 600, fontSize: 13 }}
                           >
-                            {item.CName}
+                          {item?.TitleName}  {item.CName}
                           </Typography>
                           {item.leadstatusName && (
                             <Chip
@@ -430,10 +430,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       >
                         <IconButton
                           aria-label="edit"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onEdit(item);
-                          }}
+                         
                           sx={{ color: "blue" }}
                         >      
                     {getDateStatus(item.ContactCreateDate) && (

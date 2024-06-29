@@ -224,6 +224,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
           response.data
         );
         const fetchedData = response.data.data;
+        console.log(fetchedData , 'see this cc');
 
         // Update formData state with all fetched data
         setFormData({

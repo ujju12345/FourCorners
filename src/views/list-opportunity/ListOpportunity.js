@@ -445,7 +445,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Note"
+                label="Remark"
                 type="text"
                 name="Note"
                 value={formData.Note}

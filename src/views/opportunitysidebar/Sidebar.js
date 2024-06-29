@@ -156,6 +156,22 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
     setAnchorElDots(null);
   };
 
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
+  };
+
   const handleSortOptionChange = (option) => {
     setSortOption(option);
     setAnchorElFilter(null);
@@ -376,7 +392,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                               variant="subtitle1"
                               style={{ fontWeight: 600, fontSize: 13 }}
                             >
-                              {item.CName}
+                             {item?.TitleName} {item.CName}
                             </Typography>
                             {item.leadstatusName && (
                               <Chip
@@ -388,7 +404,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                                   height:12,
                                   p:3,
                                   backgroundColor: getChipColor(item.leadstatusName),
-                                  color: "#000000", // Adjust text color for better contrast if needed
+                                  color: "#000000",
                                 }}
                               />
                             )}
@@ -413,13 +429,21 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       >
                         <IconButton
                           aria-label="edit"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onEdit(item);
-                          }}
+                        
                           sx={{ color: "blue" }}
                         >
-                          <EditIcon />
+                           {getDateStatus(item.ContactCreateDate) && (
+                            <Chip
+                              label={getDateStatus(item.ContactCreateDate)}
+                              size="small"
+                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 20,
+                              }}
+                            />
+                          )}
                         </IconButton>
                         {/* <IconButton
                           aria-label="delete"
