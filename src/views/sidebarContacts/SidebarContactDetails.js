@@ -413,6 +413,12 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                             >
                               City: {item.CityName}
                             </Typography>
+                            <Typography
+                              variant="body2"
+                              style={{ fontSize: 10 }}
+                            >
+                              Created At: {item.CreateDate}
+                            </Typography>
                           </>
                         }
                         secondaryTypographyProps={{ variant: "body2" }}

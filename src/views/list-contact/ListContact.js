@@ -618,10 +618,10 @@ Email
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
         <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Alternate Mobile Number
+          Create Date
         </Typography>
         <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.OtherNumbers}
+          {item?.CreateDate}
         </Typography>
       </Card>
     </Grid>
