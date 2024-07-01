@@ -547,7 +547,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Schedule Date: {item?.ScheduleDate}
+                Follow Up Date: {item?.NextFollowUpDate}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
@@ -567,7 +567,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Schedule Time: {item?.ScheduleTime}
+               Follow Up Time: {item?.NextFollowUpTime}
               </Typography>
             </div>
           </Box>

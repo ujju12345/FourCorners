@@ -47,7 +47,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const handleCurrentUpdate = (event) => {
     setFormData({
       ...formData,
@@ -273,6 +276,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
+            onClick={handlenavigate}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",

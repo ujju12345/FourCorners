@@ -91,7 +91,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     console.log(formData);
     setOpen(false);
   };
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const handleHistoryClick = () => {
     if (onHistoryClick) {
       // toggleSidebar(false);
@@ -273,6 +276,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
+            onClick={handlenavigate}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
