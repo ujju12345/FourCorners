@@ -38,14 +38,7 @@ const navigation = () => {
       path: "/account-settings",
     },
 
-    {
-      sectionTitle: "Projects",
-    },
-    {
-      title: "Project Manager",
-      icon: AssignmentIcon,
-      path: "/typography",
-    },
+  
     {
       sectionTitle: "User Interface",
     },
@@ -162,6 +155,12 @@ const navigation = () => {
           path: "/opportunity/NotInterested",
         },
       ]
+    },
+
+    {
+      title: "Project Manager",
+      icon: AssignmentIcon,
+      path: "/typography",
     },
    
 

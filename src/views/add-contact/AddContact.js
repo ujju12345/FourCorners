@@ -289,14 +289,7 @@ const AddContact = ({ show, editData }) => {
     }
   };
 
-  const handleNotificationChange = (event) => {
-    const value = event.target.value === "sms" ? 1 : 0;
-    setFormData({
-      ...formData,
-      SmsNotification: value,
-      EmailNotification: value === 1 ? 0 : 1,
-    });
-  };
+
   
 
   const handleChange = (event) => {

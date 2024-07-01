@@ -13,42 +13,41 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import {
-  Modal,
-  TextField,
-  IconButton,
-  Menu,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
-} from "@mui/material";
+import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Swal from "sweetalert2";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Swal from 'sweetalert2';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
-
-const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const intialName = {
-    Oid: "",
+    Tid: "",
     CurrentUpdateID: "",
     NextFollowUpDate: "",
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
     CreateUID: 1,
-  };
+  }
+
+
+
+
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+
   const [bhkOptions, setBhkOptions] = useState([]);
   const [currentUpdate, setCurrentUpdate] = useState([]);
+
   const [setRowDataToUpdate] = useState(null);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
 
   const handleCurrentUpdate = (event) => {
     setFormData({
@@ -71,6 +70,10 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
       console.error("Error fetching Bhk data:", error);
     }
   };
+
+
+
+
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
@@ -105,7 +108,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php?Oid=${item.Oid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}`;
 
         const response = await axios.get(apiUrl);
 
@@ -123,29 +126,32 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Ensure item and Nid are available
-    if (!item || !item.Oid) {
-      console.error("No valid item or Nid found.");
+  
+    // Ensure item and Tid are available
+    if (!item || !item.Tid) {
+      console.error('No valid item or Tid found.');
       return;
     }
-
-    // Add Nid to formData
-    const formDataWithNid = {
+  
+    // Add Tid to formData
+    const formDataWithTid = {
       ...formData,
-      Oid: item.Oid,
+      Tid: item.Tid
     };
 
-    const url =
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunityfollowup.php";
-
+    console.log(formDataWithTid , 'sdf');
+  
+    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+  
     try {
-      const response = await axios.post(url, formDataWithNid, {
+      const response = await axios.post(url, formDataWithTid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+      console.log(formDataWithTid ,  'sdf');
+      
+  
       if (response.data.status === "Success") {
         setFormData(intialName);
         setOpen(false);
@@ -153,18 +159,18 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
         setSubmitError(false);
         // Show success message using SweetAlert
         Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Follow-up details saved successfully.",
+          icon: 'success',
+          title: 'Success!',
+          text: 'Follow-up details saved successfully.',
         });
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
         // Show error message using SweetAlert
         Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong! Please try again later.",
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong! Please try again later.',
         });
       }
     } catch (error) {
@@ -173,13 +179,17 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
       setSubmitError(true);
       // Show error message using SweetAlert
       Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong! Please try again later.",
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong! Please try again later.',
       });
     }
   };
-
+  
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
     const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
@@ -224,6 +234,8 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
     }
   };
 
+
+
   return (
     <>
       <Grid
@@ -232,13 +244,13 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
         spacing={2}
         sx={{ marginBottom: 5 }}
       >
-        {/* <Grid item>
+        <Grid item>
           <Button
             variant="contained"
             onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{
-              // Light gray background color
+            // Light gray background color
               color: "#333333", // Dark gray text color
               fontSize: "0.6rem",
               backgroundColor: "#f0f0f0",
@@ -251,79 +263,8 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Edit Details
           </Button>
-        </Grid> */}
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={downloadCSV}
-            startIcon={<GetAppIcon />}
-            sx={{
-              color: "#333333",
-              fontSize: "0.6rem",
-              backgroundColor: "#f0f0f0",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Download
-          </Button>
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            startIcon={<ArrowForwardIosIcon />}
-            sx={{
-              color: "#333333",
-              backgroundColor: "#f0f0f0",
-              fontSize: "0.6rem",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Opportunity
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={handleDropdownClick}
-            startIcon={<PersonAddIcon />}
-            sx={{
-              mr: 30,
-
-              color: "#333333",
-              fontSize: "0.6rem",
-              backgroundColor: "#f0f0f0",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Next FollowUp
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleDropdownClose}
-          >
-            <MenuItem onClick={handleAddFollowUpClick}>
-              <AddIcon sx={{ mr: 1 }} />
-              Add Follow Up
-            </MenuItem>
-            <MenuItem onClick={handleHistoryClick}>
-              <HistoryIcon sx={{ mr: 1 }} />
-              History
-            </MenuItem>
-          </Menu>
-        </Grid>
+     
       </Grid>
       <Modal
         open={open}
@@ -345,7 +286,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
             mt: 5,
             mx: 2,
             minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: "auto",
+            height: 'auto', 
           }}
         >
           <IconButton
@@ -365,6 +306,8 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
           </Typography>
 
           <Grid container spacing={2} mt={8}>
+     
+
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel>Current Update</InputLabel>
@@ -379,12 +322,10 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                       },
                     },
                   }}
+                  
                 >
                   {currentUpdate.map((bhk) => (
-                    <MenuItem
-                      key={bhk.CurrentUpdateID}
-                      value={bhk.CurrentUpdateID}
-                    >
+                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
                       {bhk.CurrentUpdateName}
                     </MenuItem>
                   ))}
@@ -392,15 +333,17 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </FormControl>
             </Grid>
 
+
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                // label="Next Follow-Up Date"
+               
                 type="date"
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -408,10 +351,12 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 fullWidth
                 // label="Next Follow-Up Time"
                 type="time"
-                name="NextFollowUpTime"                               
+                name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
+              
                 InputLabelProps={{ sx: { mb: 1 } }}
+              
               />
             </Grid>
             <Grid item xs={6}>
@@ -466,20 +411,20 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
               padding: 5,
             }}
           >
-            <Avatar
-              alt="John Doe"
-              sx={{ width: 60, height: 60, mr: 6 }}
-              src="/images/avatars/1.png"
-            />
+                  <Avatar
+                          alt="John Doe"
+                          sx={{ width: 60, height: 60, mr: 6 }}
+                          src="/images/avatars/1.png"
+                        />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
-                {item?.CName}
+                {item?.ProjectName}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem" }}>
-                {item?.Mobile}
+                Contact Details : {item?.ContactDetails}
               </Typography>
             </Box>
           </Box>
@@ -496,6 +441,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
               <Typography
                 variant="body2"
                 sx={{
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -509,13 +455,14 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                NextFollowUpDate: {item?.NextFollowUpDate}
+             Project Manager: {item?.ProjectManager}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -529,13 +476,14 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                NextFollowUpTime: {item?.NextFollowUpTime}
+               Project Start Date : {item?.projectstartdate}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -549,146 +497,240 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                Gstin Number :  {item?.GstInNo}
               </Typography>
             </div>
           </Box>
 
           <Box
+      sx={{
+        width: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ml: 12,
+        mt: 15,
+      }}
+    >
+      <Grid container spacing={3}>
+        {/* Email */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              width: "auto",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              ml: 12,
-              mt: 15,
+              borderRadius: 1,
+              padding: "10px",
             }}
           >
-            {/* Email */}
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Project Code
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.ProjectCode}
+            </Typography>
+          </Card>
+        </Grid>
 
-            {/* Unit Type */}
-
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Current Update Name
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.CurrentUpdateName}
-                  </Typography>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Next Follow-Up Date
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.NextFollowUpDate}
-                  </Typography>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Next Follow-Up Time
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.NextFollowUpTime}
-                  </Typography>
-                </Card>
-              </Grid>
-            </Grid>
-          </Box>
-
-          {/* Comments */}
-          <Box
+        {/* Project Name */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              width: "auto",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
+              borderRadius: 1,
+              padding: "10px",
             }}
           >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Interest
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.Interest}
-                  </Typography>
-                </Card>
-              </Grid>
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Location
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.Location}
+            </Typography>
+          </Card>
+        </Grid>
 
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
+        {/* Unit Type */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1,
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              State Name
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.StateName}
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+    <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              CtsNo
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.CtsNo}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Company Name
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.CompanyName}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+            City Name
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.CityName}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
 
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Remakrs
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.Note}
-                  </Typography>
-                </Card>
-              </Grid>
-            </Grid>
-          </Box>
+      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              ReraRegistratio Number
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.ReraRegistrationNumber}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              ReraRegistration Date
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.ReraRegistrationDate}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Property Tax Number
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.PropertyTaxNumber}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Comments */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              WelcomeMessage
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.WelcomeMessage}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
         </Paper>
       </Card>
     </>
   );
 };
 
-export default ListOpportunitybacklog;
+export default Listprojectmaster;
