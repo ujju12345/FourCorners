@@ -55,6 +55,11 @@ const navigation = () => {
       icon: SupervisorAccountIcon,
       children: [
         {
+          title: "User management",
+          path: "/user-management",
+          icon: AccountCogOutline,
+        },
+        {
           title: "Admins",
           path: "/user-management/admins",
           icon: AccountCogOutline,
@@ -71,6 +76,11 @@ const navigation = () => {
         },
       ],
     },
+  
+    {
+      sectionTitle: "Data Management",
+    },
+
     {
       title: "Contacts",
       icon: ContactPhoneIcon,
@@ -78,71 +88,82 @@ const navigation = () => {
     },
 
     {
-      sectionTitle: "Data Management",
-    },
-    {
       title: "Lead",
       icon: PhoneIcon,
       path: "/tellcalling-details",
+      children:[
+        {
+          title: "All Lead",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details",
+        },
+        {
+          title: "Todays Followup",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Mylead",
+        },
+        {
+          title: "Open Lead",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/OpenLead",
+        },
+        {
+          title: "Backlog Pending",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Backlog",
+        },
+        {
+          title: "Calendar",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Leadcalender",
+        },
+        {
+          title: "Not Interested",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/NotInterested",
+        },
+      ]
     },
-    {
-      title: "Todays Followup",
-      icon: CubeOutlineIcon,
-      path: "/tellcalling-details/Mylead",
-    },
-    {
-      title: "Open Lead",
-      icon: CubeOutlineIcon,
-      path: "/tellcalling-details/OpenLead",
-    },
-    {
-      title: "Backlog Pending",
-      icon: CubeOutlineIcon,
-      path: "/tellcalling-details/Backlog",
-    },
-    {
-      title: "Calendar",
-      icon: CubeOutlineIcon,
-      path: "/tellcalling-details/Leadcalender",
-    },
-    {
-      title: "Not Interested",
-      icon: CubeOutlineIcon,
-      path: "/tellcalling-details/NotInterested",
-    },
-    {
-      sectionTitle: "Opportunity",
-    },
+   
+  
     {
       title: "Opportunity",
       icon: TrendingUpIcon,
       path: "/opportunity",
+      children:[
+        {
+          title: "All Opportunity",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
+        {
+          title: "Todays Followup",
+          icon: CubeOutlineIcon,
+          path: "/opportunity/MyOpportunity",
+        },
+        {
+          title: "Backlog Pending",
+          icon: CubeOutlineIcon,
+          path: "/opportunity/BacklogOpportunity",
+        },
+        {
+          title: "Open Opportunity",
+          icon: CubeOutlineIcon,
+          path: "/opportunity/OpenOpportunity",
+        },
+        {
+          title: "Calendar",
+          icon: CubeOutlineIcon,
+          path: "/opportunity/OpportunityCalender",
+        },
+        {
+          title: "Not Interested",
+          icon: CubeOutlineIcon,
+          path: "/opportunity/NotInterested",
+        },
+      ]
     },
-    {
-      title: "Todays Followup",
-      icon: CubeOutlineIcon,
-      path: "/opportunity/MyOpportunity",
-    },
-    {
-      title: "Backlog Pending",
-      icon: CubeOutlineIcon,
-      path: "/opportunity/BacklogOpportunity",
-    },
-    {
-      title: "Open Opportunity",
-      icon: CubeOutlineIcon,
-      path: "/opportunity/OpenOpportunity",
-    },
-    {
-      title: "Calendar",
-      icon: CubeOutlineIcon,
-      path: "/opportunity/OpportunityCalender",
-    },
-    {
-      title: "Not Interested",
-      icon: CubeOutlineIcon,
-      path: "/opportunity/NotInterested",
-    },
+   
 
     {
       sectionTitle: "Enquiries",
