@@ -412,9 +412,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         }
                         secondary={
                            <>
-                        
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             Follow up: {item.ScheduleDate} {item.ScheduleTime}
+                             Follow up: {item.NextFollowUpDate} {item.NextFollowUpTime}
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
                               Assign By : {item.Name}
