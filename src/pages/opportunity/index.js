@@ -256,16 +256,20 @@ const Tellecalling = () => {
         )}
 
         {!loading && !error && showHistory && (
-          <Box display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
-              User History
-            </Typography>
-            <HistoryOpportunity item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
+   <Box 
+   display="flex"
+   flexDirection="row"
+   alignItems="flex-start"
+   minHeight="100vh">
+     <Box flex="1">
+       <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
+         User History
+       </Typography>
+       <HistoryOpportunity item={rowDataToUpdate} onBack={handleBack} />
+     </Box>
+ </Box>
+ 
+    
         )}
       </Grid>
     </Grid>

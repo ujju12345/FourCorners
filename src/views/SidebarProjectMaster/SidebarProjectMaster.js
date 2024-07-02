@@ -366,7 +366,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
             onClick={onCreate}
             sx={{ mt: 2 }}
           >
-            Create Contact
+            Create Project
           </Button>
         </Box>
       ) : (
@@ -419,7 +419,12 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
                             
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             Project Code{item?.ProjectCode}
+                             Project Code :{item?.ProjectCode}
+
+                            
+                            </Typography>
+                            <Typography variant="body2" style={{ fontSize: 10 }}>
+                             Created Date : {item?.CreateDate}
 
                             
                             </Typography>

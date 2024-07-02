@@ -14,28 +14,26 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Modal, TextField, IconButton, Grid, Menu, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { Modal, TextField, IconButton, Grid, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 
 // Styled component for Paper
 const CustomPaper = styled(Paper)({
   padding: '6px 16px',
-  maxWidth: '600px',  
-  margin: '0 auto',   // Center the cards
+  maxWidth: '600px',
 });
 
 // Custom styling for the Timeline
 const CustomTimeline = styled(Timeline)({
   width: '100%',
-  margin: '0 auto',
+  margin: '0',
 });
 
-// SVG Image URL or import
 const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
 
 export default function HistoryOpportunity({ item }) {
-  const intialName = {
+  const initialName = {
     Oid: "",
     CurrentUpdateID: "",
     NextFollowUpDate: "",
@@ -43,11 +41,11 @@ export default function HistoryOpportunity({ item }) {
     Interest: "",
     Note: "",
     CreateUID: 1,
-  }
+  };
 
   const [rowData, setRowDataToUpdate] = useState([]);
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState(intialName);
+  const [formData, setFormData] = useState(initialName);
   const [currentUpdate, setCurrentUpdate] = useState([]);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -71,7 +69,7 @@ export default function HistoryOpportunity({ item }) {
       );
       setCurrentUpdate(response.data.data || []);
     } catch (error) {
-      console.error("Error fetching Bhk data:", error);
+      console.error("Error fetching current update data:", error);
     }
   };
 
@@ -82,7 +80,6 @@ export default function HistoryOpportunity({ item }) {
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${item.Oid}`;
         const response = await axios.get(apiUrl);
         if (response.data.status === 'Success') {
-          console.log(response.data.data, 'Single telecalling data fetched Lol');
           setRowDataToUpdate(response.data.data);
         }
       } catch (error) {
@@ -107,28 +104,28 @@ export default function HistoryOpportunity({ item }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!item || !item.Oid) {
-      console.error('No valid item or Tid found.');
+      console.error('No valid item or Oid found.');
       return;
     }
-    const formDataWithTid = {
+    const formDataWithOid = {
       ...formData,
       Oid: item.Oid
     };
     const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunityfollowup.php";
     try {
-      const response = await axios.post(url, formDataWithTid, {
+      const response = await axios.post(url, formDataWithOid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       if (response.data.status === "Success") {
-        setFormData(intialName);
+        setFormData(initialName);
         setOpen(false);
         setSubmitSuccess(true);
         setSubmitError(false);
         Swal.fire({
             icon: "success",
-            title: "Follow Up detail saved successfully",        
+            title: "Follow Up detail saved successfully",
             showConfirmButton: false,
             timer: 1000,
           }).then(() => {
@@ -156,9 +153,9 @@ export default function HistoryOpportunity({ item }) {
   };
 
   return (
-    <Box>
-      <Box width="100%">
-        <CustomTimeline align="alternate">
+    <Box minHeight="100vh">
+      <Box flex="1"  >
+        <CustomTimeline align="alternate" display="flex" justifyContent="right">
           {rowData.length > 0 ? rowData.map((data, index) => (
             <TimelineItem key={index}>
               <TimelineOppositeContent>
@@ -197,139 +194,26 @@ export default function HistoryOpportunity({ item }) {
             </Box>
           )}
         </CustomTimeline>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          fullWidth 
+        <Button
+          variant="contained"
+          color="primary"
           style={{ marginTop: '16px' }}
           onClick={handleAddFollowUpClick}
         >
           Add New Follow Up
         </Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              p: 4,
-              minWidth: 500,
-              maxWidth: 700,
-              mt: 5,
-              mx: 2,
-              minHeight: 400,
-              height: 'auto', 
-            }}
-          >
-            <IconButton
-              aria-label="cancel"
-              onClick={handleClose}
-              sx={{ position: "absolute", top: 6, right: 10 }}
-            >
-              <CancelIcon sx={{ color: "red" }} />
-            </IconButton>
-            <Typography
-              id="modal-modal-title"
-              variant="h7"
-              component="h3"
-              gutterBottom
-            >
-              Select Next Follow-Up Date and Time
-            </Typography>
-            <Grid container spacing={2} mt={8}>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Current Update</InputLabel>
-                  <Select
-                    value={formData.CurrentUpdateID}
-                    onChange={handleCurrentUpdate}
-                    label="Current Update"
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 180,
-                        },
-                      },
-                    }}
-                  >
-                    {currentUpdate.map((bhk) => (
-                      <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
-                        {bhk.CurrentUpdateName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  type="date"
-                  name="NextFollowUpDate"
-                  value={formData.NextFollowUpDate}
-                  onChange={handleChange}
-                  InputLabelProps={{ sx: { mb: 1 } }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  type="time"
-                  name="NextFollowUpTime"
-                  value={formData.NextFollowUpTime}
-                  onChange={handleChange}
-                  InputLabelProps={{ sx: { mb: 1 } }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Interest In"
-                  type="text"
-                  name="Interest"
-                  value={formData.Interest}
-                  onChange={handleChange}
-                  InputLabelProps={{ sx: { mb: 1 } }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Note"
-                  type="text"
-                  name="Note"
-                  value={formData.Note}
-                  onChange={handleChange}
-                  InputLabelProps={{ sx: { mb: 1 } }}
-                />
-              </Grid>
-            </Grid>
-            <Box sx={{ textAlign: "left" }}>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginRight: 3.5,
-                    marginTop: 15,
-                    backgroundColor: "#9155FD",
-                    color: "#FFFFFF",
-                  }}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Box>
-          </Box>
-        </Modal>
       </Box>
+      <Box
+        component="img"
+        sx={{
+          display: rowData.length > 0 ? 'none' : 'block',
+          width: '50%',
+          height: 'auto',
+          marginLeft: 'auto',
+        }}
+        src={NoDataSVG}
+        alt="No data available"
+      />
     </Box>
   );
 }

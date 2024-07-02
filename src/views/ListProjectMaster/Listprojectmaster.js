@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
+  
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",
@@ -56,20 +57,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
     });
   };
 
-  useEffect(() => {
-    fetchDataCurrent();
-  }, []);
 
-  const fetchDataCurrent = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-currentupdate.php"
-      );
-      setCurrentUpdate(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching Bhk data:", error);
-    }
-  };
 
 
 
@@ -104,25 +92,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!item) return; // Exit if no item is provided
-      try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-telecalling.php?Tid=${item.Tid}`;
 
-        const response = await axios.get(apiUrl);
-
-        if (response.data.status === "Success") {
-          console.log(response.data.data[0], "Single telecalling data fetched");
-          // Update item state with fetched data
-          setRowDataToUpdate(response.data.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching single telecalling data:", error);
-      }
-    };
-    fetchData();
-  }, [item]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -350,6 +320,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               <TextField
                 fullWidth
                 // label="Next Follow-Up Time"
+                // placeholder=""
                 type="time"
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
@@ -424,7 +395,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 {item?.ProjectName}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem" }}>
-                Contact Details : {item?.ContactDetails}
+                Project Code : {item?.ProjectCode}
               </Typography>
             </Box>
           </Box>
@@ -497,7 +468,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-                Gstin Number :  {item?.GstInNo}
+                Completion Date :  {item?.completiondate}
               </Typography>
             </div>
           </Box>
@@ -559,10 +530,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              State Name
+             Possession Date
             </Typography>
             <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.StateName}
+              {item?.possessiondate}
             </Typography>
           </Card>
         </Grid>
@@ -588,10 +559,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              CtsNo
+              Video Link 
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.CtsNo}
+                {item?.video}
               </Typography>
             </Card>
           </Grid>
@@ -605,10 +576,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Company Name
+                Landmark
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.CompanyName}
+                {item?.landmark}
               </Typography>
             </Card>
           </Grid>
@@ -670,10 +641,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              ReraRegistration Date
+              Plot Area In Sqft
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.ReraRegistrationDate}
+                {item?.PlotAreaInSqft}
               </Typography>
             </Card>
           </Grid>
@@ -687,10 +658,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Property Tax Number
+              Virtual Video Link
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.PropertyTaxNumber}
+                {item?.virtualvideo}
               </Typography>
             </Card>
           </Grid>
@@ -718,7 +689,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              WelcomeMessage
+              Welcome Message
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                 {item?.WelcomeMessage}

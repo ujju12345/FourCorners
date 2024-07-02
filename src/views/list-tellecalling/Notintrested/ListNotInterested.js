@@ -380,6 +380,8 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 // label="Next Follow-Up Date"
                 type="date"
                 name="NextFollowUpDate"
+                placeholder="Schedule date"
+
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}
@@ -390,7 +392,9 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 fullWidth
                 // label="Next Follow-Up Time"
                 type="time"
-                name="NextFollowUpTime"                               
+                name="NextFollowUpTime"    
+                placeholder="Schedule time"
+
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}

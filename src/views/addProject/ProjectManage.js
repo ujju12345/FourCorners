@@ -11,7 +11,7 @@ import {
   CardContent,
   FormControl,
   Button,
-  Card
+  Card,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,35 +19,31 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const ProjectManage = ({ show, editData }) => {
-  console.log(editData , 'lo bhai ');
+  console.log(editData, "lo bhai ");
   const [formData, setFormData] = useState({
+    projectstartdate: null,
+    completiondate: null,
+    possessiondate: null,
     ProjectName: "",
-    CompanyID: "",
     ProjectCode: "",
+    PlotAreaInSqft: "",
+    ReraRegistrationNumber: "",
+    approvedby: "",
+    specification: "",
     WelcomeMessage: "",
     ProjectTypeID: "",
+    amenitiesIDs: [],
+    video: "",
+    virtualvideo: "",
+    keyword: "",
     ProjectAddress: "",
-    Pincode: "",
-    ContactDetails: "",
-    PlotAreaInSqft: "",
-    CtsNo: "",
-    UnitOfMeasurement: "",
-    PropertyTaxNumber: "",
-    ReraRegistrationNumber: "",
-    ReraRegistrationDate: null,
-    BrochureLink: "",
-    ProjectManager: "",
-    Location: "",
-    GstInNo: "",
-    Remarks: "",
-    projectstartdate: null,
     cityID: "",
-    StateID: "",
-
+    Location: "",
+    landmark: "",
+    Pincode: "",
+    assignebyID: "",
+    ProjectManager: "",
   });
-
-
-  
 
   const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
@@ -55,126 +51,132 @@ const ProjectManage = ({ show, editData }) => {
   const [error, setError] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [projectTypes, setProjectTypes] = useState([]);
+  const [amenities, setAmenities] = useState([]);
+
   const [cities, setCities] = useState([]);
   const [states, setStates] = useState([]);
+  const [userMaster, setUserMaster] = useState([]);
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
-    fetchData();
     if (editData) {
-
-      const { ProjectID ,  ProjectName, CompanyID, ProjectCode, WelcomeMessage, ProjectTypeID, ProjectAddress, Pincode , ContactDetails , PlotAreaInSqft , CtsNo , UnitOfMeasurement , PropertyTaxNumber  , ReraRegistrationNumber , BrochureLink ,ProjectManager , Location , GstInNo , Remarks , projectstartdate , ReraRegistrationDate , cityID , StateID , ModifyUID} = editData;
+      const {
+        ProjectID,
+        projectstartdate,
+        completiondate,
+        possessiondate,
+        ProjectName,
+        ProjectCode,
+        PlotAreaInSqft,
+        ReraRegistrationNumber,
+        approvedby,
+        specification,
+        WelcomeMessage,
+        ProjectTypeID,
+        amenitiesIDs,
+        video,
+        virtualvideo,
+        keyword,
+        ProjectAddress,
+        cityID,
+        Location,
+        landmark,
+        Pincode,
+        assignebyID,
+        ProjectManager,
+        ModifyUID,
+      } = editData;
 
       setFormData({
-        ProjectID:ProjectID || "",
-        ProjectName:ProjectName || "",
-        CompanyID: CompanyID || "",
+        ProjectID: ProjectID || "",
+        projectstartdate: projectstartdate ? new Date(projectstartdate) : null,
+        completiondate: completiondate ? new Date(completiondate) : null,
+        possessiondate: possessiondate ? new Date(possessiondate) : null,
+        ProjectName: ProjectName || "",
         ProjectCode: ProjectCode || "",
+        PlotAreaInSqft: PlotAreaInSqft || "",
+        ReraRegistrationNumber: ReraRegistrationNumber || "",
+        approvedby: approvedby || "",
+        specification: specification || "",
         WelcomeMessage: WelcomeMessage || "",
         ProjectTypeID: ProjectTypeID || "",
+        amenitiesIDs: Array.isArray(amenitiesIDs) ? amenitiesIDs : [amenitiesIDs],
+        video: video || "",
+        virtualvideo: virtualvideo || "",
+        keyword: keyword || "",
         ProjectAddress: ProjectAddress || "",
-        Pincode: Pincode || "",
-        ContactDetails: ContactDetails || "",
-        PlotAreaInSqft: PlotAreaInSqft || "",
-        CtsNo: CtsNo || "",
-        UnitOfMeasurement: UnitOfMeasurement || "",
-        PropertyTaxNumber: PropertyTaxNumber || "",
-        ReraRegistrationNumber: ReraRegistrationNumber || "",
-        BrochureLink: BrochureLink || "",
-        ProjectManager: ProjectManager || "",
-        Location: Location || "",
-        GstInNo: GstInNo || "",
-        Remarks: Remarks || "",
-        projectstartdate: new Date(projectstartdate) || "",
-        ReraRegistrationDate: new Date(ReraRegistrationDate) || "",
         cityID: cityID || "",
-        StateID: StateID || "",
-        ModifyUID:1
+        Location: Location || "",
+        landmark: landmark || "",
+        Pincode: Pincode || "",
+        assignebyID: assignebyID || "",
+        ProjectManager: ProjectManager || "",
+        ModifyUID: 1 || "",
       });
     }
   }, [editData]);
 
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
-      setRows(response.data.data || []);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-  
-
-  const fetchProjectData = async (editData) => {
-    try {
-      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php");
-      if (response.data.status === "Success") {
-        const project = response.data.data[0];
-        setFormData({
-          ProjectName: project.ProjectName,
-          CompanyID: project.CompanyID,
-          ProjectCode: project.ProjectCode,
-          WelcomeMessage: project.WelcomeMessage,
-          ProjectTypeID: project.ProjectTypeID,
-          ProjectAddress: project.ProjectAddress,
-          Pincode: project.Pincode,
-          ContactDetails: project.ContactDetails,
-          PlotAreaInSqft: project.PlotAreaInSqft,
-          CtsNo: project.CtsNo,
-          UnitOfMeasurement: project.UnitOfMeasurement,
-          PropertyTaxNumber: project.PropertyTaxNumber,
-          ReraRegistrationNumber: project.ReraRegistrationNumber,
-
-          BrochureLink: project.BrochureLink,
-          ProjectManager: project.ProjectManager,
-          Location: project.Location,
-          GstInNo: project.GstInNo,
-          Remarks: project.Remarks,
-          projectstartdate: new Date(project.projectstartdate),
-          ReraRegistrationDate: new Date(project.ReraRegistrationDate),
-          cityID: project.cityID,
-          StateID: project.StateID,
-        });
-        setIsEditMode(true);
-      }
-    } catch (error) {
-      console.error("Error fetching project data:", error);
-    }
-  };
-  
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setUserMaster(response.data.data);
+          setLoading(false); // Set loading to false when data is fetched
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user master data:", error);
+        setLoading(false); // Also set loading to false on error
+      });
+  }, []);
 
   useEffect(() => {
-    axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-projecttypemaster.php")
-      .then(response => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-transactiontype.php"
+      )
+      .then((response) => {
         if (response.data.status === "Success") {
           setProjectTypes(response.data.data);
         }
       })
-      .catch(error => console.error("Error fetching data:", error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   useEffect(() => {
-    axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
-      .then(response => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-amenities.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setAmenities(response.data.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
+      .then((response) => {
         if (response.data.status === "Success") {
           setCities(response.data.data);
         }
       })
-      .catch(error => console.error("Error fetching data:", error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   useEffect(() => {
-    axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-statemaster.php")
-      .then(response => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-statemaster.php")
+      .then((response) => {
         if (response.data.status === "Success") {
           setStates(response.data.data);
         }
       })
-      .catch(error => console.error("Error fetching data:", error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const handleInputChange = (e) => {
@@ -191,76 +193,100 @@ const ProjectManage = ({ show, editData }) => {
       [name]: date,
     });
   };
-  
-  
-  const validateFields = () => {
-    const newErrors = {};
-    if (!formData.selectedCompany) newErrors.selectedCompany = "Company Name is required";
-    if (!formData.ProjectName) newErrors.ProjectName = "Project Name is required";
-    if (!formData.ProjectCode) newErrors.ProjectCode = "Project Code is required";
-    if (!formData.ProjectAddress) newErrors.ProjectAddress = "Project Address is required";
-    // if (!formData.projectstartdate) newErrors.projectstartdate = "Date is required";
-    if (!formData.Pincode) newErrors.Pincode = "Pincode is required";
-    if (!formData.cityID) newErrors.cityID = "City is required";
-    if (!formData.StateID) newErrors.StateID = "State is required";
-    return newErrors;
+
+  const handleTelecaller = (event) => {
+    const { value } = event.target;
+
+    setFormData({
+      ...formData,
+      assignebyID: event.target.value,
+    });
   };
 
+
+  const handleAmenitiesChange = (event) => {
+    const { value } = event.target;
+    setFormData({
+      ...formData,
+      amenitiesIDs: Array.isArray(value) ? value : [value],
+    });
+  };
+  
+  
+  // const validateFields = () => {
+  //   const newErrors = {};
+  //   if (!formData.selectedCompany)
+  //     newErrors.selectedCompany = "Company Name is required";
+  //   if (!formData.ProjectName)
+  //     newErrors.ProjectName = "Project Name is required";
+  //   if (!formData.ProjectCode)
+  //     newErrors.ProjectCode = "Project Code is required";
+  //   if (!formData.ProjectAddress)
+  //     newErrors.ProjectAddress = "Project Address is required";
+  //   // if (!formData.projectstartdate) newErrors.projectstartdate = "Date is required";
+  //   if (!formData.Pincode) newErrors.Pincode = "Pincode is required";
+  //   if (!formData.cityID) newErrors.cityID = "City is required";
+  //   if (!formData.StateID) newErrors.StateID = "State is required";
+  //   return newErrors;
+  // };
+
   const handleSubmitData = (event) => {
-    console.log('press');
+    console.log("press");
     event.preventDefault();
     // const newErrors = validateFields();
     // if (Object.keys(newErrors).length > 0) {
     //   setErrors(newErrors);
     // } else {
-      // setErrors({});
-      const body = {
-        ...formData,
-        CountryID: 1,
-        Status: 1,
-        CreateUID: 1,
-      };
+    // setErrors({});
+    const body = {
+      ...formData,
+      CountryID: 1,
+      Status: 1,
+      CreateUID: 1,
+    };
 
-    
+    const url = editData
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php";
+    console.log(body, "data ayaa project ke");
 
-      const url = editData
-        ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php"
-        : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php";
-        console.log(body , 'data ayaa');
+    axios
+      .post(url, body)
 
-      axios.post(url, body)
+      .then((response) => {
+        if (response.data.status === "Success") {
+          console.log(';xsees');
+          setFormData(""); // Reset form data after successful submission
+          setErrors({});
+          setSubmitSuccess(true);
+          setSubmitError(false);
+          show(false); // Hide the modal or close form
 
-        .then(response => {
-          if (response.data.status === "Success") {
-            setFormData(""); // Reset form data after successful submission
-        setErrors({});
-        setSubmitSuccess(true);
-        setSubmitError(false);
-        show(false); // Hide the modal or close form
-  
-        Swal.fire({
-          icon: "success",
-          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          window.location.reload();
-        });
-          } else {
-            setSubmitSuccess(false);
-            setSubmitError(true);
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Something went wrong!',
-            });
-          }
-        })
-        .catch(error => {
-          console.error("Error submitting data:", error);
+          // Swal.fire({
+          //   icon: "success",
+          //   title: editData
+          //     ? "Data Updated Successfully"
+          //     : "Data Added Successfully",
+          //   showConfirmButton: false,
+          //   timer: 1000,
+          // }).then(() => {
+          //   window.location.reload();
+          // });
+        } else {
           setSubmitSuccess(false);
           setSubmitError(true);
-        });
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting data:", error);
+        setSubmitSuccess(false);
+        setSubmitError(true);
+      });
     // }
   };
 
@@ -270,38 +296,89 @@ const ProjectManage = ({ show, editData }) => {
   return (
     <Card>
       <CardContent>
-      <Box>
-            <Typography
-              variant="body2"
-              sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-            >
-              {editData
-                ? "Edit Project Master"
-                : "Add Project Master "}
-            </Typography>
-
-            
-        
-          </Box>
         <Box>
-          <form onSubmit={handleSubmitData}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Company Name</InputLabel>
-                  <Select
-                    name="CompanyID"
-                    value={formData.CompanyID}
-                    onChange={handleInputChange}
-                  >
-                    {rows.map((company) => (
-                      <MenuItem key={company.CompanyID} value={company.CompanyID}>
-                        {company.CompanyName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.CompanyID && <Alert severity="error">{errors.CompanyID}</Alert>}
-                </FormControl>
+          <Typography
+            variant="body2"
+            sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+          >
+            {editData ? "Edit Project Master" : "Add Project Master "}
+          </Typography>
+        </Box>
+        <Box>
+          <form style={{ marginTop: "30px" }} onSubmit={handleSubmitData}>
+            <Grid container spacing={7}>
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.projectstartdate}
+                  onChange={(date) =>
+                    handleDateChange(date, "projectstartdate")
+                  }
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="Launch date"
+                      value={
+                        formData.projectstartdate
+                          ? formData.projectstartdate.toLocaleDateString()
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.completiondate}
+                  onChange={(date) => handleDateChange(date, "completiondate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="Completion date"
+                      value={
+                        formData.completiondate
+                          ? formData.completiondate.toLocaleDateString()
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.possessiondate}
+                  onChange={(date) => handleDateChange(date, "possessiondate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="Possession date"
+                      value={
+                        formData.possessiondate
+                          ? formData.possessiondate.toLocaleDateString()
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -311,8 +388,11 @@ const ProjectManage = ({ show, editData }) => {
                   value={formData.ProjectName}
                   onChange={handleInputChange}
                 />
-                {errors.ProjectName && <Alert severity="error">{errors.ProjectName}</Alert>}
+                {errors.ProjectName && (
+                  <Alert severity="error">{errors.ProjectName}</Alert>
+                )}
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -321,89 +401,21 @@ const ProjectManage = ({ show, editData }) => {
                   value={formData.ProjectCode}
                   onChange={handleInputChange}
                 />
-                {errors.ProjectCode && <Alert severity="error">{errors.ProjectCode}</Alert>}
+                {errors.ProjectCode && (
+                  <Alert severity="error">{errors.ProjectCode}</Alert>
+                )}
               </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Project Type</InputLabel>
-                  <Select
-                    name="ProjectTypeID"
-                    value={formData.ProjectTypeID}
-                    onChange={handleInputChange}
-                  >
-                    {projectTypes.map((projectType) => (
-                      <MenuItem key={projectType.ProjectTypeID} value={projectType.ProjectTypeID}>
-                        {projectType.ProjectTypeName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="Registered Address"
-                  name="ProjectAddress"
-                  value={formData.ProjectAddress}
-                  onChange={handleInputChange}
-                />
-                {errors.ProjectAddress && <Alert severity="error">{errors.ProjectAddress}</Alert>}
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Pincode"
-                  name="Pincode"
-                  value={formData.Pincode}
-                  onChange={handleInputChange}
-                />
-                {errors.Pincode && <Alert severity="error">{errors.Pincode}</Alert>}
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Phone"
-                  name="ContactDetails"
-                  value={formData.ContactDetails}
+                  label="project Manager"
+                  name="ProjectManager"
+                  value={formData.ProjectManager}
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Plot Area"
-                  name="PlotAreaInSqft"
-                  value={formData.PlotAreaInSqft}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="CTS No"
-                  name="CtsNo"
-                  value={formData.CtsNo}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Unit"
-                  name="UnitOfMeasurement"
-                  value={formData.UnitOfMeasurement}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Property Tax"
-                  name="PropertyTaxNumber"
-                  value={formData.PropertyTaxNumber}
-                  onChange={handleInputChange}
-                />
-              </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -413,57 +425,182 @@ const ProjectManage = ({ show, editData }) => {
                   onChange={handleInputChange}
                 />
               </Grid>
-             
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="Brochure Link"
-                  name="BrochureLink"
-                  value={formData.BrochureLink}
+                  label="Project Area"
+                  name="PlotAreaInSqft"
+                  value={formData.PlotAreaInSqft}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Transcation Type</InputLabel>
+                  <Select
+                    name="ProjectTypeID"
+                    label="Transcation Type"
+                    value={formData.ProjectTypeID}
+                    onChange={handleInputChange}
+                  >
+                    {projectTypes.map((projectType) => (
+                      <MenuItem
+                        key={projectType.transactionID}
+                        value={projectType.transactionID}
+                      >
+                        {projectType.transactionName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Approved By"
+                  name="approvedby"
+                  value={formData.approvedby}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Specification"
+                  name="specification"
+                  value={formData.specification}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Amenities</InputLabel>
+                  <Select
+  name="amenitiesIDs"
+  label="Amenities"
+  multiple
+  value={formData.amenitiesIDs}
+  onChange={handleAmenitiesChange}
+>
+
+                    {amenities.map((amenity) => (
+                      <MenuItem
+                        key={amenity.amenitiesIDs}
+                        value={amenity.amenitiesIDs}
+                      >
+                        {amenity.amenitiesName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Video Link"
+                  name="video"
+                  value={formData.video}
                   onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="Manager Name"
-                  name="ProjectManager"
-                  value={formData.ProjectManager}
+                  label="Virtual Video Link"
+                  name="virtualvideo"
+                  value={formData.virtualvideo}
                   onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="Location"
+                  label="Website Keyword"
+                  name="keyword"
+                  value={formData.keyword}
+                  onChange={handleInputChange}
+                />
+                {errors.Pincode && (
+                  <Alert severity="error">{errors.Pincode}</Alert>
+                )}
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Project Address"
+                  name="ProjectAddress"
+                  value={formData.ProjectAddress}
+                  onChange={handleInputChange}
+                />
+                {errors.ProjectAddress && (
+                  <Alert severity="error">{errors.ProjectAddress}</Alert>
+                )}
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Pincode"
+                  name="Pincode"
+                  value={formData.Pincode}
+                  onChange={handleInputChange}
+                />
+                {errors.Pincode && (
+                  <Alert severity="error">{errors.Pincode}</Alert>
+                )}
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Assigned By</InputLabel>
+                  <Select
+                    value={formData.assignebyID}
+                    onChange={handleTelecaller}
+                    label="Assign By"
+                    // error={!!errors.UserID}
+                    // helperText={errors.UserID}
+                  >
+                    {userMaster.map((bhk) => (
+                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                        {bhk.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Locality"
                   name="Location"
                   value={formData.Location}
                   onChange={handleInputChange}
                 />
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="GSTIN Number"
-                  name="GstInNo"
-                  value={formData.GstInNo}
+                  label="Landmark"
+                  name="landmark"
+                  value={formData.landmark}
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Remarks"
-                  name="Remarks"
-                  value={formData.Remarks}
-                  onChange={handleInputChange}
-                />
-              </Grid>
+
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>City</InputLabel>
                   <Select
                     name="cityID"
+                    label="City"
                     value={formData.cityID}
                     onChange={handleInputChange}
                   >
@@ -473,10 +610,12 @@ const ProjectManage = ({ show, editData }) => {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.cityID && <Alert severity="error">{errors.cityID}</Alert>}
+                  {errors.cityID && (
+                    <Alert severity="error">{errors.cityID}</Alert>
+                  )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={4}>
+              {/* <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>State</InputLabel>
                   <Select
@@ -490,9 +629,11 @@ const ProjectManage = ({ show, editData }) => {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.StateID && <Alert severity="error">{errors.StateID}</Alert>}
+                  {errors.StateID && (
+                    <Alert severity="error">{errors.StateID}</Alert>
+                  )}
                 </FormControl>
-              </Grid>
+              </Grid> */}
               {/* <Grid item xs={12} md={4}>
               <DatePicker
   selected={formData.projectstartdate}
@@ -505,31 +646,7 @@ const ProjectManage = ({ show, editData }) => {
                 {errors.projectstartdate && <Alert severity="error">{errors.projectstartdate}</Alert>}
               </Grid> */}
 
-
-
-<Grid item xs={8} sm={4}>
-<DatePicker
-  selected={formData.projectstartdate}
-  onChange={(date) => handleDateChange(date, 'projectstartdate')}
-  dateFormat="dd-MM-yyyy"
-  className="form-control"
-  customInput={
-    <TextField
-      fullWidth
-      label="Project start date"
-      value={formData.projectstartdate ? formData.projectstartdate.toLocaleDateString() : ''}
-      InputProps={{
-        readOnly: true,
-        sx: { width: "100%" },
-      }}
-    />
-  }
-/>
-
-              </Grid>
-
-
-{/* 
+              {/* 
               <Grid item xs={12} md={4}>
               <DatePicker
   selected={formData.selectedDateRera}
@@ -541,43 +658,36 @@ const ProjectManage = ({ show, editData }) => {
 
               </Grid> */}
 
-<Grid item xs={8} sm={4}>
-  <DatePicker
-    selected={formData.ReraRegistrationDate}
-    onChange={(date) => handleDateChange(date, 'ReraRegistrationDate')}
-    dateFormat="dd-MM-yyyy"
-    className="form-control"
-    customInput={
-      <TextField
-        fullWidth
-        label="Rera Registration Date"
-        value={formData.ReraRegistrationDate ? formData.ReraRegistrationDate.toLocaleDateString() : ''}
-        InputProps={{
-          readOnly: true,
-          sx: { width: "100%" },
-        }}
-      />
-    }
-  />
-</Grid>
-
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Welcome Message"
+                  label="Remarks"
                   name="WelcomeMessage"
                   value={formData.WelcomeMessage}
                   onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                  {editData ? 'Update Project' : 'Create Project'}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  {editData ? "Update Project" : "Create Project"}
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                {submitSuccess && <Alert severity="success">Project submitted successfully!</Alert>}
-                {submitError && <Alert severity="error">Error submitting project. Please try again.</Alert>}
+                {submitSuccess && (
+                  <Alert severity="success">
+                    Project submitted successfully!
+                  </Alert>
+                )}
+                {submitError && (
+                  <Alert severity="error">
+                    Error submitting project. Please try again.
+                  </Alert>
+                )}
               </Grid>
             </Grid>
           </form>

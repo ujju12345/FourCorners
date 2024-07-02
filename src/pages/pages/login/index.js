@@ -62,7 +62,7 @@ const LoginPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
-    debugger;
+    // debugger;
     if (cookies && cookies.amr && cookies.amr.UserID) router.push('/');
   });
 
@@ -88,7 +88,7 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    debugger;
+    // debugger;
     e.preventDefault();
 
     try {
@@ -104,7 +104,7 @@ const LoginPage = () => {
         },
       })
         .then(response => {
-          debugger;
+          // debugger;
           if (response.data.status === 'Success') {
 
             const user = {
@@ -113,7 +113,7 @@ const LoginPage = () => {
               RoleID: response.data.data.roleid,
               RoleName: response.data.data.rolename,
             };
-       
+            console.log(user , 'SUBMMITEDDD DATAAAA');
             setCookie("amr", JSON.stringify(user), { path: "/" });
             router.push('/');
             console.log('SUBMMITEDDD DATAAAA');

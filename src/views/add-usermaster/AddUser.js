@@ -76,12 +76,16 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-usermaster.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-usermaster.php";
 
+
+      console.log(formState , 'see this');
     try {
       const response = await axios.post(url, formState, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log(formState , 'see this');
+
 
       if (response.data.status === "Success") {
         setFormState({

@@ -328,7 +328,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 >
                   {contacts.map((contact) => (
                     <MenuItem key={contact.Cid} value={contact.Cid}>
-                      {contact.CName}
+                      {contact.CName ||"NA"}
                     </MenuItem>
                   ))}
                 </Select>
@@ -403,7 +403,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                       key={budget.EstimatedbudgetID}
                       value={budget.EstimatedbudgetID}
                     >
-                      {budget.EstimatedbudgetName}
+                      {budget.EstimatedbudgetName ||"NA"}
                     </MenuItem>
                   ))}
                 </Select>
