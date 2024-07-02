@@ -1,93 +1,68 @@
-// ** React Import
-import { useState } from 'react'
-
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-
-// ** Third Party Imports
-import { usePopper } from 'react-popper'
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import ContactsIcon from '@mui/icons-material/Contacts';
+import EventIcon from '@mui/icons-material/Event';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 const BuyNowButton = () => {
-  // ** States
-  const [open, setOpen] = useState(false)
-  const [popperElement, setPopperElement] = useState(null)
-  const [referenceElement, setReferenceElement] = useState(null)
+  const [open, setOpen] = useState(false);
 
-  const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
-    placement: 'top-end'
-  })
+  const handleOpportunity = () => {
+    window.location.href = "/opportunity/";
+  };
+
+  const handleTelecalling = () => {
+    window.location.href = "/tellcalling-details/";
+  };
+
+  const handleContact = () => {
+    window.location.href = "/contact/";
+  };
+
+  const actions = [
+    { icon: <ContactsIcon />, name: 'Contact', onClick: handleContact },
+    { icon: <PhoneIcon />, name: 'Leads', onClick: handleTelecalling },
+    { icon: <TrendingUpIcon />, name: 'Opportunity', onClick: handleOpportunity },
+    { icon: <EventIcon />, name: 'Booking' },
+  ];
 
   const handleOpen = () => {
-    setOpen(true)
-    update ? update() : null
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <Box
       className='upgrade-to-pro-button mui-fixed'
       sx={{ right: theme => theme.spacing(20), bottom: theme => theme.spacing(10), zIndex: 11, position: 'fixed' }}
     >
-  
-      <Fade in={open} timeout={700}>
-        <Box
-          style={styles.popper}
-          ref={setPopperElement}
-          {...attributes.popper}
-          onMouseEnter={handleOpen}
-          onMouseLeave={handleClose}
-          sx={{ pb: 4, minWidth: theme => (theme.breakpoints.down('sm') ? 400 : 300) }}
-        >
-          <Paper elevation={9} sx={{ borderRadius: 1, overflow: 'hidden' }}>
-            <a
-              target='_blank'
-              rel='noreferrer'
-              href=''
-            >
-              <img width='100%' alt='materio-pro-banner' src='/images/misc/materio-pro-banner.png' />
-            </a>
-            <CardContent>
-              <Typography sx={{ mb: 4 }} variant='h6'>
-               Four Corner - React Admin Template
-              </Typography>
-              <Typography sx={{ mb: 4 }} variant='body2'>
-               Four Corner Admin is the most developer friendly & highly customizable Admin Dashboard Template based on MUI
-                and NextJS.
-              </Typography>
-              <Typography sx={{ mb: 4 }} variant='body2'>
-                Click on below buttons to explore PRO version.
-              </Typography>
-              <Button
-                component='a'
-                sx={{ mr: 4 }}
-                target='_blank'
-                variant='contained'
-                href='https://demos.themeselection.com/materio-mui-react-nextjs-admin-template/landing/'
-              >
-                Demo
-              </Button>
-              <Button
-                component='a'
-                target='_blank'
-                variant='outlined'
-                href='https://themeselection.com/products/materio-mui-react-nextjs-admin-template/'
-              >
-                Download
-              </Button>
-            </CardContent>
-          </Paper>
-        </Box>
-      </Fade>
+      <SpeedDial
+        ariaLabel="SpeedDial basic example"
+        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon />}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        open={open}
+      >
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={action.onClick}
+          />
+        ))}
+      </SpeedDial>
     </Box>
-  )
-}
+  );
+};
 
-export default BuyNowButton
+export default BuyNowButton;
