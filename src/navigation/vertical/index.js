@@ -18,10 +18,10 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import LanguageIcon from "@mui/icons-material/Language";
 import AlertCircleOutline from "mdi-material-ui/AlertCircleOutline";
 import GoogleCirclesExtended from "mdi-material-ui/GoogleCirclesExtended";
-
+import GroupIcon from "mdi-material-ui/AccountGroup";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessIcon from "@mui/icons-material/Business";
-
+import SalesIcon from "mdi-material-ui/CurrencyUsd";
 const navigation = () => {
   return [
     {
@@ -29,15 +29,7 @@ const navigation = () => {
       icon: HomeOutline,
       path: "/",
     },
-    {
-      sectionTitle: "Companies",
-    },
-    {
-      title: "Manage Company",
-      icon: BusinessIcon,
-      path: "/account-settings",
-    },
-
+   
   
     {
       sectionTitle: "User Interface",
@@ -48,9 +40,9 @@ const navigation = () => {
       icon: SupervisorAccountIcon,
       children: [
         {
-          title: "User management",
+          title: "All User",
           path: "/user-management",
-          icon: AccountCogOutline,
+          icon: GroupIcon,
         },
         {
           title: "Admins",
@@ -58,18 +50,33 @@ const navigation = () => {
           icon: AccountCogOutline,
         },
         {
-          title: "Editors",
-          path: "/user-management/editors",
-          icon: FormatLetterCase,
+          title: "Sales",
+          path: "",
+          icon: SalesIcon,
         },
         {
-          title: "Viewers",
-          path: "/user-management/viewers",
+          title: "Telecaller",
+          path: "",
           icon: AccountPlusOutline,
         },
       ],
     },
-  
+    {
+      sectionTitle: "Companies",
+    },
+    {
+      title: "Manage Company",
+      icon: BusinessIcon,
+      path: "/account-settings",
+    },
+    {
+      sectionTitle: "Project",
+    },
+    {
+      title: "Project Manager",
+      icon: AssignmentIcon,
+      path: "/typography",
+    },
     {
       sectionTitle: "Data Management",
     },
@@ -157,11 +164,6 @@ const navigation = () => {
       ]
     },
 
-    {
-      title: "Project Manager",
-      icon: AssignmentIcon,
-      path: "/typography",
-    },
    
 
     {

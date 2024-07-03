@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -12,6 +12,8 @@ import {
   FormControl,
   Button,
   Card,
+  Input,
+  Chip,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,7 +21,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const ProjectManage = ({ show, editData }) => {
-  console.log(editData, "lo bhai ");
   const [formData, setFormData] = useState({
     projectstartdate: null,
     completiondate: null,
@@ -32,7 +33,7 @@ const ProjectManage = ({ show, editData }) => {
     specification: "",
     WelcomeMessage: "",
     ProjectTypeID: "",
-    amenitiesIDs: [],
+    amenitiesIDs: [], // Ensure amenitiesIDs is initialized as an array
     video: "",
     virtualvideo: "",
     keyword: "",
@@ -46,17 +47,12 @@ const ProjectManage = ({ show, editData }) => {
   });
 
   const [errors, setErrors] = useState({});
-  const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [projectTypes, setProjectTypes] = useState([]);
   const [amenities, setAmenities] = useState([]);
-
   const [cities, setCities] = useState([]);
   const [states, setStates] = useState([]);
   const [userMaster, setUserMaster] = useState([]);
-
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
@@ -194,50 +190,27 @@ const ProjectManage = ({ show, editData }) => {
     });
   };
 
+  const handleAmenitiesChange = (event) => {
+    const { value } = event.target;
+    // Ensure value is always an array
+    const selectedAmenities = Array.isArray(value) ? value : [value];
+    setFormData({
+      ...formData,
+      amenitiesIDs: selectedAmenities,
+    });
+  };
+  
   const handleTelecaller = (event) => {
     const { value } = event.target;
-
     setFormData({
       ...formData,
       assignebyID: event.target.value,
     });
   };
 
-
-  const handleAmenitiesChange = (event) => {
-    const { value } = event.target;
-    setFormData({
-      ...formData,
-      amenitiesIDs: Array.isArray(value) ? value : [value],
-    });
-  };
-  
-  
-  // const validateFields = () => {
-  //   const newErrors = {};
-  //   if (!formData.selectedCompany)
-  //     newErrors.selectedCompany = "Company Name is required";
-  //   if (!formData.ProjectName)
-  //     newErrors.ProjectName = "Project Name is required";
-  //   if (!formData.ProjectCode)
-  //     newErrors.ProjectCode = "Project Code is required";
-  //   if (!formData.ProjectAddress)
-  //     newErrors.ProjectAddress = "Project Address is required";
-  //   // if (!formData.projectstartdate) newErrors.projectstartdate = "Date is required";
-  //   if (!formData.Pincode) newErrors.Pincode = "Pincode is required";
-  //   if (!formData.cityID) newErrors.cityID = "City is required";
-  //   if (!formData.StateID) newErrors.StateID = "State is required";
-  //   return newErrors;
-  // };
-
   const handleSubmitData = (event) => {
-    console.log("press");
     event.preventDefault();
-    // const newErrors = validateFields();
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    // } else {
-    // setErrors({});
+
     const body = {
       ...formData,
       CountryID: 1,
@@ -248,30 +221,27 @@ const ProjectManage = ({ show, editData }) => {
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php";
-    console.log(body, "data ayaa project ke");
 
     axios
       .post(url, body)
-
       .then((response) => {
         if (response.data.status === "Success") {
-          console.log(';xsees');
-          setFormData(""); // Reset form data after successful submission
+          setFormData({}); // Reset form data after successful submission
           setErrors({});
           setSubmitSuccess(true);
           setSubmitError(false);
           show(false); // Hide the modal or close form
 
-          // Swal.fire({
-          //   icon: "success",
-          //   title: editData
-          //     ? "Data Updated Successfully"
-          //     : "Data Added Successfully",
-          //   showConfirmButton: false,
-          //   timer: 1000,
-          // }).then(() => {
-          //   window.location.reload();
-          // });
+          Swal.fire({
+            icon: "success",
+            title: editData
+              ? "Data Updated Successfully"
+              : "Data Added Successfully",
+            showConfirmButton: false,
+            timer: 1000,
+          }).then(() => {
+            // window.location.reload();
+          });
         } else {
           setSubmitSuccess(false);
           setSubmitError(true);
@@ -286,12 +256,15 @@ const ProjectManage = ({ show, editData }) => {
         console.error("Error submitting data:", error);
         setSubmitSuccess(false);
         setSubmitError(true);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
       });
-    // }
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
     <Card>
@@ -306,8 +279,8 @@ const ProjectManage = ({ show, editData }) => {
         </Box>
         <Box>
           <form style={{ marginTop: "30px" }} onSubmit={handleSubmitData}>
-            <Grid container spacing={7}>
-              <Grid item xs={8} sm={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
                 <DatePicker
                   selected={formData.projectstartdate}
                   onChange={(date) =>
@@ -333,7 +306,7 @@ const ProjectManage = ({ show, editData }) => {
                 />
               </Grid>
 
-              <Grid item xs={8} sm={4}>
+              <Grid item xs={12} md={4}>
                 <DatePicker
                   selected={formData.completiondate}
                   onChange={(date) => handleDateChange(date, "completiondate")}
@@ -357,7 +330,7 @@ const ProjectManage = ({ show, editData }) => {
                 />
               </Grid>
 
-              <Grid item xs={8} sm={4}>
+              <Grid item xs={12} md={4}>
                 <DatePicker
                   selected={formData.possessiondate}
                   onChange={(date) => handleDateChange(date, "possessiondate")}
@@ -380,6 +353,7 @@ const ProjectManage = ({ show, editData }) => {
                   }
                 />
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -409,7 +383,7 @@ const ProjectManage = ({ show, editData }) => {
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="project Manager"
+                  label="Project Manager"
                   name="ProjectManager"
                   value={formData.ProjectManager}
                   onChange={handleInputChange}
@@ -438,10 +412,10 @@ const ProjectManage = ({ show, editData }) => {
 
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
-                  <InputLabel>Transcation Type</InputLabel>
+                  <InputLabel>Transaction Type</InputLabel>
                   <Select
                     name="ProjectTypeID"
-                    label="Transcation Type"
+                    label="Transaction Type"
                     value={formData.ProjectTypeID}
                     onChange={handleInputChange}
                   >
@@ -477,22 +451,24 @@ const ProjectManage = ({ show, editData }) => {
                 />
               </Grid>
 
-              <Grid item xs={8} md={4}>
+              <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Amenities</InputLabel>
                   <Select
-  name="amenitiesIDs"
-  label="Amenities"
-  multiple
-  value={formData.amenitiesIDs}
-  onChange={handleAmenitiesChange}
->
-
+                    multiple
+                    value={formData.amenitiesIDs} // Ensure amenitiesIDs is an array
+                    onChange={handleAmenitiesChange}
+                    input={<Input />}
+                    renderValue={(selected) => (
+                      <div>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </div>
+                    )}
+                  >
                     {amenities.map((amenity) => (
-                      <MenuItem
-                        key={amenity.amenitiesIDs}
-                        value={amenity.amenitiesIDs}
-                      >
+                      <MenuItem key={amenity.amenitiesID} value={amenity.amenitiesID}>
                         {amenity.amenitiesName}
                       </MenuItem>
                     ))}
@@ -509,6 +485,7 @@ const ProjectManage = ({ show, editData }) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -518,6 +495,7 @@ const ProjectManage = ({ show, editData }) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -543,6 +521,7 @@ const ProjectManage = ({ show, editData }) => {
                   <Alert severity="error">{errors.ProjectAddress}</Alert>
                 )}
               </Grid>
+
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -556,15 +535,13 @@ const ProjectManage = ({ show, editData }) => {
                 )}
               </Grid>
 
-              <Grid item xs={8} sm={4}>
+              <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Assigned By</InputLabel>
                   <Select
                     value={formData.assignebyID}
                     onChange={handleTelecaller}
                     label="Assign By"
-                    // error={!!errors.UserID}
-                    // helperText={errors.UserID}
                   >
                     {userMaster.map((bhk) => (
                       <MenuItem key={bhk.UserID} value={bhk.UserID}>
@@ -615,48 +592,6 @@ const ProjectManage = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              {/* <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>State</InputLabel>
-                  <Select
-                    name="StateID"
-                    value={formData.StateID}
-                    onChange={handleInputChange}
-                  >
-                    {states.map((state) => (
-                      <MenuItem key={state.StateID} value={state.StateID}>
-                        {state.StateName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.StateID && (
-                    <Alert severity="error">{errors.StateID}</Alert>
-                  )}
-                </FormControl>
-              </Grid> */}
-              {/* <Grid item xs={12} md={4}>
-              <DatePicker
-  selected={formData.projectstartdate}
-  onChange={(date) => handleDateChange(date, 'selectedDate')}
-  placeholderText="Select Start Date"
-  dateFormat="yyyy-MM-dd"
-  className="form-control"
-/>
-
-                {errors.projectstartdate && <Alert severity="error">{errors.projectstartdate}</Alert>}
-              </Grid> */}
-
-              {/* 
-              <Grid item xs={12} md={4}>
-              <DatePicker
-  selected={formData.selectedDateRera}
-  onChange={(date) => handleDateChange(date, 'selectedDateRera')}
-  placeholderText="Select RERA Registration Date"
-  dateFormat="yyyy-MM-dd"
-  className="form-control"
-/>
-
-              </Grid> */}
 
               <Grid item xs={12}>
                 <TextField
@@ -667,6 +602,7 @@ const ProjectManage = ({ show, editData }) => {
                   onChange={handleInputChange}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <Button
                   type="submit"
@@ -677,6 +613,7 @@ const ProjectManage = ({ show, editData }) => {
                   {editData ? "Update Project" : "Create Project"}
                 </Button>
               </Grid>
+
               <Grid item xs={12}>
                 {submitSuccess && (
                   <Alert severity="success">
