@@ -27,15 +27,27 @@ import PersonIcon from "@mui/icons-material/Person";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useCookies } from "react-cookie";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 import Swal from 'sweetalert2';
+
 const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
+
+  // Accessing cookie values
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+  const userid = cookies.amr?.UserID || 'Role';
+  console.log(userName, 'ye dekh username');
+  console.log(roleName, 'ye dekh rolname');
+  console.log(userid, 'ye dekh roleide');
+
   const [filteredRows, setFilteredRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
@@ -49,13 +61,19 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php"
+        `https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php?UserID=${userid}`
       );
       console.log("API Response:", response.data);
+
+      // Set cookie after successful login or fetching data
+      setCookie("amr", response.data.cookieData, { path: "/" });
+
+      // Update userid in cookies
+      setCookie("amr", { ...cookies.amr, UserID: response.data.userId }, { path: "/" });
+
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
