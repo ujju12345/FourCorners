@@ -2,10 +2,15 @@
 import CubeOutlineIcon from "mdi-material-ui/CubeOutline";
 // ** Icon imports
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import HomeOutline from "mdi-material-ui/HomeOutline";
 import PhoneIcon from "@mui/icons-material/Phone";
 const TelecallerNavigation = () => {
   return [
-
+    {
+      title: "Dashboard",
+      icon: HomeOutline,
+      path: "/",
+    },
 
     {
       title: "Contacts",
