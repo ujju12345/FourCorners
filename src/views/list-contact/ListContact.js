@@ -231,6 +231,14 @@ const handlenavigate =() => {
       onEdit(item); // Pass item to parent component for editing
     }
   };
+  const formatCreateDate = (createDate) => {
+    if (!createDate) return ""; // Handle case where createDate might be null or undefined
+    const parts = createDate.split(" "); // Split date and time
+    const dateParts = parts[0].split("-"); // Split yyyy-mm-dd into parts
+    const time = parts[1]; // Get hh-ss-mm
+    const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${time}`; // dd-mm-yyyy format
+    return formattedDate;
+  };
 
 
 
@@ -621,7 +629,7 @@ Email
           Create Date
         </Typography>
         <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.CreateDate}
+        {formatCreateDate(item?.CreateDate)}
         </Typography>
       </Card>
     </Grid>
