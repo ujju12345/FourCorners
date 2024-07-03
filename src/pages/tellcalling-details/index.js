@@ -15,6 +15,8 @@ import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import { useCookies } from "react-cookie";
+
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
@@ -161,15 +163,29 @@ const Tellecalling = () => {
     }
   }, [leadData]);
 
+  
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+  const userid = cookies.amr?.UserID || 'Role';
+  console.log(userName, 'ye dekh username');
+  console.log(roleName, 'ye dekh rolname');
+  console.log(userid, 'ye dekh roleide');
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const fetchData = async () => {
-    setLoading(true);
-    setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php?UserID=${userid}`
+      );
+      console.log("API Response:", response.data);
       setRows(response.data.data || []);
+      setLoading(false);
     } catch (error) {
+      console.error("Error fetching data:", error);
       setError(error);
-    } finally {
       setLoading(false);
     }
   };

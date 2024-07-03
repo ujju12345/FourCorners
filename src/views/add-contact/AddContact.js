@@ -69,6 +69,7 @@ const AddContact = ({ show, editData }) => {
     fetchDataBhk();
     fetchDataTitle();
     fetchDataCustomerType();
+    fetchDataCountryCodes(); // New function to fetch country codes
   }, []);
 
   useEffect(() => {
@@ -104,19 +105,6 @@ const AddContact = ({ show, editData }) => {
       }
     }
   }, [editData]);
-
-  useEffect(() => {
-    axios
-      .get("https://apiforcorners.cubisysit.com/api/api-fetch-countrycode.php")
-      .then((response) => {
-        if (response.data.status === "Success") {
-          setCountryCodes(response.data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching country codes:", error);
-      });
-  }, []);
 
   useEffect(() => {
     axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
@@ -194,6 +182,17 @@ const AddContact = ({ show, editData }) => {
     }
   };
 
+  const fetchDataCountryCodes = async () => {
+    try {
+      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-countrycode.php");
+      if (response.data.status === "Success") {
+        setCountryCodes(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching country codes:", error);
+    }
+  };
+
   useEffect(() => {
     if (dynamicSourceID) {
       axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-sourcetype.php?SourceID=${dynamicSourceID}`)
@@ -239,7 +238,7 @@ const AddContact = ({ show, editData }) => {
     const newErrors = validateForm(formData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return;x  
+      return;  
     }
 
     const url = editData
@@ -303,9 +302,6 @@ const AddContact = ({ show, editData }) => {
     if (!formData.ContactTypeID) {
       errors.ContactTypeID = "Contact Type is required";
     }
-    // if (!formData.CountryCodeID) {
-    //   errors.CountryCodeID = "Country Code is required";
-    // }
     if (!formData.Mobile) {
       errors.Mobile = "Mobile number is required";
     }
@@ -459,7 +455,7 @@ const AddContact = ({ show, editData }) => {
                   </Select>
                   {errors.CityID && (
                     <MuiAlert severity="error">{errors.CityID}</MuiAlert>
-                  )}
+                  )}    
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -510,7 +506,7 @@ const AddContact = ({ show, editData }) => {
                     >
                       {sourceTypes.map((type) => (
                         <MenuItem key={type.SourceTypeID} value={type.SourceTypeID}>
-                          {type.SourceType}
+                          {type.SourceTypeName} {/* Assuming SourceTypeName is the correct property */}
                         </MenuItem>
                       ))}
                     </Select>
@@ -542,8 +538,7 @@ const AddContact = ({ show, editData }) => {
       <Snackbar
         open={submitError}
         autoHideDuration={6000}
-        onClose={() => setSubmitError(false)}
-      >
+        onClose={() => setSubmitError(false)} >
         <MuiAlert elevation={6} variant="filled" onClose={() => setSubmitError(false)} severity="error">
           Failed to {editData ? "update contact" : "add contact"}. Please try again later.
         </MuiAlert>
