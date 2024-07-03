@@ -328,7 +328,7 @@ const AddContact = ({ show, editData }) => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.TitleID}>
                   <InputLabel>Title</InputLabel>
                   <Select
@@ -347,7 +347,7 @@ const AddContact = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   name="CName"
@@ -358,7 +358,7 @@ const AddContact = ({ show, editData }) => {
                   helperText={errors.CName}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.CustomerTypeID}>
                   <InputLabel>Customer Type</InputLabel>
                   <Select
@@ -380,7 +380,7 @@ const AddContact = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.ContactTypeID}>
                   <InputLabel>Contact Type</InputLabel>
                   <Select
@@ -399,7 +399,7 @@ const AddContact = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.CountryCodeID}>
                   <InputLabel>Country Code</InputLabel>
                   <Select
@@ -418,7 +418,7 @@ const AddContact = ({ show, editData }) => {
                   )} */}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   name="Mobile"
@@ -429,7 +429,7 @@ const AddContact = ({ show, editData }) => {
                   helperText={errors.Mobile}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   name="Email"
@@ -440,7 +440,7 @@ const AddContact = ({ show, editData }) => {
                   helperText={errors.Email}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.CityID}>
                   <InputLabel>City</InputLabel>
                   <Select
@@ -462,7 +462,7 @@ const AddContact = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   name="LocationID"
@@ -471,7 +471,7 @@ const AddContact = ({ show, editData }) => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   name="PinCode"
@@ -480,7 +480,7 @@ const AddContact = ({ show, editData }) => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.SourceID}>
                   <InputLabel>Source</InputLabel>
                   <Select
@@ -500,7 +500,7 @@ const AddContact = ({ show, editData }) => {
                 </FormControl>
               </Grid>
               {sourceTypes.length > 0 && (
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <FormControl fullWidth>
                     <InputLabel>Source Type</InputLabel>
                     <Select
