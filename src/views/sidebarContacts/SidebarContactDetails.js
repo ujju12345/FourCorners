@@ -67,13 +67,6 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
         `https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php?UserID=${userid}`
       );
       console.log("API Response:", response.data);
-
-      // Set cookie after successful login or fetching data
-      setCookie("amr", response.data.cookieData, { path: "/" });
-
-      // Update userid in cookies
-      setCookie("amr", { ...cookies.amr, UserID: response.data.userId }, { path: "/" });
-
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
