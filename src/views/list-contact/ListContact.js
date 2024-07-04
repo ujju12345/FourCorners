@@ -18,9 +18,11 @@ import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import EmailIcon from '@mui/icons-material/Email';
+import { useCookies } from "react-cookie";
 
 const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",
@@ -28,7 +30,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies.amr?.UserID || 1,
   }
 
 

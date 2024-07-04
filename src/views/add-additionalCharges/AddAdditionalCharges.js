@@ -16,6 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const AddAdditionalCharges = ({ show }) => {
   const [date, setDate] = useState(null);
@@ -69,7 +70,7 @@ const AddAdditionalCharges = ({ show }) => {
       setLoading(false);
     }
   };
-
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const handleSubmitData = async (event) => {
     event.preventDefault();
 
@@ -88,7 +89,7 @@ const AddAdditionalCharges = ({ show }) => {
       fixedamount: fixedAmountName,
       salearea: saleAreaName,
       noofmonths: noOfMonthsName,
-      CreateUID: 1,
+      CreateUID: cookies.amr?.UserID || 1,
       Status: 1,
     };
 
