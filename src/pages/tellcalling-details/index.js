@@ -255,7 +255,7 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Photo/>}
+        {/* {error && <Alert></Alert>} */}
 
         {firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />

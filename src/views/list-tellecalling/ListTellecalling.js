@@ -28,7 +28,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: cookies?.amr?.UserID || 1,
+    CreateUID:1
   }
 
 
