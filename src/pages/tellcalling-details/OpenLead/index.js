@@ -237,7 +237,7 @@ const OpenLead = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Photo/>}
+        {/* {error && <Photo/>} */}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />

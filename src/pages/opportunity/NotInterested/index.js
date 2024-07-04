@@ -236,7 +236,7 @@ const NotInterested = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {/* {error && <Alert severity="error">Error fetching data: {error.message}</Alert>} */}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />
