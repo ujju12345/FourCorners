@@ -21,6 +21,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import { Chip } from '@mui/material';
 
 const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -81,6 +82,21 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
 
   const handleFilterMenuOpen = (event) => {
     setAnchorElFilter(event.currentTarget);
+  };
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
   };
 
   const handleFilterMenuClose = () => {
@@ -320,10 +336,35 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                   Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Assign By: {item.OpportunityAttendedByName}
                   </Typography>
                 </>}
               />
+               <IconButton
+                          aria-label="edit"
+                         
+                          sx={{ color: "blue" }}
+                        >      
+                    {getDateStatus(item.ContactCreateDate) && (
+                            <Chip
+                              label={getDateStatus(item.ContactCreateDate)}
+                              size="small"
+                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 20,
+                              }}
+                            />
+                          )}
+
+                        </IconButton>
             </ListItem>
             </Card>
                 </React.Fragment>

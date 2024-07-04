@@ -232,7 +232,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
         spacing={2}
         sx={{ marginBottom: 5 }}
       >
-        <Grid item>
+        {/* <Grid item>
           <Button
             variant="contained"
             onClick={handleEdit}
@@ -251,7 +251,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Edit Details
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item>
           <Button
             variant="contained"
@@ -400,7 +400,11 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -411,7 +415,11 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpTime"                               
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -676,7 +684,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Remakrs
+                  Follow Up Note
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}

@@ -186,7 +186,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
   
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
     const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
@@ -285,8 +288,8 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
       <Button
         variant="contained"
         startIcon={<ArrowForwardIosIcon />}
+        onClick={handlenavigate}
         sx={{
-       
           color: "#333333",
           backgroundColor: "#f0f0f0",
           fontSize: "0.6rem",
@@ -407,12 +410,15 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                // label="Next Follow-Up Date"
                 type="date"
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -423,7 +429,12 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
+              
               />
             </Grid>
             <Grid item xs={6}>

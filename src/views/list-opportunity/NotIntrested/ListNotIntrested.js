@@ -114,6 +114,52 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     fetchData();
   }, [item]);
 
+
+  const convertTooppo = async () => {
+    const formData = {
+      Oid: item?.Oid // Assuming formData is defined somewhere else in your code
+    };
+  console.log(formData , 'data aagaya');
+    try {
+      const response = await axios.post(
+        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-converttoopporunity.php",
+        formData, // Corrected: formData should be passed as the second argument
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+  
+      console.log(item?.Oid, 'see thisss');
+  
+      if (response.data.status === "Success") {
+        // Handle success
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Converted to lead successfully."
+        });
+      } else {
+        // Handle error
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to convert to lead. Please try again later."
+        });
+      }
+    } catch (error) {
+      console.error("Error converting to lead:", error);
+      // Handle error
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to convert to lead. Please try again later."
+      });
+    }
+  };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -126,7 +172,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     // Add Nid to formData
     const formDataWithNid = {
       ...formData,
-      Tid: item.Tid,
+      Oid: item.Oid,
     };
 
     const url =
@@ -241,6 +287,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
             backgroundColor: "#dcdcdc",
           },
         }}
+        onClick={convertTooppo}
       >
         Convert to Opportunity
       </Button>

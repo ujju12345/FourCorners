@@ -403,7 +403,11 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -414,7 +418,11 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -674,7 +682,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Remakrs
+               Follow Up Note
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                 {item?.Note}

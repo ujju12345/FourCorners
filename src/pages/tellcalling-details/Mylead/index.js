@@ -265,7 +265,7 @@ const Tellecalling = () => {
           alignItems="center"
           justifyContent="center"
           minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",textAlign:'center', fontSize: 20, }}>
               User History
             </Typography>
             <HistoryLead item={rowDataToUpdate} onBack={handleBack} />

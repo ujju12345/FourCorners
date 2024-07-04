@@ -91,7 +91,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     console.log(formData);
     setOpen(false);
   };
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const handleHistoryClick = () => {
     if (onHistoryClick) {
       // toggleSidebar(false);
@@ -273,6 +276,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
+            onClick={handlenavigate}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
@@ -393,23 +397,29 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                // label="Next Follow-Up Date"
                 type="date"
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
                 fullWidth
                 // label="Next Follow-Up Time"
-                type="time"
-                name="NextFollowUpTime"                               
+                type="time"                           
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -674,7 +684,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Remakrs
+                   Follow Up Note
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}

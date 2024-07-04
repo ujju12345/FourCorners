@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
-import TransformIcon from '@mui/icons-material/Transform';
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import HistoryIcon from "@mui/icons-material/History";
@@ -17,10 +16,10 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
-import EmailIcon from '@mui/icons-material/Email';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
-const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
-
+  
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",
@@ -58,20 +57,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     });
   };
 
-  useEffect(() => {
-    fetchDataCurrent();
-  }, []);
 
-  const fetchDataCurrent = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-currentupdate.php"
-      );
-      setCurrentUpdate(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching Bhk data:", error);
-    }
-  };
 
 
 
@@ -93,10 +79,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-const handlenavigate =() => {
-  window.location.href = "/tellcalling-details/";
 
-}
   const handleSave = () => {
     console.log(formData);
     setOpen(false);
@@ -109,25 +92,7 @@ const handlenavigate =() => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!item) return; // Exit if no item is provided
-      try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid}`;
 
-        const response = await axios.get(apiUrl);
-
-        if (response.data.status === "Success") {
-          console.log(response.data.data[0], "Single telecalling data fetched");
-          // Update item state with fetched data
-          setRowDataToUpdate(response.data.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching single telecalling data:", error);
-      }
-    };
-    fetchData();
-  }, [item]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -143,6 +108,8 @@ const handlenavigate =() => {
       ...formData,
       Tid: item.Tid
     };
+
+    console.log(formDataWithTid , 'sdf');
   
     const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
   
@@ -152,6 +119,8 @@ const handlenavigate =() => {
           "Content-Type": "application/json",
         },
       });
+      console.log(formDataWithTid ,  'sdf');
+      
   
       if (response.data.status === "Success") {
         setFormData(intialName);
@@ -187,7 +156,10 @@ const handlenavigate =() => {
     }
   };
   
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
     const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
@@ -197,7 +169,7 @@ const handlenavigate =() => {
   const downloadCSV = () => {
     const csvData = [
       {
-        "Party Name": item.PartyName,
+        "C Name ": item.CName,
         Mobile: item.Mobile,
         Email: item.Email,
         "Project Name": item.ProjectName,
@@ -245,15 +217,13 @@ const handlenavigate =() => {
         <Grid item>
           <Button
             variant="contained"
-            onClick={(event) => {
-              event.stopPropagation();
-              onEdit(item);
-            }}
+            onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{
-              backgroundColor: "#f0f0f0", // Light gray background color
+            // Light gray background color
               color: "#333333", // Dark gray text color
               fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
               minWidth: "auto",
               minHeight: 20, // Decrease button height
               "&:hover": {
@@ -264,80 +234,9 @@ const handlenavigate =() => {
             Edit Details
           </Button>
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={downloadCSV}
-            startIcon={<GetAppIcon />}
-            sx={{
-              backgroundColor: "#f0f0f0",
-              color: "#333333",
-              fontSize: "0.6rem",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Download
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-             onClick={handlenavigate}
-            startIcon={<TransformIcon />}
-            sx={{
-              backgroundColor: "#f0f0f0",
-              color: "#333333",
-              fontSize: "0.6rem",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-           Convert To Lead
-          </Button>
-        </Grid>
-        {/* <Grid item>
-          <Button
-            variant="contained"
-            onClick={handleDropdownClick}
-            startIcon={<PersonAddIcon />}
-            sx={{
-              mr: 30,
-              backgroundColor: "#f0f0f0",
-              color: "#333333",
-              fontSize: "0.6rem",
-              minWidth: "auto",
-              minHeight: 20,
-              "&:hover": {
-                backgroundColor: "#dcdcdc",
-              },
-            }}
-          >
-            Next FollowUp
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleDropdownClose}
-          >
-            <MenuItem onClick={handleAddFollowUpClick}>
-              <AddIcon sx={{ mr: 1 }} />
-              Add Follow Up
-            </MenuItem>
-            <MenuItem onClick={handleHistoryClick}>
-              <HistoryIcon sx={{ mr: 1 }} />
-              History
-            </MenuItem>
-          </Menu>
-        </Grid> */}
+     
       </Grid>
-      {/* <Modal
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -408,23 +307,27 @@ const handlenavigate =() => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                // label="Next Follow-Up Date"
+               
                 type="date"
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
                 InputLabelProps={{ sx: { mb: 1 } }}
+          
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
                 fullWidth
                 // label="Next Follow-Up Time"
+                // placeholder=""
                 type="time"
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
+              
                 InputLabelProps={{ sx: { mb: 1 } }}
+              
               />
             </Grid>
             <Grid item xs={6}>
@@ -468,7 +371,7 @@ const handlenavigate =() => {
             </Grid>
           </Box>
         </Box>
-      </Modal> */}
+      </Modal>
       <Card sx={{}}>
         <Paper sx={{ padding: 5 }}>
           <Box
@@ -479,7 +382,7 @@ const handlenavigate =() => {
               padding: 5,
             }}
           >
-                 <Avatar
+                  <Avatar
                           alt="John Doe"
                           sx={{ width: 60, height: 60, mr: 6 }}
                           src="/images/avatars/1.png"
@@ -489,10 +392,10 @@ const handlenavigate =() => {
                 variant="h6"
                 sx={{ fontWeight: 500, fontSize: "1.0rem" }}
               >
-                {item?.CName}
+                {item?.ProjectName}
               </Typography>
-              <Typography sx={{ fontSize: "0.9rem" }}>
-                {item?.Mobile}
+              <Typography sx={{ fontSize: "0.8rem" }}>
+                Project Code : {item?.ProjectCode}
               </Typography>
             </Box>
           </Box>
@@ -509,11 +412,12 @@ const handlenavigate =() => {
               <Typography
                 variant="body2"
                 sx={{
-                  backgroundColor: "#f0f0f0",
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
                   padding: "5px",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
@@ -522,35 +426,14 @@ const handlenavigate =() => {
                   },
                 }}
               >
-                Source: {item?.SourceName}
+             Project Manager: {item?.ProjectManager}
               </Typography>
             </div>
-             <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                City: {item?.CityName}
-              </Typography>
-            </div> 
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
-                  backgroundColor: "#f0f0f0",
+               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -558,141 +441,267 @@ const handlenavigate =() => {
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
-
+                  backgroundColor: "#f0f0f0",
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
                 }}
               >
-                Attended By: {item?.Name}
+               Project Start Date : {item?.projectstartdate}
+              </Typography>
+            </div>
+            <div style={{ marginRight: 5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+               
+                  color: "#333333",
+                  fontSize: "0.7rem",
+                  minWidth: "auto",
+                  padding: "5px",
+                  borderRadius: 2,
+                  minHeight: 20,
+                  marginLeft: 2,
+                  backgroundColor: "#f0f0f0",
+                  "&:hover": {
+                    backgroundColor: "#dcdcdc",
+                  },
+                }}
+              >
+                Completion Date :  {item?.completiondate}
               </Typography>
             </div>
           </Box>
 
           <Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    mt: 15,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem",alignContent:"center"}}>
-Email
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Email}</Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Customer Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.CustomerTypeName}</Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Contact Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.ContactName}</Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+      sx={{
+        width: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        ml: 12,
+        mt: 15,
+      }}
+    >
+      <Grid container spacing={3}>
+        {/* Email */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1,
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Project Code
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.ProjectCode}
+            </Typography>
+          </Card>
+        </Grid>
 
-<Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-  
-    mt: 12,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Create Date
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.CreateDate}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Country Code
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.CountryName}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          City Name
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.CityName}
-        </Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+        {/* Project Name */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1,
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Location
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.Location}
+            </Typography>
+          </Card>
+        </Grid>
 
-<Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-   
-    mt: 12,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Source
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.SourceName}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Source Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.SourceTypename}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Telecall Attended By
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+        {/* Unit Type */}
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1,
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+             Possession Date
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.possessiondate}
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+    <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Video Link 
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.video}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+                Landmark
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.landmark}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+            City Name
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.CityName}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
 
+      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              ReraRegistratio Number
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.ReraRegistrationNumber}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Plot Area In Sqft
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.PlotAreaInSqft}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Virtual Video Link
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.virtualvideo}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Comments */}
+      <Box
+        sx={{
+          width: "auto",
+          display: "flex",
+          alignItems: "center",
+          ml: 12,
+          mt: 12,
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Card
+              variant="outlined" // Use outlined variant for a border without shadow
+              sx={{
+                borderRadius: 1,
+             
+                padding: "10px",
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+              Welcome Message
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                {item?.WelcomeMessage}
+              </Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
         </Paper>
       </Card>
     </>
   );
 };
 
-export default ListContact;
+export default Listprojectmaster;

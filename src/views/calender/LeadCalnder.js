@@ -216,13 +216,13 @@ const LeadCalnder = () => {
           center: "toggleMonth toggleWeek toggleDay",
         }}
         customButtons={{
-          newAppointment: {
-            text: "New Appointment",
-            click: () => {
-              // Handle new appointment creation
-            },
-            className: "fc-button-custom",
-          },
+          // newAppointment: {
+          //   text: "New Appointment",
+          //   click: () => {
+          //     // Handle new appointment creation
+          //   },
+          //   className: "fc-button-custom",
+          // },
           toggleDay: {
             text: "Today",
             click: () => {

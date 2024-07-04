@@ -22,6 +22,8 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
+import { Chip } from '@mui/material';
+
 const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,21 @@ const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
     setSearchQuery("");
     setFilteredRows(rows);
   };
-
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
+  };
   const handleFilterMenuOpen = (event) => {
     setAnchorElFilter(event.currentTarget);
   };
@@ -310,20 +326,51 @@ const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
                   </Typography>
                 }
                 secondary={ <>
-                  <Typography
+                      <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                    Next FollowUp Date: {item.NextFollowUpDate}
+                Phone: {item.Mobile}
                   </Typography>
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                  Next follow Up time {item.NextFollowUpTime}
+                 FollowUp: {item.NextFollowUpDate}  {item.NextFollowUpTime}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+               Assign By:  {item.AttendedByName}
                   </Typography>
                 </>}
               />
+                   <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="flex-end"
+                      >
+                        <IconButton
+                          aria-label="edit"
+                         
+                          sx={{ color: "blue" }}
+                        >      
+                    {getDateStatus(item.ContactCreateDate) && (
+                            <Chip
+                              label={getDateStatus(item.ContactCreateDate)}
+                              size="small"
+                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 20,
+                              }}
+                            />
+                          )}
+
+                        </IconButton>
+                      </Box>
             </ListItem>
             </Card>
                 </React.Fragment>

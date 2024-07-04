@@ -413,6 +413,12 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                             >
                               City: {item.CityName}
                             </Typography>
+                            <Typography
+                              variant="body2"
+                              style={{ fontSize: 10 }}
+                            >
+                              Created At: {item.CreateDate}
+                            </Typography>
                           </>
                         }
                         secondaryTypographyProps={{ variant: "body2" }}
@@ -422,7 +428,7 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                         flexDirection="column"
                         alignItems="flex-end"
                       >
-                        <IconButton
+                        {/* <IconButton
                           aria-label="edit"
                           onClick={(event) => {
                             event.stopPropagation();
@@ -431,7 +437,7 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
                           sx={{ color: "blue" }}
                         >
                           <EditIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                           aria-label="delete"
                           onClick={(event) => {

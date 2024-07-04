@@ -47,7 +47,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handlenavigate =() => {
+    window.location.href = "/opportunity/";
+  
+  }
   const handleCurrentUpdate = (event) => {
     setFormData({
       ...formData,
@@ -273,6 +276,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
+            onClick={handlenavigate}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
@@ -398,7 +402,11 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -409,7 +417,11 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpTime"                               
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -674,7 +686,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Remakrs
+                   Follow Up Note
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}

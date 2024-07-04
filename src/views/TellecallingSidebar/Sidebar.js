@@ -413,11 +413,15 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       }
                         secondary={
                           <>
+                      
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                              Phone: {item.Mobile}
+                             follow Up: {item.NextFollowUpDate}  {item.NextFollowUpTime}
+                            
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                              Next follow Up: {item.NextFollowUpDate}
+                             Assign By:{item?.TelecallAttendedByName}
+
+                            
                             </Typography>
                           </>
                         }
@@ -447,16 +451,6 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                           )}
 
                         </IconButton>
-                        {/* <IconButton
-                          aria-label="delete"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleOpenConfirmDelete(item.Tid);
-                          }}
-                          sx={{ color: "red" }}
-                        >
-                          <DeleteIcon />
-                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>

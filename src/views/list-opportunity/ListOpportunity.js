@@ -300,7 +300,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               },
             }}
           >
-            Opportunity
+            Booking
           </Button>
         </Grid>
         <Grid item>
@@ -417,7 +417,11 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpDate"
                 value={formData.NextFollowUpDate}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -428,7 +432,11 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+          
               />
             </Grid>
             <Grid item xs={6}>
@@ -547,7 +555,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Schedule Date: {item?.ScheduleDate}
+                Follow Up Date: {item?.NextFollowUpDate}
               </Typography>
             </div>
             <div style={{ marginRight: 5 }}>
@@ -567,7 +575,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Schedule Time: {item?.ScheduleTime}
+               Follow Up Time: {item?.NextFollowUpTime}
               </Typography>
             </div>
           </Box>
@@ -771,21 +779,6 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                 </Card>
               </Grid>
-              
-            </Grid>
-          </Box>
-
-          {/* Comments */}
-          <Box
-            sx={{
-              width: "auto",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
               <Grid item xs={4}>
                 <Card
                   variant="outlined" // Use outlined variant for a border without shadow
@@ -808,6 +801,9 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
             </Grid>
           </Box>
+
+        
+       
         </Paper>
       </Card>
     </>
