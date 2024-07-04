@@ -38,17 +38,18 @@ const MyleadSidebar = ({ onItemClick, onCreate }) => {
 
   const userName = cookies.amr?.FullName || 'User';
   const roleName = cookies.amr?.RoleName || 'Admin';
-  const userid = cookies.amr?.UserID || 'Role';
+
 
 
 
   useEffect(() => {
-    console.log(userid , "lead sidebar<<<<<<<<>>>>>>>>>>");
+    // console.log(userid , "lead sidebar<<<<<<<<>>>>>>>>>>");
     fetchData();
 
   }, []);
 
   const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 'Role';
     try {
       const response = await axios.get(
         `https://apiforcorners.cubisysit.com/api/api-fetch-mylead.php?UserID=${userid}`,

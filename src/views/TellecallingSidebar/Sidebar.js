@@ -54,15 +54,16 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [cookies, setCookie] = useCookies(["amr"]);
   const userName = cookies.amr?.FullName || 'User';
   const roleName = cookies.amr?.RoleName || 'Admin';
-  const userid = cookies.amr?.UserID || 'Role';
+
   console.log(userName, 'ye dekh username');
   console.log(roleName, 'ye dekh rolname');
-  console.log(userid, 'ye dekh roleide');
+  // console.log(userid, 'ye dekh roleide');
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 'Role';
     try {
       const response = await axios.get(
         `https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php?UserID=${userid}`
