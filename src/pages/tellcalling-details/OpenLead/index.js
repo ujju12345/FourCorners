@@ -26,7 +26,7 @@ const salesData = [
     color: 'primary',
     icon: <AccountBalanceWalletIcon sx={{ fontSize: '1.75rem' }} />
   },
-  {
+{
     stats: '15',
     title: 'Followup',
     color: 'success',
