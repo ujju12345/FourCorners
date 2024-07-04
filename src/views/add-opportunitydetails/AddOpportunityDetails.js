@@ -18,9 +18,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useCookies } from "react-cookie";
 
 const AddOpportunityDetails = ({ show, editData }) => {
   console.log(editData , 'AAGAYA');
+
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formData, setFormData] = useState({
     LookingForID: "",
     EstimatedbudgetID: "",
@@ -41,9 +44,9 @@ const AddOpportunityDetails = ({ show, editData }) => {
     Description: "",
     Cid: "",
     Status: 1,
-    CreateUID: 1,
+    CreateUID: cookies.amr?.UserID || 1,
     ModifyUID: 1,
-    Oid: ""
+    Oid: "",
   });
 
 

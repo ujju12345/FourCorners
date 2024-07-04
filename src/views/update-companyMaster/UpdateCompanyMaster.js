@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import axios from 'axios';
 import Card from '@mui/material/Card';
+import { useCookies } from 'react-cookie';
 const UpdateCompanyMaster = ({ show, rowData }) => {
   const id = rowData?.CompanyID
   const [companyData, setCompanyData] = useState(null);
@@ -197,6 +198,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
       });
   };
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const handleSubmit = (event) => {
     event.preventDefault();
     const newErrors = validateFields();
@@ -206,7 +208,7 @@ const UpdateCompanyMaster = ({ show, rowData }) => {
       setErrors({});
 
       const submitData = {
-        CreateUID: 1,
+        CreateUID: cookies.amr?.UserID || 1,
         CompanyName: formData.companyName,
         CompanyCode: formData.companyCode,
         CommAddress: formData.companyAddress,

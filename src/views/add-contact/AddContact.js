@@ -26,31 +26,31 @@ import {
   FormLabel,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import { useCookies } from "react-cookie";
 
 const AddContact = ({ show, editData }) => {
   console.log(editData , 'Edit data aaya contact ka');
+    const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const initialFormData = {
     TitleID: "",
-    CName:"",
-    CustomerTypeID:"",
+    CName: "",
+    CustomerTypeID: "",
     ContactTypeID: "",
-    CountryCodeID:"",
+    CountryCodeID: "",
     Mobile: "",
     OtherNumbers: "",
     Email: "",
-    CityID:"",
-    LocationID:"",
-    PinCode:"",
-    KeyWordID:1,
-    SourceID:"",
+    CityID: "",
+    LocationID: "",
+    PinCode: "",
+    KeyWordID: 1,
+    SourceID: "",
     SourceTypeID: "",
     UserID: "",
-    Status:1,
-    CreateUID:1,
-    Cid:"",
+    Status: 1,
+    CreateUID: cookies.amr?.UserID || 1,
+    Cid: "",
     ModifyUID: 1,
-
-    
   };
 
 

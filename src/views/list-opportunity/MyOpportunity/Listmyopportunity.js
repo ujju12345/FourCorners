@@ -17,8 +17,10 @@ import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useCookies } from "react-cookie";
 const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Oid: "",
     CurrentUpdateID: "",
@@ -26,7 +28,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies.amr?.UserID || 1,
   }
 
 

@@ -2481,7 +2481,7 @@ next-transpile-modules@^9.0.0:
     enhanced-resolve "^5.10.0"
     escalade "^3.1.1"
 
-next@^12.0.4, next@>=10.2.0:
+next@^12.3.4, next@>=10.2.0:
   version "12.3.4"
   resolved "https://registry.npmjs.org/next/-/next-12.3.4.tgz"
   integrity sha512-VcyMJUtLZBGzLKo3oMxrEF0stxh8HwuW976pAzlHhI3t8qJ4SROjCrSh1T24bhrbjw55wfZXAbXPGwPt5FLRfQ==

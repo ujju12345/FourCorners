@@ -22,6 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { PrinterPosCheck } from "mdi-material-ui";
 import Card from "@mui/material/Card";
+import { useCookies } from "react-cookie";
 
 const TabAccount = ({ show }) => {
   const [companyName, setCompanyName] = useState("");
@@ -242,6 +243,8 @@ const TabAccount = ({ show }) => {
     show('list');
   };
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
+
   const handleSubmit = (event) => {
     console.log("presss");
     event.preventDefault();
@@ -252,7 +255,7 @@ const TabAccount = ({ show }) => {
       setErrors({});
 
       const formData = {
-        CreateUID: 1,
+        CreateUID: cookies.amr?.UserID || 1,
         CompanyName: companyName,
         CompanyCode: companyCode,
         CommAddress: companyAddress,

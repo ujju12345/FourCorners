@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useCookies } from "react-cookie";
 
 const UpdateProjectMaster = ({ show, rowData }) => {
   const [projectData, setProjectData] = useState(null);
@@ -215,12 +216,13 @@ const UpdateProjectMaster = ({ show, rowData }) => {
       selectedDateRera: date,
     });
   };
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const submitData = {
-      createuid: 1,
+      CreateUID: cookies.amr?.UserID || 1,
       projecttypeid: formData.projectType,
       ProjectID: rowData?.ProjectID || 0,
       projectname: formData.projectName,

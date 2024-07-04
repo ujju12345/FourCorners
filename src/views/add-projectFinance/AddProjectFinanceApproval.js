@@ -14,6 +14,7 @@ import { Button, FormControl, InputLabel } from "@mui/material";
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Card from '@mui/material/Card';
+import { useCookies } from "react-cookie";
 
 const AddProjectFinanceApproval = ({ show }) => {
   const [nameoffinancialinstitution, setNameofFinacialInstitution] =
@@ -192,12 +193,14 @@ const AddProjectFinanceApproval = ({ show }) => {
     }
   };
 
+   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
    
 
       const formData = {
-        CreateUID: 1,
+        CreateUID: cookies.amr?.UserID || 1,
         NameOfFinancialInstitution: nameoffinancialinstitution,
         Branch: branch,
         Address: address,
@@ -217,7 +220,7 @@ const AddProjectFinanceApproval = ({ show }) => {
         ProjectApprovalNo: projectapprovalno,
         ApprovalDate: approvaldate,
         Remarks: remarks,
-        createid:1
+        createid: 1,
       };
 
    

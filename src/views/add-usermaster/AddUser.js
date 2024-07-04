@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Card, CardContent, Typography, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useCookies } from 'react-cookie';
 
 const AddUser = ({ show, editData, fetchDataUser }) => {
+   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formState, setFormState] = useState({
-    UserRoleID: '',
-    Name: '',
-    MobileNo: '',
-    email: '',
-    username: '',
-    password: '',
-    CreateUID: 1,
-    UserID: '',
-    ModifyUID: 1
+    UserRoleID: "",
+    Name: "",
+    MobileNo: "",
+    email: "",
+    username: "",
+    password: "",
+    CreateUID: cookies.amr?.UserID || 1,
+    UserID: "",
+    ModifyUID: 1,
   });
 
   const [designation, setDesignation] = useState([]);
@@ -23,27 +25,27 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
   useEffect(() => {
     if (editData && Object.keys(editData).length !== 0) {
       setFormState({
-        UserRoleID: editData.UserRoleID || '',
-        Name: editData.Name || '',
-        MobileNo: editData.MobileNo || '',
-        email: editData.email || '',
-        username: editData.username || '',
-        password: editData.password || '',
-        CreateUID: 1,
-        UserID: editData.UserID || '',
-        ModifyUID: 1
+        UserRoleID: editData.UserRoleID || "",
+        Name: editData.Name || "",
+        MobileNo: editData.MobileNo || "",
+        email: editData.email || "",
+        username: editData.username || "",
+        password: editData.password || "",
+        CreateUID: cookies.amr?.UserID || 1,
+        UserID: editData.UserID || "",
+        ModifyUID: 1,
       });
     } else {
       setFormState({
-        UserRoleID: '',
-        Name: '',
-        MobileNo: '',
-        email: '',
-        username: '',
-        password: '',
-        CreateUID: 1,
-        UserID: '',
-        ModifyUID: 1
+        UserRoleID: "",
+        Name: "",
+        MobileNo: "",
+        email: "",
+        username: "",
+        password: "",
+        CreateUID: cookies.amr?.UserID || 1,
+        UserID: "",
+        ModifyUID: 1,
       });
     }
   }, [editData]);
@@ -89,15 +91,15 @@ const AddUser = ({ show, editData, fetchDataUser }) => {
 
       if (response.data.status === "Success") {
         setFormState({
-          UserRoleID: '',
-          Name: '',
-          MobileNo: '',
-          email: '',
-          username: '',
-          password: '',
-          CreateUID: 1,
-          UserID: '',
-          ModifyUID: 1
+          UserRoleID: "",
+          Name: "",
+          MobileNo: "",
+          email: "",
+          username: "",
+          password: "",
+          CreateUID: cookies.amr?.UserID || 1,
+          UserID: "",
+          ModifyUID: 1,
         });
         fetchDataUser(); // Fetch updated user data
         show(false); // Navigate back to the list view or close the form

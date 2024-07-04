@@ -11,9 +11,10 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
-const AddInstallment = ({ show, editData}) => {
-  console.log(editData , "aagaya edit ka data");
+const AddInstallment = ({ show, editData }) => {
+  console.log(editData, "aagaya edit ka data");
   const [projectName, setProjectName] = useState("");
   const [nameofcompany, setNameOfCompany] = useState("");
   const [subproject, setSubProject] = useState("");
@@ -27,7 +28,7 @@ const AddInstallment = ({ show, editData}) => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-   console.log(editData , 'installment');
+    console.log(editData, "installment");
   }, []);
 
   useEffect(() => {
@@ -73,14 +74,17 @@ const AddInstallment = ({ show, editData}) => {
 
   const handleChange = (event) => {
     const projectId = event.target.value;
-    const selectedProj = rows.find((project) => project.ProjectID === projectId);
+    const selectedProj = rows.find(
+      (project) => project.ProjectID === projectId
+    );
     setSelectedProject(projectId);
     setProjectName(selectedProj ? selectedProj.ProjectName : "");
   };
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const handleSubmit = () => {
     const formData = {
-      CreateUID: 1,
+      CreateUID: cookies.amr?.UserID || 1,
       ProjectName: projectName,
       NameOfCompany: nameofcompany,
       SubProject: subproject,
@@ -163,13 +167,14 @@ const AddInstallment = ({ show, editData}) => {
           <Grid container spacing={7}>
             <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
               <Box>
-              <Typography
-  variant="body2"
-  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
->
-  {editData ? "Update Installment Details" : "Add Installment Details"}
-</Typography>
-
+                <Typography
+                  variant="body2"
+                  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+                >
+                  {editData
+                    ? "Update Installment Details"
+                    : "Add Installment Details"}
+                </Typography>
               </Box>
             </Grid>
 
@@ -185,10 +190,7 @@ const AddInstallment = ({ show, editData}) => {
                     <em>None</em>
                   </MenuItem>
                   {rows.map((project) => (
-                    <MenuItem
-                      key={project.ProjectID}
-                      value={project.ProjectID}
-                    >
+                    <MenuItem key={project.ProjectID} value={project.ProjectID}>
                       {project.ProjectName}
                     </MenuItem>
                   ))}
@@ -255,25 +257,28 @@ const AddInstallment = ({ show, editData}) => {
                 onChange={(e) => setParticulars(e.target.value)}
               />
             </Grid>
-          <Grid item xs={8} sm={4}>
-            <TextField
-              fullWidth
-              type="text"
-              label="Percent"
-              placeholder="Percent"
-              value={percent}
-              onChange={(e) => setPercent(e.target.value)}
-            />
+            <Grid item xs={8} sm={4}>
+              <TextField
+                fullWidth
+                type="text"
+                label="Percent"
+                placeholder="Percent"
+                value={percent}
+                onChange={(e) => setPercent(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{ marginRight: 3.5 }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-          <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={handleSubmit}>
-            Submit
-          </Button>
-      
-        </Grid>
-        </Grid>
-      </form>
-    </CardContent>
+        </form>
+      </CardContent>
     </Card>
   );
 };

@@ -17,6 +17,7 @@ import axios from 'axios';
 import { Modal, TextField, IconButton, Grid, Menu, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
+import { useCookies } from 'react-cookie';
 
 // Styled component for Paper
 const CustomPaper = styled(Paper)({
@@ -35,6 +36,8 @@ const CustomTimeline = styled(Timeline)({
 const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
 
 export default function HistoryTelecalling({ item }) {
+
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",
@@ -42,7 +45,7 @@ export default function HistoryTelecalling({ item }) {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies.amr?.UserID || 1,
   }
 
   const [rowData, setRowDataToUpdate] = useState([]);

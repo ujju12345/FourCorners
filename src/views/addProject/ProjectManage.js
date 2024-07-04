@@ -19,6 +19,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useCookies } from "react-cookie";
 
 const ProjectManage = ({ show, editData }) => {
     const [formData, setFormData] = useState({
@@ -221,6 +222,8 @@ const ProjectManage = ({ show, editData }) => {
         });
     };
 
+
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
     const handleSubmitData = (event) => {
         event.preventDefault();
 
@@ -228,7 +231,7 @@ const ProjectManage = ({ show, editData }) => {
             ...formData,
             CountryID: 1,
             Status: 1,
-            CreateUID: 1,
+            CreateUID: cookies.amr?.UserID || 1,
         };
 
         const url = editData ?
@@ -278,16 +281,13 @@ const ProjectManage = ({ show, editData }) => {
     };
 
 
-    if (loading) return <p > Loading... < /p>;
+    if (loading) return <p> Loading... </p>;
 
-    return ( <
-        Card >
-        <
-        CardContent >
-        <
-        Box >
-        <
-        Typography variant = "body2"
+    return ( 
+    <Card >
+        <CardContent >
+        <Box >
+        <Typography variant = "body2"
         sx = {
             { marginTop: 5, fontWeight: "bold", fontSize: 20 } } >
         { editData ? "Edit Project Master" : "Add Project Master " } <

@@ -26,10 +26,13 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useCookies } from "react-cookie";
 
 
 const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   console.log(item , 'item hasi ye');
+
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Oid: "",
     CurrentUpdateID: "",
@@ -37,7 +40,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies.amr?.UserID || 1,
   };
 
   const [open, setOpen] = useState(false);
