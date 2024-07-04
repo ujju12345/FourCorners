@@ -193,6 +193,13 @@ const AddContact = ({ show, editData }) => {
     }
   };
 
+  const handleCode = (event) => {
+    setFormData({
+      ...formData,
+      CountryCodeID: event.target.value,
+    });
+  };
+
   useEffect(() => {
     if (dynamicSourceID) {
       axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-sourcetype.php?SourceID=${dynamicSourceID}`)
@@ -319,11 +326,20 @@ const AddContact = ({ show, editData }) => {
     <Box>
       <Card>
         <CardContent>
-          <Typography variant="h5" component="div" sx={{ mb: 2 }}>
-            {editData ? "Edit Contact" : "Add New Contact"}
-          </Typography>
+        <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+              >
+                {editData
+                  ? "Edit Contact Details"
+                  : "Add Contact Details"}
+              </Typography>
+            </Box>
+          </Grid>
           <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
+            <Grid container spacing={7}>
               <Grid item xs={12} sm={4}>
                 <FormControl fullWidth error={!!errors.TitleID}>
                   <InputLabel>Title</InputLabel>
@@ -395,23 +411,27 @@ const AddContact = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl fullWidth error={!!errors.CountryCodeID}>
-                  <InputLabel>Country Code</InputLabel>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                   Country Code
+                  </InputLabel>
                   <Select
-                    name="CountryCodeID"
                     value={formData.CountryCodeID}
-                    onChange={handleChange}
+                    onChange={handleCode}
+                    label={
+                      <>
+                        Country Code 
+                      </>
+                    }
                   >
-                    {countryCodes.map((code) => (
-                      <MenuItem key={code.CountryCodeID} value={code.CountryCodeID}>
-                        {code.CountryCode}
+                     {countryCodes.map((code) => (
+                      <MenuItem key={code.CountryCode} value={code.CountryCode}>
+                        {code.CountryName}
                       </MenuItem>
                     ))}
                   </Select>
-                  {/* {errors.CountryCodeID && (
-                    <MuiAlert severity="error">{errors.CountryCodeID}</MuiAlert>
-                  )} */}
+                  
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -462,7 +482,7 @@ const AddContact = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   name="LocationID"
-                  label="Location ID"
+                  label="Location "
                   value={formData.LocationID}
                   onChange={handleChange}
                 />
@@ -506,7 +526,7 @@ const AddContact = ({ show, editData }) => {
                     >
                       {sourceTypes.map((type) => (
                         <MenuItem key={type.SourceTypeID} value={type.SourceTypeID}>
-                          {type.SourceTypeName} {/* Assuming SourceTypeName is the correct property */}
+                          {type.SourceTypename} {/* Assuming SourceTypeName is the correct property */}
                         </MenuItem>
                       ))}
                     </Select>
@@ -514,7 +534,7 @@ const AddContact = ({ show, editData }) => {
                 </Grid>
               )}
             </Grid>
-            <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
+            <Grid container justifyContent="flex-start" sx={{ mt: 10 }}>
               <Grid item>
                 <Button type="submit" variant="contained" color="primary">
                   {editData ? "Update Contact" : "Add Contact"}

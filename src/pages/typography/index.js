@@ -168,7 +168,7 @@ const ProjectMaster = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php');
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
