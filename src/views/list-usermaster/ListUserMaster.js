@@ -66,7 +66,7 @@ const ListUserMaster = ({onEdit}) => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setError(error);
+      // setError(error);
       setLoading(false);
     }
   };

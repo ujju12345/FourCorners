@@ -16,7 +16,7 @@ const UserManager = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php');
       console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);

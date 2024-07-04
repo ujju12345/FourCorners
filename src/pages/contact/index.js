@@ -17,6 +17,7 @@ import CardHeader from '@mui/material/CardHeader'
 import IconButton from '@mui/material/IconButton'
 import Avatar from '@mui/material/Avatar'
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
+import { useCookies } from "react-cookie";
 
 const salesData = [
   {
@@ -151,7 +152,15 @@ const Contact = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
 
+  // Accessing cookie values
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+  const userid = cookies.amr?.UserID || 'Role';
+  console.log(userName, 'ye dekh username');
+  console.log(roleName, 'ye dekh rolname');
+  console.log(userid, 'ye dekh roleide');
   useEffect(() => {
     fetchData();
   }, []);
@@ -160,7 +169,7 @@ const Contact = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
