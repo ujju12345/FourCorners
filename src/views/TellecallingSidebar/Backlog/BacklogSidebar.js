@@ -23,6 +23,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import { useCookies } from "react-cookie";
 
 const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -33,6 +34,9 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
+  const [cookies, setCookie] = useCookies(["amr"]);
+
+  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
@@ -41,14 +45,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        `https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php?UserID=${userid}`,
+        
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);

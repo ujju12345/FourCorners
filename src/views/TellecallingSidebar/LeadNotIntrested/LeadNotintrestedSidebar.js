@@ -21,6 +21,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import { useCookies } from "react-cookie";
 
 const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -31,7 +32,9 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
+  const [cookies, setCookie] = useCookies(["amr"]);
 
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -39,7 +42,7 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php",
+        `https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php?UserID=${userid}`,
    
       );
       console.log("API Response:", response.data);

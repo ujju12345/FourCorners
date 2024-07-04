@@ -27,6 +27,7 @@ import {
   Autocomplete
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import { useCookies } from "react-cookie";
 
 const AddTellecallingDetails = ({ show, editData }) => {
   console.log(editData, "Edit data aaya");
@@ -55,6 +56,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
     EmailNotification: 0,
     ModifyUID: 1,
     Tid: "",
+    CreateUID: 1,
     UnittypeID: "",
     Countrycode: "",
     Status: 1,
@@ -75,6 +77,8 @@ const AddTellecallingDetails = ({ show, editData }) => {
   const [loading, setLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [cookies, setCookie] = useCookies(["amr"]);
+
   const [item, setItem] = useState(null);
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
 
@@ -270,7 +274,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
   //   const fetchData = async () => {
   //     if (!item) return; // Exit if no item is provided
   //     try {
-  //       const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid}`;
+  //       const apiUrl = https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid};
   //       const response = await axios.get(apiUrl);
 
   //       console.log("seee this", response.data); // Log the API response to debug
@@ -461,19 +465,28 @@ const AddTellecallingDetails = ({ show, editData }) => {
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
 
-    console.log(formData, "ALL the data of telecalling");
+
+      const dataToSend = editData
+      ? formData
+      : {
+          ...formData,
+          CreateUID: cookies.amr?.UserID || 1, // Fallback to 1 if UserID is not found in cookies
+        };
+
+    console.log(dataToSend, "ALL the data of telecalling");
     try {
-      const response = await axios.post(url, formData, {
+      const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      console.log(response, "ye res h ");
+    console.log(dataToSend, "ALL the data of telecalling");
+
       if (response.data.status === "Success") {
         setFormData(initialFormData);
 
-        setSubmitSuccess(true);
+        // setSubmitSuccess(true);
         setSubmitError(false);
         show(false);
 

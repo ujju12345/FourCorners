@@ -26,9 +26,12 @@ import {
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useCookies } from "react-cookie";
 
 
 const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
+
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",

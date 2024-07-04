@@ -17,8 +17,10 @@ import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useCookies } from "react-cookie";
 const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
     CurrentUpdateID: "",
@@ -26,7 +28,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies?.amr?.UserID || 1,
   }
 
 
@@ -731,10 +733,10 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Source Description
+                Created At
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.SourceDescription}
+                {item?.TelecallingCreateDate}
               </Typography>
             </Card>
           </Grid>

@@ -2,56 +2,58 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Card, CardContent, Typography } from '@mui/material';
 import axios from 'axios';
 import Box from "@mui/material/Box";
+import { useCookies } from 'react-cookie';
 
 const Addenquirysource = ({ show, rowData }) => {
   console.log(rowData , 'SEEE ');
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formState, setFormState] = useState({
-    NameOfCompany: '',
-    ProjectName: '',
-    Source: '',
-    FromDate: '', // Empty string for initial state
-    ToDate: '', // Empty string for initial state
-    SourceName: '',
-    SourceAddress: '',
-    ActiveTillDate: '', // Empty string for initial state
-    ContactNumber: '',
-    TotalCost: '',
-    CreateUID: 1,
-    Status: 1
+    NameOfCompany: "",
+    ProjectName: "",
+    Source: "",
+    FromDate: "", // Empty string for initial state
+    ToDate: "", // Empty string for initial state
+    SourceName: "",
+    SourceAddress: "",
+    ActiveTillDate: "", // Empty string for initial state
+    ContactNumber: "",
+    TotalCost: "",
+    CreateUID: cookies.amr?.UserID || 1,
+    Status: 1,
   });
   
 
   useEffect(() => {
     if (rowData && Object.keys(rowData).length !== 0) { // Check if rowData exists and is not empty
       setFormState({
-        NameOfCompany: rowData.NameOfCompany || '',
-        ProjectName: rowData.ProjectName || '',
-        Source: rowData.Source || '',
-        FromDate: rowData.FromDate || '',
-        ToDate: rowData.ToDate || '',
-        SourceName: rowData.SourceName || '',
-        SourceAddress: rowData.SourceAddress || '',
-        ActiveTillDate: rowData.ActiveTillDate || '',
-        ContactNumber: rowData.ContactNumber || '',
-        TotalCost: rowData.TotalCost || '',
-        CreateUID: 1,
-        Status: 1
+        NameOfCompany: rowData.NameOfCompany || "",
+        ProjectName: rowData.ProjectName || "",
+        Source: rowData.Source || "",
+        FromDate: rowData.FromDate || "",
+        ToDate: rowData.ToDate || "",
+        SourceName: rowData.SourceName || "",
+        SourceAddress: rowData.SourceAddress || "",
+        ActiveTillDate: rowData.ActiveTillDate || "",
+        ContactNumber: rowData.ContactNumber || "",
+        TotalCost: rowData.TotalCost || "",
+        CreateUID: cookies.amr?.UserID || 1,
+        Status: 1,
       });
     } else {
       // Set initial form state with empty date fields
       setFormState({
-        NameOfCompany: '',
-        ProjectName: '',
-        Source: '',
-        FromDate: '', // Empty string for FromDate
-        ToDate: '', // Empty string for ToDate
-        SourceName: '',
-        SourceAddress: '',
-        ActiveTillDate: '',
-        ContactNumber: '',
-        TotalCost: '',
-        CreateUID: 1,
-        Status: 1
+        NameOfCompany: "",
+        ProjectName: "",
+        Source: "",
+        FromDate: "", // Empty string for FromDate
+        ToDate: "", // Empty string for ToDate
+        SourceName: "",
+        SourceAddress: "",
+        ActiveTillDate: "",
+        ContactNumber: "",
+        TotalCost: "",
+        CreateUID: cookies.amr?.UserID || 1,
+        Status: 1,
       });
     }
   }, [rowData]);
