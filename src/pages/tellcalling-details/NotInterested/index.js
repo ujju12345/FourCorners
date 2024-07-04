@@ -19,6 +19,8 @@ import ListOpenLead from 'src/views/list-tellecalling/OpenLead/ListOpenLead';
 import ListNotInterested from 'src/views/list-tellecalling/Notintrested/ListNotInterested';
 import LeadNotintrestedSidebar from 'src/views/TellecallingSidebar/LeadNotIntrested/LeadNotintrestedSidebar';
 import Photo from 'src/pages/404';
+import { useCookies } from "react-cookie";
+
 const salesData = [
   {
     stats: '50',
@@ -134,7 +136,7 @@ const WelcomeScreen = () => {
       <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
         <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
         <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-          Welcome to Open Lead Dashboard
+          Welcome to Not Interested Dashboard
         </Typography>
         <Grid variant="body1" sx={{ marginTop: 10 , marginLeft:20}}>
           <StatisticsCard/>
@@ -153,6 +155,9 @@ const NotIntrestedLead  = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [cookies, setCookie] = useCookies(["amr"]);
+
+  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
@@ -162,7 +167,7 @@ const NotIntrestedLead  = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);

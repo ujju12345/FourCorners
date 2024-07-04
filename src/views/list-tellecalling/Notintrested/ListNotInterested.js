@@ -39,7 +39,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: 1,
+    CreateUID: cookies?.amr?.UserID || 1, 
   };
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
@@ -49,6 +49,8 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [currentUpdate, setCurrentUpdate] = useState([]);
   const [setRowDataToUpdate] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -113,8 +115,11 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
         // Handle success
         Swal.fire({
           icon: "success",
-          title: "Success!",
-          text: "Converted to lead successfully."
+          title: "Coverted to Lead Succesfully",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
       } else {
         // Handle error
