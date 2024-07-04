@@ -12,7 +12,7 @@ import { useCookies } from "react-cookie";
 const BuyNowButton = () => {
   const [open, setOpen] = useState(false);
   const [cookies] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || null;
+
 
   const handleOpportunity = () => {
     window.location.href = "/opportunity/";
@@ -25,9 +25,12 @@ const BuyNowButton = () => {
   const handleContact = () => {
     window.location.href = "/contact/";
   };
-
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+  const userid = cookies.amr?.UserID || 'USERID';
+  console.log(userid, 'ye dekh roleide');
   // Define actions based on userid condition
-  const actions = userid === '1' ? [
+  const actions = userid == 1 ? [
     { icon: <ContactsIcon />, name: 'Contact', onClick: handleContact },
     { icon: <PhoneIcon />, name: 'Leads', onClick: handleTelecalling },
     { icon: <TrendingUpIcon />, name: 'Opportunity', onClick: handleOpportunity },
@@ -45,9 +48,7 @@ const BuyNowButton = () => {
     setOpen(false);
   };
 
-  const userName = cookies.amr?.FullName || 'User';
-  const roleName = cookies.amr?.RoleName || 'Admin';
-
+  
   return (
     <Box
       className='upgrade-to-pro-button mui-fixed'
