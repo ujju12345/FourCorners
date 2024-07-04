@@ -7,14 +7,9 @@ import Listmylead from 'src/views/list-tellecalling/Mylead/Listmylead';
 import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import Card from '@mui/material/Card'
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+import Photo from 'src/pages/404'
 import CardContent from '@mui/material/CardContent'
-
-import AddIcon from "@mui/icons-material/Add";
+import { useCookies } from "react-cookie";
 import CardHeader from '@mui/material/CardHeader'
 import Avatar from '@mui/material/Avatar'
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
@@ -158,7 +153,9 @@ const OpenLead = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [cookies, setCookie] = useCookies(["amr"]);
 
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -167,7 +164,7 @@ const OpenLead = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-openlead.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -240,7 +237,7 @@ const OpenLead = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {error && <Photo/>}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />

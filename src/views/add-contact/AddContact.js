@@ -36,7 +36,7 @@ const AddContact = ({ show, editData }) => {
     SourceTypeID: "",
     UserID: "",
     Status: 1,
-    CreateUID: cookies.amr?.UserID || 1,
+    CreateUID:1,
     Cid: "",
     ModifyUID: 1,
   };

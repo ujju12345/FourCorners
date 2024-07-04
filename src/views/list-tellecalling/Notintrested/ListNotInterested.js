@@ -39,7 +39,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: cookies.amr?.UserID || 1,
+    CreateUID: 1,
   };
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);

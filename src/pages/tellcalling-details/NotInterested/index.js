@@ -18,6 +18,7 @@ import OpenLeadSidebar from 'src/views/TellecallingSidebar/OpenLead/OpenLeadSide
 import ListOpenLead from 'src/views/list-tellecalling/OpenLead/ListOpenLead';
 import ListNotInterested from 'src/views/list-tellecalling/Notintrested/ListNotInterested';
 import LeadNotintrestedSidebar from 'src/views/TellecallingSidebar/LeadNotIntrested/LeadNotintrestedSidebar';
+import Photo from 'src/pages/404';
 const salesData = [
   {
     stats: '50',
@@ -143,7 +144,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const OpenLead = () => {
+const NotIntrestedLead  = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -234,7 +235,7 @@ const OpenLead = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {error && <Photo/>}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />
@@ -259,4 +260,4 @@ const OpenLead = () => {
   );
 };
 
-export default OpenLead;
+export default NotIntrestedLead;

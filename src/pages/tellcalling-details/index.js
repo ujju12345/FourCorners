@@ -20,6 +20,7 @@ import { useCookies } from "react-cookie";
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { Photo } from 'src/pages/404'
 
 const salesData = [
   {
@@ -253,7 +254,7 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {error && <Photo/>}
 
         {firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />
