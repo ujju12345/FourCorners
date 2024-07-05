@@ -84,6 +84,9 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
+  const whatsappText = encodeURIComponent(
+    `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
+  );
 
   const handleAddFollowUpClick = () => {
     handleDropdownClose();
@@ -621,26 +624,26 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 </IconButton>
               </a>
               <a
-                href={`https://wa.me/${item?.Mobile}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton
-                  aria-label="whatsapp"
-                  size="small"
-                  sx={{
-                    color: "green",
-                    backgroundColor: "#e8f5e9",
-                    borderRadius: "50%",
-                    padding: "10px",
-                    "&:hover": {
-                      backgroundColor: "#c8e6c9",
-                    },
-                  }}
-                >
-                  <WhatsAppIcon />
-                </IconButton>
-              </a>
+          href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <IconButton
+            aria-label="whatsapp"
+            size="small"
+            sx={{
+              color: "green",
+              backgroundColor: "#e8f5e9",
+              borderRadius: "50%",
+              padding: "10px",
+              "&:hover": {
+                backgroundColor: "#c8e6c9",
+              },
+            }}
+          >
+            <WhatsAppIcon />
+          </IconButton>
+        </a>
             </Box>
           </Box>
 
