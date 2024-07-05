@@ -531,6 +531,8 @@ const AddOpportunityDetails = ({ show, editData }) => {
               />
             </Grid> */}
 
+    
+
             <Grid item xs={12} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Locality</InputLabel>

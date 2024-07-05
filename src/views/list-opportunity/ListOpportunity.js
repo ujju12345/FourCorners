@@ -27,7 +27,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
-
+import PhoneIcon from "@mui/icons-material/Phone";
+import ShareIcon from "@mui/icons-material/Share";
+import EmailIcon from "@mui/icons-material/Email";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   console.log(item , 'item hasi ye');
@@ -42,6 +45,8 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     Note: "",
     CreateUID: cookies.amr?.UserID || 1,
   };
+
+  
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
@@ -69,6 +74,10 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
+
+  const whatsappText = encodeURIComponent(
+    `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
+  );
 
   const handleAddFollowUpClick = () => {
     handleDropdownClose();
@@ -514,74 +523,150 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
           </Box>
 
           <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 20,
-            }}
-          >
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Looking For: {item?.LookingTypeName}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Follow Up Date: {item?.NextFollowUpDate}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-               Follow Up Time: {item?.NextFollowUpTime}
-              </Typography>
-            </div>
-          </Box>
+  sx={{
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    // alignItems: "center",
+    ml: 20,
+  }}
+>
+  <Box sx={{ display: "flex", mb: 2 }}>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Looking For: {item?.LookingTypeName}
+    </Typography>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        marginRight: 5,
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Follow Up Date: {item?.NextFollowUpDate}
+    </Typography>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Follow Up Time: {item?.NextFollowUpTime}
+    </Typography>
+  </Box>
+  <Box sx={{ display: "flex", ml:45, mt: 7 }}>
+    <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+      <IconButton
+        aria-label="phone"
+        size="small"
+        sx={{
+          color: "green",
+          backgroundColor: "#e0f7fa",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#b2ebf2",
+          },
+        }}
+      >
+        <PhoneIcon />
+      </IconButton>
+    </a>
+    <a style={{ marginRight: 10 }}>
+      <IconButton
+        aria-label="share"
+        size="small"
+        sx={{
+          color: "blue",
+          backgroundColor: "#e3f2fd",
+          borderRadius: "50%",
+          padding: "10px",
+          marginRight: 15,
+          "&:hover": {
+            backgroundColor: "#bbdefb",
+          },
+        }}
+      >
+        <ShareIcon />
+      </IconButton>
+    </a>
+    <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+      <IconButton
+        aria-label="email"
+        size="small"
+        sx={{
+          color: "red",
+          backgroundColor: "#ffebee",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#ffcdd2",
+          },
+        }}
+      >
+        <EmailIcon />
+      </IconButton>
+    </a>
+    <a
+      href={`https://wa.me/${item?.Mobile}?text=${encodeURIComponent(
+        whatsappText
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <IconButton
+        aria-label="whatsapp"
+        size="small"
+        sx={{
+          color: "green",
+          backgroundColor: "#e8f5e9",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#c8e6c9",
+          },
+        }}
+      >
+        <WhatsAppIcon />
+      </IconButton>
+    </a>
+  </Box>
+</Box>
+
 
           <Box
             sx={{

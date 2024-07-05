@@ -177,7 +177,7 @@ const NotInterested = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php?UserID=${userid}`,);
+      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php");
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -250,7 +250,7 @@ const NotInterested = () => {
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
           <ListNotIntrested
             item={rowDataToUpdate}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />

@@ -79,6 +79,10 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
 
+  const whatsappText = encodeURIComponent(
+    `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
+  );
+
 
 
 
@@ -192,6 +196,8 @@ const handlenavigate =() => {
       });
     }
   };
+
+
   
 
   const jsonToCSV = (json) => {
@@ -639,7 +645,7 @@ const handlenavigate =() => {
           </IconButton>
         </a>
         <a
-          href={`https://wa.me/${item?.Mobile}`}
+          href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
           target="_blank"
           rel="noopener noreferrer"
         >

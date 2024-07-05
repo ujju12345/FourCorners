@@ -186,7 +186,7 @@ const BacklogOpportunity = () => {
     setError(null);
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
+        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php"
       );
       setRows(response.data.data || []);
     } catch (error) {

@@ -467,12 +467,15 @@ const AddTellecallingDetails = ({ show, editData }) => {
 
 
       const dataToSend = editData
-      ? formData
+      ? {
+          ...formData,
+          ModifyUID: cookies.amr?.UserID || 1
+        }
       : {
           ...formData,
-          CreateUID: cookies.amr?.UserID || 1, // Fallback to 1 if UserID is not found in cookies
+          CreateUID: cookies.amr?.UserID || 1 // Fallback to 1 if UserID is not found in cookies
         };
-
+    
     console.log(dataToSend, "ALL the data of telecalling");
     try {
       const response = await axios.post(url, dataToSend, {
