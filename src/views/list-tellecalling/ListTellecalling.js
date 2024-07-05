@@ -18,6 +18,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useCookies } from "react-cookie";
+import PhoneIcon from '@mui/icons-material/Phone';
+import ShareIcon from '@mui/icons-material/Share';
 const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
@@ -30,9 +32,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     Note: "",
     CreateUID: cookies?.amr?.UserID || 1,
   }
-
-
-
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
@@ -510,77 +509,84 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Box>
 
           <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 20,
-            }}
-          >
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Source Name: {item?.SourceName}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Location: {item?.Location}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Attended By: {item?.TelecallAttendedByName}
-              </Typography>
-            </div>
-          </Box>
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    ml: 20,
+  }}
+>
+  <div style={{ marginRight: 5 }}>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Source Name: {item?.SourceName}
+    </Typography>
+  </div>
+  <div style={{ marginRight: 5 }}>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        backgroundColor: "#f0f0f0",
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Location: {item?.Location}
+    </Typography>
+  </div>
+  <div style={{ marginRight: 5 }}>
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        backgroundColor: "#f0f0f0",
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Attended By: {item?.TelecallAttendedByName}
+    </Typography>
+  </div>
+  <a href={`tel:${item?.Mobile}`} style={{ marginRight: 5 }}>
+    <IconButton aria-label="phone" size="small">
+      <PhoneIcon />
+    </IconButton>
+  </a>
+  <IconButton aria-label="share" size="small">
+    <ShareIcon />
+  </IconButton>
+</Box>
+
+ 
 
           <Box
       sx={{
