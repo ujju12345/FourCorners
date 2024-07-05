@@ -27,6 +27,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
+import PhoneIcon from "@mui/icons-material/Phone";
+import ShareIcon from "@mui/icons-material/Share";
+import EmailIcon from "@mui/icons-material/Email";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
@@ -566,6 +570,87 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Typography>
             </div>
           </Box>
+
+
+          <Box sx={{ display: "flex",  mt: 10 , ml:50}}>
+        <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+          <IconButton
+            aria-label="phone"
+            size="small"
+            sx={{
+              color: "green",
+              backgroundColor: "#e0f7fa",
+              borderRadius: "50%",
+              padding: "10px",
+              "&:hover": {
+                backgroundColor: "#b2ebf2",
+              },
+            }}
+          >
+            <PhoneIcon />
+          </IconButton>
+        </a>
+        <a  style={{ marginRight: 10 }}>
+
+        <IconButton
+          aria-label="share"
+          size="small"
+          sx={{
+            color: "blue",
+            backgroundColor: "#e3f2fd",
+            borderRadius: "50%",
+            padding: "10px",
+            marginRight: 15,
+            "&:hover": {
+              backgroundColor: "#bbdefb",
+            },
+          }}
+        >
+          <ShareIcon />
+        </IconButton>
+        </a>
+
+        <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+          <IconButton
+            aria-label="email"
+            size="small"
+            sx={{
+              color: "red",
+              backgroundColor: "#ffebee",
+              borderRadius: "50%",
+              padding: "10px",
+              "&:hover": {
+                backgroundColor: "#ffcdd2",
+              },
+            }}
+          >
+            <EmailIcon />
+          </IconButton>
+        </a>
+        <a
+          href={`https://wa.me/${item?.Mobile}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <IconButton
+            aria-label="whatsapp"
+            size="small"
+            sx={{
+              color: "green",
+              backgroundColor: "#e8f5e9",
+              borderRadius: "50%",
+              padding: "10px",
+              "&:hover": {
+                backgroundColor: "#c8e6c9",
+              },
+            }}
+          >
+            <WhatsAppIcon />
+          </IconButton>
+        </a>
+      </Box>
+
+          
 
           <Box
             sx={{
