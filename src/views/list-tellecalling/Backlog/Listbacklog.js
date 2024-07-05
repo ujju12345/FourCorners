@@ -571,7 +571,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </div>
           </Box>
 
-          <Box sx={{ display: "flex",  mt: 10 , ml:50}}>
+          <Box sx={{ display: "flex",  mt: 10 , ml:20}}>
         <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
           <IconButton
             aria-label="phone"
