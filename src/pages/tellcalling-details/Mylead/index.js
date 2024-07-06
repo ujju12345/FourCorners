@@ -13,7 +13,8 @@ import DotsVertical from 'mdi-material-ui/DotsVertical'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import CardContent from '@mui/material/CardContent'
-
+import { useCookies } from "react-cookie";
+import Photo from 'src/pages/404'
 import AddIcon from "@mui/icons-material/Add";
 import CardHeader from '@mui/material/CardHeader'
 import Avatar from '@mui/material/Avatar'
@@ -155,9 +156,11 @@ const Tellecalling = () => {
   const [editData, setEditData] = useState(null);
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
   const [showAddDetails, setShowAddDetails] = useState(false);
+  const [cookies, setCookie] = useCookies(["amr"]);
+
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
-
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -166,7 +169,7 @@ const Tellecalling = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-mylead.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -239,7 +242,7 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {/* {error &&  <Photo/>} */}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />

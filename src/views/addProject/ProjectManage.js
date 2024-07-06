@@ -1,287 +1,327 @@
 import React, { useEffect, useState } from "react";
 import {
-    Box,
-    Grid,
-    Alert,
-    Select,
-    MenuItem,
-    TextField,
-    Typography,
-    InputLabel,
-    CardContent,
-    FormControl,
-    Button,
-    Card,
-    Input,
-    Chip,
+  Box,
+  Grid,
+  Alert,
+  Select,
+  MenuItem,
+  TextField,
+  Typography,
+  InputLabel,
+  CardContent,
+  FormControl,
+  Button,
+  Card,
+  Input,
+  Chip,
+  InputAdornment,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
-
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import LanguageIcon from "@mui/icons-material/Language";
 const ProjectManage = ({ show, editData }) => {
-    const [formData, setFormData] = useState({
-        projectstartdate: null,
-        completiondate: null,
-        possessiondate: null,
-        ProjectName: "",
-        ProjectCode: "",
-        PlotAreaInSqft: "",
-        ReraRegistrationNumber: "",
-        approvedby: "",
-        specification: "",
-        WelcomeMessage: "",
-        ProjectTypeID: "",
-        amenitiesIDs: [], // Ensure amenitiesIDs is initialized as an array
-        video: "",
-        virtualvideo: "",
-        keyword: "",
-        ProjectAddress: "",
-        cityID: "",
-        Location: "",
-        landmark: "",
-        Pincode: "",
-        assignebyID: "",
-        ProjectManager: "",
-    });
+  const [formData, setFormData] = useState({
+    projectstartdate: null,
+    completiondate: null,
+    possessiondate: null,
+    ProjectName: "",
+    Possession:"",
+    ProjectCode: "",
+    PlotAreaInSqft: "",
+    ReraRegistrationNumber: "",
+    approvedby: "",
+    specification: "",
+    WelcomeMessage: "",
+    ProjectTypeID: "",
+    amenitiesIDs: [], // Ensure amenitiesIDs is initialized as an array
+    video: "",
+    virtualvideo: "",
+    keyword: "",
+    ProjectAddress: "",
+    cityID: "",
+    Location: "",
+    landmark: "",
+    Pincode: "",
+    assignebyID: "",
+    ProjectManager: "",
+  });
 
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [projectTypes, setProjectTypes] = useState([]);
-    const [amenities, setAmenities] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [states, setStates] = useState([]);
-    const [userMaster, setUserMaster] = useState([]);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
-    const [submitError, setSubmitError] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [projectTypes, setProjectTypes] = useState([]);
+  const [amenities, setAmenities] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [states, setStates] = useState([]);
+  const [pincodes, setPincodes] = useState([]);
+  const [userMaster, setUserMaster] = useState([]);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const [localities, setLocalities] = useState([]);
+  useEffect(() => {
+    if (editData) {
+      const {
+        ProjectID,
+        projectstartdate,
+        completiondate,
+        possessiondate,
+        ProjectName,
+        ProjectCode,
+        PlotAreaInSqft,
+        ReraRegistrationNumber,
+        approvedby,
+        specification,
+        WelcomeMessage,
+        ProjectTypeID,
+        amenitiesIDs,
+        video,
+        virtualvideo,
+        keyword,
+        ProjectAddress,
+        cityID,
+        Location,
+        landmark,
+        Pincode,
+        assignebyID,
+        ProjectManager,
+        ModifyUID,
+      } = editData;
 
-    useEffect(() => {
-        if (editData) {
-            const {
-                ProjectID,
-                projectstartdate,
-                completiondate,
-                possessiondate,
-                ProjectName,
-                ProjectCode,
-                PlotAreaInSqft,
-                ReraRegistrationNumber,
-                approvedby,
-                specification,
-                WelcomeMessage,
-                ProjectTypeID,
-                amenitiesIDs,
-                video,
-                virtualvideo,
-                keyword,
-                ProjectAddress,
-                cityID,
-                Location,
-                landmark,
-                Pincode,
-                assignebyID,
-                ProjectManager,
-                ModifyUID,
-            } = editData;
+      setFormData({
+        ProjectID: ProjectID || "",
+        projectstartdate: projectstartdate ? new Date(projectstartdate) : null,
+        completiondate: completiondate ? new Date(completiondate) : null,
+        possessiondate: possessiondate ? new Date(possessiondate) : null,
+        ProjectName: ProjectName || "",
+        ProjectCode: ProjectCode || "",
+        PlotAreaInSqft: PlotAreaInSqft || "",
+        ReraRegistrationNumber: ReraRegistrationNumber || "",
+        approvedby: approvedby || "",
+        specification: specification || "",
+        WelcomeMessage: WelcomeMessage || "",
+        ProjectTypeID: ProjectTypeID || "",
+        amenitiesIDs: Array.isArray(amenitiesIDs)
+          ? amenitiesIDs
+          : [amenitiesIDs],
+        video: video || "",
+        virtualvideo: virtualvideo || "",
+        keyword: keyword || "",
+        ProjectAddress: ProjectAddress || "",
+        cityID: cityID || "",
+        Location: Location || "",
+        landmark: landmark || "",
+        Pincode: Pincode || "",
+        assignebyID: assignebyID || "",
+        ProjectManager: ProjectManager || "",
+        ModifyUID: 1 || "",
+      });
+    }
+  }, [editData]);
 
-            setFormData({
-                ProjectID: ProjectID || "",
-                projectstartdate: projectstartdate ? new Date(projectstartdate) : null,
-                completiondate: completiondate ? new Date(completiondate) : null,
-                possessiondate: possessiondate ? new Date(possessiondate) : null,
-                ProjectName: ProjectName || "",
-                ProjectCode: ProjectCode || "",
-                PlotAreaInSqft: PlotAreaInSqft || "",
-                ReraRegistrationNumber: ReraRegistrationNumber || "",
-                approvedby: approvedby || "",
-                specification: specification || "",
-                WelcomeMessage: WelcomeMessage || "",
-                ProjectTypeID: ProjectTypeID || "",
-                amenitiesIDs: Array.isArray(amenitiesIDs) ? amenitiesIDs : [amenitiesIDs],
-                video: video || "",
-                virtualvideo: virtualvideo || "",
-                keyword: keyword || "",
-                ProjectAddress: ProjectAddress || "",
-                cityID: cityID || "",
-                Location: Location || "",
-                landmark: landmark || "",
-                Pincode: Pincode || "",
-                assignebyID: assignebyID || "",
-                ProjectManager: ProjectManager || "",
-                ModifyUID: 1 || "",
-            });
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setUserMaster(response.data.data);
+          setLoading(false); // Set loading to false when data is fetched
         }
-    }, [editData]);
+      })
+      .catch((error) => {
+        console.error("Error fetching user master data:", error);
+        setLoading(false); // Also set loading to false on error
+      });
+  }, []);
 
-    useEffect(() => {
-        axios
-            .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setUserMaster(response.data.data);
-                    setLoading(false); // Set loading to false when data is fetched
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching user master data:", error);
-                setLoading(false); // Also set loading to false on error
-            });
-    }, []);
+  useEffect(() => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-transactiontype.php"
+      )
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setProjectTypes(response.data.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    useEffect(() => {
-        axios
-            .get(
-                "https://apiforcorners.cubisysit.com/api/api-fetch-transactiontype.php"
-            )
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setProjectTypes(response.data.data);
-                }
-            })
-            .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+  useEffect(() => {
+    if (formData.cityID) {
+      axios
+        .get(
+          "https://apiforcorners.cubisysit.com/api/api-fetch-locationmaster.php",
+          {
+            params: { CityID: formData.cityID },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "Success") {
+            setLocalities(response.data.data);
+          }
+        })
+        .catch((error) => console.error("Error fetching localities:", error));
+    } else {
+      setLocalities([]);
+    }
+  }, [formData.cityID]);
 
-    useEffect(() => {
-        axios
-            .get("https://apiforcorners.cubisysit.com/api/api-fetch-amenities.php")
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setAmenities(response.data.data);
-                }
-            })
-            .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-amenities.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setAmenities(response.data.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    useEffect(() => {
-        axios
-            .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setCities(response.data.data);
-                }
-            })
-            .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setCities(response.data.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    useEffect(() => {
-        axios
-            .get("https://apiforcorners.cubisysit.com/api/api-fetch-statemaster.php")
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setStates(response.data.data);
-                }
-            })
-            .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-statemaster.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setStates(response.data.data);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+  useEffect(() => {
+    if (formData.Location) {
+      axios
+        .get("https://apiforcorners.cubisysit.com/api/api-fetch-pincode.php", {
+          params: { LocationID: formData.Location },
+        })
+        .then((response) => {
+          if (response.data.status === "Success") {
+            setPincodes(response.data.data);
+          }
+        })
+        .catch((error) => console.error("Error fetching pincodes:", error));
+    } else {
+      setPincodes([]);
+    }
+  }, [formData.Location]);
 
-    const handleDateChange = (date, name) => {
-        setFormData({
-            ...formData,
-            [name]: date,
-        });
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
+  const handleDateChange = (date, name) => {
+    setFormData({
+      ...formData,
+      [name]: date,
+    });
+  };
 
+  const handleAmenitiesChange = (event) => {
+    const { value } = event.target;
+    // Ensure value is always an array
+    const selectedAmenities = Array.isArray(value) ? value : [value];
+    setFormData({
+      ...formData,
+      amenitiesIDs: selectedAmenities,
+    });
+  };
 
-    const handleAmenitiesChange = (event) => {
-        const { value } = event.target;
-        // Ensure value is always an array
-        const selectedAmenities = Array.isArray(value) ? value : [value];
-        setFormData({
-            ...formData,
-            amenitiesIDs: selectedAmenities,
-        });
-    };
+  const handleDelete = (event, valueToDelete) => {
+    event.stopPropagation(); // Ensure the event propagation is stopped
+    setFormData((prevState) => ({
+      ...prevState,
+      amenitiesIDs: prevState.amenitiesIDs.filter(
+        (value) => value !== valueToDelete
+      ),
+    }));
+  };
 
-    const handleDelete = (event, valueToDelete) => {
-        event.stopPropagation(); // Ensure the event propagation is stopped
-        setFormData((prevState) => ({
-            ...prevState,
-            amenitiesIDs: prevState.amenitiesIDs.filter((value) => value !== valueToDelete),
-        }));
-    };
-
-
-
-
-    const handleTelecaller = (event) => {
-        const { value } = event.target;
-        setFormData({
-            ...formData,
-            assignebyID: event.target.value,
-        });
-    };
-
+  const handleTelecaller = (event) => {
+    const { value } = event.target;
+    setFormData({
+      ...formData,
+      assignebyID: event.target.value,
+    });
+  };
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
-    const handleSubmitData = (event) => {
-        event.preventDefault();
+  const handleSubmitData = (event) => {
+    event.preventDefault();
 
-        const body = {
-            ...formData,
-            CountryID: 1,
-            Status: 1,
-            CreateUID: cookies.amr?.UserID || 1,
-        };
-
-        const url = editData ?
-            "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php" :
-            "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php";
-
-        axios
-            .post(url, body)
-            .then((response) => {
-                if (response.data.status === "Success") {
-                    setFormData({}); // Reset form data after successful submission
-                    setErrors({});
-                    setSubmitSuccess(true);
-                    setSubmitError(false);
-                    show(false); // Hide the modal or close form
-
-                    Swal.fire({
-                        icon: "success",
-                        title: editData ?
-                            "Data Updated Successfully" :
-                            "Data Added Successfully",
-                        showConfirmButton: false,
-                        timer: 1000,
-                    }).then(() => {
-                        // window.location.reload();
-                    });
-                } else {
-                    setSubmitSuccess(false);
-                    setSubmitError(true);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Something went wrong!",
-                    });
-                }
-            })
-            .catch((error) => {
-                console.error("Error submitting data:", error);
-                setSubmitSuccess(false);
-                setSubmitError(true);
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Something went wrong!",
-                });
-            });
+    const body = {
+      ...formData,
+      CountryID: 1,
+      Status: 1,
+      CreateUID: cookies.amr?.UserID || 1,
     };
 
+    const url = editData
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectmaster.php";
 
-    if (loading) return <p> Loading... </p>;
+    axios
+      .post(url, body)
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setFormData({}); // Reset form data after successful submission
+          setErrors({});
+          setSubmitSuccess(true);
+          setSubmitError(false);
+          show(false); // Hide the modal or close form
+
+          Swal.fire({
+            icon: "success",
+            title: editData
+              ? "Data Updated Successfully"
+              : "Data Added Successfully",
+            showConfirmButton: false,
+            timer: 1000,
+          }).then(() => {
+            // window.location.reload();
+          });
+        } else {
+          setSubmitSuccess(false);
+          setSubmitError(true);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting data:", error);
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      });
+  };
+
+  if (loading) return <p> Loading... </p>;
 
     return (
       <Card>

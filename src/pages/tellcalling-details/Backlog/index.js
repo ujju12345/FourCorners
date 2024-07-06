@@ -13,6 +13,7 @@ import DotsVertical from 'mdi-material-ui/DotsVertical'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import CardContent from '@mui/material/CardContent'
+import { useCookies } from "react-cookie";
 
 import AddIcon from "@mui/icons-material/Add";
 import CardHeader from '@mui/material/CardHeader'
@@ -24,6 +25,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HistoryLead from 'src/views/history-telecalling/HistoryLead/HistoryLead';
 import HistoryBooking from 'src/views/history-telecalling/HistoryBacklog/HistoryBooking';
+import Photo from 'src/pages/404'
 const salesData = [
   {
     stats: '50',
@@ -149,7 +151,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const Tellecalling = () => {
+const BacklogLead = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -158,6 +160,9 @@ const Tellecalling = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [cookies, setCookie] = useCookies(["amr"]);
+
+  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
@@ -167,7 +172,7 @@ const Tellecalling = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get( `https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -240,7 +245,7 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {/* {error && <Photo/>} */}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />
@@ -279,4 +284,4 @@ const Tellecalling = () => {
   );
 };
 
-export default Tellecalling;
+export default BacklogLead;

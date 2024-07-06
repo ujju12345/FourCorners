@@ -21,6 +21,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Chip } from '@mui/material';
+import { useCookies } from "react-cookie";
 
 import GetAppIcon from "@mui/icons-material/GetApp";
 
@@ -33,22 +34,26 @@ const MyleadSidebar = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
+  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
+
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+
+
+
 
   useEffect(() => {
+    // console.log(userid , "lead sidebar<<<<<<<<>>>>>>>>>>");
     fetchData();
+
   }, []);
 
   const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 'Role';
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-mylead.php",
-        {
-          params: {
-            CurrentUpdateID: 2,
-            NextFollowUpDate: "2024-06-25",
-            NextFollowUpTime: "00:00:00",
-          }
-        }
+        `https://apiforcorners.cubisysit.com/api/api-fetch-mylead.php?UserID=${userid}`,
+       
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);

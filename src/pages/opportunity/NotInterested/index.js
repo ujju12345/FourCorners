@@ -13,6 +13,7 @@ import DotsVertical from 'mdi-material-ui/DotsVertical'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import CardContent from '@mui/material/CardContent'
+import { useCookies } from "react-cookie";
 
 import AddIcon from "@mui/icons-material/Add";
 import CardHeader from '@mui/material/CardHeader'
@@ -162,16 +163,21 @@ const NotInterested = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [cookies, setCookie] = useCookies(["amr"]);
+
 
   useEffect(() => {
+    
     fetchData();
+
   }, []);
 
   const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 'Role';
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-teleclose.php?UserID=${userid}`,);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -180,21 +186,7 @@ const NotInterested = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
-        Tid: id,
-        DeleteUID: 1
-      });
-      if (response.data.status === 'Success') {
-        setRows(rows.filter(row => row.Tid !== id));
-        setRowDataToUpdate(null);
-        setShowAddDetails(false);
-      }
-    } catch (error) {
-      setError(error);
-    }
-  };
+
 
   const handleBack = () => {
     setEditData(null);
@@ -244,7 +236,7 @@ const NotInterested = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+        {/* {error && <Alert severity="error">Error fetching data: {error.message}</Alert>} */}
 
         {firstVisit && !loading && !error && (
           <WelcomeScreen />

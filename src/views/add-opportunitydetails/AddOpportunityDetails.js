@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -21,7 +19,7 @@ import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
 const AddOpportunityDetails = ({ show, editData }) => {
-  console.log(editData , 'AAGAYA');
+  console.log(editData, "AAGAYA");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formData, setFormData] = useState({
@@ -49,7 +47,6 @@ const AddOpportunityDetails = ({ show, editData }) => {
     Oid: "",
   });
 
-
   const [rows, setRows] = useState([]);
   const [lookingForOptions, setLookingForOptions] = useState([]);
   const [estimatedBudgets, setEstimatedBudgets] = useState([]);
@@ -61,6 +58,8 @@ const AddOpportunityDetails = ({ show, editData }) => {
   const [sourceTypes, setSourceTypes] = useState([]);
   const [propertyAges, setPropertyAges] = useState([]);
   const [purposes, setPurposes] = useState([]);
+  const [localities, setLocalities] = useState([]);
+
   const [contacts, setContacts] = useState([]);
   const [submitError, setSubmitError] = useState(false);
   const [errors, setErrors] = useState({});
@@ -82,15 +81,14 @@ const AddOpportunityDetails = ({ show, editData }) => {
     return payload;
   };
 
-
-
   useEffect(() => {
     if (editData) {
       // Merge formData and editData
       setFormData((prevFormData) => ({
         ...prevFormData,
         LookingForID: editData.LookingForID || prevFormData.LookingForID,
-        EstimatedbudgetID: editData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
+        EstimatedbudgetID:
+          editData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
         AreaFrom: editData.AreaFrom || prevFormData.AreaFrom,
         AreaTo: editData.AreaTo || prevFormData.AreaTo,
         ScaleID: editData.ScaleID || prevFormData.ScaleID,
@@ -103,20 +101,41 @@ const AddOpportunityDetails = ({ show, editData }) => {
         ScheduleTime: editData.ScheduleTime || prevFormData.ScheduleTime,
         KeywordID: editData.KeywordID || prevFormData.KeywordID,
         SourceID: editData.SourceID || prevFormData.SourceID,
-        SourceNameID:1 || 1,
-        OpportunityAttendedByID: editData.OpportunityAttendedByID || prevFormData.OpportunityAttendedByID,
+        SourceNameID: 1 || 1,
+        OpportunityAttendedByID:
+          editData.OpportunityAttendedByID ||
+          prevFormData.OpportunityAttendedByID,
         Description: editData.Description || prevFormData.Description,
         Cid: editData.Cid || prevFormData.Cid,
         Status: editData.Status || prevFormData.Status,
         CreateUID: editData.CreateUID || prevFormData.CreateUID,
         ModifyUID: editData.ModifyUID || prevFormData.ModifyUID,
-        Oid: editData.Oid || prevFormData.Oid
+        Oid: editData.Oid || prevFormData.Oid,
       }));
-  
-      // Fetch contact types based on customer type if CustomerTypeID is available
 
+      // Fetch contact types based on customer type if CustomerTypeID is available
     }
   }, [editData]);
+
+  useEffect(() => {
+    if (formData.CityID) {
+      axios
+        .get(
+          "https://apiforcorners.cubisysit.com/api/api-fetch-locationmaster.php",
+          {
+            params: { CityID: formData.CityID },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "Success") {
+            setLocalities(response.data.data);
+          }
+        })
+        .catch((error) => console.error("Error fetching localities:", error));
+    } else {
+      setLocalities([]);
+    }
+  }, [formData.CityID]);
 
   useEffect(() => {
     axios
@@ -130,7 +149,6 @@ const AddOpportunityDetails = ({ show, editData }) => {
         console.error("Error fetching data:", error);
       });
   }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,7 +175,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
           "https://apiforcorners.cubisysit.com/api/api-fetch-purpose.php"
         );
         const contactsRes = await axios.get(
-          "https://apiforcorners.cubisysit.com/api/api-fetch-contacts.php"
+          "https://apiforcorners.cubisysit.com/api/api-fetch-Cid.php"
         );
         const sourcesRes = await axios.get(
           "https://apiforcorners.cubisysit.com/api/api-fetch-source.php"
@@ -187,10 +205,12 @@ const AddOpportunityDetails = ({ show, editData }) => {
   const fetchDataOpportunity = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php');
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php"
+      );
       setRows(response.data.data || []);
     } catch (error) {
-      console.log('err');
+      console.log("err");
     } finally {
       setLoading(false);
     }
@@ -229,56 +249,75 @@ const AddOpportunityDetails = ({ show, editData }) => {
     return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
   };
 
-
-
   const validate = () => {
     let tempErrors = {};
     tempErrors.Cid = formData.Cid ? "" : "This field is required.";
-    tempErrors.LookingForID = formData.LookingForID ? "" : "This field is required.";
-    tempErrors.EstimatedbudgetID = formData.EstimatedbudgetID ? "" : "This field is required.";
+    tempErrors.LookingForID = formData.LookingForID
+      ? ""
+      : "This field is required.";
+    tempErrors.EstimatedbudgetID = formData.EstimatedbudgetID
+      ? ""
+      : "This field is required.";
     tempErrors.AreaFrom = formData.AreaFrom ? "" : "This field is required.";
     tempErrors.AreaTo = formData.AreaTo ? "" : "This field is required.";
     tempErrors.ScaleID = formData.ScaleID ? "" : "This field is required.";
     tempErrors.CityID = formData.CityID ? "" : "This field is required.";
-    tempErrors.LocationID = formData.LocationID ? "" : "This field is required.";
-    tempErrors.UnittypeID = formData.UnittypeID ? "" : "This field is required.";
-    tempErrors.PropertyAgeID = formData.PropertyAgeID ? "" : "This field is required.";
+    tempErrors.LocationID = formData.LocationID
+      ? ""
+      : "This field is required.";
+    tempErrors.UnittypeID = formData.UnittypeID
+      ? ""
+      : "This field is required.";
+    tempErrors.PropertyAgeID = formData.PropertyAgeID
+      ? ""
+      : "This field is required.";
     tempErrors.PurposeID = formData.PurposeID ? "" : "This field is required.";
-    tempErrors.ScheduleDate = formData.ScheduleDate ? "" : "This field is required.";
-    tempErrors.ScheduleTime = formData.ScheduleTime ? "" : "This field is required.";
+    tempErrors.ScheduleDate = formData.ScheduleDate
+      ? ""
+      : "This field is required.";
+    tempErrors.ScheduleTime = formData.ScheduleTime
+      ? ""
+      : "This field is required.";
     tempErrors.KeywordID = formData.KeywordID ? "" : "This field is required.";
     tempErrors.SourceID = formData.SourceID ? "" : "This field is required.";
-    tempErrors.SourceNameID = formData.SourceNameID ? "" : "This field is required.";
-    tempErrors.OpportunityAttendedByID = formData.OpportunityAttendedByID ? "" : "This field is required.";
-    tempErrors.Description = formData.Description ? "" : "This field is required.";
+    tempErrors.SourceNameID = formData.SourceNameID
+      ? ""
+      : "This field is required.";
+    tempErrors.OpportunityAttendedByID = formData.OpportunityAttendedByID
+      ? ""
+      : "This field is required.";
+    tempErrors.Description = formData.Description
+      ? ""
+      : "This field is required.";
 
     setErrors({ ...tempErrors });
     return Object.values(tempErrors).every((x) => x === "");
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-  
+
     const payload = createPayload();
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-opportunity.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunity.php";
-  
+
     try {
       const response = await axios.post(url, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       console.log("API Response:", response.data);
-  
+
       if (response.data.status === "Success") {
         setSubmitSuccess(true);
         setSubmitError(false);
         Swal.fire({
           icon: "success",
-          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
+          title: editData
+            ? "Data Updated Successfully"
+            : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -298,7 +337,6 @@ const AddOpportunityDetails = ({ show, editData }) => {
       });
     }
   };
-  
 
   const handleCloseSnackbar = () => {
     setSubmitError(false);
@@ -310,7 +348,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-            <Typography
+              <Typography
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
@@ -331,7 +369,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 >
                   {contacts.map((contact) => (
                     <MenuItem key={contact.Cid} value={contact.Cid}>
-                      {contact.CName ||"NA"}
+                      {contact.CName || "NA"}
                     </MenuItem>
                   ))}
                 </Select>
@@ -406,7 +444,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                       key={budget.EstimatedbudgetID}
                       value={budget.EstimatedbudgetID}
                     >
-                      {budget.EstimatedbudgetName ||"NA"}
+                      {budget.EstimatedbudgetName || "NA"}
                     </MenuItem>
                   ))}
                 </Select>
@@ -482,7 +520,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            {/* <Grid item xs={4}>
               <TextField
                 fullWidth
                 label="Location"
@@ -491,6 +529,27 @@ const AddOpportunityDetails = ({ show, editData }) => {
                   setFormData({ ...formData, LocationID: e.target.value })
                 }
               />
+            </Grid> */}
+
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Locality</InputLabel>
+                <Select
+                  name="LocationID"
+                  label="Locality"
+                  value={formData.LocationID}
+                  onChange={handleChange}
+                >
+                  {localities.map((locality) => (
+                    <MenuItem
+                      key={locality.LocationID}
+                      value={locality.LocationID}
+                    >
+                      {locality.LocationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={4}>
               <FormControl fullWidth>
@@ -629,11 +688,11 @@ const AddOpportunityDetails = ({ show, editData }) => {
                     })
                   }
                 >
-             {userMaster.map((bhk) => (
-                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
-                        {bhk.Name}
-                      </MenuItem>
-                    ))}
+                  {userMaster.map((bhk) => (
+                    <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                      {bhk.Name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -688,4 +747,3 @@ const AddOpportunityDetails = ({ show, editData }) => {
   );
 };
 export default AddOpportunityDetails;
-

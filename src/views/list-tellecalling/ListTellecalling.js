@@ -13,13 +13,25 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
+import {
+  Modal,
+  TextField,
+  IconButton,
+  Menu,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Swal from 'sweetalert2';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Swal from "sweetalert2";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
-const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
-
+import PhoneIcon from "@mui/icons-material/Phone";
+import ShareIcon from "@mui/icons-material/Share";
+import EmailIcon from "@mui/icons-material/Email";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -28,11 +40,8 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     NextFollowUpTime: "",
     Interest: "",
     Note: "",
-    CreateUID: cookies.amr?.UserID || 1,
-  }
-
-
-
+    CreateUID: cookies?.amr?.UserID || 1,
+  };
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
@@ -49,7 +58,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
 
   const handleCurrentUpdate = (event) => {
     setFormData({
@@ -73,12 +81,12 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
 
-
-
-
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
+  const whatsappText = encodeURIComponent(
+    `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
+  );
 
   const handleAddFollowUpClick = () => {
     handleDropdownClose();
@@ -128,32 +136,32 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Ensure item and Tid are available
     if (!item || !item.Tid) {
-      console.error('No valid item or Tid found.');
+      console.error("No valid item or Tid found.");
       return;
     }
-  
+
     // Add Tid to formData
     const formDataWithTid = {
       ...formData,
-      Tid: item.Tid
+      Tid: item.Tid,
     };
 
-    console.log(formDataWithTid , 'sdf');
-  
-    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
-  
+    console.log(formDataWithTid, "sdf");
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+
     try {
       const response = await axios.post(url, formDataWithTid, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(formDataWithTid ,  'sdf');
-      
-  
+      console.log(formDataWithTid, "sdf");
+
       if (response.data.status === "Success") {
         setFormData(intialName);
         setOpen(false);
@@ -161,18 +169,18 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
         setSubmitError(false);
         // Show success message using SweetAlert
         Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Follow-up details saved successfully.',
+          icon: "success",
+          title: "Success!",
+          text: "Follow-up details saved successfully.",
         });
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
         // Show error message using SweetAlert
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong! Please try again later.',
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
         });
       }
     } catch (error) {
@@ -181,17 +189,16 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
       setSubmitError(true);
       // Show error message using SweetAlert
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong! Please try again later.',
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
       });
     }
   };
-  
-  const handlenavigate =() => {
+
+  const handlenavigate = () => {
     window.location.href = "/opportunity/";
-  
-  }
+  };
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
     const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
@@ -236,8 +243,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
     }
   };
 
-
-
   return (
     <>
       <Grid
@@ -252,7 +257,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{
-            // Light gray background color
+              // Light gray background color
               color: "#333333", // Dark gray text color
               fontSize: "0.6rem",
               backgroundColor: "#f0f0f0",
@@ -272,7 +277,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             onClick={downloadCSV}
             startIcon={<GetAppIcon />}
             sx={{
-           
               color: "#333333",
               fontSize: "0.6rem",
               backgroundColor: "#f0f0f0",
@@ -287,24 +291,24 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Button>
         </Grid>
         <Grid item>
-      <Button
-        variant="contained"
-        startIcon={<ArrowForwardIosIcon />}
-        onClick={handlenavigate}
-        sx={{
-          color: "#333333",
-          backgroundColor: "#f0f0f0",
-          fontSize: "0.6rem",
-          minWidth: "auto",
-          minHeight: 20,
-          "&:hover": {
-            backgroundColor: "#dcdcdc",
-          },
-        }}
-      >
-        Opportunity
-      </Button>
-    </Grid>
+          <Button
+            variant="contained"
+            startIcon={<ArrowForwardIosIcon />}
+            onClick={handlenavigate}
+            sx={{
+              color: "#333333",
+              backgroundColor: "#f0f0f0",
+              fontSize: "0.6rem",
+              minWidth: "auto",
+              minHeight: 20,
+              "&:hover": {
+                backgroundColor: "#dcdcdc",
+              },
+            }}
+          >
+            Opportunity
+          </Button>
+        </Grid>
         <Grid item>
           <Button
             variant="contained"
@@ -312,7 +316,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             startIcon={<PersonAddIcon />}
             sx={{
               mr: 30,
-           
+
               color: "#333333",
               fontSize: "0.6rem",
               backgroundColor: "#f0f0f0",
@@ -361,7 +365,7 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             mt: 5,
             mx: 2,
             minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: 'auto', 
+            height: "auto",
           }}
         >
           <IconButton
@@ -381,8 +385,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
           </Typography>
 
           <Grid container spacing={2} mt={8}>
-     
-
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel>Current Update</InputLabel>
@@ -397,17 +399,18 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                       },
                     },
                   }}
-                  
                 >
                   {currentUpdate.map((bhk) => (
-                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
+                    <MenuItem
+                      key={bhk.CurrentUpdateID}
+                      value={bhk.CurrentUpdateID}
+                    >
                       {bhk.CurrentUpdateName}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-
 
             <Grid item xs={6}>
               <TextField
@@ -420,7 +423,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
               />
             </Grid>
             <Grid item xs={6}>
@@ -435,8 +437,6 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
-              
               />
             </Grid>
             <Grid item xs={6}>
@@ -491,11 +491,11 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-                  <Avatar
-                          alt="John Doe"
-                          sx={{ width: 60, height: 60, mr: 6 }}
-                          src="/images/avatars/1.png"
-                        />
+            <Avatar
+              alt="John Doe"
+              sx={{ width: 60, height: 60, mr: 6 }}
+              src="/images/avatars/1.png"
+            />
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"
@@ -509,19 +509,11 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
             </Box>
           </Box>
 
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 20,
-            }}
-          >
-            <div style={{ mr: 5 }}>
+          <Box sx={{ width: "100%", ml: 20 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
@@ -533,45 +525,41 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
+                  mr: 2, // Add margin-right to separate the items
                 }}
               >
                 Source Name: {item?.SourceName}
               </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
                   padding: "5px",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
+                  mr: 2, // Add margin-right to separate the items
                 }}
               >
                 Location: {item?.Location}
               </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
-               
                   color: "#333333",
                   fontSize: "0.7rem",
                   minWidth: "auto",
                   padding: "5px",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: 2,
                   minHeight: 20,
                   marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
                   "&:hover": {
                     backgroundColor: "#dcdcdc",
                   },
@@ -579,234 +567,341 @@ const ListTellecalling = ({ item, onDelete, onEdit , onHistoryClick }) => {
               >
                 Attended By: {item?.TelecallAttendedByName}
               </Typography>
-            </div>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
+              <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+                <IconButton
+                  aria-label="phone"
+                  size="small"
+                  sx={{
+                    color: "green",
+                    backgroundColor: "#e0f7fa",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    "&:hover": {
+                      backgroundColor: "#b2ebf2",
+                    },
+                  }}
+                >
+                  <PhoneIcon />
+                </IconButton>
+              </a>
+              <a style={{ marginRight: 10 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "blue",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </a>
+
+              <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+                <IconButton
+                  aria-label="email"
+                  size="small"
+                  sx={{
+                    color: "red",
+                    backgroundColor: "#ffebee",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    "&:hover": {
+                      backgroundColor: "#ffcdd2",
+                    },
+                  }}
+                >
+                  <EmailIcon />
+                </IconButton>
+              </a>
+              <a
+          href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <IconButton
+            aria-label="whatsapp"
+            size="small"
+            sx={{
+              color: "green",
+              backgroundColor: "#e8f5e9",
+              borderRadius: "50%",
+              padding: "10px",
+              "&:hover": {
+                backgroundColor: "#c8e6c9",
+              },
+            }}
+          >
+            <WhatsAppIcon />
+          </IconButton>
+        </a>
+            </Box>
           </Box>
 
           <Box
-      sx={{
-        width: "auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ml: 12,
-        mt: 15,
-      }}
-    >
-      <Grid container spacing={3}>
-        {/* Email */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
             sx={{
-              borderRadius: 1,
-              padding: "10px",
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ml: 12,
+              mt: 15,
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Email
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.Email}
-            </Typography>
-          </Card>
-        </Grid>
+            <Grid container spacing={3}>
+              {/* Email */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Email
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Email}
+                  </Typography>
+                </Card>
+              </Grid>
 
-        {/* Project Name */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
+              {/* Project Name */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Project Name
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.ProjectName}
+                  </Typography>
+                </Card>
+              </Grid>
+
+              {/* Unit Type */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Unit Type
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.UnittypeName}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box
             sx={{
-              borderRadius: 1,
-              padding: "10px",
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Project Name
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.ProjectName}
-            </Typography>
-          </Card>
-        </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
 
-        {/* Unit Type */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Estimated Budget
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.EstimatedbudgetName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Lead Status
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.leadstatusName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Next Follow-Up Date
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.NextFollowUpDate}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+          <Box
             sx={{
-              borderRadius: 1,
-              padding: "10px",
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
             }}
           >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Unit Type
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.UnittypeName}
-            </Typography>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
-    <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Estimated Budget
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.EstimatedbudgetName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Lead Status
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.leadstatusName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Next Follow-Up Date
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.NextFollowUpDate}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
 
-      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Source Description
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.SourceDescription}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Telecall Attended By
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.TelecallAttendedByName}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Alternate Mobile Number
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.AlternateMobileNo}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Created At
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.TelecallingCreateDate}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
 
-      {/* Comments */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Comments
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.Comments}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Telecall Attended By
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.TelecallAttendedByName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Alternate Mobile Number
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.AlternateMobileNo}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Comments */}
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Comments
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Comments}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
         </Paper>
       </Card>
     </>
