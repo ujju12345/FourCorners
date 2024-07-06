@@ -552,198 +552,41 @@ const AddcampaignDetails = ({ show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={
+                    <>
+                     Name 
+                    </>
+                  }
+                  type="text"
+                  name="Name"
+                  value={formData.Name}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                  }}
+                />
+                {errors.Name && (
+                  <Typography variant="caption" color="error">
+                    {errors.Name}
+                  </Typography>
+                )}
+              </Grid>
+
+             
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Title <RequiredIndicator />
+                    Campaign Type ID <RequiredIndicator />
                   </InputLabel>
                   <Select
-                    value={formData.titleprefixID}
-                    onChange={handleTitleChange}
-                    label="Title"
-                  >
-                    {titles.map((title) => (
-                      <MenuItem key={title.TitleID} value={title.TitleID}>
-                        {title.TitleName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.titleprefixID && (
-                    <Typography variant="caption" color="error">
-                      {errors.titleprefixID}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  {editData ? (
-                    // Display full name as a non-editable text when in edit mode
-                    <Box
-                      sx={{
-                        padding: "16px",
-                        border: "1px solid #ced4da",
-                        borderRadius: "4px",
-                        color: "rgba(0, 0, 0, 0.87)",
-                      }}
-                    >
-                      {formData.CName}
-                    </Box>
-                  ) : (
-                    // Display Select component when not in edit mode
-                    <>
-                      <InputLabel id="select-cname-label">Full name</InputLabel>
-                      <Select
-                        labelId="select-cname-label"
-                        id="select-cname"
-                        value={selectedCid}
-                        onChange={handleSelectChange}
-                      >
-                        {cNames.map((item) => (
-                          <MenuItem key={item.Cid} value={item.Cid}>
-                            {item.CName || ""}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </>
-                  )}
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Country Code <RequiredIndicator />
-                    </>
-                  }
-                  type="tel"
-                  name="Countrycode"
-                  value={formData.Countrycode}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                  }}
-                />
-                {errors.Countrycode && (
-                  <Typography variant="caption" color="error">
-                    {errors.Countrycode}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Mobile"
-                  name="Mobile"
-                  value={formData.Mobile || ""}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-                {/* Add error handling for Mobile if needed */}
-              </Grid>
-
-              {/* <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Mobile <RequiredIndicator />
-                    </>
-                  }
-                  type="tel"
-                  name="Mobile"
-                  value={formData.Mobile}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-                {errors.Mobile && (
-                  <Typography variant="caption" color="error">
-                    {errors.Mobile}
-                  </Typography>
-                )}
-              </Grid> */}
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Alternate Mobile Number"
-                  name="AlternateMobileNo"
-                  value={formData.AlternateMobileNo || ""}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-                {/* Add error handling for Alternate Mobile Number if needed */}
-              </Grid>
-
-              {/* <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  type="tel"
-                  name="AlternateMobileNo"
-                  label="Alternate Mobile Number"
-                  placeholder="Alternate Mobile Number"
-                  value={formData.AlternateMobileNo}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-              </Grid> */}
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="Email"
-                  value={formData.Email || ""}
-                  onChange={handleChange}
-                />
-                {/* Add error handling for Email if needed */}
-              </Grid>
-
-              {/* <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Email <RequiredIndicator />
-                    </>
-                  }
-                  name="Email"
-                  placeholder="E-Mail"
-                  value={formData.Email}
-                  onChange={handleChange}
-                />
-                {errors.Email && (
-                  <Typography variant="caption" color="error">
-                    {errors.Email}
-                  </Typography>
-                )}
-              </Grid> */}
-
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    Project Name <RequiredIndicator />
-                  </InputLabel>
-                  <Select
-                    value={formData.ProjectID}
-                    name="ProjectID"
+                    value={formData.campaigntypeID}
+                    name="campaigntypeID"
                     onChange={handleChange}
-                    label={<>Project Name</>}
+                    label={<>Campaign Type</>}
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -768,14 +611,14 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Unit Type <RequiredIndicator />
+                  Template ID <RequiredIndicator />
                   </InputLabel>
                   <Select
-                    value={formData.UnittypeID}
+                    value={formData.templateID}
                     onChange={handleBhkChange}
                     label={
                       <>
-                        Unit Type <RequiredIndicator />
+                        Template ID <RequiredIndicator />
                       </>
                     }
                   >
@@ -795,13 +638,13 @@ const AddcampaignDetails = ({ show, editData }) => {
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
-                  <InputLabel>Estimated Budget</InputLabel>
+                  <InputLabel>Customer Type ID</InputLabel>
                   <Select
-                    value={formData.EstimatedbudgetID}
+                    value={formData.CustomerTypeID}
                     onChange={handleEstimatedBudget}
                     label={
                       <>
-                        Estimated Budget <RequiredIndicator />
+                       Customer Type <RequiredIndicator />
                       </>
                     }
                   >
@@ -825,14 +668,14 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Lead Status <RequiredIndicator />
+                  Contact Type ID <RequiredIndicator />
                   </InputLabel>
                   <Select
-                    value={formData.leadstatusID}
+                    value={formData.ContactTypeID}
                     onChange={handleLeadStatus}
                     label={
                       <>
-                        Lead Status <RequiredIndicator />
+                        Contact Type <RequiredIndicator />
                       </>
                     }
                   >
@@ -854,24 +697,159 @@ const AddcampaignDetails = ({ show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Location <RequiredIndicator />
-                    </>
+                <FormControl fullWidth>
+                  <InputLabel>
+                  User ID <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.UserID}
+                    onChange={handleLeadStatus}
+                    label={
+                      <>
+                        User ID <RequiredIndicator />
+                      </>
+                    }
+                  >
+                    {leadStatus.map((project) => (
+                      <MenuItem
+                        key={project.leadstatusID}
+                        value={project.leadstatusID}
+                      >
+                        {project.leadstatusName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.leadstatusID && (
+                    <Typography variant="caption" color="error">
+                      {errors.leadstatusID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+           
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                  Submitted ID <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.SubmittedID}
+                    onChange={handleSource}
+                    label="Submitted To"
+                  >
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.SourceID && (
+                    <Typography variant="caption" color="error">
+                      {errors.SourceID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.FromDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                          From Date <RequiredIndicator />
+                        </>
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
                   }
-                  name="Location"
-                  placeholder="Location"
-                  value={formData.Location}
-                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.ToDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                         To Date <RequiredIndicator />
+                        </>
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
                 />
               </Grid>
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Source <RequiredIndicator />
+                  City ID <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.CityID}
+                    onChange={handleSource}
+                    label="City"
+                  >
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.SourceID && (
+                    <Typography variant="caption" color="error">
+                      {errors.SourceID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                  Location ID <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.LocationID}
+                    onChange={handleSource}
+                    label="Location"
+                  >
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.SourceID && (
+                    <Typography variant="caption" color="error">
+                      {errors.SourceID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                  Source ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.SourceID}
@@ -893,136 +871,67 @@ const AddcampaignDetails = ({ show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Source Name <RequiredIndicator />
-                    </>
-                  }
-                  name="SourceName"
-                  placeholder="Source Name"
-                  value={formData.SourceName}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label="Source Description"
-                placeholder="Source Description"
-                name="SourceDescription"
-                value={formData.SourceDescription}
-                onChange={handleChange}
-              />
-            </Grid> */}
-
-              <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Telecall Attended By
-                    <RequiredIndicator />
+                  Source Type ID <RequiredIndicator />
                   </InputLabel>
                   <Select
-                    value={formData.TelecallAttendedByID}
-                    onChange={handleTelecaller}
-                    label="Telecall Attended By"
+                    value={formData.SourceTypeID}
+                    onChange={handleSource}
+                    label="Source Type"
                   >
-                    {userMaster.map((bhk) => (
-                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
-                        {bhk.Name}
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.TelecallAttendedByID && (
+                  {errors.SourceID && (
                     <Typography variant="caption" color="error">
-                      {errors.TelecallAttendedByID}
+                      {errors.SourceID}
                     </Typography>
                   )}
                 </FormControl>
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <DatePicker
-                  selected={formData.NextFollowUpDate}
-                  onChange={handleDateChange}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label={
-                        <>
-                          Next follow up-date <RequiredIndicator />
-                        </>
-                      }
-                      InputProps={{
-                        readOnly: true,
-                        sx: { width: "100%" },
-                      }}
-                    />
-                  }
-                />
+                <FormControl fullWidth>
+                  <InputLabel>
+                  Schedule ID <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={formData.ScheduleID}
+                    onChange={handleSource}
+                    label="Schedule"
+                  >
+                    {source.map((bhk) => (
+                      <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+                        {bhk.SourceName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.SourceID && (
+                    <Typography variant="caption" color="error">
+                      {errors.SourceID}
+                    </Typography>
+                  )}
+                </FormControl>
               </Grid>
-              <Grid item xs={8} sm={4}>
+
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={
                     <>
-                      Next Follow Up-Time <RequiredIndicator />
+                      Create UID <RequiredIndicator />
                     </>
                   }
-                  type="time"
-                  name="NextFollowUpTime"
-                  value={formData.NextFollowUpTime}
-                  onChange={handleChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 minute intervals
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Comment"
-                  name="Comments"
-                  placeholder="Comment"
-                  value={formData.Comments}
+                  name="Create UID"
+                  placeholder="Create UID"
+                  value={formData.CreateUID}
                   onChange={handleChange}
                 />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    Notification Preferences
-                  </FormLabel>
-                  <RadioGroup
-                    aria-label="notification"
-                    name="notification"
-                    value={
-                      formData.SmsNotification === 1 ? "sms" : "notification"
-                    }
-                    onChange={handleNotificationChange}
-                  >
-                    <FormControlLabel
-                      value="sms"
-                      control={<Radio />}
-                      label="Send on SMS"
-                    />
-                    <FormControlLabel
-                      value="notification"
-                      control={<Radio />}
-                      label="Send on Notification"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <Button
