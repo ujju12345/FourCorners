@@ -238,142 +238,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
         </Grid>
      
       </Grid>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            minWidth: 500,
-            maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
-            mt: 5,
-            mx: 2,
-            minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: 'auto', 
-          }}
-        >
-          <IconButton
-            aria-label="cancel"
-            onClick={handleClose}
-            sx={{ position: "absolute", top: 6, right: 10 }}
-          >
-            <CancelIcon sx={{ color: "red" }} />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h7"
-            component="h3"
-            gutterBottom
-          >
-            Select Next Follow-Up Date and Time
-          </Typography>
-
-          <Grid container spacing={2} mt={8}>
      
-
-            <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel>Current Update</InputLabel>
-                <Select
-                  value={formData.CurrentUpdateID}
-                  onChange={handleCurrentUpdate}
-                  label="Current Update"
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 180, // Adjust as needed
-                      },
-                    },
-                  }}
-                  
-                >
-                  {currentUpdate.map((bhk) => (
-                    <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
-                      {bhk.CurrentUpdateName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-               
-                type="date"
-                name="NextFollowUpDate"
-                value={formData.NextFollowUpDate}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-          
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                // label="Next Follow-Up Time"
-                // placeholder=""
-                type="time"
-                name="NextFollowUpTime"
-                value={formData.NextFollowUpTime}
-                onChange={handleChange}
-              
-                InputLabelProps={{ sx: { mb: 1 } }}
-              
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Interest In"
-                type="text"
-                name="Interest"
-                value={formData.Interest}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Note"
-                type="text"
-                name="Note"
-                value={formData.Note}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
-              />
-            </Grid>
-          </Grid>
-
-          <Box sx={{ textAlign: "left" }}>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                sx={{
-                  marginRight: 3.5,
-                  marginTop: 15,
-                  backgroundColor: "#9155FD",
-                  color: "#FFFFFF",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Box>
-        </Box>
-      </Modal>
       <Card sx={{}}>
         <Paper sx={{ padding: 5 }}>
           <Box
@@ -397,7 +262,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
                 {item?.ProjectName}
               </Typography>
               <Typography sx={{ fontSize: "0.8rem" }}>
-                Project Code : {item?.ProjectCode}
+                Created By  : {item?.Name}
               </Typography>
             </Box>
           </Box>
@@ -410,69 +275,6 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               ml: 20,
             }}
           >
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-             Project Manager: {item?.ProjectManager}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-               Project Start Date : {item?.projectstartdate}
-              </Typography>
-            </div>
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-               
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  backgroundColor: "#f0f0f0",
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Completion Date :  {item?.completiondate}
-              </Typography>
-            </div>
           </Box>
 
           <Box
@@ -487,22 +289,7 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
     >
       <Grid container spacing={3}>
         {/* Email */}
-        <Grid item xs={4}>
-          <Card
-            variant="outlined" // Use outlined variant for a border without shadow
-            sx={{
-              borderRadius: 1,
-              padding: "10px",
-            }}
-          >
-            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Project Code
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.ProjectCode}
-            </Typography>
-          </Card>
-        </Grid>
+       
 
         {/* Project Name */}
         <Grid item xs={4}>
@@ -514,10 +301,10 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Location
+              Company Name
             </Typography>
             <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.Location}
+              {item?.CompanyName}
             </Typography>
           </Card>
         </Grid>
@@ -532,174 +319,31 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-             Possession Date
+             Created By 
             </Typography>
             <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-              {item?.possessiondate}
+              {item?.Name}
+            </Typography>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card
+            variant="outlined" // Use outlined variant for a border without shadow
+            sx={{
+              borderRadius: 1,
+              padding: "10px",
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
+             Created At 
+            </Typography>
+            <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+              {item?.CreateDate}
             </Typography>
           </Card>
         </Grid>
       </Grid>
     </Box>
-    <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Video Link 
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.video}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-                Landmark
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.landmark}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-            City Name
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.CityName}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              ReraRegistratio Number
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.ReraRegistrationNumber}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Plot Area In Sqft
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.PlotAreaInSqft}
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Virtual Video Link
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.virtualvideo}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Comments */}
-      <Box
-        sx={{
-          width: "auto",
-          display: "flex",
-          alignItems: "center",
-          ml: 12,
-          mt: 12,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Card
-              variant="outlined" // Use outlined variant for a border without shadow
-              sx={{
-                borderRadius: 1,
-             
-                padding: "10px",
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "0.8rem" }}>
-              Welcome Message
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                {item?.WelcomeMessage}
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
         </Paper>
       </Card>
     </>
