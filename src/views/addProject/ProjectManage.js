@@ -323,211 +323,274 @@ const ProjectManage = ({ show, editData }) => {
 
   if (loading) return <p> Loading... </p>;
 
-  return (
-    <Card>
-      <CardContent>
-        <Box>
-          <Typography
-            variant="body2"
-            sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-          >
-            {editData ? "Edit Project Master" : "Add Project Master"}
-          </Typography>
-        </Box>
-        <Box>
-          <form style={{ marginTop: "30px" }} onSubmit={handleSubmitData}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Project Name"
-                  name="ProjectName"
-                  value={formData.ProjectName}
-                  onChange={handleInputChange}
-                />
-                {errors.ProjectName && (
-                  <Alert severity="error">{errors.ProjectName}</Alert>
-                )}
-              </Grid>
+    return (
+      <Card>
+        <CardContent>
+          <Box>
+            <Typography
+              variant="body2"
+              sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+            >
+              {editData ? "Edit Project Master" : "Add Project Master"}
+            </Typography>
+          </Box>
+          <Box>
+            <form style={{ marginTop: "30px" }} onSubmit={handleSubmitData}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <DatePicker
+                    selected={formData.projectstartdate}
+                    onChange={(date) =>
+                      handleDateChange(date, "projectstartdate")
+                    }
+                    dateFormat="dd-MM-yyyy"
+                    className="form-control"
+                    customInput={
+                      <TextField
+                        fullWidth
+                        label="Launch date"
+                        value={
+                          formData.projectstartdate
+                            ? formData.projectstartdate.toLocaleDateString()
+                            : ""
+                        }
+                        InputProps={{ readOnly: true, sx: { width: "100%" } }}
+                      />
+                    }
+                  />
+                </Grid>
 
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Project Code"
-                  name="ProjectCode"
-                  value={formData.ProjectCode}
-                  onChange={handleInputChange}
-                />
-                {errors.ProjectCode && (
-                  <Alert severity="error">{errors.ProjectCode}</Alert>
-                )}
-              </Grid>
+                <Grid item xs={12} md={4}>
+                  <DatePicker
+                    selected={formData.completiondate}
+                    onChange={(date) =>
+                      handleDateChange(date, "completiondate")
+                    }
+                    dateFormat="dd-MM-yyyy"
+                    className="form-control"
+                    customInput={
+                      <TextField
+                        fullWidth
+                        label="Completion date"
+                        value={
+                          formData.completiondate
+                            ? formData.completiondate.toLocaleDateString()
+                            : ""
+                        }
+                        InputProps={{ readOnly: true, sx: { width: "100%" } }}
+                      />
+                    }
+                  />
+                </Grid>
 
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Project Manager"
-                  name="ProjectManager"
-                  value={formData.ProjectManager}
-                  onChange={handleInputChange}
-                />
-              </Grid>
+                <Grid item xs={12} md={4}>
+                  <DatePicker
+                    selected={formData.possessiondate}
+                    onChange={(date) =>
+                      handleDateChange(date, "possessiondate")
+                    }
+                    dateFormat="dd-MM-yyyy"
+                    className="form-control"
+                    customInput={
+                      <TextField
+                        fullWidth
+                        label="Possession date"
+                        value={
+                          formData.possessiondate
+                            ? formData.possessiondate.toLocaleDateString()
+                            : ""
+                        }
+                        InputProps={{ readOnly: true, sx: { width: "100%" } }}
+                      />
+                    }
+                  />
+                </Grid>
 
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="RERA Registration Number"
-                  name="ReraRegistrationNumber"
-                  value={formData.ReraRegistrationNumber}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Project Area"
-                  name="PlotAreaInSqft"
-                  value={formData.PlotAreaInSqft}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Transaction Type</InputLabel>
-                  <Select
-                    name="ProjectTypeID"
-                    label="Transaction Type"
-                    value={formData.ProjectTypeID}
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Project Name"
+                    name="ProjectName"
+                    value={formData.ProjectName}
                     onChange={handleInputChange}
-                  >
-                    {projectTypes.map((projectType) => (
-                      <MenuItem
-                        key={projectType.transactionID}
-                        value={projectType.transactionID}
-                      >
-                        {projectType.transactionName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Approved By"
-                  name="approvedby"
-                  value={formData.approvedby}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Specification"
-                  name="specification"
-                  value={formData.specification}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Website Keyword"
-                  name="keyword"
-                  value={formData.keyword}
-                  onChange={handleInputChange}
-                />
-                {errors.Pincode && (
-                  <Alert severity="error">{errors.Pincode}</Alert>
-                )}
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Project Address"
-                  name="ProjectAddress"
-                  value={formData.ProjectAddress}
-                  onChange={handleInputChange}
-                />
-                {errors.ProjectAddress && (
-                  <Alert severity="error">{errors.ProjectAddress}</Alert>
-                )}
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Assigned By</InputLabel>
-                  <Select
-                    value={formData.assignebyID}
-                    onChange={handleTelecaller}
-                    label="Assign By"
-                  >
-                    {userMaster.map((bhk) => (
-                      <MenuItem key={bhk.UserID} value={bhk.UserID}>
-                        {bhk.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Landmark"
-                  name="landmark"
-                  value={formData.landmark}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>City</InputLabel>
-                  <Select
-                    name="cityID"
-                    label="City"
-                    value={formData.cityID}
-                    onChange={handleInputChange}
-                  >
-                    {cities.map((city) => (
-                      <MenuItem key={city.CityID} value={city.CityID}>
-                        {city.CityName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.cityID && (
-                    <Alert severity="error">{errors.cityID}</Alert>
+                  />
+                  {errors.ProjectName && (
+                    <Alert severity="error">{errors.ProjectName}</Alert>
                   )}
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Locality</InputLabel>
-                  <Select
-                    name="Location"
-                    label="Locality"
-                    value={formData.Location}
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Project Code"
+                    name="ProjectCode"
+                    value={formData.ProjectCode}
                     onChange={handleInputChange}
-                  >
-                    {localities.map((locality) => (
-                      <MenuItem
-                        key={locality.LocationID}
-                        value={locality.LocationID}
-                      >
-                        {locality.LocationName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              {/* <Grid item xs={12} md={4}>
+                  />
+                  {errors.ProjectCode && (
+                    <Alert severity="error">{errors.ProjectCode}</Alert>
+                  )}
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Project Manager"
+                    name="ProjectManager"
+                    value={formData.ProjectManager}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="RERA Registration Number"
+                    name="ReraRegistrationNumber"
+                    value={formData.ReraRegistrationNumber}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Project Area"
+                    name="PlotAreaInSqft"
+                    value={formData.PlotAreaInSqft}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>Transaction Type</InputLabel>
+                    <Select
+                      name="ProjectTypeID"
+                      label="Transaction Type"
+                      value={formData.ProjectTypeID}
+                      onChange={handleInputChange}
+                    >
+                      {projectTypes.map((projectType) => (
+                        <MenuItem
+                          key={projectType.transactionID}
+                          value={projectType.transactionID}
+                        >
+                          {projectType.transactionName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Approved By"
+                    name="approvedby"
+                    value={formData.approvedby}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Specification"
+                    name="specification"
+                    value={formData.specification}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>Amenities</InputLabel>
+                    <Select
+                      multiple
+                      value={formData.amenitiesIDs} // Ensure amenitiesIDs is an array
+                      onChange={handleAmenitiesChange}
+                      input={<Input />}
+                      renderValue={(selected) => (
+                        <div style={{ display: "flex", flexWrap: "wrap" }}>
+                          {selected.map((value) => (
+                            <div key={value} style={{ marginRight: "0.5rem" }}>
+                              <Chip
+                                label={
+                                  amenities.find(
+                                    (amenity) => amenity.amenitiesID === value
+                                  )?.amenitiesName || value
+                                }
+                                onDelete={(event) => handleDelete(event, value)}
+                                onMouseDown={(event) => {
+                                  // Prevent the dropdown from opening when clicking the delete button
+                                  event.stopPropagation();
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    >
+                      {amenities.map((amenity) => (
+                        <MenuItem
+                          key={amenity.amenitiesID}
+                          value={amenity.amenitiesID}
+                        >
+                          {amenity.amenitiesName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Video Link"
+                    name="video"
+                    value={formData.video}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Virtual Video Link"
+                    name="virtualvideo"
+                    value={formData.virtualvideo}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Website Keyword"
+                    name="keyword"
+                    value={formData.keyword}
+                    onChange={handleInputChange}
+                  />
+                  {errors.Pincode && (
+                    <Alert severity="error">{errors.Pincode}</Alert>
+                  )}
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Project Address"
+                    name="ProjectAddress"
+                    value={formData.ProjectAddress}
+                    onChange={handleInputChange}
+                  />
+                  {errors.ProjectAddress && (
+                    <Alert severity="error">{errors.ProjectAddress}</Alert>
+                  )}
+                </Grid>
+
+                <Grid item xs={12} md={4}>
                   <TextField
                     fullWidth
                     label="Pincode"
@@ -538,286 +601,105 @@ const ProjectManage = ({ show, editData }) => {
                   {errors.Pincode && (
                     <Alert severity="error">{errors.Pincode}</Alert>
                   )}
-                </Grid> */}
+                </Grid>
 
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Pincode</InputLabel>
-                  <Select
-                    name="Pincode"
-                    label="Pincode"
-                    value={formData.Pincode}
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>Assigned By</InputLabel>
+                    <Select
+                      value={formData.assignebyID}
+                      onChange={handleTelecaller}
+                      label="Assign By"
+                    >
+                      {userMaster.map((bhk) => (
+                        <MenuItem key={bhk.UserID} value={bhk.UserID}>
+                          {bhk.Name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Locality"
+                    name="Location"
+                    value={formData.Location}
                     onChange={handleInputChange}
-                  >
-                    {pincodes.map((pincode) => (
-                      <MenuItem
-                        key={pincode.pincodeID}
-                        value={pincode.pincodeID}
-                      >
-                        {pincode.pincodename}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                  />
+                </Grid>
 
-              <Grid item xs={12} md={4}>
-                <DatePicker
-                  selected={formData.projectstartdate}
-                  onChange={(date) =>
-                    handleDateChange(date, "projectstartdate")
-                  }
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label="Launch date"
-                      value={
-                        formData.projectstartdate
-                          ? formData.projectstartdate.toLocaleDateString()
-                          : ""
-                      }
-                      InputProps={{ readOnly: true, sx: { width: "100%" } }}
-                    />
-                  }
-                />
-              </Grid>
-
-              <Grid item xs={6}>
-                <DatePicker
-                  selected={formData.completiondate}
-                  onChange={(date) => handleDateChange(date, "completiondate")}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label="Completion date"
-                      value={
-                        formData.completiondate
-                          ? formData.completiondate.toLocaleDateString()
-                          : ""
-                      }
-                      InputProps={{ readOnly: true, sx: { width: "100%" } }}
-                    />
-                  }
-                />
-              </Grid>
-
-
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Possession</InputLabel>
-                  <Select
-                    name="Possession"
-                    label="Possession"
-                    value={formData.Possession}
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Landmark"
+                    name="landmark"
+                    value={formData.landmark}
                     onChange={handleInputChange}
-                  >
-                    {pincodes.map((pincode) => (
-                      <MenuItem
-                        key={pincode.pincodeID}
-                        value={pincode.pincodeID}
-                      >
-                        {pincode.pincodename}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                  />
+                </Grid>
 
-              <Grid item xs={6}>
-                <DatePicker
-                  selected={formData.possessiondate}
-                  onChange={(date) => handleDateChange(date, "possessiondate")}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label="Possession date"
-                      value={
-                        formData.possessiondate
-                          ? formData.possessiondate.toLocaleDateString()
-                          : ""
-                      }
-                      InputProps={{ readOnly: true, sx: { width: "100%" } }}
-                    />
-                  }
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel>Amenities</InputLabel>
-                  <Select
-                    multiple
-                    value={formData.amenitiesIDs} // Ensure amenitiesIDs is an array
-                    onChange={handleAmenitiesChange}
-                    input={<Input />}
-                    renderValue={(selected) => (
-                      <div style={{ display: "flex", flexWrap: "wrap" }}>
-                        {selected.map((value) => (
-                          <div key={value} style={{ marginRight: "0.5rem" }}>
-                            <Chip
-                              label={
-                                amenities.find(
-                                  (amenity) => amenity.amenitiesID === value
-                                )?.amenitiesName || value
-                              }
-                              onDelete={(event) => handleDelete(event, value)}
-                              onMouseDown={(event) => {
-                                // Prevent the dropdown from opening when clicking the delete button
-                                event.stopPropagation();
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>City</InputLabel>
+                    <Select
+                      name="cityID"
+                      label="City"
+                      value={formData.cityID}
+                      onChange={handleInputChange}
+                    >
+                      {cities.map((city) => (
+                        <MenuItem key={city.CityID} value={city.CityID}>
+                          {city.CityName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.cityID && (
+                      <Alert severity="error">{errors.cityID}</Alert>
                     )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Remarks"
+                    name="WelcomeMessage"
+                    value={formData.WelcomeMessage}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
                   >
-                    {amenities.map((amenity) => (
-                      <MenuItem
-                        key={amenity.amenitiesID}
-                        value={amenity.amenitiesID}
-                      >
-                        {amenity.amenitiesName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                    {editData ? "Update Project" : "Create Project"}
+                  </Button>
+                </Grid>
 
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Instagram Link"
-                  name="instagram"
-                  value={formData.instagram}
-                  onChange={handleInputChange}
-                  placeholder="Instagram link"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <InstagramIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                <Grid item xs={12}>
+                  {submitSuccess && (
+                    <Alert severity="success">
+                      Project submitted successfully!
+                    </Alert>
+                  )}
+                  {submitError && (
+                    <Alert severity="error">
+                      Error submitting project. Please try again.
+                    </Alert>
+                  )}
+                </Grid>
               </Grid>
-
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Facebook Link"
-                  name="facebook"
-                  value={formData.facebook}
-                  onChange={handleInputChange}
-                  placeholder="Facebook link"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FacebookIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Website Link"
-                  name="website"
-                  value={formData.website}
-                  onChange={handleInputChange}
-                  placeholder="Website link"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LanguageIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Video Link"
-                  name="video"
-                  value={formData.video}
-                  onChange={handleInputChange}
-                  placeholder="YouTube link"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <YouTubeIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Virtual Video Link"
-                  name="virtualvideo"
-                  value={formData.virtualvideo}
-                  onChange={handleInputChange}
-                  placeholder="YouTube link"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <YouTubeIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Remarks"
-                  name="WelcomeMessage"
-                  value={formData.WelcomeMessage}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  {editData ? "Update Project" : "Create Project"}
-                </Button>
-              </Grid>
-
-              <Grid item xs={12}>
-                {submitSuccess && (
-                  <Alert severity="success">
-                    Project submitted successfully!
-                  </Alert>
-                )}
-                {submitError && (
-                  <Alert severity="error">
-                    Error submitting project. Please try again.
-                  </Alert>
-                )}
-              </Grid>
-            </Grid>
-          </form>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+            </form>
+          </Box>
+        </CardContent>
+      </Card>
+    );
 };
 
 export default ProjectManage;

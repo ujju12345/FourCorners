@@ -29,8 +29,7 @@ const navigation = () => {
       icon: HomeOutline,
       path: "/",
     },
-   
-  
+
     {
       sectionTitle: "User Interface",
     },
@@ -91,7 +90,7 @@ const navigation = () => {
       title: "Lead",
       icon: PhoneIcon,
       path: "/tellcalling-details",
-      children:[
+      children: [
         {
           title: "All Lead",
           icon: CubeOutlineIcon,
@@ -122,15 +121,14 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/tellcalling-details/NotInterested",
         },
-      ]
+      ],
     },
-   
-  
+
     {
       title: "Opportunity",
       icon: TrendingUpIcon,
       path: "/opportunity",
-      children:[
+      children: [
         {
           title: "All Opportunity",
           icon: CubeOutlineIcon,
@@ -161,10 +159,8 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/opportunity/NotInterested",
         },
-      ]
+      ],
     },
-
-   
 
     {
       sectionTitle: "Enquiries",
@@ -178,6 +174,14 @@ const navigation = () => {
       title: "Enquiry Source",
       icon: LanguageIcon,
       path: "/enquiry-source",
+    },
+    {
+      sectionTitle: "Campaign",
+    },
+    {
+      title: "Campaign Manager",
+      icon: LanguageIcon,
+      path: "/campaign",
     },
     {
       sectionTitle: "Sales",

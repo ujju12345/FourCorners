@@ -17,6 +17,7 @@ import VerticalAppBarContent from './components/vertical/AppBarContent'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import TelecallerNavigation from 'src/navigation/TelecallerNavigation'
 import { useCookies } from 'react-cookie'
+import SalesManagerNavigation from 'src/navigation/SalesManagerNavigation'
 
 const UserLayout = ({ children }) => {
   // ** Hooks
@@ -52,7 +53,7 @@ const UserLayout = ({ children }) => {
       hidden={hidden}
       settings={settings}
       saveSettings={saveSettings}
-      verticalNavItems={roleName==='Telecaller' ? TelecallerNavigation() : VerticalNavItems()} // Navigation Items
+      verticalNavItems={roleName==='Telecaller' ? TelecallerNavigation() : roleName==='Sales Manager' ? SalesManagerNavigation() : VerticalNavItems()} // Navigation Items
       // afterVerticalNavMenuContent={UpgradeToProImg}
       verticalAppBarContent={(
         props // AppBar Content
