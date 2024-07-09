@@ -170,6 +170,11 @@ const navigation = () => {
       sectionTitle: "Enquiries",
     },
     {
+      icon: CubeOutlineIcon,
+      title: "Template",
+      path: "/template",
+    },
+    {
       title: "Enquiry Source",
       icon: LanguageIcon,
       path: "/enquiry-source",
