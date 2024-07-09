@@ -321,7 +321,7 @@ const TabAccount = ({ show }) => {
         </Typography>
         <Button
           variant="contained"
-          onClick={handleNavigation}
+          // onClick={handleNavigation}
           style={{ marginTop: 0 }}
         >
           List

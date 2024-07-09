@@ -164,7 +164,7 @@ const NotInterested = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
   const [cookies, setCookie] = useCookies(["amr"]);
-
+  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     
@@ -173,11 +173,11 @@ const NotInterested = () => {
   }, []);
 
   const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
+
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php");
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);

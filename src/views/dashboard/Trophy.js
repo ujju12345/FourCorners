@@ -4,6 +4,8 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { styled, useTheme } from '@mui/material/styles'
+import { useCookies } from "react-cookie";
+
 
 // Styled component for the triangle shaped background image
 const TriangleImg = styled('img')({
@@ -25,13 +27,15 @@ const Trophy = () => {
   // ** Hook
   const theme = useTheme()
   const imageSrc = theme.palette.mode === 'light' ? 'triangle-light.png' : 'triangle-dark.png'
+  const [cookies] = useCookies(["amr"]);
+  const userName = cookies.amr?.FullName || "User";
 
   return (
     <Card sx={{ position: 'relative' }}>
       <CardContent>
-        <Typography variant='h6'>Congratulations John! 🥳</Typography>
+        <Typography variant='h6'>Congratulations {userName}! 🥳</Typography>
         <Typography variant='body2' sx={{ letterSpacing: '0.25px' }}>
-          Best seller of the month
+          Have a Great day !
         </Typography>
         <Typography variant='h5' sx={{ my: 4, color: 'primary.main' }}>
           $42.8k

@@ -21,6 +21,8 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useCookies } from "react-cookie";
+
 import CancelIcon from '@mui/icons-material/Cancel';
 import OpenLeadSidebar from 'src/views/TellecallingSidebar/OpenLead/OpenLeadSidebar';
 import ListOpenLead from 'src/views/list-tellecalling/OpenLead/ListOpenLead';
@@ -160,7 +162,8 @@ const OpenOpportunity = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
-
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -169,7 +172,7 @@ const OpenOpportunity = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-opportunityopenlead.php');
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunityopenlead.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);

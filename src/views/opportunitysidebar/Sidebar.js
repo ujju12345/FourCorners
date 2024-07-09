@@ -34,6 +34,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
+import { useCookies } from "react-cookie";
 
 
 const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
@@ -49,6 +50,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
@@ -57,7 +60,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php"
+        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -282,7 +285,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -290,7 +293,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
               sx={{ color: "grey" }}
             >
               <MoreVertIcon />
-            </IconButton>
+            </IconButton> */}
             <Popover
               id="menu"
               anchorEl={anchorElDots}

@@ -55,6 +55,8 @@
     "@mui/icons-material": "^5.15.18",
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.9.3",
+    "@mui/x-data-grid-generator": "^7.9.0",
+    "@mui/x-data-grid-pro": "^7.9.0",
     "@popperjs/core": "^2.11.2",
     "apexcharts-clevision": "3.28.5",
     "axios": "^1.7.2",

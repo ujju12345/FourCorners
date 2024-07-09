@@ -22,6 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Chip } from '@mui/material';
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useCookies } from "react-cookie";
 import GetAppIcon from "@mui/icons-material/GetApp";
 
 const BacklogSidebar = ({ onItemClick, onCreate }) => {
@@ -33,7 +34,8 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
-
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -41,7 +43,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php",
+        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php?UserID=${userid}`,
 
       );
       console.log("API Response:", response.data);
@@ -222,7 +224,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -248,7 +250,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
               <MenuItem onClick={handleDownload}>
                 Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>

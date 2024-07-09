@@ -22,6 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import { Chip } from '@mui/material';
+import { useCookies } from "react-cookie";
 
 const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -32,7 +33,8 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
-
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -40,7 +42,7 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunitymylead.php",
+        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitymylead.php?UserID=${userid}`,
     
       );
       console.log("API Response:", response.data);
@@ -221,7 +223,7 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -247,7 +249,7 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
               <MenuItem onClick={handleDownload}>
                 Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>

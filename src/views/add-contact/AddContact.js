@@ -28,7 +28,7 @@ import {
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 
-const AddContact = ({ show, editData }) => {
+const AddContact = ({ show, editData  , onDashboardClick}) => {
   console.log(editData , 'Edit data aaya contact ka');
   const initialFormData = {
     TitleID: "",
@@ -384,6 +384,12 @@ const AddContact = ({ show, editData }) => {
   };
 
 
+
+  const handleNavigation = () => {
+    setShowDashboard(true);
+  };
+
+
   const handleLeadStatus = (event) => {
     setFormData({
       ...formData,
@@ -603,20 +609,25 @@ const handleSubmit = async (event) => {
    
       <CardContent>
         <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-          
-          <Box>
-            <Typography
-              variant="body2"
-              sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
-            >
-              {editData
+
+
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: 'bold', fontSize: 20 }}
+        >
+          {editData
                 ? "Edit Contact Details"
                 : "Add Contact Details"}
-            </Typography>
-
-            
-        
-          </Box>
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={onDashboardClick}
+          style={{ marginTop: 0 }}
+        >
+          Dashboard
+        </Button>
+      </Box>
         </Grid>
         <form style={{ marginTop: "50px" }}>
           <Grid container spacing={7}>

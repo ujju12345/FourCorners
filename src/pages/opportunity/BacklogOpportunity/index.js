@@ -25,6 +25,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useCookies } from "react-cookie";
+
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -176,7 +178,8 @@ const BacklogOpportunity = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
-
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -186,7 +189,7 @@ const BacklogOpportunity = () => {
     setError(null);
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php"
+       `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php?UserID=${userid}`
       );
       setRows(response.data.data || []);
     } catch (error) {
