@@ -41,6 +41,14 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Pie } from "react-chartjs-2";
+ChartJS.register(ArcElement, Tooltip, Legend);
 const Dashboard = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -59,10 +67,7 @@ const Dashboard = () => {
   const [modalOpenContact, setModalOpenContact] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
 
-
   const [selectedTelecaller, setSelectedTelecaller] = useState(null);
-
-
 
   const userName = cookies.amr?.FullName || "User";
 
@@ -139,14 +144,17 @@ const Dashboard = () => {
   };
 
   const fetchDataForModalContact = async (Cid) => {
-    console.log('CID AAYA' , Cid);
-    console.log('press');
+    console.log("CID AAYA", Cid);
+    console.log("press");
     try {
       const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${Cid}`;
       const response = await axios.get(apiUrl);
 
       if (response.data.status === "Success") {
-        console.log(response.data.data, "Single telecalling data fetched for cotact");
+        console.log(
+          response.data.data,
+          "Single telecalling data fetched for cotact"
+        );
         setSelectedContact(response.data.data);
         setModalOpenContact(true);
       }
@@ -163,6 +171,27 @@ const Dashboard = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const pieData = {
+    labels: ["Telecalling", "Contacts", "Not Interested"],
+    datasets: [
+      {
+        data: [
+          telecallingData?.data?.telecallingCount || 0,
+          telecallingData?.data?.contactsCount || 0,
+          0, // Adjust this value as needed for "Not Interested"
+        ],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+      },
+    ],
+  };
+  
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+  
 
   return (
     <ApexChartWrapper>
@@ -248,58 +277,73 @@ const Dashboard = () => {
               </Card>
 
               {telecallingData && (
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "center", mt: 3 }}
-                >
-                  <Grid
-                    container
-                    spacing={3}
-                    sx={{ maxWidth: "1200px", width: "100%" }}
-                  >
-                    <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("telecalling")}>
-                        <CardContent sx={{ textAlign: "center" }}>
-                          <Call fontSize="large" color="primary" />
-                          <Typography variant="h6" gutterBottom>
-                            Telecalling Data
-                          </Typography>
-                          <Typography variant="body1" color="textSecondary">
-                            Total Calls: {telecallingData.data.telecallingCount}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("contacts")}>
-                        <CardContent sx={{ textAlign: "center" }}>
-                          <Contacts fontSize="large" color="primary" />
-                          <Typography variant="h6" gutterBottom>
-                            Contact Data
-                          </Typography>
-                          <Typography variant="body1" color="textSecondary">
-                            Total Contacts: {telecallingData.data.contactsCount}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Card>
-                        <CardContent sx={{ textAlign: "center" }}>
-                          <Contacts fontSize="large" color="primary" />
-                          <Typography variant="h6" gutterBottom>
-                            Not Interested
-                          </Typography>
-                          <Typography variant="body1" color="textSecondary">
-                            Total Counts: 0 {/* Adjust this key as needed */}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              )}
+  <Grid
+    container
+    spacing={3}
+    sx={{ display: "flex", justifyContent: "center", mt: 3 }}
+  >
+    <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
+      <Grid
+        container
+        spacing={3}
+        sx={{ maxWidth: "1200px", width: "100%" }}
+      >
+        <Grid item xs={12} sm={4}>
+          <Card onClick={() => handleCardClick("telecalling")}>
+            <CardContent sx={{ textAlign: "center" }}>
+              <Call fontSize="large" color="primary" />
+              <Typography variant="h6" gutterBottom>
+                Telecalling Data
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                Total Calls: {telecallingData.data.telecallingCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card onClick={() => handleCardClick("contacts")}>
+            <CardContent sx={{ textAlign: "center" }}>
+              <Contacts fontSize="large" color="primary" />
+              <Typography variant="h6" gutterBottom>
+                Contact Data
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                Total Contacts: {telecallingData.data.contactsCount}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Card>
+            <CardContent sx={{ textAlign: "center" }}>
+              <Contacts fontSize="large" color="primary" />
+              <Typography variant="h6" gutterBottom>
+                Not Interested
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                Total Counts: 0 {/* Adjust this key as needed */}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Grid>
+    <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+      <Card>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            Data Distribution
+          </Typography>
+          <div style={{ height: "300px" }}>
+            <Pie data={pieData} options={pieOptions} />
+          </div>
+        </CardContent>
+      </Card>
+    </Grid>
+  </Grid>
+)}
+
             </CardContent>
           </Card>
         </Grid>
@@ -357,25 +401,36 @@ const Dashboard = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-      {selectedData.map((row, index) => (
-        <TableRow key={index}>
-          <TableCell>{row.CName}</TableCell>
-          <TableCell>{row.Mobile}</TableCell>
-          <TableCell>
-            {selectedType === 'telecalling' ? row.NextFollowUpDate : row.CreateDate}
-          </TableCell>
-          <TableCell>
-            {/* Conditionally render different buttons based on selectedType */}
-            {selectedType === 'telecalling' ? (
-        <Button onClick={() => fetchDataForModal(row.Tid)}>View Telecaller Profile</Button>
-      ) : (
-        <Button onClick={() => fetchDataForModalContact(row.Cid)}>View Contact Profile</Button>
-      )}
-
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
+                          {selectedData.map((row, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{row.CName}</TableCell>
+                              <TableCell>{row.Mobile}</TableCell>
+                              <TableCell>
+                                {selectedType === "telecalling"
+                                  ? row.NextFollowUpDate
+                                  : row.CreateDate}
+                              </TableCell>
+                              <TableCell>
+                                {/* Conditionally render different buttons based on selectedType */}
+                                {selectedType === "telecalling" ? (
+                                  <Button
+                                    onClick={() => fetchDataForModal(row.Tid)}
+                                  >
+                                    View Telecaller Profile
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    onClick={() =>
+                                      fetchDataForModalContact(row.Cid)
+                                    }
+                                  >
+                                    View Contact Profile
+                                  </Button>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
                       </Table>
                     </TableContainer>
                   </Grid>
@@ -385,1159 +440,1343 @@ const Dashboard = () => {
           </Grid>
         )}
 
-
-<Dialog open={modalOpenContact} onClose={() => setModalOpenContact(false)} sx={{ maxWidth: '90vw', width: 'auto' }}>
-        {selectedContact ? (
-          <>
-            <DialogTitle>Contact Profile</DialogTitle>
-            <DialogContent>
-            <Paper sx={{ padding: 5 }}>
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              padding: 5,
-            }}
-          >
-                 <Avatar
-                          alt="John Doe"
-                          sx={{ width: 60, height: 60, mr: 6 }}
-                          src="/images/avatars/1.png"
-                        />
-            <Box sx={{ flex: "1 1" }}>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 500, fontSize: "1.0rem" }}
-              >
-                {selectedContact?.CName}
-              </Typography>
-              <Typography sx={{ fontSize: "0.9rem" }}>
-                {selectedContact?.Mobile}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              ml: 20,
-            }}
-          >
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Source: {selectedContact?.SourceName}
-              </Typography>
-            </div>
-             <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                City: {selectedContact?.CityName}
-              </Typography>
-            </div> 
-            <div style={{ marginRight: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                Attended By: {selectedContact?.Name}
-              </Typography>
-            </div>
-          </Box>
-
-          <Box sx={{ display: "flex",  mt: 10 , ml:10}}>
-        <a href={`tel:${selectedContact?.Mobile}`} style={{ marginRight: 40 }}>
-          <IconButton
-            aria-label="phone"
-            size="small"
-            sx={{
-              color: "green",
-              backgroundColor: "#e0f7fa",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#b2ebf2",
-              },
-            }}
-          >
-            <PhoneIcon />
-          </IconButton>
-        </a>
-        <a  style={{ marginRight: 10 }}>
-
-        <IconButton
-          aria-label="share"
-          size="small"
-          sx={{
-            color: "blue",
-            backgroundColor: "#e3f2fd",
-            borderRadius: "50%",
-            padding: "10px",
-            marginRight: 15,
-            "&:hover": {
-              backgroundColor: "#bbdefb",
-            },
-          }}
+        <Dialog
+          open={modalOpenContact}
+          onClose={() => setModalOpenContact(false)}
+          sx={{ maxWidth: "90vw", width: "auto" }}
         >
-          <ShareIcon />
-        </IconButton>
-        </a>
+          {selectedContact ? (
+            <>
+              <DialogTitle>Contact Profile</DialogTitle>
+              <DialogContent>
+                <Paper sx={{ padding: 5 }}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: 5,
+                    }}
+                  >
+                    <Avatar
+                      alt="John Doe"
+                      sx={{ width: 60, height: 60, mr: 6 }}
+                      src="/images/avatars/1.png"
+                    />
+                    <Box sx={{ flex: "1 1" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 500, fontSize: "1.0rem" }}
+                      >
+                        {selectedContact?.CName}
+                      </Typography>
+                      <Typography sx={{ fontSize: "0.9rem" }}>
+                        {selectedContact?.Mobile}
+                      </Typography>
+                    </Box>
+                  </Box>
 
-        <a href={`mailto:${selectedContact?.Email}`} style={{ marginRight: 35 }}>
-          <IconButton
-            aria-label="email"
-            size="small"
-            sx={{
-              color: "red",
-              backgroundColor: "#ffebee",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#ffcdd2",
-              },
-            }}
-          >
-            <EmailIcon />
-          </IconButton>
-        </a>
-        <a
-          href={`https://wa.me/${selectedContact?.Mobile}?text=${whatsappText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <IconButton
-            aria-label="whatsapp"
-            size="small"
-            sx={{
-              color: "green",
-              backgroundColor: "#e8f5e9",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#c8e6c9",
-              },
-            }}
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        </a>
-      </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 20,
+                    }}
+                  >
+                    <div style={{ mr: 5 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          backgroundColor: "#f0f0f0",
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
+                      >
+                        Source: {selectedContact?.SourceName}
+                      </Typography>
+                    </div>
+                    <div style={{ marginRight: 5 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          backgroundColor: "#f0f0f0",
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
 
-          <Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    mt: 15,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem",alignContent:"center"}}>
-Email
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{selectedContact?.Email}</Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-           Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{selectedContact?.CustomerTypeName}</Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Contact Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{selectedContact?.ContactName}</Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
+                      >
+                        City: {selectedContact?.CityName}
+                      </Typography>
+                    </div>
+                    <div style={{ marginRight: 5 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          backgroundColor: "#f0f0f0",
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
 
-<Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-  
-    mt: 12,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Create Date
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-        {formatCreateDate(selectedContact?.CreateDate)}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Country Code
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {selectedContact?.CountryName}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          City Name
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {selectedContact?.CityName}
-        </Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
+                      >
+                        Attended By: {selectedContact?.Name}
+                      </Typography>
+                    </div>
+                  </Box>
 
-<Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-   
-    mt: 12,
-  }}
->
-  <Grid container spacing={3}>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Source
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {selectedContact?.SourceName}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Source Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {selectedContact?.SourceTypename}
-        </Typography>
-      </Card>
-    </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-         Attended By
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{selectedContact?.Name}</Typography>
-      </Card>
-    </Grid>
-  </Grid>
-</Box>
+                  <Box sx={{ display: "flex", mt: 10, ml: 10 }}>
+                    <a
+                      href={`tel:${selectedContact?.Mobile}`}
+                      style={{ marginRight: 40 }}
+                    >
+                      <IconButton
+                        aria-label="phone"
+                        size="small"
+                        sx={{
+                          color: "green",
+                          backgroundColor: "#e0f7fa",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          "&:hover": {
+                            backgroundColor: "#b2ebf2",
+                          },
+                        }}
+                      >
+                        <PhoneIcon />
+                      </IconButton>
+                    </a>
+                    <a style={{ marginRight: 10 }}>
+                      <IconButton
+                        aria-label="share"
+                        size="small"
+                        sx={{
+                          color: "blue",
+                          backgroundColor: "#e3f2fd",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          marginRight: 15,
+                          "&:hover": {
+                            backgroundColor: "#bbdefb",
+                          },
+                        }}
+                      >
+                        <ShareIcon />
+                      </IconButton>
+                    </a>
 
-        </Paper>
-            </DialogContent>
-          </>
-        ) : (
-          <DialogContent>
-            <DialogTitle>Contact Profile</DialogTitle>
+                    <a
+                      href={`mailto:${selectedContact?.Email}`}
+                      style={{ marginRight: 35 }}
+                    >
+                      <IconButton
+                        aria-label="email"
+                        size="small"
+                        sx={{
+                          color: "red",
+                          backgroundColor: "#ffebee",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          "&:hover": {
+                            backgroundColor: "#ffcdd2",
+                          },
+                        }}
+                      >
+                        <EmailIcon />
+                      </IconButton>
+                    </a>
+                    <a
+                      href={`https://wa.me/${selectedContact?.Mobile}?text=${whatsappText}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconButton
+                        aria-label="whatsapp"
+                        size="small"
+                        sx={{
+                          color: "green",
+                          backgroundColor: "#e8f5e9",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          "&:hover": {
+                            backgroundColor: "#c8e6c9",
+                          },
+                        }}
+                      >
+                        <WhatsAppIcon />
+                      </IconButton>
+                    </a>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      mt: 15,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              fontSize: "0.9rem",
+                              alignContent: "center",
+                            }}
+                          >
+                            Email
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.Email}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
+                          >
+                            Type
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.CustomerTypeName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
+                          >
+                            Contact Type
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.ContactName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+
+                      mt: 12,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, fontSize: "0.9rem" }}
+                          >
+                            Create Date
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {formatCreateDate(selectedContact?.CreateDate)}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
+                          >
+                            Country Code
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.CountryName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
+                          >
+                            City Name
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.CityName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+
+                      mt: 12,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, fontSize: "0.9rem" }}
+                          >
+                            Source
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.SourceName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
+                          >
+                            Source Type
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.SourceTypename}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined"
+                          sx={{ borderRadius: 1, padding: "10px" }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, fontSize: "0.9rem" }}
+                          >
+                            Attended By
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
+                            {selectedContact?.Name}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </DialogContent>
+            </>
+          ) : (
             <DialogContent>
-              <Typography>No data available for selected contact.</Typography>
+              <DialogTitle>Contact Profile</DialogTitle>
+              <DialogContent>
+                <Typography>No data available for selected contact.</Typography>
+              </DialogContent>
             </DialogContent>
-          </DialogContent>
-        )}
-      </Dialog>
+          )}
+        </Dialog>
 
-<Dialog open={modalOpen} onClose={() => setModalOpen(false)}    sx={{ maxWidth: '90vw', width: 'auto' }} >
-      {selectedTelecaller ? (
-        <>
-          <DialogTitle>Telecaller Profile</DialogTitle>
-          <DialogContent>
-            <Paper sx={{ padding: 2 }}>
-              <Box
-                sx={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: 5,
-                }}
-              >
-                <Avatar
-                  alt="John Doe"
-                  sx={{ width: 60, height: 60, mr: 6 }}
-                  src="/images/avatars/1.png"
-                />
-                <Box sx={{ flex: '1 1' }}>
-                  <Typography variant="h6" sx={{ fontWeight: 500, fontSize: '1.0rem' }}>
-                    {selectedTelecaller?.CName}
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.8rem' }}>{selectedTelecaller?.Mobile}</Typography>
-                </Box>
-              </Box>
-    
-              <Box sx={{ width: '100%', ml: 20 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mr: 10 }}>
-                  <Typography
-                    variant="body2"
+        <Dialog
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          sx={{ maxWidth: "90vw", width: "auto" }}
+        >
+          {selectedTelecaller ? (
+            <>
+              <DialogTitle>Telecaller Profile</DialogTitle>
+              <DialogContent>
+                <Paper sx={{ padding: 2 }}>
+                  <Box
                     sx={{
-                      color: '#333333',
-                      fontSize: '0.7rem',
-                      minWidth: 'auto',
-                      padding: '5px',
-                      backgroundColor: '#f0f0f0',
-                      borderRadius: 2,
-                      minHeight: 20,
-                      // marginLeft: 20,
-                      '&:hover': {
-                        backgroundColor: '#dcdcdc',
-                      },
-                   
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: 5,
                     }}
                   >
-                    Source Name: {selectedTelecaller?.SourceName}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: '#333333',
-                      fontSize: '0.7rem',
-                      minWidth: 'auto',
-                      padding: '5px',
-                      backgroundColor: '#f0f0f0',
-                      borderRadius: 2,
-                      minHeight: 20,
-                      marginLeft: 2,
-                      '&:hover': {
-                        backgroundColor: '#dcdcdc',
-                      },
-                      mr: 2, // Add margin-right to separate the items
-                    }}
-                  >
-                    Location: {selectedTelecaller?.Location}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: '#333333',
-                      fontSize: '0.7rem',
-                      minWidth: 'auto',
-                      padding: '5px',
-                      backgroundColor: '#f0f0f0',
-                      borderRadius: 2,
-                      minHeight: 20,
-                      marginLeft: 2,
-                      '&:hover': {
-                        backgroundColor: '#dcdcdc',
-                      },
-                    }}
-                  >
-                    Attended By: {selectedTelecaller?.TelecallAttendedByName}
-                  </Typography>
-                </Box>
-    
-                <Box sx={{ display: 'flex', mt: 10, ml: 20 }}>
-                  <a href={`tel:${selectedTelecaller?.Mobile}`} style={{ marginRight: 40 }}>
-                    <IconButton
-                      aria-label="phone"
-                      size="small"
-                      sx={{
-                        color: 'green',
-                        backgroundColor: '#e0f7fa',
-                        borderRadius: '50%',
-                        padding: '10px',
-                        '&:hover': {
-                          backgroundColor: '#b2ebf2',
-                        },
-                      }}
-                    >
-                      <PhoneIcon />
-                    </IconButton>
-                  </a>
-                  <a style={{ marginRight: 10 }}>
-                    <IconButton
-                      aria-label="share"
-                      size="small"
-                      sx={{
-                        color: 'blue',
-                        backgroundColor: '#e3f2fd',
-                        borderRadius: '50%',
-                        padding: '10px',
-                        marginRight: 15,
-                        '&:hover': {
-                          backgroundColor: '#bbdefb',
-                        },
-                      }}
-                    >
-                      <ShareIcon />
-                    </IconButton>
-                  </a>
-    
-                  <a href={`mailto:${selectedTelecaller?.Email}`} style={{ marginRight: 35 }}>
-                    <IconButton
-                      aria-label="email"
-                      size="small"
-                      sx={{
-                        color: 'red',
-                        backgroundColor: '#ffebee',
-                        borderRadius: '50%',
-                        padding: '10px',
-                        '&:hover': {
-                          backgroundColor: '#ffcdd2',
-                        },
-                      }}
-                    >
-                      <EmailIcon />
-                    </IconButton>
-                  </a>
-                  <a
-                    href={`https://wa.me/${selectedTelecaller?.Mobile}?text=${whatsappText}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <IconButton
-                      aria-label="whatsapp"
-                      size="small"
-                      sx={{
-                        color: 'green',
-                        backgroundColor: '#e8f5e9',
-                        borderRadius: '50%',
-                        padding: '10px',
-                        '&:hover': {
-                          backgroundColor: '#c8e6c9',
-                        },
-                      }}
-                    >
-                      <WhatsAppIcon />
-                    </IconButton>
-                  </a>
-                </Box>
-              </Box>
-    
-              <Box
-                sx={{
-                  width: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  ml: 12,
-                  mt: 15,
-                }}
-              >
-                <Grid container spacing={3}>
-                  {/* Email */}
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
+                    <Avatar
+                      alt="John Doe"
+                      sx={{ width: 60, height: 60, mr: 6 }}
+                      src="/images/avatars/1.png"
+                    />
+                    <Box sx={{ flex: "1 1" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 500, fontSize: "1.0rem" }}
+                      >
+                        {selectedTelecaller?.CName}
+                      </Typography>
+                      <Typography sx={{ fontSize: "0.8rem" }}>
+                        {selectedTelecaller?.Mobile}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ width: "100%", ml: 20 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mr: 10 }}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          // marginLeft: 20,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
                       >
-                        Email
+                        Source Name: {selectedTelecaller?.SourceName}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.Email}
-                      </Typography>
-                    </Card>
-                  </Grid>
-    
-                  {/* Project Name */}
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                          mr: 2, // Add margin-right to separate the items
+                        }}
                       >
-                        Project Name
+                        Location: {selectedTelecaller?.Location}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.ProjectName}
-                      </Typography>
-                    </Card>
-                  </Grid>
-    
-                  {/* Unit Type */}
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
                       >
-                        Unit Type
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.UnittypeName}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Box>
-    
-              <Box
-                sx={{
-                  width: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  ml: 12,
-                  mt: 12,
-                }}
-              >
-                <Grid container spacing={3}>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                        Estimated Budget
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.EstimatedbudgetName}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                        Lead Status
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.leadstatusName}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                         Follow-Up Date
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.NextFollowUpDate}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Box>
-    
-              {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
-              <Box
-                sx={{
-                  width: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  ml: 12,
-                  mt: 12,
-                }}
-              >
-                <Grid container spacing={3}>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                        Created At
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.TelecallingCreateDate}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                       Attended By
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        Attended By:{" "}
                         {selectedTelecaller?.TelecallAttendedByName}
                       </Typography>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
+                    </Box>
+
+                    <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
+                      <a
+                        href={`tel:${selectedTelecaller?.Mobile}`}
+                        style={{ marginRight: 40 }}
+                      >
+                        <IconButton
+                          aria-label="phone"
+                          size="small"
+                          sx={{
+                            color: "green",
+                            backgroundColor: "#e0f7fa",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#b2ebf2",
+                            },
+                          }}
+                        >
+                          <PhoneIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 10 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            marginRight: 15,
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                        >
+                          <ShareIcon />
+                        </IconButton>
+                      </a>
+
+                      <a
+                        href={`mailto:${selectedTelecaller?.Email}`}
+                        style={{ marginRight: 35 }}
+                      >
+                        <IconButton
+                          aria-label="email"
+                          size="small"
+                          sx={{
+                            color: "red",
+                            backgroundColor: "#ffebee",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#ffcdd2",
+                            },
+                          }}
+                        >
+                          <EmailIcon />
+                        </IconButton>
+                      </a>
+                      <a
+                        href={`https://wa.me/${selectedTelecaller?.Mobile}?text=${whatsappText}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IconButton
+                          aria-label="whatsapp"
+                          size="small"
+                          sx={{
+                            color: "green",
+                            backgroundColor: "#e8f5e9",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#c8e6c9",
+                            },
+                          }}
+                        >
+                          <WhatsAppIcon />
+                        </IconButton>
+                      </a>
+                    </Box>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      ml: 12,
+                      mt: 15,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      {/* Email */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Email
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.Email}
+                          </Typography>
+                        </Card>
+                      </Grid>
+
+                      {/* Project Name */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Project Name
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.ProjectName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+
+                      {/* Unit Type */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Unit Type
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.UnittypeName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Estimated Budget
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.EstimatedbudgetName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Lead Status
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.leadstatusName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Follow-Up Date
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.NextFollowUpDate}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+                  <Box
+                    sx={{
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Created At
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.TelecallingCreateDate}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Attended By
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.TelecallAttendedByName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Alternate Number
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.AlternateMobileNo}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Comments */}
+                  <Box
+                    sx={{
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
+                    }}
+                  >
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Comments
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.Comments}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </DialogContent>
+            </>
+          ) : (
+            <>
+              <DialogTitle>Contact Profile</DialogTitle>
+              <DialogContent>
+                <Paper sx={{ padding: 2 }}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: 5,
+                    }}
+                  >
+                    <Avatar
+                      alt="John Doe"
+                      sx={{ width: 60, height: 60, mr: 6 }}
+                      src="/images/avatars/1.png"
+                    />
+                    <Box sx={{ flex: "1 1" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 500, fontSize: "1.0rem" }}
+                      >
+                        {selectedTelecaller?.CName}
+                      </Typography>
+                      <Typography sx={{ fontSize: "0.8rem" }}>
+                        {selectedTelecaller?.Mobile}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ width: "100%", ml: 20 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mr: 10 }}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          // marginLeft: 20,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
                       >
-                        Alternate  Number
+                        Source Name: {selectedTelecaller?.SourceName}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.AlternateMobileNo}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Box>
-    
-              {/* Comments */}
-              <Box
-                sx={{
-                  width: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  ml: 12,
-                  mt: 12,
-                }}
-              >
-                <Grid container spacing={3}>
-                  <Grid item xs={4}>
-                    <Card
-                      variant="outlined" // Use outlined variant for a border without shadow
-                      sx={{
-                        borderRadius: 1,
-                        padding: '10px',
-                      }}
-                    >
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                          mr: 2, // Add margin-right to separate the items
+                        }}
                       >
-                        Comments
+                        Location: {selectedTelecaller?.Location}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                        {selectedTelecaller?.Comments}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#333333",
+                          fontSize: "0.7rem",
+                          minWidth: "auto",
+                          padding: "5px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: 2,
+                          minHeight: 20,
+                          marginLeft: 2,
+                          "&:hover": {
+                            backgroundColor: "#dcdcdc",
+                          },
+                        }}
+                      >
+                        Attended By:{" "}
+                        {selectedTelecaller?.TelecallAttendedByName}
                       </Typography>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Paper>
-          </DialogContent>
-        </>
+                    </Box>
 
+                    <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
+                      <a
+                        href={`tel:${selectedTelecaller?.Mobile}`}
+                        style={{ marginRight: 40 }}
+                      >
+                        <IconButton
+                          aria-label="phone"
+                          size="small"
+                          sx={{
+                            color: "green",
+                            backgroundColor: "#e0f7fa",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#b2ebf2",
+                            },
+                          }}
+                        >
+                          <PhoneIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 10 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            marginRight: 15,
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                        >
+                          <ShareIcon />
+                        </IconButton>
+                      </a>
 
-      ) : (
-        <>
-        <DialogTitle>Contact Profile</DialogTitle>
-        <DialogContent>
-          <Paper sx={{ padding: 2 }}>
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                padding: 5,
-              }}
-            >
-              <Avatar
-                alt="John Doe"
-                sx={{ width: 60, height: 60, mr: 6 }}
-                src="/images/avatars/1.png"
-              />
-              <Box sx={{ flex: '1 1' }}>
-                <Typography variant="h6" sx={{ fontWeight: 500, fontSize: '1.0rem' }}>
-                  {selectedTelecaller?.CName}
-                </Typography>
-                <Typography sx={{ fontSize: '0.8rem' }}>{selectedTelecaller?.Mobile}</Typography>
-              </Box>
-            </Box>
-  
-            <Box sx={{ width: '100%', ml: 20 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mr: 10 }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: '#333333',
-                    fontSize: '0.7rem',
-                    minWidth: 'auto',
-                    padding: '5px',
-                    backgroundColor: '#f0f0f0',
-                    borderRadius: 2,
-                    minHeight: 20,
-                    // marginLeft: 20,
-                    '&:hover': {
-                      backgroundColor: '#dcdcdc',
-                    },
-                 
-                  }}
-                >
-                  Source Name: {selectedTelecaller?.SourceName}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: '#333333',
-                    fontSize: '0.7rem',
-                    minWidth: 'auto',
-                    padding: '5px',
-                    backgroundColor: '#f0f0f0',
-                    borderRadius: 2,
-                    minHeight: 20,
-                    marginLeft: 2,
-                    '&:hover': {
-                      backgroundColor: '#dcdcdc',
-                    },
-                    mr: 2, // Add margin-right to separate the items
-                  }}
-                >
-                  Location: {selectedTelecaller?.Location}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: '#333333',
-                    fontSize: '0.7rem',
-                    minWidth: 'auto',
-                    padding: '5px',
-                    backgroundColor: '#f0f0f0',
-                    borderRadius: 2,
-                    minHeight: 20,
-                    marginLeft: 2,
-                    '&:hover': {
-                      backgroundColor: '#dcdcdc',
-                    },
-                  }}
-                >
-                  Attended By: {selectedTelecaller?.TelecallAttendedByName}
-                </Typography>
-              </Box>
-  
-              <Box sx={{ display: 'flex', mt: 10, ml: 20 }}>
-                <a href={`tel:${selectedTelecaller?.Mobile}`} style={{ marginRight: 40 }}>
-                  <IconButton
-                    aria-label="phone"
-                    size="small"
+                      <a
+                        href={`mailto:${selectedTelecaller?.Email}`}
+                        style={{ marginRight: 35 }}
+                      >
+                        <IconButton
+                          aria-label="email"
+                          size="small"
+                          sx={{
+                            color: "red",
+                            backgroundColor: "#ffebee",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#ffcdd2",
+                            },
+                          }}
+                        >
+                          <EmailIcon />
+                        </IconButton>
+                      </a>
+                      <a
+                        href={`https://wa.me/${selectedTelecaller?.Mobile}?text=${whatsappText}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IconButton
+                          aria-label="whatsapp"
+                          size="small"
+                          sx={{
+                            color: "green",
+                            backgroundColor: "#e8f5e9",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            "&:hover": {
+                              backgroundColor: "#c8e6c9",
+                            },
+                          }}
+                        >
+                          <WhatsAppIcon />
+                        </IconButton>
+                      </a>
+                    </Box>
+                  </Box>
+
+                  <Box
                     sx={{
-                      color: 'green',
-                      backgroundColor: '#e0f7fa',
-                      borderRadius: '50%',
-                      padding: '10px',
-                      '&:hover': {
-                        backgroundColor: '#b2ebf2',
-                      },
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      ml: 12,
+                      mt: 15,
                     }}
                   >
-                    <PhoneIcon />
-                  </IconButton>
-                </a>
-                <a style={{ marginRight: 10 }}>
-                  <IconButton
-                    aria-label="share"
-                    size="small"
+                    <Grid container spacing={3}>
+                      {/* Email */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Email
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.Email}
+                          </Typography>
+                        </Card>
+                      </Grid>
+
+                      {/* Project Name */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Project Name
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.ProjectName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+
+                      {/* Unit Type */}
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Unit Type
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.UnittypeName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  <Box
                     sx={{
-                      color: 'blue',
-                      backgroundColor: '#e3f2fd',
-                      borderRadius: '50%',
-                      padding: '10px',
-                      marginRight: 15,
-                      '&:hover': {
-                        backgroundColor: '#bbdefb',
-                      },
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
                     }}
                   >
-                    <ShareIcon />
-                  </IconButton>
-                </a>
-  
-                <a href={`mailto:${selectedTelecaller?.Email}`} style={{ marginRight: 35 }}>
-                  <IconButton
-                    aria-label="email"
-                    size="small"
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Estimated Budget
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.EstimatedbudgetName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Lead Status
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.leadstatusName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Follow-Up Date
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.NextFollowUpDate}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
+                  <Box
                     sx={{
-                      color: 'red',
-                      backgroundColor: '#ffebee',
-                      borderRadius: '50%',
-                      padding: '10px',
-                      '&:hover': {
-                        backgroundColor: '#ffcdd2',
-                      },
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
                     }}
                   >
-                    <EmailIcon />
-                  </IconButton>
-                </a>
-                <a
-                  href={`https://wa.me/${selectedTelecaller?.Mobile}?text=${whatsappText}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IconButton
-                    aria-label="whatsapp"
-                    size="small"
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Created At
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.TelecallingCreateDate}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Attended By
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.TelecallAttendedByName}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Alternate Number
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.AlternateMobileNo}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  {/* Comments */}
+                  <Box
                     sx={{
-                      color: 'green',
-                      backgroundColor: '#e8f5e9',
-                      borderRadius: '50%',
-                      padding: '10px',
-                      '&:hover': {
-                        backgroundColor: '#c8e6c9',
-                      },
+                      width: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      ml: 12,
+                      mt: 12,
                     }}
                   >
-                    <WhatsAppIcon />
-                  </IconButton>
-                </a>
-              </Box>
-            </Box>
-  
-            <Box
-              sx={{
-                width: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                ml: 12,
-                mt: 15,
-              }}
-            >
-              <Grid container spacing={3}>
-                {/* Email */}
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Email
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.Email}
-                    </Typography>
-                  </Card>
-                </Grid>
-  
-                {/* Project Name */}
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Project Name
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.ProjectName}
-                    </Typography>
-                  </Card>
-                </Grid>
-  
-                {/* Unit Type */}
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Unit Type
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.UnittypeName}
-                    </Typography>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-  
-            <Box
-              sx={{
-                width: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                ml: 12,
-                mt: 12,
-              }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Estimated Budget
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.EstimatedbudgetName}
-                    </Typography>
-                  </Card>
-                </Grid>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Lead Status
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.leadstatusName}
-                    </Typography>
-                  </Card>
-                </Grid>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                       Follow-Up Date
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.NextFollowUpDate}
-                    </Typography>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-  
-            {/* Source Description, Telecall Attended By, Alternate Mobile Number */}
-            <Box
-              sx={{
-                width: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                ml: 12,
-                mt: 12,
-              }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Created At
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.TelecallingCreateDate}
-                    </Typography>
-                  </Card>
-                </Grid>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                     Attended By
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.TelecallAttendedByName}
-                    </Typography>
-                  </Card>
-                </Grid>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Alternate  Number
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.AlternateMobileNo}
-                    </Typography>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-  
-            {/* Comments */}
-            <Box
-              sx={{
-                width: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                ml: 12,
-                mt: 12,
-              }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={4}>
-                  <Card
-                    variant="outlined" // Use outlined variant for a border without shadow
-                    sx={{
-                      borderRadius: 1,
-                      padding: '10px',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 600, fontSize: '0.8rem' }}
-                    >
-                      Comments
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
-                      {selectedTelecaller?.Comments}
-                    </Typography>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-          </Paper>
-        </DialogContent>
-      </>
-      )}
-    </Dialog>
+                    <Grid container spacing={3}>
+                      <Grid item xs={4}>
+                        <Card
+                          variant="outlined" // Use outlined variant for a border without shadow
+                          sx={{
+                            borderRadius: 1,
+                            padding: "10px",
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                          >
+                            Comments
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.7rem" }}
+                          >
+                            {selectedTelecaller?.Comments}
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Paper>
+              </DialogContent>
+            </>
+          )}
+        </Dialog>
 
         <Grid item xs={12} md={6}>
           <WeeklyOverview />
