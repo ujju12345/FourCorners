@@ -77,6 +77,11 @@ const navigation = () => {
       path: "/typography",
     },
     {
+      title: "Project Details",
+      icon: AssignmentIcon,
+      path: "/projectinfo",
+    },
+    {
       sectionTitle: "Data Management",
     },
 
