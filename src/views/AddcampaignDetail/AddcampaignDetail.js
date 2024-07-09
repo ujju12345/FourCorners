@@ -31,6 +31,22 @@ import MuiAlert from "@mui/material/Alert";
 const AddcampaignDetails = ({ show, editData }) => {
   console.log(editData, "Edit data aaya");
   const initialFormData = {
+    name: "",
+    campaigntypeID: "",
+    templateID: "",
+    CustomerTypeID: "",
+    ContactTypeID: "",
+    UserID: "",
+    SubmittedID: "",
+    FromDate: "",
+    ToDate: "",
+    CityID: "",
+    LocationID: "",
+    SourceID: "",
+    SourceTypeID: "",
+    ScheduleID: "",
+    CreateUID: "",
+
     titleprefixID: "",
     Cid: "",
     CName: "",
@@ -61,6 +77,18 @@ const AddcampaignDetails = ({ show, editData }) => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const [compaignTypeData, setCampaignTypedata] = useState([]);
+  const [templateData, setTemplatedata] = useState([]);
+  const [customerTypeData, setCustomerTypeData] = useState([]);
+  const [contactTypeData, setContactTypeData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [submittedData, setSubmittedData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [locationData, setLocationData] = useState([]);
+  const [sourceData, setSourceData] = useState([]);
+  const [sourceTypeData, setSourceTypeData] = useState([]);
+  const [scheduleType, setScheduleType] = useState([]);
+
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
   const [projectTypes, setProjectTypes] = useState([]);
@@ -344,10 +372,169 @@ const AddcampaignDetails = ({ show, editData }) => {
     }));
   }, []);
 
-  const handleBhkChange = (event) => {
+  useEffect(() => {
+    fetchCompaignType();
+    fetchTemplate();
+    fetchCustomers();
+    fetchSchedule();
+    fetchSource();
+    fetchSourceType();
+    fetchCity();
+    fetchLocation();
+    fetchSubmittedBy();
+  }, []);
+
+  const fetchCompaignType = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-campaigntype.php")
+      .then((response) => {
+        console.warn("response of campaign type---->", response);
+        if (response.data.status === "Success") {
+          setCampaignTypedata(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchTemplate = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-template.php")
+      .then((response) => {
+        console.warn("response of template type---->", response);
+        if (response.data.status === "Success") {
+          setTemplatedata(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchCustomers = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php")
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setCustomerTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchSchedule = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-schedule.php")
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setScheduleType(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchContactType = (e) => {
+    axios
+      .get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-contacttype.php?CustomerTypeID=${e}`
+      )
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setContactTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchSource = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setSourceData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchSourceType = (e) => {
+    axios
+      .get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-sourcetype.php?SourceID=${e}`
+      )
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setSourceTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchCity = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-citymaster.php")
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setCityData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchLocation = () => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-locationmaster.php"
+      )
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setLocationData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const fetchSubmittedBy = () => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-usermaster.php")
+      .then((response) => {
+        console.warn("response of customers type---->", response);
+        if (response.data.status === "Success") {
+          setSubmittedData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const handleTemplateChange = (event) => {
+    console.warn(event.target);
     setFormData({
       ...formData,
-      UnittypeID: event.target.value,
+      templateID: event.target.value,
     });
   };
 
@@ -552,19 +739,19 @@ const AddcampaignDetails = ({ show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label={
-                    <>
-                     Name 
-                    </>
-                  }
+                  label={<>Name</>}
                   type="text"
                   name="Name"
-                  value={formData.Name}
-                  onChange={handleChange}
+                  value={formData.name}
+                  onChange={() =>
+                    setFormData({
+                      ...formData,
+                      name: event.target.value,
+                    })
+                  }
                   inputProps={{
                     pattern: "[0-9]*",
                   }}
@@ -576,11 +763,10 @@ const AddcampaignDetails = ({ show, editData }) => {
                 )}
               </Grid>
 
-             
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    Campaign Type ID <RequiredIndicator />
+                    Campaign Type <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.campaigntypeID}
@@ -611,20 +797,21 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Template ID <RequiredIndicator />
+                    Template <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.templateID}
-                    onChange={handleBhkChange}
+                    onChange={handleTemplateChange}
                     label={
                       <>
-                        Template ID <RequiredIndicator />
+                        Template ID
+                        <RequiredIndicator />
                       </>
                     }
                   >
-                    {bhkOptions.map((bhk) => (
-                      <MenuItem key={bhk.UnittypeID} value={bhk.UnittypeID}>
-                        {bhk.UnittypeName}
+                    {templateData.map((key) => (
+                      <MenuItem key={key.templateID} value={key.templateID}>
+                        {key.TName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -638,22 +825,28 @@ const AddcampaignDetails = ({ show, editData }) => {
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
-                  <InputLabel>Customer Type ID</InputLabel>
+                  <InputLabel>Customer Type</InputLabel>
                   <Select
                     value={formData.CustomerTypeID}
-                    onChange={handleEstimatedBudget}
+                    onChange={(event) => {
+                      setFormData({
+                        ...formData,
+                        CustomerTypeID: event.target.value,
+                      });
+                      fetchContactType(event.target.value);
+                    }}
                     label={
                       <>
-                       Customer Type <RequiredIndicator />
+                        Customer Type <RequiredIndicator />
                       </>
                     }
                   >
-                    {estimatedBudget.map((bhk) => (
+                    {customerTypeData.map((key) => (
                       <MenuItem
-                        key={bhk.EstimatedbudgetID}
-                        value={bhk.EstimatedbudgetID}
+                        key={key.CustomerTypeID}
+                        value={key.CustomerTypeID}
                       >
-                        {bhk.EstimatedbudgetName}
+                        {key?.CustomerTypeName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -668,7 +861,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Contact Type ID <RequiredIndicator />
+                    Contact Type <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.ContactTypeID}
@@ -679,12 +872,12 @@ const AddcampaignDetails = ({ show, editData }) => {
                       </>
                     }
                   >
-                    {leadStatus.map((project) => (
+                    {contactTypeData.map((project) => (
                       <MenuItem
-                        key={project.leadstatusID}
-                        value={project.leadstatusID}
+                        key={project.ContactTypeID}
+                        value={project.ContactTypeID}
                       >
-                        {project.leadstatusName}
+                        {project.ContactName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -699,23 +892,20 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  User ID <RequiredIndicator />
+                    User<RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.UserID}
                     onChange={handleLeadStatus}
                     label={
                       <>
-                        User ID <RequiredIndicator />
+                        User<RequiredIndicator />
                       </>
                     }
                   >
-                    {leadStatus.map((project) => (
-                      <MenuItem
-                        key={project.leadstatusID}
-                        value={project.leadstatusID}
-                      >
-                        {project.leadstatusName}
+                    {submittedData.map((user) => (
+                      <MenuItem key={user.UserID} value={user.UserID}>
+                        {user.Name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -726,12 +916,11 @@ const AddcampaignDetails = ({ show, editData }) => {
                   )}
                 </FormControl>
               </Grid>
-           
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Submitted ID <RequiredIndicator />
+                    Submitted ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.SubmittedID}
@@ -786,7 +975,7 @@ const AddcampaignDetails = ({ show, editData }) => {
                       fullWidth
                       label={
                         <>
-                         To Date <RequiredIndicator />
+                          To Date <RequiredIndicator />
                         </>
                       }
                       InputProps={{
@@ -801,7 +990,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  City ID <RequiredIndicator />
+                    City ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.CityID}
@@ -825,7 +1014,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Location ID <RequiredIndicator />
+                    Location ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.LocationID}
@@ -849,7 +1038,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Source ID <RequiredIndicator />
+                    Source ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.SourceID}
@@ -873,7 +1062,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Source Type ID <RequiredIndicator />
+                    Source Type ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.SourceTypeID}
@@ -897,7 +1086,7 @@ const AddcampaignDetails = ({ show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
-                  Schedule ID <RequiredIndicator />
+                    Schedule ID <RequiredIndicator />
                   </InputLabel>
                   <Select
                     value={formData.ScheduleID}
