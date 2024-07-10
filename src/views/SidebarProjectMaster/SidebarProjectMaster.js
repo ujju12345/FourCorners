@@ -282,7 +282,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -311,7 +311,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
                 </ListItemIcon>
             Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   List,
   ListItem,
@@ -19,13 +18,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Chip,
   Button,
   Menu,
   ListItemIcon,
   Popover,
 } from "@mui/material";
+import axios from "axios";
+import { Chip } from '@mui/material';
 import PersonIcon from "@mui/icons-material/Person";
+import FaceIcon from '@mui/icons-material/Face';
+
 import { Divider } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,10 +36,9 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
-import { useCookies } from "react-cookie";
 
 
-const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
+const SaleProjectDetails = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,8 +51,6 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
-  const [cookies, setCookie] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
@@ -60,7 +59,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`
+        "https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php"
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -83,8 +82,8 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
-          item?.Mobile?.toLowerCase().includes(lowerCaseQuery)
+          item?.ProjectName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.ProjectManager?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }
@@ -112,7 +111,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
   const handleDelete = async () => {
     try {
       const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-opportunity.php",
+        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php",
         {
           Tid: deleteId,
           DeleteUID: 1,
@@ -128,12 +127,26 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       setError(error);
     }
   };
-
   const handleOpenConfirmDelete = (id) => {
     setDeleteId(id);
     setConfirmDelete(true);
   };
-
+  const getDateStatus = (contactCreateDate) => {
+    const date = new Date(contactCreateDate);
+    const now = new Date();
+    
+    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+  
+    if (isCurrentMonth) {
+      return "New";
+    } else if (isPreviousMonth) {
+      return "In Progress";
+    } else {
+      return null;
+    }
+  };
+  
   const handleListItemClick = (item) => {
     onItemClick(item);
   };
@@ -159,22 +172,6 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
     setAnchorElDots(null);
   };
 
-  const getDateStatus = (contactCreateDate) => {
-    const date = new Date(contactCreateDate);
-    const now = new Date();
-    
-    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
-  
-    if (isCurrentMonth) {
-      return "New";
-    } else if (isPreviousMonth) {
-      return "In Progress";
-    } else {
-      return null;
-    }
-  };
-
   const handleSortOptionChange = (option) => {
     setSortOption(option);
     setAnchorElFilter(null);
@@ -197,10 +194,10 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.CName.localeCompare(b.CName));
+        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.CName.localeCompare(a.CName));
+        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
         break;
       default:
         break;
@@ -240,7 +237,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Opportunity
+            All Projects
           </Typography>
           <Box display="flex" alignItems="center">
           <IconButton
@@ -293,7 +290,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
               sx={{ color: "grey" }}
             >
               <MoreVertIcon />
-            </IconButton> */}
+            </IconButton>
             <Popover
               id="menu"
               anchorEl={anchorElDots}
@@ -312,9 +309,9 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                 <ListItemIcon>
                   <GetAppIcon fontSize="small" />
                 </ListItemIcon>
-                Download All Data
+            Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>
@@ -369,7 +366,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
             onClick={onCreate}
             sx={{ mt: 2 }}
           >
-            Create Opportunity
+            Create Project
           </Button>
         </Box>
       ) : (
@@ -378,7 +375,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
             {filteredRows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
-                 <React.Fragment key={item.Oid}>
+                <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>
                    <ListItem disablePadding onClick={() => handleListItemClick(item)}>
                       <ListItemAvatar>
@@ -389,39 +386,49 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                         />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography
-                              variant="subtitle1"
-                              style={{ fontWeight: 600, fontSize: 13 }}
-                            >
-                             {item?.TitleName} {item.CName}
-                            </Typography>
-                            {item.leadstatusName && (
-                              <Chip
-                                label={item.leadstatusName}
-                                size="small"
-                                style={{
-                                  fontSize:8  ,
-                                  marginLeft: 8,
-                                  height:12,
-                                  p:3,
-                                  backgroundColor: getChipColor(item.leadstatusName),
-                                  color: "#000000",
-                                }}
-                              />
-                            )}
-                          </div>
-                        }
+                       primary={
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography
+                            variant="subtitle1"
+                            style={{ fontWeight: 600, fontSize: 13 }}
+                          >
+                         {item.ProjectName}
+                          </Typography>
+                          {item.leadstatusName && (
+                            <Chip
+                              label={item.leadstatusName}
+                              size="small"
+                              style={{
+                                fontSize: 8,
+                                marginLeft: 8,
+                                height: 12,
+                                p: 3,
+                                backgroundColor: getChipColor(item.leadstatusName),
+                                color: "#000000", // Adjust text color for better contrast if needed
+                              }}
+                            />
+                          )}
+                          
+                        </div>
+                      }
                         secondary={
-                           <>
+                          <>
+                      
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             Follow up: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                            Project Manager {item.ProjectManager} 
+                            
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                              Assign By : {item.Name}
+                             Project Code :{item?.ProjectCode}
+
+                            
                             </Typography>
-                           </>
+                            <Typography variant="body2" style={{ fontSize: 10 }}>
+                             Created Date : {item?.CreateDate}
+
+                            
+                            </Typography>
+                          </>
                         }
                         secondaryTypographyProps={{ variant: "body2" }}
                       />
@@ -432,10 +439,10 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                       >
                         <IconButton
                           aria-label="edit"
-                        
+                         
                           sx={{ color: "blue" }}
-                        >
-                           {getDateStatus(item.ContactCreateDate) && (
+                        >      
+                    {getDateStatus(item.ContactCreateDate) && (
                             <Chip
                               label={getDateStatus(item.ContactCreateDate)}
                               size="small"
@@ -447,21 +454,12 @@ const Sidebar = ({ onEdit, onItemClick, onCreate }) => {
                               }}
                             />
                           )}
+
                         </IconButton>
-                        {/* <IconButton
-                          aria-label="delete"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleOpenConfirmDelete(item.Tid);
-                          }}
-                          sx={{ color: "red" }}
-                        >
-                          <DeleteIcon />
-                        </IconButton> */}
                       </Box>
                     </ListItem>
                   </Card>
-                </React.Fragment> 
+                </React.Fragment>
               ))}
           </List>
         </>
@@ -500,4 +498,4 @@ const getChipColor = (leadstatusName) => {
       return "#FFFFFF"; // Default color
   }
 };
-export default Sidebar;
+export default SaleProjectDetails;

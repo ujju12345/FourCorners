@@ -226,33 +226,33 @@ const OpenLeadSidebar = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
-              aria-label="more"
-              aria-controls="menu"
-              aria-haspopup="true"
-              onClick={handleDotsMenuOpen}
-              sx={{ color: "grey" }}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Popover
-              id="menu"
-              anchorEl={anchorElDots}
-              open={Boolean(anchorElDots)}
-              onClose={handleDotsMenuClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-            >
-              <MenuItem onClick={handleDownload}>
-                Download All Data
-              </MenuItem>
-            </Popover>
+              {/* <IconButton
+                aria-label="more"
+                aria-controls="menu"
+                aria-haspopup="true"
+                onClick={handleDotsMenuOpen}
+                sx={{ color: "grey" }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Popover
+                id="menu"
+                anchorEl={anchorElDots}
+                open={Boolean(anchorElDots)}
+                onClose={handleDotsMenuClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem onClick={handleDownload}>
+                  Download All Data
+                </MenuItem>
+              </Popover> */}
           </Box>
         </Box>
       </Grid>

@@ -225,7 +225,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -251,7 +251,7 @@ const BacklogSidebar = ({ onItemClick, onCreate }) => {
               <MenuItem onClick={handleDownload}>
                 Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>

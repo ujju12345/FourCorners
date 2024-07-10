@@ -77,6 +77,11 @@ const navigation = () => {
       path: "/typography",
     },
     {
+      title: "Project Details",
+      icon: AssignmentIcon,
+      path: "/projectinfo",
+    },
+    {
       sectionTitle: "Data Management",
     },
 
@@ -164,6 +169,11 @@ const navigation = () => {
 
     {
       sectionTitle: "Enquiries",
+    },
+    {
+      icon: CubeOutlineIcon,
+      title: "Template",
+      path: "/template",
     },
     {
       title: "Enquiry Source",

@@ -21,6 +21,8 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import { useCookies } from "react-cookie";
+
 
 const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -31,7 +33,9 @@ const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
   const [anchorElFilter, setAnchorElFilter] = useState(null);
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
+  const [cookies, setCookie] = useCookies(["amr"]);
 
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -39,7 +43,7 @@ const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php",
+        `https://apiforcorners.cubisysit.com/api/api-fetch-oppoclose.php?UserID=${userid}`,
    
       );
       console.log("API Response:", response.data);
@@ -205,7 +209,7 @@ const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -231,7 +235,7 @@ const OpportunityNotinterested = ({ onItemClick, onCreate }) => {
               <MenuItem onClick={handleDownload}>
                 Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>

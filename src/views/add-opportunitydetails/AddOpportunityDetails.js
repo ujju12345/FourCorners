@@ -198,23 +198,23 @@ const AddOpportunityDetails = ({ show, editData }) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    fetchDataOpportunity();
-  }, []);
+  // useEffect(() => {
+  //   fetchDataOpportunity();
+  // }, []);
 
-  const fetchDataOpportunity = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php"
-      );
-      setRows(response.data.data || []);
-    } catch (error) {
-      console.log("err");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchDataOpportunity = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.get(
+  //       "https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php"
+  //     );
+  //     setRows(response.data.data || []);
+  //   } catch (error) {
+  //     console.log("err");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (rows.length > 0) {
@@ -530,6 +530,8 @@ const AddOpportunityDetails = ({ show, editData }) => {
                 }
               />
             </Grid> */}
+
+    
 
             <Grid item xs={12} md={4}>
               <FormControl fullWidth>

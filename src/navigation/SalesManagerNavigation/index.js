@@ -11,13 +11,19 @@ const SalesManagerNavigation = () => {
     {
       title: "Dashboard",
       icon: HomeOutline,
-      path: "/",
+      path: "/views/sale-dashboard/",
     },
 
     {
       title: "Project Manager",
       icon: AssignmentIcon,
       path: "/typography",
+    },
+
+    {
+      title: "Project Details",
+      icon: AssignmentIcon,
+      path: "/views/SaleProjectDetails",
     },
 
     {
@@ -55,6 +61,38 @@ const SalesManagerNavigation = () => {
           icon: CubeOutlineIcon,
           path: "/opportunity/NotInterested",
         },
+      ],
+    },
+    {
+      title: "Availibilty List",
+      icon: TrendingUpIcon,
+      path: "/opportunity",
+      children: [
+        {
+          title: "Heaven Palace",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
+        {
+          title: "Heaven Palace II",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
+      ],
+    },
+
+    {
+      title: "Post Sales",
+      icon: TrendingUpIcon,
+      path: "/opportunity",
+      children: [
+        {
+          title: "Payment Reminder",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
+
+       
       ],
     },
   ];

@@ -18,6 +18,7 @@ import IconButton from '@mui/material/IconButton'
 import Avatar from '@mui/material/Avatar'
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
 import HistoryOpportunity from 'src/views/history-apportunity/HistoryOpportunity';
+import { useCookies } from "react-cookie";
 
 
 
@@ -155,7 +156,8 @@ const Tellecalling = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
-
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
   }, []);
@@ -164,7 +166,8 @@ const Tellecalling = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php');
+       
+        const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);

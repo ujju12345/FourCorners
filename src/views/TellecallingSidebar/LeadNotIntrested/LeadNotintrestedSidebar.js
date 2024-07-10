@@ -208,7 +208,7 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
               </MenuItem>
             </Popover>
 
-            <IconButton
+            {/* <IconButton
               aria-label="more"
               aria-controls="menu"
               aria-haspopup="true"
@@ -216,8 +216,8 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
               sx={{ color: "grey" }}
             >
               <MoreVertIcon />
-            </IconButton>
-            <Popover
+            </IconButton> */}
+            {/* <Popover
               id="menu"
               anchorEl={anchorElDots}
               open={Boolean(anchorElDots)}
@@ -234,7 +234,7 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
               <MenuItem onClick={handleDownload}>
                 Download All Data
               </MenuItem>
-            </Popover>
+            </Popover> */}
           </Box>
         </Box>
       </Grid>
