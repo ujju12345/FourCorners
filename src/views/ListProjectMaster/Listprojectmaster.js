@@ -13,6 +13,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ApartmentIcon from '@mui/icons-material/Apartment';
+
 import { Modal, TextField, IconButton, Menu, MenuItem , FormControl , InputLabel , Select} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
@@ -249,11 +251,9 @@ const Listprojectmaster = ({ item, onDelete, onEdit , onHistoryClick }) => {
               padding: 5,
             }}
           >
-                  <Avatar
-                          alt="John Doe"
-                          sx={{ width: 60, height: 60, mr: 6 }}
-                          src="/images/avatars/1.png"
-                        />
+                    <ApartmentIcon style={{ fontSize: 30, textAlign:"center" ,width: 60, height: 60, mr: 6 ,color: '#b187fd'}} />
+
+                
             <Box sx={{ flex: "1 1" }}>
               <Typography
                 variant="h6"

@@ -29,6 +29,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import FaceIcon from '@mui/icons-material/Face';
 
 import { Divider } from "@mui/material";
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -83,7 +84,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
       const filteredData = rows.filter(
         (item) =>
           item?.ProjectName?.toLowerCase().includes(lowerCaseQuery) ||
-          item?.ProjectManager?.toLowerCase().includes(lowerCaseQuery)
+          item?.CompanyName?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
     }
@@ -378,19 +379,17 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
                 <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>
                    <ListItem disablePadding onClick={() => handleListItemClick(item)}>
-                      <ListItemAvatar>
-                        <Avatar
-                          alt="John Doe"
-                          sx={{ width: 40, height: 40, margin: 2 }}
-                          src="/images/avatars/1.png"
-                        />
-                      </ListItemAvatar>
+                   <ListItemAvatar>
+ 
+        <ApartmentIcon style={{ width: 40, height: 40, margin: 2 ,color: '#b187fd' }} />
+
+    </ListItemAvatar>
                       <ListItemText
                        primary={
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <Typography
                             variant="subtitle1"
-                            style={{ fontWeight: 600, fontSize: 13 }}
+                            style={{ fontWeight: 600, fontSize: 13 }}         
                           >
                          {item.ProjectName}
                           </Typography>
@@ -415,11 +414,11 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
                           <>
                       
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                            Project Manager {item.ProjectManager} 
+                            Company Name :{item.CompanyName} 
                             
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             Project Code :{item?.ProjectCode}
+                            Created By :{item?.Name}
 
                             
                             </Typography>
@@ -485,17 +484,5 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
   );
 };
 
-// Function to get chip color based on leadstatusName
-const getChipColor = (leadstatusName) => {
-  switch (leadstatusName) {
-    case "Warm":
-      return "#FFD700"; // Yellow
-    case "Hot":
-      return "#FF6347"; // Red
-    case "Cold":
-      return "#87CEEB"; // Blue
-    default:
-      return "#FFFFFF"; // Default color
-  }
-};
+
 export default SidebarProjectMaster;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Grid, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
-import ListProjectinfo from 'src/views/List-projectinfo/ListProjectinfo';
+import ListProjectinfo from 'src/views/projectinfo/ListProjectinfo';
 import AddProjectinfo from 'src/views/projectinfo/AddProjectinfo';
 import { useRouter } from 'next/router';
 import Link from 'next/link'
