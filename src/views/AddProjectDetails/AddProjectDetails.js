@@ -80,7 +80,7 @@ const AddProjectDetails = ({ show, editData }) => {
   const fetchProject = () => {
     axios
       .get(
-        "https://apiforcorners.cubisysit.com/api/api-dropdown-projectinfo.php"
+        "https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php"
       )
       .then((response) => {
         console.warn("response of project type---->", response);
@@ -102,27 +102,14 @@ const AddProjectDetails = ({ show, editData }) => {
         console.warn("response of customers type---->", response);
         if (response.data.status === "Success") {
           setWingsdata(response.data.data);
+        }else{
+            setWingsdata([])
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+            setWingsdata([]);
       });
-  };
-
-  const handleProjectChange = (e) => {
-    const selectedProjectID = e.target.value;
-    const selectedProject = projectTypeData.find(
-      (project) => project.ProjectID === selectedProjectID
-    );
-
-    setFormData({
-      ...formData,
-      ProjectID: selectedProjectID,
-      reraregistration: selectedProject ? selectedProject.reraregistration : "",
-      address: selectedProject ? selectedProject.address : "",
-    });
-
-    fetchWings(selectedProjectID);
   };
 
 
@@ -284,8 +271,11 @@ const AddProjectDetails = ({ show, editData }) => {
                   <Select
                     value={formData.ProjectID}
                     name="ProjectID"
-                    onChange={(e) => {
-                      handleProjectChange(e);
+                    onChange={(e) => {setFormData({
+                      ...formData,
+                      ProjectID: e.target.value,
+                    });
+                    fetchWings(e.target.value)
                     }}
                     label={<>Select Project</>}
                   >
