@@ -23,7 +23,7 @@ const SalesManagerNavigation = () => {
     {
       title: "Project Details",
       icon: AssignmentIcon,
-      path: "/views/SaleProjectDetails",
+      path: "/sales-project-details",
     },
 
     {
