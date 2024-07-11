@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -45,25 +47,40 @@ const AddProjectDetails = ({ show, editData }) => {
   };
 
   const initialProjectdata = {
-    ProjectID:"",
-    WingID:"",
+    No: "",
+    UnitType: "",
+    Area: "",
+    SKU: "",
+    PartyName: "",
     Status: 1,
     CreateUID: cookies.amr?.UserID || 1,
   };
   const [formData, setFormData] = useState(initialFormData);
-  const [projectRoomData,setProjectRoomData] = useState(initialProjectdata)
+  const [projectRoomData, setProjectRoomData] = useState(initialProjectdata);
   const [companyTypeData, setCompanyTypeData] = useState([]);
   const [projectTypeData, setProjectTypeData] = useState([]);
 
-  const [projectData,setProjectData] = useState([]);
-  const [selectedWings,setSelectedWings] = useState([]);
+  const [projectData, setProjectData] = useState([]);
+  const [selectedWings, setSelectedWings] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [tellecallingID, setTellecallingID] = useState([]);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
-  const [showMoreDetails,setShowMoreDetails] = useState(false);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
+
+  const [additionalFields, setAdditionalFields] = useState([
+    {
+      reraregistration: "",
+      No:"",
+      Area: "",
+      PartyName: "",
+      FloorNo: "",
+    },
+  ]);
+
+
 
   const RequiredIndicator = () => {
     return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
@@ -72,12 +89,101 @@ const AddProjectDetails = ({ show, editData }) => {
   useEffect(() => {
     fetchCompany();
     fetchProject();
+    skUID();
+    unitType();
+    insertApi();
   }, []);
 
   const wingsData = Array.from({ length: 26 }, (_, i) => ({
     WingID: i + 1,
     WingName: `Wing ${String.fromCharCode(65 + i)}`,
   }));
+
+  const handleAddFields = () => {
+    setAdditionalFields([
+      ...additionalFields,
+      {
+        reraregistration: "",
+        No:"",
+        Area: "",
+        PartyName: "",
+        FloorNo: "",
+      },
+    ]);
+  };
+
+  const handleFieldChange = (index, event) => {
+    const newFields = [...additionalFields];
+    newFields[index][event.target.name] = event.target.value;
+    setAdditionalFields(newFields);
+  };
+
+  const handleProjectRoomDataChange = (e) => {
+    setProjectRoomData({
+      ...projectRoomData,
+      [e.target.name]: e.target.value,
+    });
+
+    if (e.target.name === "ProjectID") {
+      fetchWings(e.target.value);
+    }
+  };
+
+  const handleFormDataChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
+  const skUID = () => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-projectsku.php"
+      )
+      .then((response) => {
+        console.warn("response of campaign type---->", response);
+        if (response.data.status === "Success") {
+          setCompanyTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const unitType = () => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-projectunittype.php"
+      )
+      .then((response) => {
+        console.warn("response of campaign type---->", response);
+        if (response.data.status === "Success") {
+          setCompanyTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const insertApi = () => {
+    axios
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-insert-projectroom.php"
+      )
+      .then((response) => {
+        console.warn("response of campaign type---->", response);
+        if (response.data.status === "Success") {
+          setCompanyTypeData(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
   const fetchCompany = () => {
     axios
@@ -111,8 +217,7 @@ const AddProjectDetails = ({ show, editData }) => {
       });
   };
 
-
-    const fetchProjectInfo = () => {
+  const fetchProjectInfo = () => {
     axios
       .get(
         "https://apiforcorners.cubisysit.com/api/api-dropdown-projectinfo.php"
@@ -137,16 +242,15 @@ const AddProjectDetails = ({ show, editData }) => {
         console.warn("response of customers type---->", response);
         if (response.data.status === "Success") {
           setSelectedWings(response.data.data);
-        }else{
-            setSelectedWings([]);
+        } else {
+          setSelectedWings([]);
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-            setSelectedWings([]);
+        setSelectedWings([]);
       });
   };
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -192,7 +296,7 @@ const AddProjectDetails = ({ show, editData }) => {
         setFormData(initialFormData);
         setShowMoreDetails(true);
         fetchProjectInfo();
-        
+
         // setSubmitSuccess(true);
         setSubmitError(false);
         // show(false);
@@ -238,7 +342,7 @@ const AddProjectDetails = ({ show, editData }) => {
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectroom.php";
 
-      console.log(formData, "ALL the data of project rooms");
+    console.log(formData, "ALL the data of project rooms");
     try {
       const response = await axios.post(url, projectRoomData, {
         headers: {
@@ -491,92 +595,173 @@ const AddProjectDetails = ({ show, editData }) => {
             </form>
           ) : (
             <form style={{ marginTop: "50px" }}>
-              <Grid container spacing={7}>
-                <Grid item xs={8} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>
-                      Select Project
-                      <RequiredIndicator />
-                    </InputLabel>
-                    <Select
-                      value={projectRoomData.ProjectID}
-                      name="ProjectID"
-                      onChange={(e) => {
-                        setProjectRoomData({
-                          ...projectRoomData,
-                          ProjectID: e.target.value,
-                        });
-                        fetchWings(e.target.value);
-                      }}
-                      label={<>Select Project</>}
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      {projectData.map((project) => (
-                        <MenuItem
-                          key={project.ProjectID}
-                          value={project.ProjectID}
-                        >
-                          {project.ProjectName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors.ProjectID && (
-                      <Typography variant="caption" color="error">
-                        {errors.ProjectID}
-                      </Typography>
-                    )}
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={8} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>
-                      Wings
-                      <RequiredIndicator />
-                    </InputLabel>
-                    <Select
-                      value={projectRoomData.WingID}
-                      name="WingName"
-                      onChange={(e) => {
-                        setProjectRoomData({
-                          ...projectRoomData,
-                          WingID: e.target.value,
-                        });
-                      }}
-                      label={<>Select Wing</>}
-                    >
-                      {selectedWings.map((project) => (
-                        <MenuItem key={project.WingID} value={project.WingID}>
-                          {project.WingName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors.ProjectID && (
-                      <Typography variant="caption" color="error">
-                        {errors.ProjectID}
-                      </Typography>
-                    )}
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      marginRight: 3.5,
-                      marginTop: 5,
-                      backgroundColor: "#9155FD",
-                      color: "#FFFFFF",
-                    }}
-                    onClick={handleProjectSubmit}
+            <Grid container spacing={7}>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Select Project
+                    <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={projectRoomData.ProjectID}
+                    name="ProjectID"
+                    onChange={handleProjectRoomDataChange}
+                    label={<>Select Project</>}
                   >
-                    Submit
-                  </Button>
-                </Grid>
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {projectData.map((project) => (
+                      <MenuItem key={project.ProjectID} value={project.ProjectID}>
+                        {project.ProjectName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.ProjectID && (
+                    <Typography variant="caption" color="error">
+                      {errors.ProjectID}
+                    </Typography>
+                  )}
+                </FormControl>
               </Grid>
-            </form>
+      
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>
+                    Wings
+                    <RequiredIndicator />
+                  </InputLabel>
+                  <Select
+                    value={projectRoomData.WingID}
+                    name="WingID"
+                    onChange={handleProjectRoomDataChange}
+                    label={<>Select Wing</>}
+                  >
+                    {selectedWings.map((project) => (
+                      <MenuItem key={project.WingID} value={project.WingID}>
+                        {project.WingName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.ProjectID && (
+                    <Typography variant="caption" color="error">
+                      {errors.ProjectID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+      
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={<>No</>}
+                  type="text"
+                  name="reraregistration"
+                  value={formData.reraregistration}
+                  onChange={handleFormDataChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                  }}
+                />
+                {errors.Name && (
+                  <Typography variant="caption" color="error">
+                    {errors.Name}
+                  </Typography>
+                )}
+              </Grid>
+      
+              {additionalFields.map((field, index) => (
+                <React.Fragment key={index}>
+                  <Grid item xs={8} sm={4}>
+                    <TextField
+                      fullWidth
+                      label={<>Area</>}
+                      type="text"
+                      name="Area"
+                      value={field.Area}
+                      onChange={(event) => handleFieldChange(index, event)}
+                      inputProps={{
+                        pattern: "[0-9]*",
+                      }}
+                    />
+                    {errors.Name && (
+                      <Typography variant="caption" color="error">
+                        {errors.Name}
+                      </Typography>
+                    )}
+                  </Grid>
+      
+                  <Grid item xs={8} sm={4}>
+                    <TextField
+                      fullWidth
+                      label={<>Party Name</>}
+                      type="text"
+                      name="PartyName"
+                      value={field.PartyName}
+                      onChange={(event) => handleFieldChange(index, event)}
+                      inputProps={{
+                        pattern: "[0-9]*",
+                      }}
+                    />
+                    {errors.Name && (
+                      <Typography variant="caption" color="error">
+                        {errors.Name}
+                      </Typography>
+                    )}
+                  </Grid>
+      
+                  <Grid item xs={8} sm={4}>
+                    <TextField
+                      fullWidth
+                      label={<>Floor No</>}
+                      type="text"
+                      name="FloorNo"
+                      value={field.FloorNo}
+                      onChange={(event) => handleFieldChange(index, event)}
+                      inputProps={{
+                        pattern: "[0-9]*",
+                      }}
+                    />
+                    {errors.Name && (
+                      <Typography variant="caption" color="error">
+                        {errors.Name}
+                      </Typography>
+                    )}
+                  </Grid>
+                </React.Fragment>
+              ))}
+      
+              <Grid item xs={8} sm={4}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginLeft: 45,
+                    marginTop: 10,
+                    backgroundColor: "#9155FD",
+                    color: "#FFFFFF",
+                  }}
+                  onClick={handleAddFields}
+                >
+                  +
+                </Button>
+              </Grid>
+      
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginRight: 3.5,
+                    marginTop: 5,
+                    backgroundColor: "#9155FD",
+                    color: "#FFFFFF",
+                  }}
+                  onClick={handleProjectSubmit}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
           )}
 
           <Snackbar
