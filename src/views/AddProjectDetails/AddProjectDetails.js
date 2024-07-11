@@ -45,7 +45,8 @@ const AddProjectDetails = ({ show, editData }) => {
   };
 
   const initialProjectdata = {
-
+    ProjectID:"",
+    WingID:"",
     Status: 1,
     CreateUID: cookies.amr?.UserID || 1,
   };
@@ -190,7 +191,8 @@ const AddProjectDetails = ({ show, editData }) => {
       if (response.data.status === "Success") {
         setFormData(initialFormData);
         setShowMoreDetails(true);
-        fetchProjectInfo()
+        fetchProjectInfo();
+        
         // setSubmitSuccess(true);
         setSubmitError(false);
         // show(false);
@@ -497,14 +499,14 @@ const AddProjectDetails = ({ show, editData }) => {
                       <RequiredIndicator />
                     </InputLabel>
                     <Select
-                      value={formData.ProjectID}
+                      value={projectRoomData.ProjectID}
                       name="ProjectID"
                       onChange={(e) => {
-                        setFormData({
-                          ...formData,
+                        setProjectRoomData({
+                          ...projectRoomData,
                           ProjectID: e.target.value,
                         });
-                        fetchWings(e.target.value)
+                        fetchWings(e.target.value);
                       }}
                       label={<>Select Project</>}
                     >
@@ -530,37 +532,30 @@ const AddProjectDetails = ({ show, editData }) => {
 
                 <Grid item xs={8} sm={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Wings</InputLabel>
+                    <InputLabel>
+                      Wings
+                      <RequiredIndicator />
+                    </InputLabel>
                     <Select
-                      multiple
-                      value={formData.WingName}
-                      onChange={(event) => {
-                        setFormData({
-                          ...formData,
-                          WingName: event.target.value,
+                      value={projectRoomData.WingID}
+                      name="WingName"
+                      onChange={(e) => {
+                        setProjectRoomData({
+                          ...projectRoomData,
+                          WingID: e.target.value,
                         });
                       }}
-                      renderValue={(selected) => selected.join(", ")}
-                      label={
-                        <>
-                          Wings <RequiredIndicator />
-                        </>
-                      }
+                      label={<>Select Wing</>}
                     >
-                      {selectedWings.map((key) => (
-                        <MenuItem key={key.WingID} value={key.WingName}>
-                          <Checkbox
-                            checked={
-                              formData.WingName.indexOf(key.WingName) > -1
-                            }
-                          />
-                          <ListItemText primary={key.WingName} />
+                      {selectedWings.map((project) => (
+                        <MenuItem key={project.WingID} value={project.WingID}>
+                          {project.WingName}
                         </MenuItem>
                       ))}
                     </Select>
-                    {errors.EstimatedbudgetID && (
+                    {errors.ProjectID && (
                       <Typography variant="caption" color="error">
-                        {errors.EstimatedbudgetID}
+                        {errors.ProjectID}
                       </Typography>
                     )}
                   </FormControl>
