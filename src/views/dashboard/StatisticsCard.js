@@ -74,7 +74,7 @@ const StatisticsCard = () => {
             </Avatar>
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Today Count</Typography>
+              <Typography variant='caption'>Today Follow Up</Typography>
               <Typography variant='h6'>{apiData ? apiData.summary.todayCount : '--'}</Typography>
             </Box>
            
@@ -96,7 +96,7 @@ const StatisticsCard = () => {
               <AccountOutline sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Backlog</Typography>
+              <Typography variant='caption'>Backlog Pending</Typography>
               <Typography variant='h6'>{apiData ? apiData.summary.pastCount : '--'}</Typography>
             </Box>
           </Box>
@@ -118,7 +118,7 @@ const StatisticsCard = () => {
             </Avatar>
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>FutureCount</Typography>
+              <Typography variant='caption'>Open Opportunity</Typography>
               <Typography variant='h6'>{apiData ? apiData.summary.futureCount : '--'}</Typography>
             </Box>
 
@@ -141,7 +141,7 @@ const StatisticsCard = () => {
               <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Total Count</Typography>
+              <Typography variant='caption'>All Opportunity</Typography>
               <Typography variant='h6'>{apiData ? apiData.summary.totalCount : '--'}</Typography>
             </Box>
        

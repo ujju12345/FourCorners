@@ -175,7 +175,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
           "https://apiforcorners.cubisysit.com/api/api-fetch-purpose.php"
         );
         const contactsRes = await axios.get(
-          "https://apiforcorners.cubisysit.com/api/api-fetch-Cid.php"
+          "https://apiforcorners.cubisysit.com/api/api-fetch-opcid.php"
         );
         const sourcesRes = await axios.get(
           "https://apiforcorners.cubisysit.com/api/api-fetch-source.php"

@@ -60,6 +60,24 @@ const navigation = () => {
         },
       ],
     },
+
+    {
+      sectionTitle: "Direct Login",
+    },
+
+    {
+      title: " Login",
+      icon: PhoneIcon,
+      // path: "/tellcalling-details",
+      children: [
+        {
+          title: "Employees Login",
+          icon: CubeOutlineIcon,
+          path: "/AdminLeadLogin",
+        },
+
+      ],
+    },
     {
       sectionTitle: "Companies",
     },
@@ -117,6 +135,11 @@ const navigation = () => {
           path: "/tellcalling-details/Backlog",
         },
         {
+          title: "Person Wise Search",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Leadcalender",
+        },
+        {
           title: "Calendar",
           icon: CubeOutlineIcon,
           path: "/tellcalling-details/Leadcalender",
@@ -158,6 +181,11 @@ const navigation = () => {
           title: "Calendar",
           icon: CubeOutlineIcon,
           path: "/opportunity/OpportunityCalender",
+        },
+        {
+          title: "Person Wise Search",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Leadcalender",
         },
         {
           title: "Not Interested",

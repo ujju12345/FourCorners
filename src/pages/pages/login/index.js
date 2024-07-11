@@ -63,7 +63,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     // debugger;
-    if (cookies && cookies.amr && cookies.amr.UserID) router.push('/');
+    // if (cookies && cookies.amr && cookies.amr.UserID) router.push('/');
   });
 
 
@@ -88,55 +88,59 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    // debugger;
     e.preventDefault();
-
+  
     try {
-
       const formData = {
         username: values.username,
         password: values.password,
       };
-
+  
       axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-login.php', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then(response => {
-          // debugger;
           if (response.data.status === 'Success') {
-
             const user = {
               FullName: response.data.data.Name,
               UserID: response.data.data.userid,
               RoleID: response.data.data.roleid,
               RoleName: response.data.data.rolename,
             };
-            console.log(user , 'SUBMMITEDDD DATAAAA');
+            console.log(user, 'SUBMITTED DATA');
             setCookie("amr", JSON.stringify(user), { path: "/" });
-            router.push('/');
-            console.log('SUBMMITEDDD DATAAAA');
+       
+            // router.push('/SaleDashboard');
+            console.log('bac');
+            // return
+            if (user.RoleID === 1) {
+              router.push('/');
+            } else if (user.RoleID === 4) {
+              router.push('/SaleDashboard');
+            } else {
+              router.push('/Telecalling');
+            }
+            console.log('SUBMITTED DATA');
           } else {
             setIsSnackbarOpen(true);
             setSnackbarMessage(response.data.message);
           }
         })
         .catch(error => {
-          debugger;
           console.error('There was an error!', error);
           setIsSnackbarOpen(true);
           setSnackbarMessage('There was an error, Please contact admin');
         });
-
-     
+  
     } catch (error) {
-      debugger;
       console.error('Login failed:', error);
       setIsSnackbarOpen(true);
       setSnackbarMessage('There was an error, Please contact admin');
     }
   };
+  
 
 
 
