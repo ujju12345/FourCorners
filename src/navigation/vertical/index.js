@@ -78,6 +78,17 @@ const navigation = () => {
 
       ],
     },
+   
+   
+    {
+      sectionTitle: "Booking",
+    },
+    {
+      title: "Booking form",
+      icon: BusinessIcon,
+      path: "/BookingForm",
+    },
+
     {
       sectionTitle: "Companies",
     },
@@ -192,6 +203,33 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/opportunity/NotInterested",
         },
+      ],
+    },
+
+    {
+      sectionTitle: "Post Sales",
+    },
+    {
+      title: "Post Sales",
+      icon: PhoneIcon,
+      path: "/tellcalling-details",
+      children: [
+        {
+          title: "Todays Follow up",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details",
+        },
+        {
+          title: "Backlog Payment",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Mylead",
+        },
+        {
+          title: "Open Payment ",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/OpenLead",
+        },
+       
       ],
     },
 

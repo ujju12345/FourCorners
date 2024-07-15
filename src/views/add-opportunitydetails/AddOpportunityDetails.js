@@ -151,6 +151,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
   }, []);
 
   useEffect(() => {
+    const userid = cookies.amr?.UserID || 'Role';
     const fetchData = async () => {
       try {
         const lookingForRes = await axios.get(
@@ -175,7 +176,7 @@ const AddOpportunityDetails = ({ show, editData }) => {
           "https://apiforcorners.cubisysit.com/api/api-fetch-purpose.php"
         );
         const contactsRes = await axios.get(
-          "https://apiforcorners.cubisysit.com/api/api-fetch-opcid.php"
+          `https://apiforcorners.cubisysit.com/api/api-fetch-convtooppo.php?UserID=${userid}`
         );
         const sourcesRes = await axios.get(
           "https://apiforcorners.cubisysit.com/api/api-fetch-source.php"

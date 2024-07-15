@@ -31,7 +31,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
+  console.log(item , 'CIDD MIL JAYEGAA<<<>>>>>>');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -46,14 +48,14 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
 
+  const [userMaster, setUserMaster] = useState([]);
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-
-  const [bhkOptions, setBhkOptions] = useState([]);
   const [currentUpdate, setCurrentUpdate] = useState([]);
 
   const [setRowDataToUpdate] = useState(null);
-
+  const [anchorElOpportunity, setAnchorElOpportunity] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -94,7 +96,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorElOpportunity(null);
   };
 
   const handleChange = (e) => {
@@ -102,9 +104,9 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    console.log(formData);
-    setOpen(false);
+  const handleClick = (event) => {
+    setAnchorElOpportunity(event.currentTarget);
+    fetchUserMasterData();
   };
 
   const handleHistoryClick = () => {
@@ -133,6 +135,89 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     };
     fetchData();
   }, [item]);
+  const fetchUserMasterData = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-usersales.php"
+      );
+      if (response.data.status === "Success") {
+        setUserMaster(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleMenuItemClick = async (event, userID) => {
+    event.preventDefault();
+
+    // Ensure item and Tid are available
+    if (!item || !item.Tid) {
+      console.error("No valid item or Tid found.");
+      return;
+    }
+
+    // Add Tid to formData
+    const formData = {
+      UserID:userID,
+      Cid:item?.Cid,
+      Tid: item.Tid,
+      Status:1,
+      CreateUID: cookies?.amr?.UserID || 1,
+
+    };
+
+    console.log(formData, "COVERT TO OPPORTUNITY Data 1");
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convtoppo.php";
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(formData, "COVERT TO OPPORTUNITY Data 2");
+
+      if (response.data.status === "Success") {
+        // setFormData(intialName);
+        setOpen(false);
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        // Show success message using SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: 
+             "Lead Converted to opportunity Successfully",
+            
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        // Show error message using SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
+      });
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -294,7 +379,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
-            onClick={handlenavigate}
+            onClick={handleClick}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
@@ -308,6 +393,30 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Opportunity
           </Button>
+          <Menu
+            anchorEl={anchorElOpportunity}
+            open={Boolean(anchorElOpportunity)}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                maxHeight: 300, // Set the desired height in pixels
+                overflowY: "auto", // Make the content scrollable if it exceeds the height
+              },
+            }}
+          >
+            <MenuItem disabled>
+              <Typography variant="subtitle1">Convert Lead to</Typography>
+            </MenuItem>
+            {userMaster.length > 0 ? (
+              userMaster.map((user, index) => (
+                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+                {index + 1}. {user.Name}
+              </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Menu>
         </Grid>
         <Grid item>
           <Button
@@ -624,26 +733,26 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 </IconButton>
               </a>
               <a
-          href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <IconButton
-            aria-label="whatsapp"
-            size="small"
-            sx={{
-              color: "green",
-              backgroundColor: "#e8f5e9",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#c8e6c9",
-              },
-            }}
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        </a>
+                href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton
+                  aria-label="whatsapp"
+                  size="small"
+                  sx={{
+                    color: "green",
+                    backgroundColor: "#e8f5e9",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    "&:hover": {
+                      backgroundColor: "#c8e6c9",
+                    },
+                  }}
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+              </a>
             </Box>
           </Box>
 
