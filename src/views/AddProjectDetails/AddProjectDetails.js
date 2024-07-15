@@ -47,13 +47,23 @@ const AddProjectDetails = ({ show, editData }) => {
   };
 
   const initialProjectdata = {
+    skuID:"",
+    UnittypeID:"",
     No: "",
-    UnitType: "",
     Area: "",
-    SKU: "",
     PartyName: "",
     Status: 1,
     CreateUID: cookies.amr?.UserID || 1,
+  };
+
+  const initialAdditionalField = {
+    skutype: "",
+    unittype: "",
+    reraregistration: "",
+    No: "",
+    Area: "",
+    PartyName: "",
+    FloorNo: "",
   };
   const [formData, setFormData] = useState(initialFormData);
   const [projectRoomData, setProjectRoomData] = useState(initialProjectdata);
@@ -62,6 +72,8 @@ const AddProjectDetails = ({ show, editData }) => {
 
   const [projectData, setProjectData] = useState([]);
   const [selectedWings, setSelectedWings] = useState([]);
+  const [skuType,setSkuType] = useState([]);
+  const [unitTypeData,setUnitTypeData] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [tellecallingID, setTellecallingID] = useState([]);
@@ -69,49 +81,13 @@ const AddProjectDetails = ({ show, editData }) => {
   const [submitError, setSubmitError] = useState(false);
 
   const [showMoreDetails, setShowMoreDetails] = useState(false);
-
   const [additionalFields, setAdditionalFields] = useState([
-    {
-      reraregistration: "",
-      No:"",
-      Area: "",
-      PartyName: "",
-      FloorNo: "",
-    },
+    initialAdditionalField,
   ]);
 
-
-
-  const RequiredIndicator = () => {
-    return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
-  };
-
-  useEffect(() => {
-    fetchCompany();
-    fetchProject();
-    skUID();
-    unitType();
-    insertApi();
-  }, []);
-
-  const wingsData = Array.from({ length: 26 }, (_, i) => ({
-    WingID: i + 1,
-    WingName: `Wing ${String.fromCharCode(65 + i)}`,
-  }));
-
   const handleAddFields = () => {
-    setAdditionalFields([
-      ...additionalFields,
-      {
-        reraregistration: "",
-        No:"",
-        Area: "",
-        PartyName: "",
-        FloorNo: "",
-      },
-    ]);
+    setAdditionalFields([...additionalFields, { ...initialAdditionalField }]);
   };
-
   const handleFieldChange = (index, event) => {
     const newFields = [...additionalFields];
     newFields[index][event.target.name] = event.target.value;
@@ -129,6 +105,23 @@ const AddProjectDetails = ({ show, editData }) => {
     }
   };
 
+
+  const RequiredIndicator = () => {
+    return <span style={{ color: "red", marginLeft: "5px" }}>*</span>;
+  };
+
+  useEffect(() => {
+    fetchCompany();
+    fetchProject();
+    skUID();
+    unitType();
+  }, []);
+
+  const wingsData = Array.from({ length: 26 }, (_, i) => ({
+    WingID: i + 1,
+    WingName: `Wing ${String.fromCharCode(65 + i)}`,
+  }));
+
   const handleFormDataChange = (e) => {
     setFormData({
       ...formData,
@@ -143,9 +136,9 @@ const AddProjectDetails = ({ show, editData }) => {
         "https://apiforcorners.cubisysit.com/api/api-fetch-projectsku.php"
       )
       .then((response) => {
-        console.warn("response of campaign type---->", response);
+        console.warn("company type---->", response);
         if (response.data.status === "Success") {
-          setCompanyTypeData(response.data.data);
+          setSkuType(response.data.data);
         }
       })
       .catch((error) => {
@@ -159,9 +152,9 @@ const AddProjectDetails = ({ show, editData }) => {
         "https://apiforcorners.cubisysit.com/api/api-fetch-projectunittype.php"
       )
       .then((response) => {
-        console.warn("response of campaign type---->", response);
+        console.warn("response of unit type---->", response);
         if (response.data.status === "Success") {
-          setCompanyTypeData(response.data.data);
+          setUnitTypeData(response.data.data);
         }
       })
       .catch((error) => {
@@ -169,15 +162,14 @@ const AddProjectDetails = ({ show, editData }) => {
       });
   };
 
-  const insertApi = () => {
+  const addProjectRoom = () => {
     axios
-      .get(
-        "https://apiforcorners.cubisysit.com/api/api-insert-projectroom.php"
+      .post(
+        "https://apiforcorners.cubisysit.com/api/api-insert-projectroom.php",projectRoomData
       )
       .then((response) => {
-        console.warn("response of campaign type---->", response);
+        console.warn("add project room response---->", response);
         if (response.data.status === "Success") {
-          setCompanyTypeData(response.data.data);
         }
       })
       .catch((error) => {
@@ -595,173 +587,225 @@ const AddProjectDetails = ({ show, editData }) => {
             </form>
           ) : (
             <form style={{ marginTop: "50px" }}>
-            <Grid container spacing={7}>
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    Select Project
-                    <RequiredIndicator />
-                  </InputLabel>
-                  <Select
-                    value={projectRoomData.ProjectID}
-                    name="ProjectID"
-                    onChange={handleProjectRoomDataChange}
-                    label={<>Select Project</>}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    {projectData.map((project) => (
-                      <MenuItem key={project.ProjectID} value={project.ProjectID}>
-                        {project.ProjectName}
+              <Grid container spacing={7}>
+                <Grid item xs={8} sm={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>
+                      Select Project
+                      <RequiredIndicator />
+                    </InputLabel>
+                    <Select
+                      value={projectRoomData.ProjectID}
+                      name="ProjectID"
+                      onChange={handleProjectRoomDataChange}
+                      label={<>Select Project</>}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
                       </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.ProjectID && (
-                    <Typography variant="caption" color="error">
-                      {errors.ProjectID}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Grid>
-      
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    Wings
-                    <RequiredIndicator />
-                  </InputLabel>
-                  <Select
-                    value={projectRoomData.WingID}
-                    name="WingID"
-                    onChange={handleProjectRoomDataChange}
-                    label={<>Select Wing</>}
+                      {projectData.map((project) => (
+                        <MenuItem
+                          key={project.ProjectID}
+                          value={project.ProjectID}
+                        >
+                          {project.ProjectName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.ProjectID && (
+                      <Typography variant="caption" color="error">
+                        {errors.ProjectID}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={8} sm={4}>
+                  <FormControl fullWidth>
+                    <InputLabel>
+                      Wings
+                      <RequiredIndicator />
+                    </InputLabel>
+                    <Select
+                      value={projectRoomData.WingID}
+                      name="WingID"
+                      onChange={handleProjectRoomDataChange}
+                      label={<>Select Wing</>}
+                    >
+                      {selectedWings.map((project) => (
+                        <MenuItem key={project.WingID} value={project.WingID}>
+                          {project.WingName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.ProjectID && (
+                      <Typography variant="caption" color="error">
+                        {errors.ProjectID}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
+
+                {additionalFields.map((field, index) => (
+                  <React.Fragment key={index}>
+                    <Grid item xs={8} sm={4}>
+                      <FormControl fullWidth>
+                        <InputLabel>
+                          SKU Type
+                          <RequiredIndicator />
+                        </InputLabel>
+                        <Select
+                          value={field.skuID}
+                          name="skuID"
+                          onChange={(event) => handleFieldChange(index, event)}
+                          label={<>Select SKU Type</>}
+                        >
+                          {skuType.map((project) => (
+                            <MenuItem key={project.skuID} value={project.skuID}>
+                              {project.skuName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.ProjectID && (
+                          <Typography variant="caption" color="error">
+                            {errors.ProjectID}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={8} sm={4}>
+                      <FormControl fullWidth>
+                        <InputLabel>
+                          Unit Type
+                          <RequiredIndicator />
+                        </InputLabel>
+                        <Select
+                          value={field.unitID}
+                          name="unitID"
+                          onChange={(event) => handleFieldChange(index, event)}
+                          label={<>Select Unit Type</>}
+                        >
+                          {unitTypeData.map((project) => (
+                            <MenuItem
+                              key={project.UnittypeID}
+                              value={project.UnittypeID}
+                            >
+                              {project.UnittypeName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.ProjectID && (
+                          <Typography variant="caption" color="error">
+                            {errors.ProjectID}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={8} sm={4}>
+                      <TextField
+                        fullWidth
+                        label={<>No</>}
+                        type="text"
+                        name="No"
+                        value={field.No}
+                        onChange={(event) => handleFieldChange(index, event)}
+                      />
+                      {errors.Name && (
+                        <Typography variant="caption" color="error">
+                          {errors.Name}
+                        </Typography>
+                      )}
+                    </Grid>
+                    <Grid item xs={8} sm={4}>
+                      <TextField
+                        fullWidth
+                        label={<>Area</>}
+                        type="text"
+                        name="Area"
+                        value={field.Area}
+                        onChange={(event) => handleFieldChange(index, event)}
+                        inputProps={{
+                          pattern: "[0-9]*",
+                        }}
+                      />
+                      {errors.Name && (
+                        <Typography variant="caption" color="error">
+                          {errors.Name}
+                        </Typography>
+                      )}
+                    </Grid>
+
+                    <Grid item xs={8} sm={4}>
+                      <TextField
+                        fullWidth
+                        label={<>Party Name</>}
+                        type="text"
+                        name="PartyName"
+                        value={field.PartyName}
+                        onChange={(event) => handleFieldChange(index, event)}
+                        inputProps={{
+                          pattern: "[0-9]*",
+                        }}
+                      />
+                      {errors.Name && (
+                        <Typography variant="caption" color="error">
+                          {errors.Name}
+                        </Typography>
+                      )}
+                    </Grid>
+
+                    <Grid item xs={8} sm={4}>
+                      <TextField
+                        fullWidth
+                        label={<>Floor No</>}
+                        type="text"
+                        name="FloorNo"
+                        value={field.FloorNo}
+                        onChange={(event) => handleFieldChange(index, event)}
+                        inputProps={{
+                          pattern: "[0-9]*",
+                        }}
+                      />
+                      {errors.Name && (
+                        <Typography variant="caption" color="error">
+                          {errors.Name}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </React.Fragment>
+                ))}
+
+                <Grid item xs={8} sm={4}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginLeft: 45,
+                      marginTop: 10,
+                      backgroundColor: "#9155FD",
+                      color: "#FFFFFF",
+                    }}
+                    onClick={handleAddFields}
                   >
-                    {selectedWings.map((project) => (
-                      <MenuItem key={project.WingID} value={project.WingID}>
-                        {project.WingName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.ProjectID && (
-                    <Typography variant="caption" color="error">
-                      {errors.ProjectID}
-                    </Typography>
-                  )}
-                </FormControl>
+                    +
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginRight: 3.5,
+                      marginTop: 5,
+                      backgroundColor: "#9155FD",
+                      color: "#FFFFFF",
+                    }}
+                    onClick={addProjectRoom}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
               </Grid>
-      
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>No</>}
-                  type="text"
-                  name="reraregistration"
-                  value={formData.reraregistration}
-                  onChange={handleFormDataChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                  }}
-                />
-                {errors.Name && (
-                  <Typography variant="caption" color="error">
-                    {errors.Name}
-                  </Typography>
-                )}
-              </Grid>
-      
-              {additionalFields.map((field, index) => (
-                <React.Fragment key={index}>
-                  <Grid item xs={8} sm={4}>
-                    <TextField
-                      fullWidth
-                      label={<>Area</>}
-                      type="text"
-                      name="Area"
-                      value={field.Area}
-                      onChange={(event) => handleFieldChange(index, event)}
-                      inputProps={{
-                        pattern: "[0-9]*",
-                      }}
-                    />
-                    {errors.Name && (
-                      <Typography variant="caption" color="error">
-                        {errors.Name}
-                      </Typography>
-                    )}
-                  </Grid>
-      
-                  <Grid item xs={8} sm={4}>
-                    <TextField
-                      fullWidth
-                      label={<>Party Name</>}
-                      type="text"
-                      name="PartyName"
-                      value={field.PartyName}
-                      onChange={(event) => handleFieldChange(index, event)}
-                      inputProps={{
-                        pattern: "[0-9]*",
-                      }}
-                    />
-                    {errors.Name && (
-                      <Typography variant="caption" color="error">
-                        {errors.Name}
-                      </Typography>
-                    )}
-                  </Grid>
-      
-                  <Grid item xs={8} sm={4}>
-                    <TextField
-                      fullWidth
-                      label={<>Floor No</>}
-                      type="text"
-                      name="FloorNo"
-                      value={field.FloorNo}
-                      onChange={(event) => handleFieldChange(index, event)}
-                      inputProps={{
-                        pattern: "[0-9]*",
-                      }}
-                    />
-                    {errors.Name && (
-                      <Typography variant="caption" color="error">
-                        {errors.Name}
-                      </Typography>
-                    )}
-                  </Grid>
-                </React.Fragment>
-              ))}
-      
-              <Grid item xs={8} sm={4}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginLeft: 45,
-                    marginTop: 10,
-                    backgroundColor: "#9155FD",
-                    color: "#FFFFFF",
-                  }}
-                  onClick={handleAddFields}
-                >
-                  +
-                </Button>
-              </Grid>
-      
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginRight: 3.5,
-                    marginTop: 5,
-                    backgroundColor: "#9155FD",
-                    color: "#FFFFFF",
-                  }}
-                  onClick={handleProjectSubmit}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
+            </form>
           )}
 
           <Snackbar
