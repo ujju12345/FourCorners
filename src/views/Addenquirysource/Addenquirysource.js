@@ -19,12 +19,9 @@ const Addenquirysource = ({ show, rowData }) => {
   const [formData, setFormData] = useState({
     ProjectID: "",
     WingID: "", // Corrected: Changed WingData to WingID for selection
-    Status:1,
-    CreateUID:1,
-    file:""
-    
+    Status: 1,
+    CreateUID: 1,
   });
-  
 
   const [wingData, setWingData] = useState([]);
 
@@ -58,11 +55,8 @@ const Addenquirysource = ({ show, rowData }) => {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]); // Set file state
-  
-    // Update formData to include the file
-   
   };
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -73,25 +67,26 @@ const Addenquirysource = ({ show, rowData }) => {
 
   const handleSubmitFile = async (event) => {
     event.preventDefault();
-  
+
     if (!file) {
       setError("Please select a file.");
       return;
     }
-  
+
+    // Create a FormData object
     const formDataFile = new FormData();
-    formDataFile.append("file", formData.file);
-  
-    // Append additional form data fields
+    formDataFile.append("file", file);
     formDataFile.append("ProjectID", formData.ProjectID);
     formDataFile.append("WingID", formData.WingID);
     formDataFile.append("Status", formData.Status);
     formDataFile.append("CreateUID", formData.CreateUID);
-  
+
+    console.log(formDataFile, "dekh bhaiiiiiii");
+
     try {
       setLoading(true);
       const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-excel-projectroom.php",
+        "http://3.108.228.197:3000/proxy_u",
         formDataFile,
         {
           headers: {
@@ -99,8 +94,10 @@ const Addenquirysource = ({ show, rowData }) => {
           },
         }
       );
-  
+
       if (response.data.status === "Success") {
+        console.log("Hogaya submit");
+
         Swal.fire({
           icon: "success",
           title: "File uploaded successfully!",
@@ -126,7 +123,6 @@ const Addenquirysource = ({ show, rowData }) => {
       setLoading(false);
     }
   };
-  
 
   return (
     <Card>

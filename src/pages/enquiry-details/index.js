@@ -87,14 +87,7 @@ const AccountSettings = () => {
               Add
             </Button>
 
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleDownload}
-              style={{ marginBottom: "8px", float: "right" }}
-            >
-              Download
-            </Button>
+           
           </Grid>
 
           <Grid container spacing={6}>

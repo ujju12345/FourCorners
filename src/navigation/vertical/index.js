@@ -206,9 +206,9 @@ const navigation = () => {
       ],
     },
 
-    {
-      sectionTitle: "Post Sales",
-    },
+  {
+    sectionTitle: "Post Sales",
+  },
     {
       title: "Post Sales",
       icon: PhoneIcon,

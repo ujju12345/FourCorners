@@ -91,7 +91,7 @@ const Enquirysource = () => {
     <Addenquirysource show={handleBack} editData={rowDataToUpdate} />
   </Grid>
   <Grid item xs={12}>
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+    {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
       <Button
         variant="contained"
         sx={{ marginRight: 3.5 }}
@@ -100,7 +100,7 @@ const Enquirysource = () => {
         Download List
       </Button>
    
-    </Box>
+    </Box> */}
   </Grid>
   <Grid item xs={12}>
     <Listenquirysource rows={rows} onEdit={handleEdit} setShowTabAccount={handleBack}  onDelete={handleDelete}/>

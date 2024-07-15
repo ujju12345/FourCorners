@@ -37,38 +37,46 @@ const FormRosenagar = ({ show, editData }) => {
   const initialFormData = {
     BookingDate: null,
     BookedBy: "",
-    imageFile: null,
+    // imageFile: null,
     Mobile: "",
     Name: "",
     Address: "",
-    pancard: "",
+    Pancard: "",
     Email: "",
-    bookingType: "",
+    BookingType: "",
     area: "",
-    ttlamount: "",
-    charges: "",
-    parkingFacility: "",
-    flatCost: "",
-    flatCostInWords: "",
-    gst: "",
-    stampduty: "",
-    registration: "",
-    advocate: "",
-    extracost: "",
-    totalCost: "",
-    unsableArea: "",
-    agreementcarpet: "",
-    remark: "",
-    remarkDate: "",
+    TtlAmount: "",
+    Charges: "",
+    ParkingFacility: "",
+    FlatCost: "",
+    FlatCostInWords: "",
+    Gst: "",
+    StampDuty: "",
+    Registration: "",
+    UnittypeID: "",
+    Advocate: "",
+    ExtraCost: "",
+    TotalCost: "",
+    UnsableArea: "",
+    AgreementCarpet: "",
+    Area:"",
+    Remark: "",
+    // remarkDate: "",
     ProjectID: "",
     WingID: "",
-    flatNo: "",
+    FlatNo: "",
     FlatNumber: "",
+    FloorNo:"",
+    Status:1,
+    CreateUID:1
+
   };
+ 
   const [remarks, setRemarks] = useState([{ remark: "", date: null }]);
   const [projectMaster, setProjectMaster] = useState([]);
   const [floor, setFloor] = useState([]);
   const [flatNoData, setFlatNoData] = useState([]);
+  const [unitTypeData, setUnitTypeData] = useState([]);
   const [formData, setFormData] = useState(initialFormData);
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
@@ -188,18 +196,18 @@ const FormRosenagar = ({ show, editData }) => {
           ...prevFormData,
           [name]: numericValue,
         }));
-      } else if (name === "flatCost") {
+      } else if (name === "FlatCost") {
         const numericValue = value.replace(/,/g, "");
         const formattedValue = formatNumber(numericValue);
-        const flatCostInWords = numberToWordsIndian(
+        const FlatCostInWords = numberToWordsIndian(
           parseInt(numericValue || 0)
         );
 
         setFormData((prevFormData) => ({
           ...prevFormData,
-          flatCost: formattedValue,
-          flatCostInWords:
-            flatCostInWords.charAt(0).toUpperCase() + flatCostInWords.slice(1),
+          FlatCost: formattedValue,
+          FlatCostInWords:
+          FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       } else {
         setFormData((prevFormData) => ({
@@ -281,6 +289,57 @@ const FormRosenagar = ({ show, editData }) => {
     }
   }, [formData.WingID, formData.ProjectID, formData.FloorNo]);
 
+  useEffect(() => {
+    if (formData.WingID && formData.ProjectID && formData.FloorNo) {
+      axios
+        .get(
+          `https://apiforcorners.cubisysit.com/api/api-booking-flat.php?WingID=${formData.WingID}&ProjectID=${formData.ProjectID}&FloorNo=${formData.FloorNo}`
+        )
+        .then((response) => {
+          if (response.data.status === "Success") {
+            console.log("Flat No Data:", response.data.data); // Log the fetched data
+            setFlatNoData(response.data.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching flat number data:", error);
+        });
+    }
+  }, [formData.WingID, formData.ProjectID, formData.FloorNo]);
+
+  useEffect(() => {
+    const fetchUnitTypeData = async () => {
+      try {
+        const response = await axios.get(
+          `https://apiforcorners.cubisysit.com/api/api-booking-type.php`,
+          {
+            params: {
+              WingID: formData.WingID,
+              ProjectID: formData.ProjectID,
+              FloorNo: formData.FloorNo,
+              FlatNo: formData.FlatNo,
+            },
+          }
+        );
+
+        if (response.data.status === "Success") {
+          console.log("Unit Type Data:", response.data.data);
+          setUnitTypeData(response.data.data);
+        } else {
+          console.error("API request failed with status:", response.data.status);
+        }
+      } catch (error) {
+        console.error("Error fetching unit type data:", error);
+      }
+    };
+
+    if (formData.FlatNo) {
+      fetchUnitTypeData();
+    }
+  }, [formData.FlatNo, formData.WingID, formData.ProjectID, formData.FloorNo]);
+
+  
+
   const validateForm = () => {
     const newErrors = {};
     const requiredFields = [
@@ -332,7 +391,7 @@ const FormRosenagar = ({ show, editData }) => {
     // if (isValid) {
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
-      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
 
     const dataToSend = editData
       ? {
@@ -359,7 +418,7 @@ const FormRosenagar = ({ show, editData }) => {
 
         // setSubmitSuccess(true);
         setSubmitError(false);
-        show(false);
+        // show(false);
 
         setErrors({});
 
@@ -469,77 +528,101 @@ const FormRosenagar = ({ show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Project Name</InputLabel>
-                  <Select
-                    value={formData.ProjectID}
-                    onChange={handleChange}
-                    name="ProjectID"
-                    label="Project Name"
-                  >
-                    {projectMaster.map((project) => (
-                      <MenuItem
-                        key={project.ProjectID}
-                        value={project.ProjectID}
-                      >
-                        {project.ProjectName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+            <Grid item xs={12} md={4}>
+  <FormControl fullWidth>
+    <InputLabel>Project Name</InputLabel>
+    <Select
+      value={formData.ProjectID}
+      onChange={handleChange}
+      name="ProjectID"
+      label="Project Name"
+    >
+      {projectMaster.map((project, index) => (
+        <MenuItem
+          key={`${project.ProjectID}-${index}`}
+          value={project.ProjectID}
+        >
+          {project.ProjectName}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
 
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Wings</InputLabel>
-                  <Select
-                    value={formData.WingID} // Corrected: Changed WingData to WingID
-                    onChange={handleChange}
-                    name="WingID" // Corrected: Changed WingData to WingID
-                    label="Wings"
-                  >
-                    {wingData.map((wing) => (
-                      <MenuItem key={wing.WingID} value={wing.WingID}>
-                        {wing.WingName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Flat Floor</InputLabel>
-                  <Select
-                    value={formData.flatNo} // Corrected: Changed WingData to WingIDs
-                    onChange={handleChange}
-                    name="flatNo" // Corrected: Changed WingData to WingID
-                    label="Floor Floor"
-                  >
-                    {floor.map((wing) => (
-                      <MenuItem key={wing.FloorNo} value={wing.FloorNo}>
-                        {wing.FloorNo}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+<Grid item xs={12} md={4}>
+  <FormControl fullWidth>
+    <InputLabel>Wings</InputLabel>
+    <Select
+      value={formData.WingID}
+      onChange={handleChange}
+      name="WingID"
+      label="Wings"
+    >
+      {wingData.map((wing, index) => (
+        <MenuItem key={`${wing.WingID}-${index}`} value={wing.WingID}>
+          {wing.WingName}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
 
-              <FormControl fullWidth>
-                <InputLabel>Flat Number</InputLabel>
-                <Select
-                  value={formData.FlatNumber}
-                  onChange={handleChange}
-                  name="FlatNumber"
-                  label="Flat Number"
-                >
-                  {flatNoData.map((flat) => (
-                    <MenuItem key={flat.No} value={flat.No}>
-                      {flat.No}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+<Grid item xs={12} md={4}>
+  <FormControl fullWidth>
+    <InputLabel>Floor</InputLabel>
+    <Select
+      value={formData.FloorNo}
+      onChange={handleChange}
+      name="FloorNo"
+      label="Floor"
+    >
+      {floor.map((wing, index) => (
+        <MenuItem key={`${wing.FloorNo}-${index}`} value={wing.FloorNo}>
+          {wing.FloorNo}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
+<Grid item xs={12} md={4}>
+  <FormControl fullWidth>
+    <InputLabel>Flat Number</InputLabel>
+    <Select
+      value={formData.FlatNo}
+      onChange={handleChange}
+      name="FlatNo"
+      label="Flat Number"
+    >
+      {flatNoData.map((flat, index) => (
+        <MenuItem key={`${flat.FlatNo}-${index}`} value={flat.FlatNo}>
+          {flat.FlatNo}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
+<Grid item xs={12} md={4}>
+        <FormControl fullWidth>
+          <InputLabel>Unit Type</InputLabel>
+          <Select
+            value={formData.UnittypeID}
+            onChange={handleChange}
+            name="UnittypeID"
+            label="Unit Type"
+          >
+            {unitTypeData.map((unit) => (
+              <MenuItem key={unit.UnittypeID} value={unit.UnittypeID}>
+                {unit.UnittypeName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+
+             
+             
 
               <Grid item xs={8} sm={4}>
                 <DatePicker
@@ -571,7 +654,7 @@ const FormRosenagar = ({ show, editData }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={4}>
+              {/* <Grid item xs={12} sm={4}>
                 <input
                   accept="image/*"
                   id="contained-button-file"
@@ -589,7 +672,7 @@ const FormRosenagar = ({ show, editData }) => {
                     {formData.imageFile.name}
                   </Typography>
                 )}
-              </Grid>
+              </Grid> */}
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -616,9 +699,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Pan Card Number</>}
-                  name="pancard"
+                  name="Pancard"
                   placeholder="Pan Card Number"
-                  value={formData.pancard}
+                  value={formData.Pancard}
                   onChange={handleChange}
                 />
               </Grid>
@@ -653,8 +736,8 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label="Type of Booking"
-                  name="bookingType"
-                  value={formData.bookingType || ""}
+                  name="BookingType"
+                  value={formData.BookingType || ""}
                   onChange={handleChange}
                 />
                 {/* Add error handling for Email if needed */}
@@ -664,9 +747,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Area in Builtup</>}
-                  name="area"
+                  name="Area"
                   placeholder="Area in Builtup "
-                  value={formData.area}
+                  value={formData.Area}
                   onChange={handleChange}
                 />
               </Grid>
@@ -686,9 +769,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>TTL Amount As Per Builtup</>}
-                  name="ttlamount"
+                  name="TtlAmount"
                   placeholder="TTL Amount as per Builtup "
-                  value={formData.ttlamount}
+                  value={formData.TtlAmount}
                   onChange={handleChange}
                 />
               </Grid>
@@ -697,9 +780,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Development Charges</>}
-                  name="charges"
+                  name="Charges"
                   placeholder="Development Charges"
-                  value={formData.charges}
+                  value={formData.Charges}
                   onChange={handleChange}
                 />
               </Grid>
@@ -708,9 +791,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Parking Facility</>}
-                  name="parkingFacility"
+                  name="ParkingFacility"
                   placeholder="Parking Facility"
-                  value={formData.parkingFacility}
+                  value={formData.ParkingFacility}
                   onChange={handleChange}
                 />
               </Grid>
@@ -719,9 +802,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label="Gross Flat Cost"
-                  name="flatCost"
+                  name="FlatCost"
                   placeholder="Flat Cost"
-                  value={formData.flatCost}
+                  value={formData.FlatCost}
                   onChange={handleChange}
                   InputProps={{
                     startAdornment: (
@@ -736,8 +819,8 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label="Amount in Words"
-                  name="flatCostInWords"
-                  value={formData.flatCostInWords}
+                  name="FlatCostInWords"
+                  value={formData.FlatCostInWords}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -749,9 +832,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>GST</>}
-                  name="gst"
+                  name="Gst"
                   placeholder="GST As per Govt. Notification"
-                  value={formData.gst}
+                  value={formData.Gst}
                   onChange={handleChange}
                 />
               </Grid>
@@ -760,9 +843,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Stamp Duty</>}
-                  name="stampduty"
+                  name="StampDuty"
                   placeholder="Stamp Duty"
-                  value={formData.stampduty}
+                  value={formData.StampDuty}
                   onChange={handleChange}
                 />
               </Grid>
@@ -770,9 +853,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Registration</>}
-                  name="registration"
+                  name="Registration"
                   placeholder="Registration"
-                  value={formData.registration}
+                  value={formData.Registration}
                   onChange={handleChange}
                 />
               </Grid>
@@ -780,9 +863,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Advocate</>}
-                  name="advocate"
+                  name="Advocate"
                   placeholder="Advocate"
-                  value={formData.advocate}
+                  value={formData.Advocate}
                   onChange={handleChange}
                 />
               </Grid>
@@ -790,9 +873,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label="Extra Cost "
-                  name="extracost"
+                  name="ExtraCost"
                   placeholder="Extra Cost"
-                  value={formData.extracost}
+                  value={formData.ExtraCost}
                   onChange={handleChange}
                   InputProps={{
                     startAdornment: (
@@ -808,9 +891,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label="Total Cost"
-                  name="totalCost"
+                  name="TotalCost"
                   placeholder="Total Cost"
-                  value={formData.totalCost}
+                  value={formData.TotalCost}
                   onChange={handleChange}
                   InputProps={{
                     startAdornment: (
@@ -826,9 +909,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Unsable Area in Sqft</>}
-                  name="unsableArea"
+                  name="UnsableArea"
                   placeholder="Unsable Area in sqft"
-                  value={formData.unsableArea}
+                  value={formData.UnsableArea}
                   onChange={handleChange}
                 />
               </Grid>
@@ -837,9 +920,9 @@ const FormRosenagar = ({ show, editData }) => {
                 <TextField
                   fullWidth
                   label={<>Agreemnent carpet (RERA) in Sqft</>}
-                  name="agreementcarpet"
+                  name="AgreementCarpet"
                   placeholder="Agreement Carpet "
-                  value={formData.agreementcarpet}
+                  value={formData.AgreementCarpet}
                   onChange={handleChange}
                 />
               </Grid>
@@ -850,7 +933,7 @@ const FormRosenagar = ({ show, editData }) => {
                       fullWidth
                       label={`Remark ${index + 1}`}
                       name={`remark${index}`}
-                      value={remark.remark}
+                      value={remark.Remark}
                       onChange={(e) => handleChange(e, index, "remark")}
                     />
                   </Grid>

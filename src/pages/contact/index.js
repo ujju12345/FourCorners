@@ -41,12 +41,12 @@ const Contact = () => {
   const [firstVisit, setFirstVisit] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
   const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
-  const [summary, setSummary] = useState({
-    totalCount: 0,
-    pastCount: 0,
-    todayCount: 0,
-    futureCount: 0,
-  }); // New state for summary
+  // const [summary, setSummary] = useState({
+  //   totalCount: 0,
+  //   pastCount: 0,
+  //   todayCount: 0,
+  //   futureCount: 0,
+  // }); // New state for summary
 
   // Accessing cookie values
   const userName = cookies.amr?.FullName || "User";

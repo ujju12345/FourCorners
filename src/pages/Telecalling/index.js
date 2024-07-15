@@ -353,15 +353,15 @@ const TeleDashboard = () => {
             <CardContent sx={{ textAlign: "center" }}>
               <Contacts fontSize="large" color="primary" />
               <Typography variant="h6" gutterBottom>
-                 Opportunity
+                Transfer to Opportunity
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                Total Counts: 0 {/* Adjust this key as needed */}
+                Total Counts: {telecallingData?.data?.convertOpportunityCount} {/* Adjust this key as needed */}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
               <Contacts fontSize="large" color="primary" />
@@ -369,11 +369,11 @@ const TeleDashboard = () => {
                  Booking
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                Total Counts: 0 {/* Adjust this key as needed */}
+                Total Counts: 0 
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Grid>
     <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
