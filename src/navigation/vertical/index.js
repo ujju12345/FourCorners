@@ -60,6 +60,35 @@ const navigation = () => {
         },
       ],
     },
+
+    {
+      sectionTitle: "Direct Login",
+    },
+
+    {
+      title: " Login",
+      icon: PhoneIcon,
+      // path: "/tellcalling-details",
+      children: [
+        {
+          title: "Employees Login",
+          icon: CubeOutlineIcon,
+          path: "/AdminLeadLogin",
+        },
+
+      ],
+    },
+   
+   
+    {
+      sectionTitle: "Booking",
+    },
+    {
+      title: "Booking form",
+      icon: BusinessIcon,
+      path: "/BookingForm",
+    },
+
     {
       sectionTitle: "Companies",
     },
@@ -117,6 +146,11 @@ const navigation = () => {
           path: "/tellcalling-details/Backlog",
         },
         {
+          title: "Person Wise Search",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Leadcalender",
+        },
+        {
           title: "Calendar",
           icon: CubeOutlineIcon,
           path: "/tellcalling-details/Leadcalender",
@@ -160,10 +194,42 @@ const navigation = () => {
           path: "/opportunity/OpportunityCalender",
         },
         {
+          title: "Person Wise Search",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Leadcalender",
+        },
+        {
           title: "Not Interested",
           icon: CubeOutlineIcon,
           path: "/opportunity/NotInterested",
         },
+      ],
+    },
+
+  {
+    sectionTitle: "Post Sales",
+  },
+    {
+      title: "Post Sales",
+      icon: PhoneIcon,
+      path: "/tellcalling-details",
+      children: [
+        {
+          title: "Todays Follow up",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details",
+        },
+        {
+          title: "Backlog Payment",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Mylead",
+        },
+        {
+          title: "Open Payment ",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/OpenLead",
+        },
+       
       ],
     },
 

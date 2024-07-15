@@ -1,216 +1,200 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Grid, Card, CardContent, Typography } from '@mui/material';
-import axios from 'axios';
-import Box from "@mui/material/Box";
-import { useCookies } from 'react-cookie';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Swal from "sweetalert2";
 
 const Addenquirysource = ({ show, rowData }) => {
-  console.log(rowData , 'SEEE ');
-  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
-  const [formState, setFormState] = useState({
-    NameOfCompany: "",
-    ProjectName: "",
-    Source: "",
-    FromDate: "", // Empty string for initial state
-    ToDate: "", // Empty string for initial state
-    SourceName: "",
-    SourceAddress: "",
-    ActiveTillDate: "", // Empty string for initial state
-    ContactNumber: "",
-    TotalCost: "",
-    CreateUID: cookies.amr?.UserID || 1,
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [projectMaster, setProjectMaster] = useState([]);
+  const [formData, setFormData] = useState({
+    ProjectID: "",
+    WingID: "", // Corrected: Changed WingData to WingID for selection
     Status: 1,
+    CreateUID: 1,
   });
-  
+
+  const [wingData, setWingData] = useState([]);
 
   useEffect(() => {
-    if (rowData && Object.keys(rowData).length !== 0) { // Check if rowData exists and is not empty
-      setFormState({
-        NameOfCompany: rowData.NameOfCompany || "",
-        ProjectName: rowData.ProjectName || "",
-        Source: rowData.Source || "",
-        FromDate: rowData.FromDate || "",
-        ToDate: rowData.ToDate || "",
-        SourceName: rowData.SourceName || "",
-        SourceAddress: rowData.SourceAddress || "",
-        ActiveTillDate: rowData.ActiveTillDate || "",
-        ContactNumber: rowData.ContactNumber || "",
-        TotalCost: rowData.TotalCost || "",
-        CreateUID: cookies.amr?.UserID || 1,
-        Status: 1,
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-projectinfo.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setProjectMaster(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching project master data:", error);
       });
-    } else {
-      // Set initial form state with empty date fields
-      setFormState({
-        NameOfCompany: "",
-        ProjectName: "",
-        Source: "",
-        FromDate: "", // Empty string for FromDate
-        ToDate: "", // Empty string for ToDate
-        SourceName: "",
-        SourceAddress: "",
-        ActiveTillDate: "",
-        ContactNumber: "",
-        TotalCost: "",
-        CreateUID: cookies.amr?.UserID || 1,
-        Status: 1,
-      });
-    }
-  }, [rowData]);
-  
+  }, []);
 
-  const handleChange = (e) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value
+  useEffect(() => {
+    if (formData.ProjectID) {
+      axios
+        .get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectwings.php?ProjectID=${formData.ProjectID}`)
+        .then((response) => {
+          if (response.data.status === "Success") {
+            setWingData(response.data.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching wing data:", error);
+        });
+    }
+  }, [formData.ProjectID]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]); // Set file state
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      let response;
-      if (rowData) {
-        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-update-enquirysource.php', {
-          ...formState,
-          EnquirySourceID: rowData.EnquirySourceID, // Pass the ID for updating
-          UpdateUID: 1 // Assuming you have a user ID to pass
-        });
-      } else {
-        response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-insert-enquirysource.php', {
-          ...formState,
-          // AddUID: 1 // Assuming you have a user ID to pass
-        });
-      }
+  const handleSubmitFile = async (event) => {
+    event.preventDefault();
 
-      if (response.data.status === 'Success') {
-        show(); // Navigate back to the list view
+    if (!file) {
+      setError("Please select a file.");
+      return;
+    }
+
+    // Create a FormData object
+    const formDataFile = new FormData();
+    formDataFile.append("file", file);
+    formDataFile.append("ProjectID", formData.ProjectID);
+    formDataFile.append("WingID", formData.WingID);
+    formDataFile.append("Status", formData.Status);
+    formDataFile.append("CreateUID", formData.CreateUID);
+
+    console.log(formDataFile, "dekh bhaiiiiiii");
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://3.108.228.197:3000/proxy_u",
+        formDataFile,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.status === "Success") {
+        console.log("Hogaya submit");
+
+        Swal.fire({
+          icon: "success",
+          title: "File uploaded successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        show(false); // Optional: Close modal or handle other UI updates
       } else {
-        console.error('Error submitting data:', response.data.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to upload file.",
+        });
       }
     } catch (error) {
-      console.error('There was an error!', error);
+      console.error("Error uploading file:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to upload file.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-<Card>
+    <Card>
       <CardContent>
-        <Typography variant="h5" gutterBottom>
-          {rowData ? 'Update Enquiry Source' : 'Add Enquiry Source'}
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Name of Company"
-                name="NameOfCompany"
-                value={formState.NameOfCompany}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Project Name"
-                name="ProjectName"
-                value={formState.ProjectName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Source"
-                name="Source"
-                value={formState.Source}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="From Date"
-                name="FromDate"
-                type="date"
-                value={formState.FromDate}
-                onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="To Date"
-                name="ToDate"
-                type="date"
-                value={formState.ToDate}
-                onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Source Name"
-                name="SourceName"
-                value={formState.SourceName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Source Address"
-                name="SourceAddress"
-                value={formState.SourceAddress}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Active Till Date"
-                name="ActiveTillDate"
-                type="date"
-                value={formState.ActiveTillDate}
-                onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Contact Number"
-                name="ContactNumber"
-                value={formState.ContactNumber}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}sm={4}>
-              <TextField
-                fullWidth
-                label="Total Cost"
-                name="TotalCost"
-                value={formState.TotalCost}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} >
-              <Button variant="contained" color="primary" type="submit">
-                {rowData ? 'Update' : 'Add'}
-              </Button>
-          
-            </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
+              Upload Excel File to Insert Data
+            </Typography>
           </Grid>
-        </form>
+
+          <Grid item xs={12} md={4}>
+            <FormControl fullWidth>
+              <InputLabel>Project Name</InputLabel>
+              <Select
+                value={formData.ProjectID}
+                onChange={handleInputChange}
+                name="ProjectID"
+                label="Project Name"
+              >
+                {projectMaster.map((project) => (
+                  <MenuItem key={project.ProjectID} value={project.ProjectID}>
+                    {project.ProjectName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <FormControl fullWidth>
+              <InputLabel>Wings</InputLabel>
+              <Select
+                value={formData.WingID} // Corrected: Changed WingData to WingID
+                onChange={handleInputChange}
+                name="WingID" // Corrected: Changed WingData to WingID
+                label="Wings"
+              >
+                {wingData.map((wing) => (
+                  <MenuItem key={wing.WingID} value={wing.WingID}>
+                    {wing.WingName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12}>
+            <input
+              type="file"
+              accept=".xls,.xlsx"
+              onChange={handleFileChange}
+              style={{ marginBottom: "10px" }}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              onClick={handleSubmitFile}
+              disabled={loading}
+            >
+              {loading ? "Uploading..." : "Upload File"}
+            </Button>
+          </Grid>
+
+          {error && (
+            <Grid item xs={12}>
+              <Typography color="error">{error}</Typography>
+            </Grid>
+          )}
+        </Grid>
       </CardContent>
     </Card>
   );

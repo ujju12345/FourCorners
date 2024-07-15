@@ -41,12 +41,12 @@ const Contact = () => {
   const [firstVisit, setFirstVisit] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
   const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
-  const [summary, setSummary] = useState({
-    totalCount: 0,
-    pastCount: 0,
-    todayCount: 0,
-    futureCount: 0,
-  }); // New state for summary
+  // const [summary, setSummary] = useState({
+  //   totalCount: 0,
+  //   pastCount: 0,
+  //   todayCount: 0,
+  //   futureCount: 0,
+  // }); // New state for summary
 
   // Accessing cookie values
   const userName = cookies.amr?.FullName || "User";
@@ -72,14 +72,14 @@ const Contact = () => {
       setLoading(false);
     }
 
-    try {
-      const summaryResponse = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
-      );
-      setSummary(summaryResponse.data.summary);
-    } catch (error) {
-      setError(error);
-    }
+    // try {
+    //   const summaryResponse = await axios.get(
+    //     `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
+    //   );
+    //   setSummary(summaryResponse.data.summary);
+    // } catch (error) {
+    //   setError(error);
+    // }
   };
 
   const handleDelete = async (id) => {
@@ -153,25 +153,25 @@ const Contact = () => {
 
   const salesData = [
     {
-      stats: summary.totalCount,
+      stats: "200",
       title: "Total Count",
       color: "primary",
       icon: <TrendingUp sx={{ fontSize: "1.75rem" }} />,
     },
     {
-      stats: summary.pastCount,
+      stats: "10",
       title: "Past Count",
       color: "success",
       icon: <AccountCircleOutlinedIcon sx={{ fontSize: "1.75rem" }} />,
     },
     {
-      stats: summary.todayCount,
+      stats: "400",
       color: "warning",
       title: "Today Count",
       icon: <PhoneOutlined sx={{ fontSize: "1.75rem" }} />,
     },
     {
-      stats: summary.futureCount,
+      stats: "30",
       color: "info",
       title: "Future Count",
       icon: <CurrencyExchange sx={{ fontSize: "1.75rem" }} />,
@@ -179,10 +179,10 @@ const Contact = () => {
   ];
 
   const pieData = [
-    { name: "Total Count", value: summary.totalCount, color: "#3f51b5" },
-    { name: "Past Count", value: summary.pastCount, color: "#4caf50" },
-    { name: "Today Count", value: summary.todayCount, color: "#ff9800" },
-    { name: "Future Count", value: summary.futureCount, color: "#00acc1" },
+    { name: "Total Count", value: "400",  color: "#3f51b5" },
+    { name: "Past Count", value: "200", color: "#4caf50" },
+    { name: "Today Count", value: "200", color: "#ff9800" },
+    { name: "Future Count", value: "600", color: "#00acc1" },
   ];
 
   const renderStats = () => {

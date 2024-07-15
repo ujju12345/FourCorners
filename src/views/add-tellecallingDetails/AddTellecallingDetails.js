@@ -67,7 +67,7 @@ const AddTellecallingDetails = ({ show, editData }) => {
   const [errors, setErrors] = useState({});
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
-  const [cNames, setCNames] = useState([]);
+const [cNames, setCNames] = useState([]);
   const [selectedCid, setSelectedCid] = useState("");
   const [estimatedBudget, setEstimatedBudget] = useState([]);
   const [leadStatus, setLeadStatus] = useState([]);

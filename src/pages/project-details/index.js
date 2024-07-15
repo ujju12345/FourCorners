@@ -15,22 +15,22 @@ const TypographyPage = () => {
   const [showProjectDetails, setShowProjectDetails] = useState(false);
 
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectdetails.php');
-      console.log('API Response:', response.data);
-      setRows(response.data.data || []);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError(error);
-      setLoading(false);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectdetails.php');
+  //     console.log('API Response:', response.data);
+  //     setRows(response.data.data || []);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     setError(error);
+  //     setLoading(false);
+  //   }
+  // };
 
   if (loading) {
     return <CircularProgress />;

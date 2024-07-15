@@ -1,16 +1,15 @@
-
 import React, { useState, useEffect } from "react";
 import { Button, Grid, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
-import LisListEnquiryt from "src/views/List-enquiry/ListEnquiry";
-import AddEnquiryDetails from "src/views/add-enquirydetails/AddEnquiryDetails";
+import TabInfo from "src/views/manage-companydetail/TabInfo";
+import TabAccount from "src/views/account-settings/TabAccount";
 import UpdateCompanyMaster from "src/views/update-companyMaster/UpdateCompanyMaster";
-
-const AccountSettings = () => {
+import LeadLogin from 'src/views/list-leadlogin/LeadLogin'
+const AdminLeadLogin = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('list'); // 'list', 'account', 'update'
+  const [activeTab, setActiveTab] = useState(); // 'list', 'account', 'update'
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
 
   useEffect(() => {
@@ -73,48 +72,37 @@ const AccountSettings = () => {
         a.click();
         document.body.removeChild(a);
       };
+
+
+      const handleBack = () => {
+        // setEditData(null);
+        fetchData(); // Refetch data after adding or editing details
+      };
   return (
     <>
-      {activeTab === "list" && (
+      {/* {activeTab === "list" && ( */}
         <>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleNavigation}
-              style={{ marginBottom: "8px", float: "right" }}
-            >
-              Add
-            </Button>
+  
 
-           
-          </Grid>
+
+         
+        
+ 
+     
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <AddEnquiryDetails  />
+              <LeadLogin  />
             </Grid>
           </Grid>
         </>
-      )}
+      {/* )} */}
 
-      {activeTab === "account" && (
-        
-        <AddEnquiryDetails
-          show={setActiveTab}
-          onSubmitSuccess={handleSubmissionSuccess}
-        />
-      )}
+     
 
-      {/* {activeTab === "update" && (
-        <UpdateCompanyMaster
-          show={setActiveTab}
-          rowData={rowDataToUpdate}
-          onSubmitSuccess={handleSubmissionSuccess}
-        />
-      )} */}
+   
     </>
   );
 };
 
-export default AccountSettings;
+export default AdminLeadLogin;

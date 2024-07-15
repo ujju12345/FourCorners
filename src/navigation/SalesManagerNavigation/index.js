@@ -11,7 +11,7 @@ const SalesManagerNavigation = () => {
     {
       title: "Dashboard",
       icon: HomeOutline,
-      path: "/views/sale-dashboard/",
+      path: "/SaleDashboard",
     },
 
     {
@@ -87,12 +87,20 @@ const SalesManagerNavigation = () => {
       path: "/opportunity",
       children: [
         {
-          title: "Payment Reminder",
+          title: "Todays payment ",
           icon: CubeOutlineIcon,
           path: "/opportunity",
         },
-
-       
+        {
+          title: "Open Payment",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
+        {
+          title: "Backlog Payment ",
+          icon: CubeOutlineIcon,
+          path: "/opportunity",
+        },
       ],
     },
   ];

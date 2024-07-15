@@ -94,11 +94,11 @@ const Receipt = () => {
             </Button>
           </Grid>
 
-          <Grid container spacing={6}>
+          {/* <Grid container spacing={6}>
             <Grid item xs={12}>
               <Listreceipt rows={rows} setRows={setRows} onEdit={handleEdit} />
             </Grid>
-          </Grid>
+          </Grid> */}
         </>
       )}
 

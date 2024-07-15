@@ -9,7 +9,7 @@ const TelecallerNavigation = () => {
     {
       title: "Dashboard",
       icon: HomeOutline,
-      path: "/",
+      path: "/Telecalling",
     },
 
     {
@@ -55,6 +55,16 @@ const TelecallerNavigation = () => {
         },
       ],
     },
+    {
+      sectionTitle: "Transfered to opportunity",
+    },
+
+    {
+      title: "Transfer Opportunity",
+      icon: ContactPhoneIcon,
+      path: "/tellcalling-details/opportunitytransfer",
+    },
+
 
    
   ];

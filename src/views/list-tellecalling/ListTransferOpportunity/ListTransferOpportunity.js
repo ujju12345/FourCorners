@@ -32,7 +32,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 // import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
+const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   console.log(item , 'CIDD MIL JAYEGAA<<<>>>>>>');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
@@ -336,7 +336,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
         spacing={2}
         sx={{ marginBottom: 5 }}
       >
-        <Grid item>
+        {/* <Grid item>
           <Button
             variant="contained"
             onClick={handleEdit}
@@ -355,8 +355,8 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Edit Details
           </Button>
-        </Grid>
-        <Grid item>
+        </Grid> */}
+        {/* <Grid item>
           <Button
             variant="contained"
             onClick={downloadCSV}
@@ -374,8 +374,8 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Download
           </Button>
-        </Grid>
-        <Grid item>
+        </Grid> */}
+        {/* <Grid item>
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
@@ -417,8 +417,8 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
               <MenuItem disabled>No data available</MenuItem>
             )}
           </Menu>
-        </Grid>
-        <Grid item>
+        </Grid> */}
+        {/* <Grid item>
           <Button
             variant="contained"
             onClick={handleDropdownClick}
@@ -452,7 +452,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
               History
             </MenuItem>
           </Menu>
-        </Grid>
+        </Grid> */}
       </Grid>
       <Modal
         open={open}
@@ -1017,4 +1017,4 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   );
 };
 
-export default ListTellecalling;
+export default ListTransferOpportunity;
