@@ -32,12 +32,16 @@ import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 import { toWords } from "number-to-words";
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
-const FormRosenagar = ({ show, editData }) => {
+import { useRouter } from 'next/router';
+
+const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
+  const router = useRouter();
+
   console.log(editData, "Edit data aaya");
+  const initialRemark = { RemarkName: "", RemarkDate: null, Status: 1 };
   const initialFormData = {
     BookingDate: null,
     BookedBy: "",
-    // imageFile: null,
     Mobile: "",
     Name: "",
     Address: "",
@@ -59,25 +63,24 @@ const FormRosenagar = ({ show, editData }) => {
     TotalCost: "",
     UnsableArea: "",
     AgreementCarpet: "",
-    Area:"",
+    Area: "",
     Remark: "",
-    // remarkDate: "",
     ProjectID: "",
     WingID: "",
     FlatNo: "",
     FlatNumber: "",
-    FloorNo:"",
-    Status:1,
-    CreateUID:1
-
+    FloorNo: "",
+    Status: 1,
+    CreateUID: 1,
   };
- 
-  const [remarks, setRemarks] = useState([{ remark: "", date: null }]);
+
+  const [remarks, setRemarks] = useState([{ ...initialRemark }]);
+  const [formData, setFormData] = useState(initialFormData);
   const [projectMaster, setProjectMaster] = useState([]);
   const [floor, setFloor] = useState([]);
   const [flatNoData, setFlatNoData] = useState([]);
   const [unitTypeData, setUnitTypeData] = useState([]);
-  const [formData, setFormData] = useState(initialFormData);
+  // const [showForm, setShowForm] = useState(true);
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
   const [wingData, setWingData] = useState([]);
@@ -207,7 +210,7 @@ const FormRosenagar = ({ show, editData }) => {
           ...prevFormData,
           FlatCost: formattedValue,
           FlatCostInWords:
-          FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       } else {
         setFormData((prevFormData) => ({
@@ -326,7 +329,10 @@ const FormRosenagar = ({ show, editData }) => {
           console.log("Unit Type Data:", response.data.data);
           setUnitTypeData(response.data.data);
         } else {
-          console.error("API request failed with status:", response.data.status);
+          console.error(
+            "API request failed with status:",
+            response.data.status
+          );
         }
       } catch (error) {
         console.error("Error fetching unit type data:", error);
@@ -337,8 +343,6 @@ const FormRosenagar = ({ show, editData }) => {
       fetchUnitTypeData();
     }
   }, [formData.FlatNo, formData.WingID, formData.ProjectID, formData.FloorNo]);
-
-  
 
   const validateForm = () => {
     const newErrors = {};
@@ -367,12 +371,13 @@ const FormRosenagar = ({ show, editData }) => {
   };
 
   const handleAddRemark = () => {
-    setRemarks([...remarks, { remark: "", date: null }]);
+    setRemarks([...remarks, { ...initialRemark }]);
   };
 
   const handleRemoveRemark = (index) => {
-    const newRemarks = remarks.filter((_, i) => i !== index);
-    setRemarks(newRemarks);
+    const updatedRemarks = [...remarks];
+    updatedRemarks.splice(index, 1);
+    setRemarks(updatedRemarks);
   };
 
   //   const handleAddRemark = () => {
@@ -384,58 +389,57 @@ const FormRosenagar = ({ show, editData }) => {
   //   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Validate form
-    // const isValid = validateForm();
-
-    // if (isValid) {
+  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
-
+  
     const dataToSend = editData
       ? {
           ...formData,
           ModifyUID: cookies.amr?.UserID || 1,
+          remarks: remarks.map(({ RemarkName, RemarkDate, Status }) => ({
+            RemarkName,
+            RemarkDate: RemarkDate.toISOString().split("T")[0],
+            Status,
+          })),
         }
       : {
           ...formData,
-          CreateUID: cookies.amr?.UserID || 1, // Fallback to 1 if UserID is not found in cookies
+          CreateUID: cookies.amr?.UserID || 1,
+          remarks: remarks.map(({ RemarkName, RemarkDate, Status }) => ({
+            RemarkName,
+            RemarkDate: RemarkDate.toISOString().split("T")[0],
+            Status,
+          })),
         };
-
-    console.log(dataToSend, "ALL the data of telecalling");
+  
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log(dataToSend, "ALL the data of telecalling");
-
+  
       if (response.data.status === "Success") {
+        const { BookingID } = response.data; // Extract BookingID from response
+        onFormSubmitSuccess(BookingID); 
         setFormData(initialFormData);
-
-        // setSubmitSuccess(true);
-        setSubmitError(false);
+        setRemarks([{ ...initialRemark }]);
         // show(false);
-
-        setErrors({});
-
+  
+        // Optionally show success message
         Swal.fire({
           icon: "success",
-          title: editData
-            ? "Data Updated Successfully"
-            : "Data Added Successfully",
+          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
-        }).then(() => {
-          window.location.reload();
         });
+  
+        // Navigate to the desired page with BookingID
+        // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
+  
       } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
-
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -444,20 +448,15 @@ const FormRosenagar = ({ show, editData }) => {
       }
     } catch (error) {
       console.error("There was an error!", error);
-      setSubmitSuccess(false);
-      setSubmitError(true);
-
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Something went wrong!",
       });
     }
-    // } else {
-    //   // Handle validation errors if any
-    //   console.log("Form validation failed");
-    // }
   };
+  
+  
 
   //   const handleSubmit = async (event) => {
   //     event.preventDefault();
@@ -496,10 +495,9 @@ const FormRosenagar = ({ show, editData }) => {
   };
 
   const handleDateRemarks = (date, index) => {
-    const newRemarks = [...remarks];
-    newRemarks[index].date = date;
-    console.log(newRemarks, "date of remakrs");
-    setRemarks(newRemarks);
+    const updatedRemarks = [...remarks];
+    updatedRemarks[index] = { ...updatedRemarks[index], RemarkDate: date };
+    setRemarks(updatedRemarks);
   };
 
   const handleImageChange = (event) => {
@@ -528,101 +526,107 @@ const FormRosenagar = ({ show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-            <Grid item xs={12} md={4}>
-  <FormControl fullWidth>
-    <InputLabel>Project Name</InputLabel>
-    <Select
-      value={formData.ProjectID}
-      onChange={handleChange}
-      name="ProjectID"
-      label="Project Name"
-    >
-      {projectMaster.map((project, index) => (
-        <MenuItem
-          key={`${project.ProjectID}-${index}`}
-          value={project.ProjectID}
-        >
-          {project.ProjectName}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Project Name</InputLabel>
+                  <Select
+                    value={formData.ProjectID}
+                    onChange={handleChange}
+                    name="ProjectID"
+                    label="Project Name"
+                  >
+                    {projectMaster.map((project, index) => (
+                      <MenuItem
+                        key={`${project.ProjectID}-${index}`}
+                        value={project.ProjectID}
+                      >
+                        {project.ProjectName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-<Grid item xs={12} md={4}>
-  <FormControl fullWidth>
-    <InputLabel>Wings</InputLabel>
-    <Select
-      value={formData.WingID}
-      onChange={handleChange}
-      name="WingID"
-      label="Wings"
-    >
-      {wingData.map((wing, index) => (
-        <MenuItem key={`${wing.WingID}-${index}`} value={wing.WingID}>
-          {wing.WingName}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Wings</InputLabel>
+                  <Select
+                    value={formData.WingID}
+                    onChange={handleChange}
+                    name="WingID"
+                    label="Wings"
+                  >
+                    {wingData.map((wing, index) => (
+                      <MenuItem
+                        key={`${wing.WingID}-${index}`}
+                        value={wing.WingID}
+                      >
+                        {wing.WingName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-<Grid item xs={12} md={4}>
-  <FormControl fullWidth>
-    <InputLabel>Floor</InputLabel>
-    <Select
-      value={formData.FloorNo}
-      onChange={handleChange}
-      name="FloorNo"
-      label="Floor"
-    >
-      {floor.map((wing, index) => (
-        <MenuItem key={`${wing.FloorNo}-${index}`} value={wing.FloorNo}>
-          {wing.FloorNo}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Floor</InputLabel>
+                  <Select
+                    value={formData.FloorNo}
+                    onChange={handleChange}
+                    name="FloorNo"
+                    label="Floor"
+                  >
+                    {floor.map((wing, index) => (
+                      <MenuItem
+                        key={`${wing.FloorNo}-${index}`}
+                        value={wing.FloorNo}
+                      >
+                        {wing.FloorNo}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-<Grid item xs={12} md={4}>
-  <FormControl fullWidth>
-    <InputLabel>Flat Number</InputLabel>
-    <Select
-      value={formData.FlatNo}
-      onChange={handleChange}
-      name="FlatNo"
-      label="Flat Number"
-    >
-      {flatNoData.map((flat, index) => (
-        <MenuItem key={`${flat.FlatNo}-${index}`} value={flat.FlatNo}>
-          {flat.FlatNo}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Flat Number</InputLabel>
+                  <Select
+                    value={formData.FlatNo}
+                    onChange={handleChange}
+                    name="FlatNo"
+                    label="Flat Number"
+                  >
+                    {flatNoData.map((flat, index) => (
+                      <MenuItem
+                        key={`${flat.FlatNo}-${index}`}
+                        value={flat.FlatNo}
+                      >
+                        {flat.FlatNo}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-<Grid item xs={12} md={4}>
-        <FormControl fullWidth>
-          <InputLabel>Unit Type</InputLabel>
-          <Select
-            value={formData.UnittypeID}
-            onChange={handleChange}
-            name="UnittypeID"
-            label="Unit Type"
-          >
-            {unitTypeData.map((unit) => (
-              <MenuItem key={unit.UnittypeID} value={unit.UnittypeID}>
-                {unit.UnittypeName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-
-             
-             
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Unit Type</InputLabel>
+                  <Select
+                    value={formData.UnittypeID}
+                    onChange={handleChange}
+                    name="UnittypeID"
+                    label="Unit Type"
+                  >
+                    {unitTypeData.map((unit) => (
+                      <MenuItem key={unit.UnittypeID} value={unit.UnittypeID}>
+                        {unit.UnittypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
               <Grid item xs={8} sm={4}>
                 <DatePicker
@@ -932,52 +936,43 @@ const FormRosenagar = ({ show, editData }) => {
                     <TextField
                       fullWidth
                       label={`Remark ${index + 1}`}
-                      name={`remark${index}`}
-                      value={remark.Remark}
-                      onChange={(e) => handleChange(e, index, "remark")}
+                      value={remark.RemarkName}
+                      onChange={(e) => handleChange(e, index, "RemarkName")}
                     />
                   </Grid>
                   <Grid item xs={8} sm={4}>
                     <DatePicker
-                      selected={remark.date}
+                      selected={remark.RemarkDate}
                       onChange={(date) => handleDateRemarks(date, index)}
                       dateFormat="dd-MM-yyyy"
                       className="form-control"
                       customInput={
-                        <TextField
-                          fullWidth
-                          label={<>Expected Date</>}
-                          InputProps={{
-                            readOnly: true,
-                            sx: { width: "100%" },
-                          }}
-                        />
+                        <TextField fullWidth label={<>Expected Date</>} />
                       }
                     />
                   </Grid>
                   <Grid item xs={2}>
                     <IconButton
                       color="primary"
-                      sx={{ color: "#1976d2" }} // Change color to your desired primary color
+                      sx={{ color: "#1976d2" }}
                       onClick={handleAddRemark}
                     >
                       <AddIcon />
                     </IconButton>
                     <IconButton
                       color="primary"
-                      sx={{ color: "#f44336" }} // Change color to your desired secondary color
+                      sx={{ color: "#f44336" }}
                       onClick={() => handleRemoveRemark(index)}
                     >
                       <DeleteIcon />
                     </IconButton>
-                    <IconButton
-                      sx={{ color: "#4caf50" }} // Change color to your desired color
-                    >
+                    <IconButton sx={{ color: "#4caf50" }}>
                       <EditIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
               ))}
+
               {/* <Grid item xs={12}>
                 <Button
                   variant="contained"

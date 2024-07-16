@@ -68,23 +68,23 @@ const UploadExcel = ({ show, rowData }) => {
 
   const handleSubmitFile = async (event) => {
     event.preventDefault();
-
+  
     if (!file) {
       setError("Please select a file.");
       return;
     }
-
+  
     const formDataFile = new FormData();
     formDataFile.append("file", file);
     formDataFile.append("ProjectID", formData.ProjectID);
     formDataFile.append("WingID", formData.WingID);
     formDataFile.append("Status", formData.Status);
     formDataFile.append("CreateUID", formData.CreateUID);
-
+  
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://3.108.228.197:3000/proxy_u",
+        "https://3.108.228.197:3000/proxy_u",
         formDataFile,
         {
           headers: {
@@ -92,7 +92,7 @@ const UploadExcel = ({ show, rowData }) => {
           },
         }
       );
-
+  
       if (response.data.status === "Success") {
         Swal.fire({
           icon: "success",
@@ -119,6 +119,7 @@ const UploadExcel = ({ show, rowData }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Card>

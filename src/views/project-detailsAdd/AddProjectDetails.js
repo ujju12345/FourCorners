@@ -100,6 +100,7 @@ const AddProjectDetails = ({ show, setShowUploadExcel, editData }) => {
 
       if (response.data.status === "Success") {
         setFormData(initialFormData);
+        
         Swal.fire({
           icon: "success",
           title: editData
