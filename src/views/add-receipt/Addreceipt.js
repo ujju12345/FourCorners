@@ -1,9 +1,27 @@
-import React from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled } from '@mui/material';
+import React,{ useRef } from 'react';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
+import { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
+const GlobalStyle = createGlobalStyle`
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    .printableArea, .printableArea * {
+      visibility: visible;
+    }
+    .printableArea {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+`;
 
 const StyledTableCell = styled(TableCell)({
-  border: '1px solid black',
-  padding: '5px',
+  border: '2px solid black',
+  padding: '0px', // Removed padding
   textAlign: 'center',
 });
 
@@ -15,33 +33,50 @@ const InvoiceBox = styled(Box)({
   fontSize: '11px',
   lineHeight: '18px',
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
-  color: '#555',
 });
 
 const Addreceipt = () => {
+  const printRef = useRef();
+
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload the page to reset the original contents
+  };
+
   return (
-    <InvoiceBox>
+    <>
+      <GlobalStyle />
+      <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
+        Print
+      </Button>
+
+      <InvoiceBox className="printableArea" ref={printRef}>
       <TableContainer component={Paper}>
         <Table>
           <TableBody>
-            <TableRow>
-              <StyledTableCell colSpan={3}>
-                <Typography variant="h1" style={{ textAlign: 'left', paddingLeft: '5px' }}>Sai Agro Engineers</Typography>
+            <TableRow sx={{ height: '10px', padding: 0 }}>
+              <StyledTableCell colSpan={3} sx={{ height: '10px', padding: 0 }}>
+                <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}>QUOTATION</Typography>
               </StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell>
-                A/p- xyz, afk Chowk Tal: shirur , Dist: Pune 510511 <br />
-                GST NO. 435653467347g VAT NO - 654773573fg <br />
-                GSTIN/UIN:
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell colSpan={3} sx={{ padding: 0 }}>
+                <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.</Typography>
+                <Typography style={{ float: 'left', fontSize: 15, fontWeight: 200 }}>Date :</Typography>
+                <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By :</Typography>
               </StyledTableCell>
-              <StyledTableCell style={{ textAlign: 'right', paddingRight: '20px' }}>
-                Mobile No. - 456456422 <br />
-                State Name: Maharashtra, Code 27 <br />
-                E-Mail : sai_ckn@rediffmail.com
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'center', padding: 0 }}>
+                <img src="{images}" alt="Logo" width="70" height="100" />
               </StyledTableCell>
-              <StyledTableCell>
-                <img src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png" alt="200 * 200" width="70" height="70" />
+              <StyledTableCell sx={{ padding: 0 }}>
+                <img src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png" alt="200 * 200" width="30" height="100" />
               </StyledTableCell>
             </TableRow>
           </TableBody>
@@ -51,72 +86,43 @@ const Addreceipt = () => {
       <TableContainer component={Paper}>
         <Table>
           <TableBody>
-            <TableRow>
-              <StyledTableCell>
-                <Typography variant="h4">
-                  <b style={{ color: 'darkblue' }}>GSTIN : </b> 56757687gj543jg
-                </Typography>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', width: '20%', padding: 0 }} colSpan={2}>
+                <Typography>Name Of Purchase</Typography>
               </StyledTableCell>
-              <StyledTableCell style={{ textAlign: 'center', color: 'darkblue' }}>
-                <Typography variant="h1">TAX INVOICE</Typography>
-              </StyledTableCell>
-              <StyledTableCell style={{ textAlign: 'right' }}>
-                <Typography variant="h5">ORIGINAL FOR RECIPIENT</Typography>
+              <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
+                &nbsp;
               </StyledTableCell>
             </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <StyledTableCell style={{ textAlign: 'center', border: '1px solid' }} colSpan={2}>
-                <Typography variant="h4">Customer Detail</Typography>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                <Typography>Address</Typography>
               </StyledTableCell>
-              <StyledTableCell colSpan={4}>&nbsp;</StyledTableCell>
+              <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={2} style={{ borderRight: '1px solid' }}></StyledTableCell>
-              <StyledTableCell>Invoice No.</StyledTableCell>
-              <StyledTableCell>GST1657020</StyledTableCell>
-              <StyledTableCell>Invoice Date</StyledTableCell>
-              <StyledTableCell>xyz</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                <Typography>MOBILE No.</Typography>
+              </StyledTableCell>
+              <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell><b>M/S</b></StyledTableCell>
-              <StyledTableCell style={{ borderRight: '1px solid' }}>Kevin Motors</StyledTableCell>
-              <StyledTableCell>Challan No</StyledTableCell>
-              <StyledTableCell>865</StyledTableCell>
-              <StyledTableCell>Challan Date</StyledTableCell>
-              <StyledTableCell>03-Mar-20204</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                <Typography>PAN Card No.</Typography>
+              </StyledTableCell>
+              <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell><b>Address</b></StyledTableCell>
-              <StyledTableCell style={{ borderRight: '1px solid' }}>Chandani Chok, New Delhi, Opposite Statue, New Delhiq, Delhi - 110014</StyledTableCell>
-              <StyledTableCell>P.O. No.</StyledTableCell>
-              <StyledTableCell colSpan={3}>66</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell colSpan={2} style={{ textAlign: 'left', padding: 0 }}>
+                <Typography>AADHAR No.</Typography>
+              </StyledTableCell>
+              <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell><b>PHONE</b></StyledTableCell>
-              <StyledTableCell style={{ borderRight: '1px solid' }}>89786547476</StyledTableCell>
-              <StyledTableCell>DELIVERY DATE</StyledTableCell>
-              <StyledTableCell>04-Mar-20204</StyledTableCell>
-              <StyledTableCell>Reverse Charge</StyledTableCell>
-              <StyledTableCell>No</StyledTableCell>
-            </TableRow>
-            <TableRow>
-              <StyledTableCell><b>GSTIN</b></StyledTableCell>
-              <StyledTableCell style={{ borderRight: '1px solid' }}>dge554g36634</StyledTableCell>
-              <StyledTableCell>Due Date</StyledTableCell>
-              <StyledTableCell colSpan={3}>19-Mar-2020</StyledTableCell>
-            </TableRow>
-            <TableRow>
-              <StyledTableCell><b>Place of Supply</b></StyledTableCell>
-              <StyledTableCell style={{ borderRight: '1px solid' }}>Delhi ( 07 )</StyledTableCell>
-              <StyledTableCell>E-Way No</StyledTableCell>
-              <StyledTableCell colSpan={3}>657thtg3453</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                <Typography>EMAIL ID.</Typography>
+              </StyledTableCell>
+              <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>&nbsp;</StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -125,8 +131,22 @@ const Addreceipt = () => {
       <TableContainer component={Paper}>
         <Table style={{ border: '1px solid black' }}>
           <TableBody>
-            <TableRow>
-              <StyledTableCell>&nbsp;</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '40%', padding: 0 }} colSpan={10}>
+                <Typography>Project</Typography>
+              </StyledTableCell>
+              <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
+                <Typography>Wing</Typography>
+              </StyledTableCell>
+              <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
+                <Typography>Floor</Typography>
+              </StyledTableCell>
+              <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
+                <Typography>Flat No.</Typography>
+              </StyledTableCell>
+              <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
+                <Typography>Type</Typography>
+              </StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -134,114 +154,104 @@ const Addreceipt = () => {
 
       <TableContainer component={Paper}>
         <Table className="info-border">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Sr. No.</StyledTableCell>
-              <StyledTableCell>Name of Product / Service</StyledTableCell>
-              <StyledTableCell>HSN / SAC</StyledTableCell>
-              <StyledTableCell>Qty</StyledTableCell>
-              <StyledTableCell>Rate</StyledTableCell>
-              <StyledTableCell>Taxable Value</StyledTableCell>
-              <StyledTableCell colSpan={2}>IGST</StyledTableCell>
-              <StyledTableCell>Total</StyledTableCell>
-            </TableRow>
-            <TableRow>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell style={{ borderBottom: '1px solid' }}>%</StyledTableCell>
-              <StyledTableCell style={{ borderBottom: '1px solid' }}>Amount</StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
-            <TableRow>
-              <StyledTableCell>1</StyledTableCell>
-              <StyledTableCell>Automatic Saw</StyledTableCell>
-              <StyledTableCell>8202</StyledTableCell>
-              <StyledTableCell>1.00 PCS</StyledTableCell>
-              <StyledTableCell>586.00</StyledTableCell>
-              <StyledTableCell>586.00</StyledTableCell>
-              <StyledTableCell>9.00</StyledTableCell>
-              <StyledTableCell>52.74</StyledTableCell>
-              <StyledTableCell>638.74</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Type of Booking</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>GST* (As per Govt.Notification)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell>2</StyledTableCell>
-              <StyledTableCell>Automatic Saw</StyledTableCell>
-              <StyledTableCell>8202</StyledTableCell>
-              <StyledTableCell>1.00 PCS</StyledTableCell>
-              <StyledTableCell>586.00</StyledTableCell>
-              <StyledTableCell>586.00</StyledTableCell>
-              <StyledTableCell>9.00</StyledTableCell>
-              <StyledTableCell>52.74</StyledTableCell>
-              <StyledTableCell>638.74</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Area in Building(in Sq.Ft)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Stamp Duty* (As per Govt.Notification)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={3} style={{ textAlign: 'right', borderTop: '1px solid' }}>Total</StyledTableCell>
-              <StyledTableCell>2</StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell>1,154.00</StyledTableCell>
-              <StyledTableCell></StyledTableCell>
-              <StyledTableCell>103.86</StyledTableCell>
-              <StyledTableCell>1,257.86</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Rate Sq.Ft</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Registration* (As per Govt.Notification)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>TTL Amount As Per Builtup</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Advocate* (At time of registration)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Payment Schedule</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Extra Cost (B)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Total (A + B)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Gross Flat Cost (A)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
 
       <TableContainer component={Paper}>
-        <Table style={{ border: '1px solid black' }}>
+        <Table className="info-border">
           <TableBody>
-            <TableRow>
-              <StyledTableCell colSpan={9}>&nbsp;</StyledTableCell>
-            </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={7} style={{ textAlign: 'right', borderBottom: '1px solid' }}>
-                Total Invoice Amount:
-              </StyledTableCell>
-              <StyledTableCell colSpan={2} style={{ textAlign: 'right' }}>
-                1,257.86
-              </StyledTableCell>
+            <TableRow style={{ border: '1px solid black', padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>RUPEES IN WORDS: SIXTY THREE LAKHS RUPEES ONLY</StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
 
       <TableContainer component={Paper}>
-        <Table style={{ border: '1px solid black' }}>
+        <Table className="info-border">
           <TableBody>
-            <TableRow>
-              <StyledTableCell colSpan={2}>
-                <Typography variant="h4"><b style={{ color: 'darkblue' }}>Tax Amount In Words:</b></Typography>
-              </StyledTableCell>
-              <StyledTableCell colSpan={7}>RUPEES ONE THOUSAND TWO HUNDRED FIFTY-SEVEN AND PAISE EIGHTY-SIX ONLY</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Usable Area in Sq.Ft</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+              <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Agreement Carpet (RERA) in Sq.Ft</StyledTableCell>
+              <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={9}>&nbsp;</StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 500, padding: 0 }} colSpan={10}>REMARKS :</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={3}>
-                <Typography variant="h5"><b style={{ color: 'darkblue' }}>Company's PAN: GQOPS8995A</b></Typography>
-              </StyledTableCell>
-              <StyledTableCell colSpan={3}>&nbsp;</StyledTableCell>
-              <StyledTableCell colSpan={3}>
-                <Typography variant="h4" style={{ textAlign: 'center' }}>For Sai Agro Engineers</Typography>
-              </StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>1.</StyledTableCell>
             </TableRow>
-            <TableRow>
-              <StyledTableCell colSpan={6}>&nbsp;</StyledTableCell>
-              <StyledTableCell colSpan={3}>
-                <Typography variant="h5" style={{ textAlign: 'center' }}>Authorized Signatory</Typography>
-              </StyledTableCell>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>2.</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>3.</StyledTableCell>
+            </TableRow>
+            <TableRow sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>4.</StyledTableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-    </InvoiceBox>
+
+      <TableContainer component={Paper}>
+        <Table className="info-border">
+          <TableBody>
+            <TableRow style={{ border: '1px solid black', padding: 0 }}>
+              <StyledTableCell colSpan={4} style={{ padding: 0 }}>Verified By</StyledTableCell>
+              <StyledTableCell colSpan={4} style={{ padding: 0 }}>Maked By</StyledTableCell>
+              <StyledTableCell colSpan={4} style={{ padding: 0 }}>Purchaser Signature & Date</StyledTableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </InvoiceBox>
+    </>
   );
 };
 
