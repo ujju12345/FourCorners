@@ -105,11 +105,30 @@ const navigation = () => {
       icon: AssignmentIcon,
       path: "/typography",
     },
+
     {
       title: "Project Details",
-      icon: AssignmentIcon,
-      path: "/projectinfo",
+      icon: PhoneIcon,
+      // path: "/tellcalling-details",
+      children: [
+        {
+          title: "Add project Details",
+          icon: CubeOutlineIcon,
+          path: "/project-details",
+        },
+        {
+          title: "List Project Details",
+          icon: CubeOutlineIcon,
+          path: "/project-details/ListProjectDetails",
+        },
+   
+      ],
     },
+    // {
+    //   title: "Project Details",
+    //   icon: AssignmentIcon,
+    //   path: "/project-details",
+    // },
     {
       sectionTitle: "Data Management",
     },

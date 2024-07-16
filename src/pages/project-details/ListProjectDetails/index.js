@@ -3,18 +3,19 @@ import { Button, Grid } from '@mui/material';
 // import ListProjectDetails from 'src/views/project-detailsList/ListProjectDetails';
 import AddProjectDetails from 'src/views/project-detailsAdd/AddProjectDetails';
 import UploadExcel from 'src/views/project-detailsAdd/UploadExcel/UploadExcel';
+import ListProject from 'src/views/ListProjectDetails/ListProject';
 
-const TypographyPage = () => {
+const ListProjectDetails = () => {
   const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [showUploadExcel, setShowUploadExcel] = useState(false);
 
-  useEffect(() => {
-    const shouldShowUploadExcel = localStorage.getItem('showUploadExcel') === 'true';
-    if (shouldShowUploadExcel) {
-      setShowUploadExcel(true);
-      localStorage.removeItem('showUploadExcel');
-    }
-  }, []);
+//   useEffect(() => {
+//     const shouldShowUploadExcel = localStorage.getItem('showUploadExcel') === 'true';
+//     if (shouldShowUploadExcel) {
+//       setShowUploadExcel(true);
+//       localStorage.removeItem('showUploadExcel');
+//     }
+//   }, []);
 
   const handleNavigation = () => {
     setShowProjectDetails(true);
@@ -44,20 +45,20 @@ const TypographyPage = () => {
 
       {/* {showProjectDetails && ( */}
         <Grid item xs={12}>
-          <AddProjectDetails
+          <ListProject
             show={setShowProjectDetails}
             setShowUploadExcel={setShowUploadExcel}
           />
         </Grid>
       {/* )} */}
 
-      {/* {showUploadExcel && ( */}
+      {/* {showUploadExcel && (
         <Grid sx={{ mt: 20 }}>
           <UploadExcel show={setShowUploadExcel} />
         </Grid>
-      {/* )} */}
+      )} */}
     </>
   );
 };
 
-export default TypographyPage;
+export default ListProjectDetails;
