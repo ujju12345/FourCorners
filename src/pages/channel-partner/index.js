@@ -8,6 +8,8 @@ import AddChanelPartner from "src/views/add-channelpartner/AddChannelPartner";
 const ChanelPartner = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('list');
+  
   const [error, setError] = useState(null);
   const [showListChannelpartner, setShowListChannelpartner] = useState(false);
   useEffect(() => {

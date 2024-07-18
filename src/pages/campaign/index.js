@@ -188,8 +188,6 @@ const Tellecalling = () => {
   const userName = cookies.amr?.FullName || "User";
   const roleName = cookies.amr?.RoleName || "Admin";
   const userid = cookies.amr?.UserID || "Role";
-  console.log(userName, "ye dekh username");
-  console.log(roleName, "ye dekh rolname");
   console.log(userid, "ye dekh roleide");
   useEffect(() => {
     fetchData();
