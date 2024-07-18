@@ -117,7 +117,7 @@ const LoginPage = () => {
             // return
             if (user.RoleID === 1) {
               router.push('/');
-            } else if (user.RoleID === 4) {
+            } else if (user.RoleID === 3) {
               router.push('/SaleDashboard');
             } else {
               router.push('/Telecalling');

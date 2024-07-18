@@ -38,10 +38,10 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
   const router = useRouter();
 
   console.log(editData, "Edit data aaya");
-  const initialRemark = { RemarkName: "", RemarkDate: null, Status: 1 };
+  const initialRemark = { RemarkName: '', RemarkDate: null, Remarkamount: '' };
   const initialFormData = {
     BookingDate: null,
-    BookedBy: "",
+    BookedByID: "",
     Mobile: "",
     Name: "",
     Address: "",
@@ -54,6 +54,7 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     ParkingFacility: "",
     FlatCost: "",
     FlatCostInWords: "",
+    Remarkamount:"",
     Gst: "",
     StampDuty: "",
     Registration: "",
@@ -84,7 +85,7 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
   const [wingData, setWingData] = useState([]);
-
+  const [bookedByOptions, setBookedByOptions] = useState([]);
   const [tellecallingID, setTellecallingID] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -199,7 +200,7 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
           ...prevFormData,
           [name]: numericValue,
         }));
-      } else if (name === "FlatCost") {
+      } else if (name === "FlatCost" || name === "Amount") {
         const numericValue = value.replace(/,/g, "");
         const formattedValue = formatNumber(numericValue);
         const FlatCostInWords = numberToWordsIndian(
@@ -242,6 +243,22 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
         });
     }
   }, [formData.WingID]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-usersales.php');
+        if (response.data && response.data.data) {
+          setBookedByOptions(response.data.data); // Use response.data.data to set the options
+        } else {
+          console.error('Unexpected response structure:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     axios
@@ -648,15 +665,22 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Booked By</>}
-                  //   type="tel"
-                  name="BookedBy"
-                  value={formData.BookedBy}
-                  onChange={handleChange}
-                />
-              </Grid>
+      <FormControl fullWidth>
+        <InputLabel>Booked By</InputLabel>
+        <Select
+          name="BookedByID"
+          value={formData.BookedByID}
+          onChange={handleChange}
+          label="Booked By"
+        >
+          {bookedByOptions?.map((option) => (
+            <MenuItem key={option.UserID} value={option.UserID}>
+              {option.Name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
 
               {/* <Grid item xs={12} sm={4}>
                 <input
@@ -931,47 +955,46 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
                 />
               </Grid>
               {remarks.map((remark, index) => (
-                <Grid container item spacing={2} key={index}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label={`Remark ${index + 1}`}
-                      value={remark.RemarkName}
-                      onChange={(e) => handleChange(e, index, "RemarkName")}
-                    />
-                  </Grid>
-                  <Grid item xs={8} sm={4}>
-                    <DatePicker
-                      selected={remark.RemarkDate}
-                      onChange={(date) => handleDateRemarks(date, index)}
-                      dateFormat="dd-MM-yyyy"
-                      className="form-control"
-                      customInput={
-                        <TextField fullWidth label={<>Expected Date</>} />
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <IconButton
-                      color="primary"
-                      sx={{ color: "#1976d2" }}
-                      onClick={handleAddRemark}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                    <IconButton
-                      color="primary"
-                      sx={{ color: "#f44336" }}
-                      onClick={() => handleRemoveRemark(index)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton sx={{ color: "#4caf50" }}>
-                      <EditIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              ))}
+        <Grid container item spacing={2} key={index}>
+          <Grid item xs={2}>
+            <TextField
+              fullWidth
+              label={`Amount ${index + 1}`}
+              value={remark.Remarkamount}
+              onChange={(e) => handleChange(e, index, 'Remarkamount')}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                inputProps: { style: { textAlign: 'left' } },
+              }}
+              type="text"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label={`Remark ${index + 1}`}
+              value={remark.RemarkName}
+              onChange={(e) => handleChange(e, index, 'RemarkName')}
+            />
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <DatePicker
+              selected={remark.RemarkDate}
+              onChange={(date) => handleDateRemarks(date, index)}
+              dateFormat="dd-MM-yyyy"
+              className="form-control"
+              customInput={<TextField fullWidth label={<>Expected Date</>} />}
+            />
+          </Grid>
+          <IconButton color="primary" sx={{ color: '#1976d2' }} onClick={handleAddRemark}>
+            <AddIcon />
+          </IconButton>
+          <IconButton color="primary" sx={{ color: '#f44336' }} onClick={() => handleRemoveRemark(index)}>
+            <DeleteIcon />
+          </IconButton>
+        </Grid>
+      ))}
+
 
               {/* <Grid item xs={12}>
                 <Button

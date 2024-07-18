@@ -270,7 +270,7 @@ const SaleDashboard = () => {
                   variant="body2"
                   sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
                 >
-                  Search Date-Wise
+                  Search Opportunity
                 </Typography>
               </Box>
             </Grid>
@@ -316,6 +316,8 @@ const SaleDashboard = () => {
                         }
                       />
                     </Grid>
+
+
 
                     <Grid
                       item
@@ -365,6 +367,32 @@ const SaleDashboard = () => {
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Booking
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: 0 {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Card>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Loan reminder
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: 0 {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Card>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Payment reminder
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Counts: 0 {/* Adjust this key as needed */}
@@ -926,43 +954,7 @@ const SaleDashboard = () => {
 
    
 
-        <Grid item xs={12} md={6}>
-          <WeeklyOverview />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TotalEarning />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats="862"
-                trend="negative"
-                trendNumber="-18%"
-                title="New Project"
-                subtitle="Yearly Project"
-                icon={<BriefcaseVariantOutline />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVerticalComponent
-                stats="15"
-                color="warning"
-                trend="negative"
-                trendNumber="-18%"
-                subtitle="Last Week"
-                title="Sales Queries"
-                icon={<HelpCircleOutline />}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <SalesByCountries />
-        </Grid>
-        <Grid item xs={12} md={12} lg={8}>
-          <DepositWithdraw />
-        </Grid>
+       
       </Grid>
     </ApexChartWrapper>
   );

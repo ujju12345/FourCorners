@@ -143,11 +143,13 @@ const LeadLogin = ({ setShowTabAccount }) => {
           RoleName: response.data.data.rolename,
         };
 
+        
+
         setCookie("amr", JSON.stringify(user), { path: "/" });
 
         if (user.RoleID === 1) {
           router.push("/");
-        } else if (user.RoleID === 4) {
+        } else if (user.RoleID === 3) {
           router.push("/SaleDashboard");
         } else {
           router.push("/Telecalling");

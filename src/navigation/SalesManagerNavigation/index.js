@@ -77,25 +77,54 @@ const SalesManagerNavigation = () => {
       ],
     },
   
+    
     {
-      title: "Post Sales",
+      sectionTitle: "Post Sales",
+    },
+
+    {
+      title: "Payment Reminder",
       icon: TrendingUpIcon,
-      path: "/opportunity",
+      // path: "/opportunity",
       children: [
         {
           title: "Todays payment ",
           icon: CubeOutlineIcon,
-          path: "/opportunity",
+          path: "/payment-reminder",
         },
         {
           title: "Open Payment",
           icon: CubeOutlineIcon,
-          path: "/opportunity",
+          path: "/payment-reminder/Openpayment",
         },
         {
           title: "Backlog Payment ",
           icon: CubeOutlineIcon,
-          path: "/opportunity",
+          path: "/payment-reminder/BacklogPaymentReminder",
+        },
+      ],
+    },
+
+
+    {
+      title: "Loan Reminder ",
+      icon: TrendingUpIcon,
+      // path: "/opportunity",
+      children: [
+        {
+          title: "Todays payment ",
+          icon: CubeOutlineIcon,
+          path: "/payment-reminder",
+        },
+        {
+          title: "Open Payment",
+          icon: CubeOutlineIcon,
+          path: "/payment-reminder/Openpayment",
+        },
+        {
+          title: "Backlog Payment",
+          icon: CubeOutlineIcon,
+          path: "/payment-reminder/BacklogPaymentReminder",
         },
       ],
     },
