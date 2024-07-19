@@ -38,6 +38,7 @@ const InvoiceBox = styled(Box)({
 });
 
 const TemplateRosenagar = ({ bookingID }) => {
+  console.log(bookingID , 'booking id aaya');
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

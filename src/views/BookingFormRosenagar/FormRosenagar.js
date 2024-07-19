@@ -18,6 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from "sweetalert2";
+import moment from 'moment';
 import {
   Snackbar,
   FormControlLabel,
@@ -27,20 +28,27 @@ import {
   Autocomplete,
   InputAdornment,
   IconButton,
+  Checkbox,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 import { toWords } from "number-to-words";
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
+const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const router = useRouter();
 
   console.log(editData, "Edit data aaya");
-  const initialRemark = { RemarkName: '', RemarkDate: null, Remarkamount: '' };
+  const initialRemark = {
+    RemarkName: "",
+    RemarkDate: null,
+    Remarkamount: "",
+    Loan: 0,
+  };
+  const dateStr = "2023-07-19";
   const initialFormData = {
-    BookingDate: null,
+    BookingDate: moment(dateStr, 'YYYY-MM-DD').toDate(),
     BookedByID: "",
     Mobile: "",
     Name: "",
@@ -54,7 +62,6 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     ParkingFacility: "",
     FlatCost: "",
     FlatCostInWords: "",
-    Remarkamount:"",
     Gst: "",
     StampDuty: "",
     Registration: "",
@@ -65,17 +72,15 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     UnsableArea: "",
     AgreementCarpet: "",
     Area: "",
-    Remark: "",
     ProjectID: "",
     WingID: "",
     FlatNo: "",
-    FlatNumber: "",
     FloorNo: "",
     Status: 1,
     CreateUID: 1,
   };
 
-  const [remarks, setRemarks] = useState([{ ...initialRemark }]);
+  const [remarks, setRemarks] = useState([initialRemark]);
   const [formData, setFormData] = useState(initialFormData);
   const [projectMaster, setProjectMaster] = useState([]);
   const [floor, setFloor] = useState([]);
@@ -92,7 +97,9 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [cookies, setCookie] = useCookies(["amr"]);
-
+  const [remarkChecked, setRemarkChecked] = useState(false);
+  const [remarkName, setRemarkName] = useState("");
+  const [expectedDate, setExpectedDate] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -166,29 +173,25 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     return result.trim();
   };
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleNotificationChange = (event) => {
-    const value = event.target.value === "sms" ? 1 : 0;
-    setFormData({
-      ...formData,
-      SmsNotification: value,
-      EmailNotification: value === 1 ? 0 : 1,
-    });
-  };
-
   const handleChange = (event, index, field) => {
-    const { name, value } = event.target;
+    const { type, checked, value } = event.target;
 
     if (index !== undefined && field !== undefined) {
       // Handling changes in remarks array (dynamic fields)
       const newRemarks = [...remarks];
-      newRemarks[index][field] = value;
+
+      if (type === "checkbox") {
+        // Set Loan to 1 if checked, 0 if unchecked
+        newRemarks[index][field] = checked ? 1 : 0;
+      } else {
+        // Update other fields
+        newRemarks[index][field] = value;
+      }
+
       setRemarks(newRemarks);
     } else {
       // Handling changes in main form fields
+      const name = event.target.name;
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name]: undefined,
@@ -246,14 +249,16 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-usersales.php');
+        const response = await axios.get(
+          "https://apiforcorners.cubisysit.com/api/api-fetch-usersales.php"
+        );
         if (response.data && response.data.data) {
           setBookedByOptions(response.data.data); // Use response.data.data to set the options
         } else {
-          console.error('Unexpected response structure:', response);
+          console.error("Unexpected response structure:", response);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -361,32 +366,6 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     }
   }, [formData.FlatNo, formData.WingID, formData.ProjectID, formData.FloorNo]);
 
-  const validateForm = () => {
-    const newErrors = {};
-    const requiredFields = [
-      "titleprefixID",
-      "PartyName",
-      "Mobile",
-      "Countrycode",
-      "Email",
-      "ProjectID",
-      "UnittypeID",
-      "leadstatusID",
-      "Location",
-      "SourceID",
-      "TelecallAttendedByID",
-    ];
-
-    requiredFields.forEach((field) => {
-      if (!formData[field]) {
-        newErrors[field] = "This field is required";
-      }
-    });
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return true if no errors
-  };
-
   const handleAddRemark = () => {
     setRemarks([...remarks, { ...initialRemark }]);
   };
@@ -397,20 +376,25 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     setRemarks(updatedRemarks);
   };
 
-  //   const handleAddRemark = () => {
-  //     setRemarks([...remarks, { remark: "", date: null }]);
-  //   };
-
-  //   const handleRemoveRemark = (index) => {
-  //     setRemarks(remarks.filter((_, i) => i !== index));
-  //   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
-  
+
+    const formattedRemarks = remarks.map((remark, index) => ({
+      ...remark,
+      RemarkDate: remark.RemarkDate
+        ? remark.RemarkDate.toISOString().split("T")[0]
+        : null,
+      RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
+     
+      Status: 1, // default or calculated value
+      CreateUID: 1, // default or fetched value
+    }));
+    console.log(formattedRemarks, "format dekh<<<<<<<>>>>>>");
+
     const dataToSend = editData
       ? {
           ...formData,
@@ -423,39 +407,36 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
         }
       : {
           ...formData,
-          CreateUID: cookies.amr?.UserID || 1,
-          remarks: remarks.map(({ RemarkName, RemarkDate, Status }) => ({
-            RemarkName,
-            RemarkDate: RemarkDate.toISOString().split("T")[0],
-            Status,
-          })),
+          Remarks: formattedRemarks,
         };
-  
+
+    console.log(dataToSend, "FORM ROSE NAGAR<<<<<<<>>>>>>");
+
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.data.status === "Success") {
-        const { BookingID } = response.data; // Extract BookingID from response
-        onFormSubmitSuccess(BookingID); 
+        console.log("hogaya submut");
+        const { BookingID } = response.data; 
+        onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
         // show(false);
-  
+
         // Optionally show success message
-        Swal.fire({
-          icon: "success",
-          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-  
+        // Swal.fire({
+        //   icon: "success",
+        //   title: editData ? "Data Updated Successfully" : "Data Added Successfully",
+        //   showConfirmButton: false,
+        //   timer: 1000,
+        // });
+
         // Navigate to the desired page with BookingID
         // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
-  
       } else {
         Swal.fire({
           icon: "error",
@@ -472,32 +453,14 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
       });
     }
   };
-  
-  
 
-  //   const handleSubmit = async (event) => {
-  //     event.preventDefault();
-
-  //     try {
-  //       // Filter out remarks with empty values
-  //       const validRemarks = remarks.filter(remark => remark.remark.trim() !== '' && remark.date !== null);
-
-  //       if (validRemarks.length === 0) {
-  //         setErrors(['At least one remark must have both text and date.']);
-  //         return;
-  //       }
-
-  //       // Send valid remarks to your API
-  //       const response = await axios.post('/your-api-endpoint', validRemarks);
-  //       console.log('API response:', response.data);
-
-  //       // Reset form after successful submission
-  //       setRemarks([{ remark: '', date: null }]);
-  //       setErrors([]);
-  //     } catch (error) {
-  //       console.error('Error submitting remarks:', error);
-  //     }
-  //   };
+  const handleChangeLoan = (e, field) => {
+    if (field === "RemarkChecked") {
+      setRemarkChecked(e.target.checked);
+    } else if (field === "RemarkName") {
+      setRemarkName(e.target.value);
+    }
+  };
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -517,12 +480,8 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
     setRemarks(updatedRemarks);
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setFormData({
-      ...formData,
-      imageFile: file,
-    });
+  const handleDateLoan = (date) => {
+    setExpectedDate(date);
   };
 
   return (
@@ -665,22 +624,22 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-      <FormControl fullWidth>
-        <InputLabel>Booked By</InputLabel>
-        <Select
-          name="BookedByID"
-          value={formData.BookedByID}
-          onChange={handleChange}
-          label="Booked By"
-        >
-          {bookedByOptions?.map((option) => (
-            <MenuItem key={option.UserID} value={option.UserID}>
-              {option.Name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
+                <FormControl fullWidth>
+                  <InputLabel>Booked By</InputLabel>
+                  <Select
+                    name="BookedByID"
+                    value={formData.BookedByID}
+                    onChange={handleChange}
+                    label="Booked By"
+                  >
+                    {bookedByOptions?.map((option) => (
+                      <MenuItem key={option.UserID} value={option.UserID}>
+                        {option.Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
               {/* <Grid item xs={12} sm={4}>
                 <input
@@ -872,7 +831,7 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
                   fullWidth
                   label={<>Stamp Duty</>}
                   name="StampDuty"
-                  placeholder="Stamp Duty"
+                  placeholder="Stamp Duty As per Govt. Notification"
                   value={formData.StampDuty}
                   onChange={handleChange}
                 />
@@ -882,7 +841,7 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
                   fullWidth
                   label={<>Registration</>}
                   name="Registration"
-                  placeholder="Registration"
+                  placeholder="Registration As per Govt. Notification"
                   value={formData.Registration}
                   onChange={handleChange}
                 />
@@ -955,56 +914,80 @@ const FormRosenagar = ({ onFormSubmitSuccess ,  show, editData }) => {
                 />
               </Grid>
               {remarks.map((remark, index) => (
-        <Grid container item spacing={2} key={index}>
-          <Grid item xs={2}>
-            <TextField
-              fullWidth
-              label={`Amount ${index + 1}`}
-              value={remark.Remarkamount}
-              onChange={(e) => handleChange(e, index, 'Remarkamount')}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                inputProps: { style: { textAlign: 'left' } },
-              }}
-              type="text"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label={`Remark ${index + 1}`}
-              value={remark.RemarkName}
-              onChange={(e) => handleChange(e, index, 'RemarkName')}
-            />
-          </Grid>
-          <Grid item xs={8} sm={4}>
-            <DatePicker
-              selected={remark.RemarkDate}
-              onChange={(date) => handleDateRemarks(date, index)}
-              dateFormat="dd-MM-yyyy"
-              className="form-control"
-              customInput={<TextField fullWidth label={<>Expected Date</>} />}
-            />
-          </Grid>
-          <IconButton color="primary" sx={{ color: '#1976d2' }} onClick={handleAddRemark}>
-            <AddIcon />
-          </IconButton>
-          <IconButton color="primary" sx={{ color: '#f44336' }} onClick={() => handleRemoveRemark(index)}>
-            <DeleteIcon />
-          </IconButton>
-        </Grid>
-      ))}
+                <Grid container item spacing={2} key={index}>
+                  {/* Amount Field */}
+                  <Grid item xs={2}>
+                    <TextField
+                      fullWidth
+                      label={`Amount ${index + 1}`}
+                      value={remark.Remarkamount}
+                      onChange={(e) => handleChange(e, index, "Remarkamount")}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">₹</InputAdornment>
+                        ),
+                        inputProps: { style: { textAlign: "left" } },
+                      }}
+                      type="text"
+                    />
+                  </Grid>
 
+                  {/* Remark Field */}
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label={`Remark ${index + 1}`}
+                      value={remark.RemarkName}
+                      onChange={(e) => handleChange(e, index, "RemarkName")}
+                    />
+                  </Grid>
 
-              {/* <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddRemark}
-                >
-                  Add Remark
-                </Button>
-              </Grid> */}
+                  {/* Date Field */}
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={remark.RemarkDate}
+                      onChange={(date) => handleDateRemarks(date, index)}
+                      dateFormat="dd-MM-yyyy"
+                      customInput={
+                        <TextField fullWidth label="Expected Date" />
+                      }
+                    />
+                  </Grid>
+
+                  {/* Loan Process Checkbox */}
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={remark.Loan === 1}
+                          onChange={(e) => handleChange(e, index, "Loan")}
+                        />
+                      }
+                      label="Loan Process"
+                    />
+                  </Grid>
+
+                  {/* Add and Delete Buttons */}
+                  {index === remarks.length - 1 && (
+                    <Grid item xs={2}>
+                      <IconButton
+                        color="primary"
+                        sx={{ color: "#1976d2" }}
+                        onClick={handleAddRemark}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton
+                        color="primary"
+                        sx={{ color: "#f44336", ml: 1 }}
+                        onClick={() => handleRemoveRemark(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                </Grid>
+              ))}
 
               <Grid item xs={12}>
                 <Button
