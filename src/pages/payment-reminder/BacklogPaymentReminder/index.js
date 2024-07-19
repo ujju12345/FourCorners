@@ -34,6 +34,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ListOpportunitybacklog from "src/views/list-opportunity/backlog/ListOpportunitybacklog";
 import HistoryOpportunitybacklog from "src/views/history-apportunity/HistoryOpportunityBacklog/HistoryOpportunitybacklog";
 import BacklogPaymentSidebar from "src/views/payment-reminder/ BacklogPaymentSidebar/BacklogPaymentSidebar";
+import BacklogPaymentTemplate from "src/views/payment-reminder/BacklogPaymentTemplate/BacklogPaymentTemplate";
 const salesData = [
   {
     stats: "50",
@@ -254,6 +255,15 @@ const BacklogPayment = () => {
           onCreate={handleAddTelecaller}
         />
       </Grid>
+
+      {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+          <BacklogPaymentTemplate
+            item={rowDataToUpdate}
+            onDelete={handleDelete}
+            onHistoryClick={handleShowHistory}
+            onEdit={handleEdit}
+          />
+        )}
      
     </Grid>
   );

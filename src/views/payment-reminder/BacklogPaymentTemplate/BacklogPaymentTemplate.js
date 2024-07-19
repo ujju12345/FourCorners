@@ -23,24 +23,27 @@ const GlobalStyle = createGlobalStyle`
 
 const StyledTableCell = styled(TableCell)({
   border: '2px solid black',
-  padding: '0px', // Removed padding
+  padding: '4px', // Reduced padding
   textAlign: 'center',
 });
 
+
 const InvoiceBox = styled(Box)({
-  maxWidth: '890px',
+  maxWidth: '1500px', // Increased width
   margin: 'auto',
-  padding: '10px',
+  padding: '20px', // Increased padding to give more space
   border: '1px solid #eee',
   fontSize: '11px',
   lineHeight: '18px',
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
-const TemplateRosenagar = ({ bookingID }) => {
+
+const BacklogPaymentTemplate = ({ item  }) => {
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState(null);
 
   const handlePrint = () => {
@@ -54,22 +57,29 @@ const TemplateRosenagar = ({ bookingID }) => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (!item) return; // Exit if no item is provided
+      try {
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${item?.BookingID}`;
+
+        // const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=${item.BookingID}`;
+        const response = await axios.get(apiUrl);
+
+        if (response.data.status === "Success") {
+            console.log(response.data , 'data aaya deh');
+          setData(response.data.data);
+        } else {
+          setError('Failed to fetch data');
+        }
+      } catch (error) {
+        setError('Error fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [bookingID]);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${bookingID}`);
-      console.log("data aaya dekh", response.data);
-      setData(response.data.data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-      setLoading(false);
-    }
-  };
-
+  }, [item]);
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -81,15 +91,15 @@ const TemplateRosenagar = ({ bookingID }) => {
   return (
     <>
       <GlobalStyle />
-      <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
+      {/* <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
         Print
-      </Button>
+      </Button> */}
 
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
-              <TableRow sx={{ height: '10px', padding: 0 }}>
+            <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ height: '10px', padding: 0 }}>
                   <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}>QUOTATION</Typography>
                 </StyledTableCell>
@@ -308,4 +318,4 @@ const TemplateRosenagar = ({ bookingID }) => {
   );
 };
 
-export default TemplateRosenagar;
+export default BacklogPaymentTemplate;

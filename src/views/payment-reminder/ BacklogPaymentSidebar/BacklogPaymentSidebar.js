@@ -16,9 +16,10 @@ import {
   ListItemAvatar,
   Modal,
   Button,
-  Chip
-
+  Chip,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 // import  Chip from '@mui/material';
@@ -27,22 +28,30 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import { useCookies } from "react-cookie";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
+  const initialFormData = {
+    AmountGiven: null,
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filteredRows, setFilteredRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [totalCost, setTotalCost] = useState(0);
+
   const [anchorElFilter, setAnchorElFilter] = useState(null);
-  const [anchorElDots, setAnchorElDots] = useState(null);
+
   const [sortOption, setSortOption] = useState("");
   const [cookies, setCookie] = useCookies(["amr"]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [cashPaid, setCashPaid] = useState('');
-  const [chequePaid, setChequePaid] = useState('');
-  const userid = cookies.amr?.UserID || 'Role';
+  const [cashPaid, setCashPaid] = useState("");
+  const [chequePaid, setChequePaid] = useState("");
+  const userid = cookies.amr?.UserID || "Role";
 
   useEffect(() => {
     fetchData();
@@ -51,7 +60,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=15`,
+        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=15`
         // https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php?UserID=${userid}
       );
       console.log("BACKLOG PAYEMent DTAA", response.data);
@@ -93,10 +102,14 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   const getDateStatus = (contactCreateDate) => {
     const date = new Date(contactCreateDate);
     const now = new Date();
-    
-    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
-  
+
+    const isCurrentMonth =
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+    const isPreviousMonth =
+      date.getMonth() === now.getMonth() - 1 &&
+      date.getFullYear() === now.getFullYear();
+
     if (isCurrentMonth) {
       return "New";
     } else if (isPreviousMonth) {
@@ -112,13 +125,8 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   const handleFilterMenuClose = () => {
     setAnchorElFilter(null);
   };
-
-  const handleDotsMenuOpen = (event) => {
-    setAnchorElDots(event.currentTarget);
-  };
-
-  const handleDotsMenuClose = () => {
-    setAnchorElDots(null);
+  const calculateBalance = () => {
+    return totalCost - handleAddition();
   };
 
   const handleSortOptionChange = (option) => {
@@ -132,14 +140,12 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
         );
         break;
       case "a-z":
@@ -154,15 +160,8 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
     setFilteredRows(sortedRows);
   };
 
-  const jsonToCSV = (json) => {
-    const header = Object.keys(json[0]).join(",");
-    const values = json
-      .map((obj) => Object.values(obj).join(","))
-      .join("\n");
-    return `${header}\n${values}`;
-  };
-
-  const handleModalOpen = () => {
+  const handleModalOpen = (totalCost) => {
+    setTotalCost(totalCost);
     setModalOpen(true);
   };
 
@@ -176,7 +175,9 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
     return cashPaidNumber + chequePaidNumber;
   };
 
-
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, AmountGiven: date });
+  };
 
   return (
     <Card
@@ -190,7 +191,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-           Backlog Payment Reminder
+            Backlog Payment Reminder
           </Typography>
           <Box display="flex" alignItems="center">
             {/* <IconButton
@@ -314,123 +315,199 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
         </Box>
       ) : (
         <List>
-        {filteredRows.map((item) => (
-          <React.Fragment key={item.Tid}>
-            <Card sx={{ marginBottom: 2 }}>
-              <ListItem key={item.Tid} disablePadding onClick={() => onItemClick(item)}>
-                <ListItemAvatar>
-                  <Avatar
-                    alt={item.CName}
-                    sx={{ width: 40, height: 40, margin: 2 }}
-                    src="/images/avatars/1.png"
-                  />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="subtitle1" style={{ fontSize: 15 }}>
-                      Name: {item.Name}
-                    </Typography>
-                  }
-                  secondary={
-                    <>
-                      <Typography variant="body2" style={{ fontSize: 12 }}>
-                        Remark: {item.RemarkName}
-                      </Typography>
-                      <Typography variant="body2" style={{ fontSize: 10 }}>
-                        Date: {item.RemarkDate}
-                      </Typography>
-                      <Typography variant="body2" style={{ fontSize: 10 }}>
-                        Flat Cost: {item.FlatCost}
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box display="flex" flexDirection="column" alignItems="flex-end">
-                  <IconButton
-                    aria-label="edit"
-                    sx={{ color: 'blue' }}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent ListItem click propagation
-                      handleModalOpen();
-                    }}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  {getDateStatus(item.ContactCreateDate) && (
-                    <Chip
-                      label={getDateStatus(item.ContactCreateDate)}
-                      size="small"
-                      color={getDateStatus(item.ContactCreateDate) === 'New' ? 'warning' : 'default'}
-                      style={{
-                        fontSize: 8,
-                        marginLeft: 8,
-                        height: 20,
-                      }}
+          {filteredRows.map((item) => (
+            <React.Fragment key={item.BookingID}>
+              <Card sx={{ marginBottom: 2 }}>
+                <ListItem
+                  key={item.BookingID}
+                  disablePadding
+                  onClick={() => onItemClick(item)}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={item.CName}
+                      sx={{ width: 40, height: 40, margin: 2 }}
+                      src="/images/avatars/1.png"
                     />
-                  )}
-                </Box>
-              </ListItem>
-            </Card>
-          </React.Fragment>
-        ))}
-  
-        {/* Modal */}
-        <Modal
-          open={modalOpen}
-          onClose={handleModalClose}
-          aria-labelledby="modal-title"
-          aria-describedby="modal-description"
-        >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              p: 4,
-            }}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" style={{ fontSize: 15 }}>
+                        Name: {item.Name}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="body2" style={{ fontSize: 12 }}>
+                          Remark: {item.RemarkName}
+                        </Typography>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          Date: {item.RemarkDate}
+                        </Typography>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          Flat Cost: {item.TotalCost}
+                        </Typography>
+                      </>
+                    }
+                  />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="flex-end"
+                  >
+                    <IconButton
+                      aria-label="more"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleModalOpen(item.TotalCost);
+                      }}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    {getDateStatus(item.ContactCreateDate) && (
+                      <Chip
+                        label={getDateStatus(item.ContactCreateDate)}
+                        size="small"
+                        color={
+                          getDateStatus(item.ContactCreateDate) === "New"
+                            ? "warning"
+                            : "default"
+                        }
+                        style={{
+                          fontSize: 8,
+                          marginLeft: 8,
+                          height: 20,
+                        }}
+                      />
+                    )}
+                  </Box>
+                </ListItem>
+              </Card>
+            </React.Fragment>
+          ))}
+
+          {/* Modal */}
+          <Modal
+            open={modalOpen}
+            onClose={handleModalClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
           >
-            <Typography variant="h6" id="modal-title" gutterBottom>
-              Add Payment Details
-            </Typography>
-           
-            <TextField
-              fullWidth
-              label="Cash Paid"
-              value={cashPaid}
-              onChange={(e) => setCashPaid(e.target.value)}
-              type="number"
-              style={{ marginTop: 16 }}
-            />
-            <TextField
-              fullWidth
-              label="Cheque Paid"
-              value={chequePaid}
-              onChange={(e) => setChequePaid(e.target.value)}
-              type="number"
-              style={{ marginTop: 16 }}
-            />
-            <TextField
-              fullWidth
-              label="Total Payment"
-              value={handleAddition()}
-              disabled
-              style={{ marginTop: 16 }}
-            />
-            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-              <Button onClick={handleModalClose} variant="contained" color="primary" sx={{ mr: 2 }}>
-                Cancel
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleModalClose}>
-                Save
-              </Button>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 600, // Increased width
+                height: 380, // Increased height
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <IconButton
+                aria-label="close"
+                onClick={handleModalClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h6" id="modal-title" gutterBottom>
+                Add Payment Details
+              </Typography>
+              <Grid container spacing={5} sx={{ mt: 5 }}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Cash Paid"
+                    value={cashPaid}
+                    onChange={(e) => setCashPaid(e.target.value)}
+                    type="number"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Cheque Paid"
+                    value={chequePaid}
+                    onChange={(e) => setChequePaid(e.target.value)}
+                    type="number"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Total Payment A + B"
+                    value={handleAddition()}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Total Cost"
+                    variant="outlined"
+                    value={totalCost}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Balance"
+                    variant="outlined"
+                    value={calculateBalance()}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <DatePicker
+                    selected={formData.AmountGiven}
+                    onChange={handleDateChange}
+                    dateFormat="dd-MM-yyyy"
+                    className="form-control"
+                    customInput={
+                      <TextField
+                        fullWidth
+                        label="Amount Given on "
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Button
+                      onClick={handleModalClose}
+                      variant="contained"
+                      color="primary"
+                      sx={{ mr: 2 }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleModalClose}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
             </Box>
-          </Box>
-        </Modal>
-      </List>
+          </Modal>
+        </List>
       )}
     </Card>
   );
