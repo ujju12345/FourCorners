@@ -83,8 +83,9 @@ const UploadExcel = ({ show, rowData }) => {
   
     try {
       setLoading(true);
+      
       const response = await axios.post(
-        "https://3.108.228.197:3000/proxy_u",
+        "https://api-backend.devasmriti.com/api/test_u",
         formDataFile,
         {
           headers: {

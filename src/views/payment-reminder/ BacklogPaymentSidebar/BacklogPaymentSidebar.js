@@ -43,9 +43,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   const [filteredRows, setFilteredRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [totalCost, setTotalCost] = useState(0);
-
   const [anchorElFilter, setAnchorElFilter] = useState(null);
-
   const [sortOption, setSortOption] = useState("");
   const [cookies, setCookie] = useCookies(["amr"]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,7 +58,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=15`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=${userid}`
         // https://apiforcorners.cubisysit.com/api/api-fetch-backlog.php?UserID=${userid}
       );
       console.log("BACKLOG PAYEMent DTAA", response.data);
