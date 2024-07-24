@@ -287,6 +287,7 @@ const Contact = () => {
           rows={rows}
           onItemClick={handleShow}
           onEdit={handleEdit}
+          onDashboardClick={handleNavigation}
           onCreate={handleAddTelecaller}
         />
       </Grid>

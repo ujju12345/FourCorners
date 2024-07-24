@@ -4,25 +4,21 @@ import axios from 'axios';
 import AddOpportunityDetails from 'src/views/add-opportunitydetails/AddOpportunityDetails';
 import Sidebar from 'src/views/opportunitysidebar/Sidebar';
 import ListOpportunity from 'src/views/list-opportunity/ListOpportunity';
-import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
-import PieChartIcon from '@mui/icons-material/PieChart';
-import Card from '@mui/material/Card'
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import IconButton from '@mui/material/IconButton'
-import Avatar from '@mui/material/Avatar'
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
 import HistoryOpportunity from 'src/views/history-apportunity/HistoryOpportunity';
-import { useCookies } from "react-cookie";
+import PieChartIcon from '@mui/icons-material/PieChart';
+import Card from '@mui/material/Card';
+import TrendingUp from 'mdi-material-ui/TrendingUp';
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
+import CellphoneLink from 'mdi-material-ui/CellphoneLink';
+import AccountOutline from 'mdi-material-ui/AccountOutline';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { useCookies } from 'react-cookie';
 
-
-
-const salesData = [ 
+const salesData = [
   {
     stats: '245k',
     title: 'Sales',
@@ -47,15 +43,14 @@ const salesData = [
     title: 'Revenue',
     icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
   }
-]
+];
 
 const pieData = [
   { name: 'Sales', value: 2000, color: '#3f51b5' },
   { name: 'Customers', value: 1200, color: '#4caf50' },
   { name: 'Products', value: 1540, color: '#ff9800' },
   { name: 'Revenue', value: 8000, color: '#00acc1' }
-]
-
+];
 
 const renderStats = () => {
   return salesData.map((item, index) => (
@@ -80,25 +75,20 @@ const renderStats = () => {
         </Box>
       </Box>
     </Grid>
-  ))
-}
+  ));
+};
 
 const StatisticsCard = () => {
   return (
     <>
       <CardHeader
         title='Statistics Card'
-        // action={
-        //   <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-        //     <DotsVertical />
-        //   </IconButton>
-        // }
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
               Total 48.5% growth
             </Box>{' '}
-            ðŸ˜Ž this month
+            😎 this month
           </Typography>
         }
         titleTypographyProps={{
@@ -128,8 +118,8 @@ const StatisticsCard = () => {
         </Grid>
       </CardContent>
     </>
-  )
-}
+  );
+};
 
 const WelcomeScreen = () => {
   return (
@@ -139,8 +129,8 @@ const WelcomeScreen = () => {
         <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
           Welcome to Opportunity Dashboard
         </Typography>
-        <Grid variant="body1" sx={{ marginTop: 10 , marginLeft:20}}>
-          <StatisticsCard/>
+        <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
+          <StatisticsCard />
         </Grid>
       </Box>
     </Card>
@@ -156,8 +146,10 @@ const Tellecalling = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
   const [cookies, setCookie] = useCookies(["amr"]);
   const userid = cookies.amr?.UserID || 'Role';
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -166,8 +158,7 @@ const Tellecalling = () => {
     setLoading(true);
     setError(null);
     try {
-       
-        const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`);
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -197,6 +188,7 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setShowHistory(false);
     setRowDataToUpdate(null);
+    setShowDashboard(false); // Reset showDashboard when navigating back
     fetchData();
   };
 
@@ -205,6 +197,7 @@ const Tellecalling = () => {
     setRowDataToUpdate(null);
     setShowAddDetails(true);
     setShowHistory(false);
+    setShowDashboard(false); // Reset showDashboard when editing
     setFirstVisit(false);
   };
 
@@ -212,6 +205,7 @@ const Tellecalling = () => {
     setRowDataToUpdate(item);
     setShowAddDetails(false);
     setShowHistory(false);
+    setShowDashboard(false); // Reset showDashboard when showing details
     setFirstVisit(false);
   };
 
@@ -220,6 +214,7 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setRowDataToUpdate(null);
     setShowHistory(false);
+    setShowDashboard(false); // Ensure dashboard is hidden when adding a contact
     setFirstVisit(false);
     setTimeout(() => {
       setShowAddDetails(true);
@@ -229,29 +224,37 @@ const Tellecalling = () => {
   const handleShowHistory = () => {
     setShowHistory(true);
     setShowAddDetails(false);
+    setShowDashboard(false); // Reset showDashboard when showing history
     setFirstVisit(false);
   };
 
+  const handleNavigation = () => {
+    setShowDashboard(true);
+    setShowAddDetails(false); // Ensure the AddOpportunityDetails form is hidden when navigating to the dashboard
+  };
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
         {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
 
-        {firstVisit && !loading && !error && (
+        {firstVisit && !loading && !error && !showDashboard && (
           <WelcomeScreen />
+        )}
 
+        {showDashboard && !loading && !error && (
+         <WelcomeScreen/>
         )}
 
         {showAddDetails && (
           <AddOpportunityDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <ListOpportunity
             item={rowDataToUpdate}
             onDelete={handleDelete}
@@ -261,20 +264,18 @@ const Tellecalling = () => {
         )}
 
         {!loading && !error && showHistory && (
-   <Box 
-   display="flex"
-   flexDirection="row"
-   alignItems="flex-start"
-   minHeight="100vh">
-     <Box flex="1">
-       <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
-         User History
-       </Typography>
-       <HistoryOpportunity item={rowDataToUpdate} onBack={handleBack} />
-     </Box>
- </Box>
- 
-    
+          <Box 
+            display="flex"
+            flexDirection="row"
+            alignItems="flex-start"
+            minHeight="100vh">
+            <Box flex="1">
+              <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
+                User History
+              </Typography>
+              <HistoryOpportunity item={rowDataToUpdate} onBack={handleBack} />
+            </Box>
+          </Box>
         )}
       </Grid>
     </Grid>

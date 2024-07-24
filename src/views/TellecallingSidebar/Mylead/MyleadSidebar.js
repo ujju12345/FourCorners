@@ -25,7 +25,7 @@ import { useCookies } from "react-cookie";
 
 import GetAppIcon from "@mui/icons-material/GetApp";
 
-const MyleadSidebar = ({ onItemClick, onCreate }) => {
+const MyleadSidebar = ({ onItemClick, onCreate , onDashboardClick}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -190,13 +190,13 @@ const MyleadSidebar = ({ onItemClick, onCreate }) => {
           My Lead
           </Typography>
           <Box display="flex" alignItems="center">
-            {/* <IconButton
+            <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
-              onClick={onCreate}
+              onClick={onDashboardClick}
             >
               <AddIcon />
-            </IconButton> */}
+            </IconButton>
             <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}

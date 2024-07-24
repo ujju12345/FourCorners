@@ -153,6 +153,8 @@ const Tellecalling = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
+  
 
   useEffect(() => {
     fetchData();
@@ -213,6 +215,8 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setShowHistory(false);
     setRowDataToUpdate(null);
+    setShowDashboard(false); // Reset showDashboard when going back
+
     fetchData();
   };
 
@@ -222,6 +226,8 @@ const Tellecalling = () => {
     setShowAddDetails(true);
     setShowHistory(false);
     setFirstVisit(false);
+    setShowDashboard(false); // Reset showDashboard when editing
+
   };
 
   const handleShow = (item) => {
@@ -229,6 +235,8 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setShowHistory(false);
     setFirstVisit(false);
+    setShowDashboard(false); // Reset showDashboard when showing details
+
   };
 
   const handleAddTelecaller = () => {
@@ -237,6 +245,8 @@ const Tellecalling = () => {
     setRowDataToUpdate(null);
     setShowHistory(false);
     setFirstVisit(false);
+    setShowDashboard(false); // Reset showDashboard when showing details
+
     setTimeout(() => {
       setShowAddDetails(true);
     }, 0);
@@ -245,19 +255,26 @@ const Tellecalling = () => {
   const handleShowHistory = () => {
     setShowHistory(true);
     setShowAddDetails(false);
+    setShowDashboard(false); // Reset showDashboard when showing details
+
     setFirstVisit(false);
+  };
+
+  const handleNavigation = () => {
+    setShowDashboard(true);
+    setShowAddDetails(false); // Ensure the AddContact form is hidden when navigating to the dashboard
   };
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
         {/* {error && <Alert></Alert>} */}
-
-        {firstVisit && !loading && !error && !leadData && (
+        {showDashboard && !loading && !error && <WelcomeScreen />}
+        {!showDashboard && firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />
         )}
 
@@ -271,11 +288,11 @@ const Tellecalling = () => {
           </Box>
         )}
 
-        {showAddDetails && (
+        {showAddDetails &&  !showDashboard &&(
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <ListTellecalling
             item={rowDataToUpdate}
             onDelete={handleDelete}

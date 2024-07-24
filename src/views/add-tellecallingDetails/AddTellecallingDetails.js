@@ -29,7 +29,7 @@ import {
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 
-const AddTellecallingDetails = ({ show, editData }) => {
+const AddTellecallingDetails = ({ show, editData , onDashboardClick}) => {
   console.log(editData, "Edit data aaya");
   const initialFormData = {
     titleprefixID: "",
@@ -557,7 +557,7 @@ const [cNames, setCNames] = useState([]);
       <Card sx={{ height: "auto" }}>
         <CardContent>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
@@ -566,7 +566,15 @@ const [cNames, setCNames] = useState([]);
                   ? "Edit Lead Details"
                   : "Add Lead Details"}
               </Typography>
+              <Button
+          variant="contained"
+          onClick={onDashboardClick}
+          style={{ marginTop: 0 }}
+        >
+          Dashboard
+        </Button>
             </Box>
+           
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>

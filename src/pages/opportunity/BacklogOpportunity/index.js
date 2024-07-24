@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Grid, CircularProgress, Alert, Typography, Box } from "@mui/material";
 import axios from "axios";
-// import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
 import BacklogSidebar from "src/views/opportunitysidebar/backlog/BacklogSidebar";
-import Listbacklog from "src/views/list-tellecalling/Backlog/Listbacklog";
-import HistoryTelecalling from "src/views/history-telecalling/HistoryTelecalling";
+import ListOpportunitybacklog from "src/views/list-opportunity/backlog/ListOpportunitybacklog";
+import HistoryOpportunitybacklog from "src/views/history-apportunity/HistoryOpportunityBacklog/HistoryOpportunitybacklog";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import Card from "@mui/material/Card";
-import TrendingUp from "mdi-material-ui/TrendingUp";
-import CurrencyUsd from "mdi-material-ui/CurrencyUsd";
-import DotsVertical from "mdi-material-ui/DotsVertical";
-import CellphoneLink from "mdi-material-ui/CellphoneLink";
-import AccountOutline from "mdi-material-ui/AccountOutline";
 import CardContent from "@mui/material/CardContent";
-
-import AddIcon from "@mui/icons-material/Add";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import {
@@ -26,38 +18,16 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useCookies } from "react-cookie";
-
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CancelIcon from "@mui/icons-material/Cancel";
-import ListOpportunitybacklog from "src/views/list-opportunity/backlog/ListOpportunitybacklog";
-import HistoryOpportunitybacklog from "src/views/history-apportunity/HistoryOpportunityBacklog/HistoryOpportunitybacklog";
+
 const salesData = [
-  {
-    stats: "50",
-    title: "Today Leads",
-    color: "primary",
-    icon: <AccountBalanceWalletIcon sx={{ fontSize: "1.75rem" }} />,
-  },
-  {
-    stats: "15",
-    title: "Followup",
-    color: "success",
-    icon: <ScheduleIcon sx={{ fontSize: "1.75rem" }} />,
-  },
-  {
-    stats: "20",
-    color: "warning",
-    title: "Interested",
-    icon: <FavoriteIcon sx={{ fontSize: "1.75rem" }} />,
-  },
-  {
-    stats: "02",
-    color: "info",
-    title: "Disqualified",
-    icon: <CancelIcon sx={{ fontSize: "1.75rem" }} />,
-  },
+  { stats: "50", title: "Today Leads", color: "primary", icon: <AccountBalanceWalletIcon sx={{ fontSize: "1.75rem" }} /> },
+  { stats: "15", title: "Followup", color: "success", icon: <ScheduleIcon sx={{ fontSize: "1.75rem" }} /> },
+  { stats: "20", title: "Interested", color: "warning", icon: <FavoriteIcon sx={{ fontSize: "1.75rem" }} /> },
+  { stats: "02", title: "Disqualified", color: "info", icon: <CancelIcon sx={{ fontSize: "1.75rem" }} /> },
 ];
 
 const pieData = [
@@ -70,18 +40,8 @@ const pieData = [
 const renderStats = () => {
   return salesData.map((item, index) => (
     <Grid item xs={12} sm={3} key={index}>
-      <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          variant="rounded"
-          sx={{
-            mr: 3,
-            width: 44,
-            height: 44,
-            boxShadow: 3,
-            color: "common.white",
-            backgroundColor: `${item.color}.main`,
-          }}
-        >
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Avatar variant="rounded" sx={{ mr: 3, width: 44, height: 44, boxShadow: 3, color: "common.white", backgroundColor: `${item.color}.main` }}>
           {item.icon}
         </Avatar>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -98,29 +58,15 @@ const StatisticsCard = () => {
     <>
       <CardHeader
         title="Statistics Card"
-        // action={
-        //   <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-        //     <DotsVertical />
-        //   </IconButton>
-        // }
         subheader={
           <Typography variant="body2">
-            <Box
-              component="span"
-              sx={{ fontWeight: 600, color: "text.primary" }}
-            >
+            <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
               Total 48.5% growth
             </Box>{" "}
             😎 this month
           </Typography>
         }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: "2rem !important",
-            letterSpacing: "0.15px !important",
-          },
-        }}
+        titleTypographyProps={{ sx: { mb: 2.5, lineHeight: "2rem !important", letterSpacing: "0.15px !important" } }}
       />
       <CardContent sx={{ pt: (theme) => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
@@ -128,19 +74,8 @@ const StatisticsCard = () => {
           <Grid item xs={12}>
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={120}
-                  fill="#8884d8"
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
+                <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="#8884d8" label>
+                  {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                 </Pie>
                 <Tooltip />
                 <Legend />
@@ -175,11 +110,11 @@ const BacklogOpportunity = () => {
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null);
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
-  const [showAddDetails, setShowAddDetails] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [firstVisit, setFirstVisit] = useState(true);
+  const [currentView, setCurrentView] = useState("dashboard"); // Manage current view state
+
   const [cookies, setCookie] = useCookies(["amr"]);
   const userid = cookies.amr?.UserID || 'Role';
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -189,7 +124,7 @@ const BacklogOpportunity = () => {
     setError(null);
     try {
       const response = await axios.get(
-       `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php?UserID=${userid}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunitybacklog.php?UserID=${userid}`
       );
       setRows(response.data.data || []);
     } catch (error) {
@@ -211,7 +146,7 @@ const BacklogOpportunity = () => {
       if (response.data.status === "Success") {
         setRows(rows.filter((row) => row.Tid !== id));
         setRowDataToUpdate(null);
-        setShowAddDetails(false);
+        setCurrentView("dashboard");
       }
     } catch (error) {
       setError(error);
@@ -220,42 +155,34 @@ const BacklogOpportunity = () => {
 
   const handleBack = () => {
     setEditData(null);
-    setShowAddDetails(false);
-    setShowHistory(false);
     setRowDataToUpdate(null);
+    setCurrentView("dashboard");
     fetchData();
   };
 
   const handleEdit = (row) => {
     setEditData(row);
     setRowDataToUpdate(null);
-    setShowAddDetails(true);
-    setShowHistory(false);
-    setFirstVisit(false);
+    setCurrentView("addDetails");
   };
 
   const handleShow = (item) => {
     setRowDataToUpdate(item);
-    setShowAddDetails(false);
-    setShowHistory(false);
-    setFirstVisit(false);
+    setCurrentView("details");
   };
 
   const handleAddTelecaller = () => {
     setEditData(null);
-    setShowAddDetails(false);
     setRowDataToUpdate(null);
-    setShowHistory(false);
-    setFirstVisit(false);
-    setTimeout(() => {
-      setShowAddDetails(true);
-    }, 0);
+    setCurrentView("addDetails");
   };
 
   const handleShowHistory = () => {
-    setShowHistory(true);
-    setShowAddDetails(false);
-    setFirstVisit(false);
+    setCurrentView("history");
+  };
+
+  const handleNavigation = () => {
+    setCurrentView("dashboard");
   };
 
   return (
@@ -266,58 +193,33 @@ const BacklogOpportunity = () => {
           onItemClick={handleShow}
           onEdit={handleEdit}
           onCreate={handleAddTelecaller}
+          onDashboardClick={handleNavigation}
         />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && (
-          <Alert severity="error">Error fetching data: {error.message}</Alert>
+        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
+
+        {currentView === "dashboard" && !loading && !error && <WelcomeScreen />}
+        {currentView === "details" && !loading && !error && rowDataToUpdate && (
+          <ListOpportunitybacklog
+            item={rowDataToUpdate}
+            onDelete={handleDelete}
+            onHistoryClick={handleShowHistory}
+            onEdit={handleEdit}
+          />
         )}
-
-        {firstVisit && !loading && !error && <WelcomeScreen />}
-
-        {/* {showAddDetails && (
-          <AddTellecallingDetails show={handleBack} editData={editData} />
-        )} */}
-
-        {!loading &&
-          !error &&
-          rowDataToUpdate &&
-          !showHistory &&
-          !showAddDetails && (
-            <ListOpportunitybacklog
-              item={rowDataToUpdate}
-              onDelete={handleDelete}
-              onHistoryClick={handleShowHistory}
-              onEdit={handleEdit}
-            />
-          )}
-
-        {!loading && !error && showHistory && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                marginTop: 5,
-                fontWeight: "bold",
-                alignItems: "center",
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            >
+        {currentView === "history" && !loading && !error && rowDataToUpdate && (
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: "center", textAlign: "center", fontSize: 20 }}>
               User History
             </Typography>
-            <HistoryOpportunitybacklog
-              item={rowDataToUpdate}
-              onBack={handleBack}
-            />
+            <HistoryOpportunitybacklog item={rowDataToUpdate} onBack={handleBack} />
           </Box>
+        )}
+        {currentView === "addDetails" && (
+          // Add your AddTellecallingDetails component here if needed
+          <div>Add Telecalling Details</div>
         )}
       </Grid>
     </Grid>

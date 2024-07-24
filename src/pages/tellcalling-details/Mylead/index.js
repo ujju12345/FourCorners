@@ -157,6 +157,7 @@ const Tellecalling = () => {
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [cookies, setCookie] = useCookies(["amr"]);
+  const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
 
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
@@ -198,6 +199,8 @@ const Tellecalling = () => {
     setEditData(null);
     setShowAddDetails(false);
     setShowHistory(false);
+    setShowDashboard(false); // Reset showDashboard when editing
+
     setRowDataToUpdate(null);
     fetchData();
   };
@@ -207,6 +210,8 @@ const Tellecalling = () => {
     setRowDataToUpdate(null);
     setShowAddDetails(true);
     setShowHistory(false);
+    setShowDashboard(false); // Reset showDashboard when editing
+
     setFirstVisit(false);
   };
 
@@ -215,6 +220,8 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setShowHistory(false);
     setFirstVisit(false);
+    setShowDashboard(false); // Reset showDashboard when showing details
+
   };
 
   const handleAddTelecaller = () => {
@@ -222,6 +229,8 @@ const Tellecalling = () => {
     setShowAddDetails(false);
     setRowDataToUpdate(null);
     setShowHistory(false);
+    setShowDashboard(false); // Ensure dashboard is hidden when adding a contact
+
     setFirstVisit(false);
     setTimeout(() => {
       setShowAddDetails(true);
@@ -232,28 +241,33 @@ const Tellecalling = () => {
     setShowHistory(true);
     setShowAddDetails(false);
     setFirstVisit(false);
+    setShowDashboard(false); // Reset showDashboard when showing history
+
+  };
+
+  const handleNavigation = () => {
+    setShowDashboard(true);
+    setShowAddDetails(false); // Ensure the AddContact form is hidden when navigating to the dashboard
   };
 
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <MyleadSidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <MyleadSidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
         {/* {error &&  <Photo/>} */}
-
+        {showDashboard && !loading && !error && <WelcomeScreen />}
         {firstVisit && !loading && !error && (
           <WelcomeScreen />
 
         )}
 
-        {showAddDetails && (
-          <AddTellecallingDetails show={handleBack} editData={editData} />
-        )}
+     
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails &&  !showDashboard &&(
           <Listmylead
             item={rowDataToUpdate}
             onDelete={handleDelete}

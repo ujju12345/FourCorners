@@ -21,9 +21,8 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
-import { Chip } from '@mui/material';
+import { Chip } from "@mui/material";
 import { useCookies } from "react-cookie";
-
 
 const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
@@ -35,16 +34,15 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
   const [anchorElDots, setAnchorElDots] = useState(null);
   const [sortOption, setSortOption] = useState("");
   const [cookies, setCookie] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
+  const userid = cookies.amr?.UserID || "Role";
   useEffect(() => {
-  fetchData();
+    fetchData();
   }, []);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-opportunityopenlead.php?UserID=${userid}`,
-    
+        `https://apiforcorners.cubisysit.com/api/api-fetch-openreminder.php?UserID=${userid}`
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -80,10 +78,14 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
   const getDateStatus = (contactCreateDate) => {
     const date = new Date(contactCreateDate);
     const now = new Date();
-    
-    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
-  
+
+    const isCurrentMonth =
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+    const isPreviousMonth =
+      date.getMonth() === now.getMonth() - 1 &&
+      date.getFullYear() === now.getFullYear();
+
     if (isCurrentMonth) {
       return "New";
     } else if (isPreviousMonth) {
@@ -125,21 +127,23 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) =>
-            new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a?.NextFollowUpDate?.localeCompare(b.NextFollowUpDate));
+        sortedRows.sort((a, b) =>
+          a?.NextFollowUpDate?.localeCompare(b.NextFollowUpDate)
+        );
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b?.NextFollowUpDate.localeCompare(a.NextFollowUpDate));
+        sortedRows.sort((a, b) =>
+          b?.NextFollowUpDate.localeCompare(a.NextFollowUpDate)
+        );
         break;
       default:
         break;
@@ -149,9 +153,7 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
 
   const jsonToCSV = (json) => {
     const header = Object.keys(json[0]).join(",");
-    const values = json
-      .map((obj) => Object.values(obj).join(","))
-      .join("\n");
+    const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
     return `${header}\n${values}`;
   };
 
@@ -179,7 +181,7 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-         Upcoming Payment Member List
+            Upcoming Payment Member List
           </Typography>
           <Box display="flex" alignItems="center">
             {/* <IconButton
@@ -305,72 +307,63 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
         <List>
           {filteredRows.map((item) => (
             <React.Fragment key={item.Oid}>
-                  <Card sx={{ marginBottom: 2 }}>
-            <ListItem
-              key={item.Oid}
-              disablePadding   
-              onClick={() => onItemClick(item)}
-
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={item.CName}
-                  sx={{ width: 40, height: 40, margin: 2 }}
-                  src="/images/avatars/1.png"                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography
-                  variant="subtitle1"
-                  style={{ fontWeight: "bold" }}
+              <Card sx={{ marginBottom: 2 }}>
+                <ListItem
+                  key={item.Oid}
+                  disablePadding
+                  onClick={() => onItemClick(item)}
                 >
-                  
-                {item?.TitleName} {item.CName}
-                  </Typography>
-                }
-                secondary={ <>
-                 <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                    Phone: {item.Mobile}
-                  </Typography>
-         <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                   Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                   Assign By: {item.OpportunityAttendedByName}
-                  </Typography>
-                </>}
-              />
-               <IconButton
-                          aria-label="edit"
-                         
-                          sx={{ color: "blue" }}
-                        >      
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={item.CName}
+                      sx={{ width: 40, height: 40, margin: 2 }}
+                      src="/images/avatars/1.png"
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="subtitle1"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        {item?.TitleName} {item.CName}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          Phone: {item.Mobile}
+                        </Typography>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                        </Typography>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          Assign By: {item.OpportunityAttendedByName}
+                        </Typography>
+                      </>
+                    }
+                  />
+                  <IconButton aria-label="edit" sx={{ color: "blue" }}>
                     {getDateStatus(item.ContactCreateDate) && (
-                            <Chip
-                              label={getDateStatus(item.ContactCreateDate)}
-                              size="small"
-                              color={getDateStatus(item.ContactCreateDate) === "New" ? "warning" : "default"}
-                              style={{
-                                fontSize: 8,
-                                marginLeft: 8,
-                                height: 20,
-                              }}
-                            />
-                          )}
-
-                        </IconButton>
-            </ListItem>
-            </Card>
-                </React.Fragment>
+                      <Chip
+                        label={getDateStatus(item.ContactCreateDate)}
+                        size="small"
+                        color={
+                          getDateStatus(item.ContactCreateDate) === "New"
+                            ? "warning"
+                            : "default"
+                        }
+                        style={{
+                          fontSize: 8,
+                          marginLeft: 8,
+                          height: 20,
+                        }}
+                      />
+                    )}
+                  </IconButton>
+                </ListItem>
+              </Card>
+            </React.Fragment>
           ))}
         </List>
       )}

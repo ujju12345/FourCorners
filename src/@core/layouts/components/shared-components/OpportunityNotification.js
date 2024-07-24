@@ -15,10 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useCookies } from "react-cookie";
 import BellOutline from 'mdi-material-ui/BellOutline';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
-import BellRing from 'mdi-material-ui/BellRing';
 
-
-import { useRouter } from 'next/router';
 // ** Styled Menu component
 const Menu = styled(MuiMenu)(({ theme }) => ({
   '& .MuiMenu-paper': {
@@ -79,61 +76,14 @@ const MenuItemSubtitle = styled(Typography)({
   textOverflow: 'ellipsis'
 });
 
-const NotificationDropdown = () => {
+const OpportunityNotification = () => {
   // ** States
   const [anchorEl, setAnchorEl] = useState(null);
-  const [anchorBooking, setAnchorElBooking] = useState(null);
-
-  
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
-  const [notificationsBooking, setNotificationsBooking] = useState([]);
-  // const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [error, setError] = useState(null);
   const [cookies] = useCookies(["amr"]);
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'));
-  const router = useRouter();
-
-
-
-
-
-  useEffect(() => {
-    fetchDataBooking();
-  }, []);
-  
-  const fetchDataBooking = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
-  
-    try {
-      const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-convertbooking.php?UserID=${userid}`
-      );
-      console.log("RESPONSE:", response.data);
-
-      // Ensure the data is an array before setting notifications
-      if (Array.isArray(response.data.data)) {
-        const newNotifications = response.data.data;
-        
-        if (newNotifications.length > notifications.length) {
-          playNotificationSound();
-        }
-        
-        setNotificationsBooking(newNotifications);
-      } else {
-        console.error("Expected an array of notifications");
-      }
-      
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-
-
 
   useEffect(() => {
     fetchData();
@@ -144,9 +94,9 @@ const NotificationDropdown = () => {
   
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-notification.php`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-convtooppo.php?UserID=${userid}`
       );
-      console.log("RESPONSE:", response.data);
+      console.log("RESPONSEEEEEE DEKHHH<<<<<<<<<<<>>>>>>>>>>>>", response.data);
 
       // Ensure the data is an array before setting notifications
       if (Array.isArray(response.data.data)) {
@@ -177,20 +127,11 @@ const NotificationDropdown = () => {
   const handleDropdownOpen = event => {
     setAnchorEl(event.currentTarget);
   };
-  const handleConvertBooking = event => {
-    setAnchorElBooking(event.currentTarget);
-  };
-
 
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
-  const handleDropdownBooking = () => {
-    setAnchorElBooking(null);
-  };
-  const handleDropdownCloseBooking = () => {
-    setAnchorElBooking(null);
-  };
+
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
       return <Box sx={{ ...styles, overflowY: 'auto', overflowX: 'hidden' }}>{children}</Box>;
@@ -201,65 +142,11 @@ const NotificationDropdown = () => {
     }
   };
 
-  const handleReadAllNotifications = () => {
-    router.push('/notification');
-    handleDropdownClose();
-  };
-
   return (
     <Fragment>
-        <IconButton color='inherit' aria-haspopup='true' onClick={handleConvertBooking} aria-controls='customized-menu'>
-            <BellRing />
-          </IconButton>
       <IconButton color='inherit' aria-haspopup='true' onClick={handleDropdownOpen} aria-controls='customized-menu'>
         <BellOutline />
       </IconButton>
-
-
-      <Menu
-        anchorEl={anchorBooking}
-        open={Boolean(anchorBooking)}
-        onClose={handleDropdownBooking}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MenuItem disableRipple>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-            <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
-            <Chip
-              size='small'
-              label={`${notificationsBooking.length} New`}
-              color='primary'
-              sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
-            />
-          </Box>
-        </MenuItem>
-        <ScrollWrapper>
-          {notificationsBooking.map((notification, index) => (
-            <MenuItem key={index} onClick={handleDropdownCloseBooking}>
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                <Avatar alt='notification' src='/images/avatars/3.png' />
-                <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>Name: {notification?.TitleName} {notification.CName}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>Estimated budget: {notification.EstimatedbudgetName}</MenuItemSubtitle>
-                  <MenuItemSubtitle variant='body2'>Source Name: {notification.SourceName}</MenuItemSubtitle>
-                </Box>
-              </Box>
-            </MenuItem>
-          ))}
-        </ScrollWrapper>
-        <MenuItem
-          disableRipple
-          sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
-        >
-          <Button fullWidth variant='contained' onClick={handleReadAllNotifications}>
-            Read All Notifications
-          </Button>
-        </MenuItem>
-      </Menu>
-
-
-
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -284,11 +171,8 @@ const NotificationDropdown = () => {
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Avatar alt='notification' src='/images/avatars/3.png' />
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>Table: {notification.TableName}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>Action: {notification.ActionType}</MenuItemSubtitle>
-                  <MenuItemSubtitle variant='body2'>Name: {notification.Name}</MenuItemSubtitle>
-                  <MenuItemSubtitle variant='body2'>Created Date: {notification.CreatedDate}</MenuItemSubtitle>
-
+                  <MenuItemTitle>Name: {notification.TitleName}{notification.CName}</MenuItemTitle>
+                  <MenuItemSubtitle variant='body2'>Date: {notification.CreateDate}</MenuItemSubtitle>
                 </Box>
               </Box>
             </MenuItem>
@@ -298,7 +182,7 @@ const NotificationDropdown = () => {
           disableRipple
           sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Button fullWidth variant='contained' onClick={handleReadAllNotifications}>
+          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
             Read All Notifications
           </Button>
         </MenuItem>
@@ -307,4 +191,5 @@ const NotificationDropdown = () => {
   );
 };
 
-export default NotificationDropdown;
+export default OpportunityNotification;
+

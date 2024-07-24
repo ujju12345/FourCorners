@@ -18,7 +18,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
-const AddOpportunityDetails = ({ show, editData }) => {
+const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
   console.log(editData, "AAGAYA");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);

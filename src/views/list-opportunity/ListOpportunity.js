@@ -50,11 +50,12 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(intialName);
+  const [userMaster, setUserMaster] = useState([]);
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-
-  const [bhkOptions, setBhkOptions] = useState([]);
+  const [anchorElOpportunity, setAnchorElOpportunity] = useState(null);
+  const [anchorElBooking, setAnchorElBooking] = useState(null);
   const [currentUpdate, setCurrentUpdate] = useState([]);
 
   const [setRowDataToUpdate] = useState(null);
@@ -75,6 +76,8 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setAnchorEl(null);
   };
 
+
+
   const whatsappText = encodeURIComponent(
     `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
   );
@@ -93,15 +96,26 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    console.log(formData);
-    setOpen(false);
+  const handleCloseBooking = () => {
+    setAnchorElOpportunity(null);
   };
-
   const handleHistoryClick = () => {
     if (onHistoryClick) {
       // toggleSidebar(false);
       onHistoryClick(item); // Pass item to parent component for showing history
+    }
+  };
+
+  const fetchUserMasterData = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-useradmin.php"
+      );
+      if (response.data.status === "Success") {
+        setUserMaster(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -138,6 +152,77 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
       setCurrentUpdate(response.data.data || []);
     } catch (error) {
       console.error("Error fetching Bhk data:", error);
+    }
+  };
+
+
+  const handleMenuItemClick = async (event, userID) => {
+    event.preventDefault();
+
+    // Ensure item and Tid are available
+    if (!item || !item.Oid) {
+      console.error("No valid item or Tid found.");
+      return;
+    }
+
+    // Add Tid to formData
+    const formData = {
+      UserID:userID,
+      Cid:item?.Cid,
+      Oid:item?.Oid,
+      CreateUID: cookies?.amr?.UserID || 1,
+
+    };
+
+    console.log(formData, "COVERT TO Booking Data 1");
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convertbooking.php";
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(formData, "COVERT TO Booking Data 2");
+
+      if (response.data.status === "Success") {
+        // setFormData(intialName);
+        setOpen(false);
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        // Show success message using SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: 
+             "Lead Converted to Booking Successfully",
+            
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        // Show error message using SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
+      });
     }
   };
 
@@ -206,42 +291,11 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     }
   };
 
-  const jsonToCSV = (json) => {
-    const header = Object.keys(json[0]).join(",");
-    const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
-    return `${header}\n${values}`;
-  };
 
-  const downloadCSV = () => {
-    const csvData = [
-      {
-        "Party Name": item.PartyName,
-        Mobile: item.Mobile,
-        Email: item.Email,
-        "Project Name": item.ProjectName,
-        "Unit Type": item.UnittypeName,
-        "Estimated Budget": item.EstimatedbudgetName,
-        "Lead Status": item.leadstatusName,
-        "Next Follow Up-Date": item.NextFollowUpDate,
-        "Source Description": item.SourceDescription,
-        "Telecall Attended By": item.TelecallAttendedByName,
-        "Alternate Mobile Number": item.AlternateMobileNo,
-        Comments: item.Comments,
-        "Source Name": item.SourceName,
-        Location: item.Location,
-        "Attended By": item.TelecallAttendedByName,
-      },
-    ];
 
-    const csv = jsonToCSV(csvData);
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Telecalling.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleClick = (event) => {
+    setAnchorElOpportunity(event.currentTarget);
+    fetchUserMasterData();
   };
 
   const handleEdit = () => {
@@ -301,6 +355,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
+            onClick={handleClick}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
@@ -315,6 +370,30 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             Booking
           </Button>
         </Grid>
+        <Menu
+            anchorEl={anchorElOpportunity}
+            open={Boolean(anchorElOpportunity)}
+            onClose={handleCloseBooking}
+            PaperProps={{
+              style: {
+                maxHeight: 300, // Set the desired height in pixels
+                overflowY: "auto", // Make the content scrollable if it exceeds the height
+              },
+            }}
+          >
+            <MenuItem disabled>
+              <Typography variant="subtitle1">Convert to Booking</Typography>
+            </MenuItem>
+            {userMaster.length > 0 ? (
+              userMaster.map((user, index) => (
+                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+                {index + 1}. {user.Name}
+              </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Menu>
         <Grid item>
           <Button
             variant="contained"

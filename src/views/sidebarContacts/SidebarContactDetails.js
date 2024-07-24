@@ -33,8 +33,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 import Swal from 'sweetalert2';
-
-const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
+import DashboardIcon from '@mui/icons-material/Dashboard';
+const SidebarContactDetails = ({ onEdit, onItemClick, onCreate ,onDashboardClick}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -253,6 +253,13 @@ const SidebarContactDetails = ({ onEdit, onItemClick, onCreate }) => {
             All Contacts
           </Typography>
           <Box display="flex" alignItems="center">
+          <IconButton
+              aria-label="filter"
+              sx={{ color: "grey" }}
+              onClick={onDashboardClick}
+            >
+              <DashboardIcon />
+            </IconButton>
             <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}

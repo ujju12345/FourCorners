@@ -83,12 +83,41 @@ const navigation = () => {
     {
       sectionTitle: "Booking",
     },
-    {
-      title: "Booking form",
-      icon: BusinessIcon,
-      path: "/BookingForm",
-    },
+    // {
+    //   title: "Booking form",
+    //   icon: BusinessIcon,
+    //   path: "/BookingForm",
+    // },
 
+
+    {
+      title: "Booking Form",
+      icon: PhoneIcon,
+      // path: "/tellcalling-details",
+      children: [
+        {
+          title: "Add Booking Details",
+          icon: CubeOutlineIcon,
+          path: "/BookingForm",
+        },
+        {
+          title: "List Booking Details",
+          icon: CubeOutlineIcon,
+          path: "/project-details/ListProjectDetails",
+        },
+        {
+          title: "Add payment",
+          icon: CubeOutlineIcon,
+          path: "/project-details/ListProjectDetails",
+        },
+        {
+          title: "Report",
+          icon: CubeOutlineIcon,
+          path: "/project-details/ListProjectDetails",
+        },
+   
+      ],
+    },
     {
       sectionTitle: "Companies",
     },
@@ -122,6 +151,7 @@ const navigation = () => {
           path: "/project-details/ListProjectDetails",
         },
    
+     
       ],
     },
     // {
@@ -164,11 +194,11 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/tellcalling-details/Backlog",
         },
-        {
-          title: "Person Wise Search",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/Leadcalender",
-        },
+        // {
+        //   title: "Person Wise Search",
+        //   icon: CubeOutlineIcon,
+        //   path: "/AdminLeadLogin",
+        // },
         {
           title: "Calendar",
           icon: CubeOutlineIcon,
@@ -212,11 +242,11 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/opportunity/OpportunityCalender",
         },
-        {
-          title: "Person Wise Search",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/Leadcalender",
-        },
+        // {
+        //   title: "Person Wise Search",
+        //   icon: CubeOutlineIcon,
+        //   path: "/AdminLeadLogin",
+        // },
         {
           title: "Not Interested",
           icon: CubeOutlineIcon,
@@ -229,7 +259,31 @@ const navigation = () => {
     sectionTitle: "Post Sales",
   },
     {
-      title: "Post Sales",
+      title: "Payment Reminder",
+      icon: PhoneIcon,
+      path: "/tellcalling-details",
+      children: [
+        {
+          title: "Todays Follow up",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details",
+        },
+        {
+          title: "Backlog Payment",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/Mylead",
+        },
+        {
+          title: "Open Payment ",
+          icon: CubeOutlineIcon,
+          path: "/tellcalling-details/OpenLead",
+        },
+       
+      ],
+    },
+
+    {
+      title: "Loan Reminder",
       icon: PhoneIcon,
       path: "/tellcalling-details",
       children: [
