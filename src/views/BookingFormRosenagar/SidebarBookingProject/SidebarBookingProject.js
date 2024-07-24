@@ -39,7 +39,7 @@ import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 
 
-const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
+const SidebarBookingProject = ({ onEdit, onItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,7 +66,6 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
-      
       console.error("Error fetching data:", error);
       setError(error);
       setLoading(false);
@@ -242,13 +241,13 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
             All Projects
           </Typography>
           <Box display="flex" alignItems="center">
-          <IconButton
+          {/* <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
               onClick={onCreate}
             >
               <AddIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
@@ -486,4 +485,4 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
 };
 
 
-export default SidebarProjectMaster;
+export default SidebarBookingProject;
