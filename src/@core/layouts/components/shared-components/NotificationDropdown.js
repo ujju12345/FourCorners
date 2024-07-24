@@ -15,6 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useCookies } from "react-cookie";
 import BellOutline from 'mdi-material-ui/BellOutline';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 // ** Styled Menu component
 const Menu = styled(MuiMenu)(({ theme }) => ({
@@ -84,6 +85,7 @@ const NotificationDropdown = () => {
   const [error, setError] = useState(null);
   const [cookies] = useCookies(["amr"]);
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'));
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchData();
@@ -94,9 +96,9 @@ const NotificationDropdown = () => {
   
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-convtooppo.php?UserID=${userid}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-notification.php`
       );
-      console.log("RESPONSEEEEEE DEKHHH<<<<<<<<<<<>>>>>>>>>>>>", response.data);
+      console.log("RESPONSE:", response.data);
 
       // Ensure the data is an array before setting notifications
       if (Array.isArray(response.data.data)) {
@@ -142,6 +144,11 @@ const NotificationDropdown = () => {
     }
   };
 
+  const handleReadAllNotifications = () => {
+    navigate('/all-notifications'); // Redirect to the AllNotification component
+    handleDropdownClose();
+  };
+
   return (
     <Fragment>
       <IconButton color='inherit' aria-haspopup='true' onClick={handleDropdownOpen} aria-controls='customized-menu'>
@@ -171,8 +178,9 @@ const NotificationDropdown = () => {
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Avatar alt='notification' src='/images/avatars/3.png' />
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>Name: {notification.TitleName}{notification.CName}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>Date: {notification.CreateDate}</MenuItemSubtitle>
+                  <MenuItemTitle>Table: {notification.TableName}</MenuItemTitle>
+                  <MenuItemSubtitle variant='body2'>Action: {notification.ActionType}</MenuItemSubtitle>
+                  <MenuItemSubtitle variant='body2'>Name: {notification.Name}</MenuItemSubtitle>
                 </Box>
               </Box>
             </MenuItem>
@@ -182,7 +190,7 @@ const NotificationDropdown = () => {
           disableRipple
           sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
+          <Button fullWidth variant='contained' onClick={handleReadAllNotifications}>
             Read All Notifications
           </Button>
         </MenuItem>
