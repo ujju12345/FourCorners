@@ -113,7 +113,7 @@ const navigation = () => {
         {
           title: "Report",
           icon: CubeOutlineIcon,
-          path: "/project-details/ListProjectDetails",
+          path: "/BookingForm/Report",
         },
    
       ],
