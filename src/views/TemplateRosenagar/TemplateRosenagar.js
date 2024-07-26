@@ -143,12 +143,12 @@ const TemplateRosenagar = ({ bookingID }) => {
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Pancard}</StyledTableCell>
               </TableRow>
-              {/* <TableRow sx={{ padding: 0 }}>
+              <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={2} style={{ textAlign: 'left', padding: 0 }}>
-                  <Typography>AADHAR No.</Typography>
+                  <Typography>Aadhar No.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Aadhar}</StyledTableCell>
-              </TableRow> */}
+              </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
                   <Typography>EMAIL ID.</Typography>
@@ -277,7 +277,7 @@ const TemplateRosenagar = ({ bookingID }) => {
 {data.remarks && data.remarks.map((remark, index) => (
   <TableRow key={index} sx={{ padding: 0 }}>
     <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.RemarkName} - {remark.RemarkDate}
+      {index + 1}. Amount : {remark.Remarkamount} Remark : {remark.RemarkName} - Date : {remark.RemarkDate}
     </StyledTableCell>
   </TableRow>
 ))}

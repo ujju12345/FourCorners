@@ -26,12 +26,12 @@ import {
   InputAdornment
 } from "@mui/material";
 import PaymentIcon from '@mui/icons-material/Payment';
-import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios from "axios";import { Info as InfoIcon } from '@mui/icons-material';
+import axios from "axios";
+import { Info as InfoIcon } from '@mui/icons-material';
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -54,7 +54,6 @@ const Listprojectbookng = ({ item }) => {
     fromdate: new Date(),
     todate: new Date()
   });
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
@@ -290,20 +289,25 @@ const Listprojectbookng = ({ item }) => {
     const payload = {
       BookingID: selectedRow, 
       BookingremarkID:selectedBookingRemark , 
-      Remarkamount: remarks.reduce((acc, remark) => acc + parseFloat(remark.Remarkamount || 0), 0), // Sum of all remark amounts
+      PRemarkamount: remarks.reduce((acc, remark) => acc + parseFloat(remark.Remarkamount || 0), 0), 
       Cash: cashPaid || '0',
       ChequeAmount: chequePaid || '0',
       BankName: bankName || '', 
       ChequeNumber:cheqNo ||'', 
       ChequeDate: formData.AmountGiven.toISOString().split('T')[0], 
+      Remarkamount:remarks.Remarkamount,
+      RemarkName:remarks.RemarkName,
+      RemarkDate:remarks.RemarkDate,
+      Loan:1,
       paymenttypeID: 1, 
-      Loan:1, 
+      PLoan:1, 
+      Status:1,
       CreateUID: 1 
     };
-  
+  console.log(payload , 'ye jaa raha');
     try {
       const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php', payload);
-      console.log('Response:', response.data);
+      console.log('ye gaya data', response.data);
       if (response.data.status === 'Success') {
         console.log('Payment successfully submitted:', response.data);
         setCashPaid('');
@@ -318,7 +322,7 @@ const Listprojectbookng = ({ item }) => {
         setSelectedRow(null);
         
          Swal.fire({
-          icon: "success",
+          icon: "successs",
           title: 'Data Submitted Successfully',
           showConfirmButton: false,
           timer: 1000,
@@ -439,269 +443,268 @@ const Listprojectbookng = ({ item }) => {
         </Card>
       )}
 
-      <Modal open={modalOpen} onClose={handleModalClose}>
-        <Box sx={{ padding: 15, backgroundColor: 'white', margin:'auto',  width: 900 }}>
-          <Grid container spacing={2}>
+<Modal open={modalOpen} onClose={handleModalClose}>
+  <Box
+    sx={{
+      padding: 15,
+      backgroundColor: 'white',
+      margin: 'auto',
+      maxWidth: 900,
+      maxHeight: '80vh', 
+      overflowY: 'auto', 
+      display: 'flex',
+      flexDirection: 'column'
+    }}
+  >
+    <Grid container spacing={2}>
+      <Grid item xs={4}>
+        <Typography variant="h6" gutterBottom>Add Payment</Typography>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <TextField
+            select
+            label="Select Booking Remark"
+            value={selectedBookingRemark}
+            onChange={(e) => setSelectedBookingRemark(e.target.value)}
+            fullWidth
+            margin="normal"
+          >
+            {bookingRemarks.map((option) => (
+              <MenuItem key={option.BookingremarkID} value={option.BookingremarkID}>
+                {option.RemarkName}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        {selectedBookingRemark && (
+          <>
             <Grid item xs={4}>
-              <Typography variant="h6" gutterBottom>Add Payment</Typography>
+              <TextField
+                label="Remark Amount"
+                value={bookingRemarkDetails.Remarkamount || ''}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
             </Grid>
-
-            <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                label="Remark Name"
+                value={bookingRemarkDetails.RemarkName || ''}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+          </>
+        )}
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          label="Cash Paid"
+          type="number"
+          value={cashPaid}
+          onChange={(e) => setCashPaid(e.target.value)}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+          }}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          label="Cheque Paid"
+          type="number"
+          value={chequePaid}
+          onChange={(e) => setChequePaid(e.target.value)}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+          }}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          label="Total Amount"
+          type="number"
+          value={handleAddition()}
+          InputProps={{
+            readOnly: true,
+            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+          }}
+          fullWidth
+          margin="normal"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          label="Bank Name"
+          type="text"
+          value={bankName}
+          onChange={(e) => setBankName(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          label="Cheque Number"
+          type="Number"
+          value={cheqNo}
+          onChange={(e) => setCheqNo(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+      </Grid>
+      <Grid item xs={3} mt={3.5}>
+        <DatePicker
+          selected={formData.AmountGiven}
+          onChange={handleDateChange}
+          dateFormat="yyyy-MM-dd"
+          customInput={<TextField label="Date" fullWidth />}
+        />
+      </Grid>
       <Grid item xs={4}>
         <TextField
           select
-          label="Select Booking Remark"
-          value={selectedBookingRemark}
-          onChange={(e) => setSelectedBookingRemark(e.target.value)}
+          label="Select Payment Type"
+          value={selectedPaymentType}
+          onChange={handleChange}
           fullWidth
           margin="normal"
         >
-          {bookingRemarks.map((option) => (
-            <MenuItem key={option.BookingremarkID} value={option.BookingremarkID}>
-              {option.RemarkName}
+          {paymentTypes.map((option) => (
+            <MenuItem key={option.paymenttypeID} value={option.paymenttypeName}>
+              {option.paymenttypeName}
             </MenuItem>
           ))}
         </TextField>
       </Grid>
-
-      {selectedBookingRemark && (
+      {selectedPaymentType === 'Partial payment' && (
         <>
-          <Grid item xs={4}>
-            <TextField
-              label="Remark Amount"
-              value={bookingRemarkDetails.Remarkamount || ''}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>Remarks</Typography>
           </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="Remark Name"
-              value={bookingRemarkDetails.RemarkName || ''}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
+          {remarks.map((remark, index) => (
+            <Grid container spacing={2} key={index}>
+              <Grid item xs={3}>
+                <TextField
+                  label="Amount"
+                  type="number"
+                  value={remark.Remarkamount}
+                  onChange={(e) => handleChangeRemark(e, index, 'Remarkamount')}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="Remark"
+                  value={remark.RemarkName}
+                  onChange={(e) => handleChangeRemark(e, index, 'RemarkName')}
+                  fullWidth
+                  margin="normal"
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="A"
+                  type="number"
+                  value={cashPaidRemark}
+                  onChange={(e) => setCashPaidRemarks(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="B"
+                  type="number"
+                  value={chequePaidRemarks}
+                  onChange={(e) => setChequePaidRemarks(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <DatePicker
+                  selected={remark.RemarkDate}
+                  onChange={(date) => handleDateRemarks(date, index)}
+                  dateFormat="yyyy-MM-dd"
+                  customInput={<TextField label="Date" fullWidth />}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={remark.Loan === 1}
+                      onChange={(e) => handleLoanChange(e, index)}
+                    />
+                  }
+                  label="Loan Process"
+                />
+              </Grid>
+              <Grid item xs={12} container justifyContent="flex-end">
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => handleRemoveRemark(index)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <Button
+              onClick={handleAddRemark}
+              variant="outlined"
+              startIcon={<AddIcon />}
+            >
+              Add Remark
+            </Button>
           </Grid>
         </>
       )}
+      <Grid item xs={12} container justifyContent="flex-end">
+        <Button onClick={handleModalClose} variant="contained" color="primary">
+          Close
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          variant="contained"
+          sx={{
+            marginRight: 3.5,
+            marginTop: 5,
+            backgroundColor: "#9155FD",
+            color: "#FFFFFF",
+          }}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
+      </Grid>
     </Grid>
-         
-          
-            <Grid item xs={4}>
-              <TextField
-                label="Cash Paid"
-                type="number"
-                value={cashPaid}
-                onChange={(e) => setCashPaid(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Cheque Paid"
-                type="number"
-                value={chequePaid}
-                onChange={(e) => setChequePaid(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Total Amount"
-                type="number"
-                value={handleAddition()}
-                InputProps={{
-                  readOnly: true,
-                  startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                }}
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Bank Name"
-                type="text"
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-                fullWidth
-                margin="normal"
-               
-              />
-            </Grid>
+  </Box>
+</Modal>
 
-            <Grid item xs={4}>
-              <TextField
-                label="Cheque Number"
-                type="Number"
-                value={cheqNo}
-                onChange={(e) => setCheqNo(e.target.value)}
-                fullWidth
-                margin="normal"
-               
-              />
-            </Grid>
-            
-
-            <Grid item xs={3} mt={3.5}>
-              <DatePicker
-                selected={formData.AmountGiven}
-                onChange={handleDateChange}
-                dateFormat="yyyy-MM-dd"
-                customInput={<TextField label="Date" fullWidth />}
-              />
-            </Grid>
-          
-            <Grid item xs={4}>
-              <TextField
-                select
-                label="Select Payment Type"
-                value={selectedPaymentType}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              >
-                {paymentTypes.map((option) => (
-                  <MenuItem key={option.paymenttypeID} value={option.paymenttypeName}>
-                    {option.paymenttypeName}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            {selectedPaymentType === 'Partial payment' && (
-              <>
-                <Grid item xs={12}>
-                  <Typography variant="h6" gutterBottom>Remarks</Typography>
-                </Grid>
-                {remarks.map((remark, index) => (
-                  <Grid container spacing={2} key={index}>
-                    <Grid item xs={3} >
-                      <TextField
-                        label="Amount"
-                        type="number"
-                        value={remark.Remarkamount}
-                        onChange={(e) => handleChangeRemark(e, index, 'Remarkamount')}
-                        fullWidth
-                        margin="normal"
-                        InputProps={{
-                          startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={3} >
-                      <TextField
-                        label="Remark"
-                        value={remark.RemarkName}
-                        onChange={(e) => handleChangeRemark(e, index, 'RemarkName')}
-                        fullWidth
-                        margin="normal"
-                      />
-                    </Grid>
-                    
-                    <Grid item xs={3}>
-              <TextField
-                label="A"
-                type="number"
-                value={cashPaidRemark}
-                onChange={(e) => setCashPaidRemarks(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                label="B"
-                type="number"
-                value={chequePaidRemarks}
-                onChange={(e) => setChequePaidRemarks(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid item xs={3} >
-                      <DatePicker
-                        selected={remark.RemarkDate}
-                        onChange={(date) => handleDateRemarks(date, index)}
-                        dateFormat="yyyy-MM-dd"
-                        customInput={<TextField label="Date" fullWidth />}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={remark.Loan === 1}
-                            onChange={(e) => handleLoanChange(e, index)}
-                          />
-                        }
-                        label="Loan Process"
-                      />
-                    </Grid>
-                    <Grid item xs={12} container justifyContent="flex-end">
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => handleRemoveRemark(index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                ))}
-                <Grid item xs={12}>
-                  <Button
-                    onClick={handleAddRemark}
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                  >
-                    Add Remark
-                  </Button>
-                </Grid>
-              </>
-            )}
-
-            <Grid item xs={12} container justifyContent="flex-end">
-              <Button onClick={handleModalClose} variant="contained" color="primary">
-                Close
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginRight: 3.5,
-                    marginTop: 5,
-                    backgroundColor: "#9155FD",
-                    color: "#FFFFFF",
-                  }}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
-              </Grid>
-          </Grid>
-        </Box>
-      </Modal>
       <Modal open={open} onClose={handleClose}>
       <Card style={{ maxWidth: '800px', margin: 'auto', marginTop: '50px', padding: '20px' }}>
         <CardContent>

@@ -18,7 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from "sweetalert2";
-import moment from 'moment';
+import moment from "moment";
 import {
   Snackbar,
   FormControlLabel,
@@ -48,7 +48,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   };
   const dateStr = "2023-07-19";
   const initialFormData = {
-    BookingDate: moment(dateStr, 'YYYY-MM-DD').toDate(),
+    BookingDate: moment(dateStr, "YYYY-MM-DD").toDate(),
     BookedByID: "",
     Mobile: "",
     Name: "",
@@ -59,6 +59,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     area: "",
     TtlAmount: "",
     Charges: "",
+    Aadhar: "",
     ParkingFacility: "",
     FlatCost: "",
     FlatCostInWords: "",
@@ -85,6 +86,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [projectMaster, setProjectMaster] = useState([]);
   const [floor, setFloor] = useState([]);
   const [flatNoData, setFlatNoData] = useState([]);
+  const [areainbuiltup, setAreainbuiltup] = useState([]);
+  const [bookingTypes, setBookingTypes] = useState([]);
   const [unitTypeData, setUnitTypeData] = useState([]);
   // const [showForm, setShowForm] = useState(true);
   const [titles, setTitles] = useState([]);
@@ -216,10 +219,37 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           FlatCostInWords:
             FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
+      } else if (name === "area") {
+        // Calculate TtlAmount when area changes
+        const newArea = value;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          area: newArea,
+          TtlAmount: newArea * areainbuiltup,
+        }));
       } else {
         setFormData((prevFormData) => ({
           ...prevFormData,
           [name]: value,
+        }));
+      }
+
+      // Recalculate Gross Flat Cost when any relevant field changes
+      const { TtlAmount, Charges, ParkingFacility, Advocate } = formData;
+      if (
+        name === "TtlAmount" ||
+        name === "Charges" ||
+        name === "ParkingFacility" ||
+        name === "Advocate"
+      ) {
+        const newFlatCost =
+          (parseFloat(TtlAmount) || 0) +
+          (parseFloat(Charges) || 0) +
+          (parseFloat(ParkingFacility) || 0) +
+          (parseFloat(Advocate) || 0);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          FlatCost: newFlatCost.toFixed(2),
         }));
       }
     }
@@ -230,6 +260,50 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     return new Intl.NumberFormat().format(value);
   };
 
+  useEffect(() => {
+    const {
+      TtlAmount,
+      Charges,
+      ParkingFacility,
+      Advocate,
+      Gst,
+      StampDuty,
+      Registration,
+      ExtraCost,
+    } = formData;
+    const newFlatCost =
+      (parseFloat(TtlAmount) || 0) +
+      (parseFloat(Charges) || 0) +
+      (parseFloat(ParkingFacility) || 0) +
+      (parseFloat(Advocate) || 0);
+    const newTotalCost =
+      newFlatCost +
+      (parseFloat(Gst) || 0) +
+      (parseFloat(StampDuty) || 0) +
+      (parseFloat(Registration) || 0) +
+      (parseFloat(ExtraCost) || 0);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      FlatCost: newFlatCost.toFixed(2),
+      TotalCost: newTotalCost.toFixed(2),
+    }));
+  }, [
+    formData.TtlAmount,
+    formData.Charges,
+    formData.ParkingFacility,
+    formData.Advocate,
+    formData.Gst,
+    formData.StampDuty,
+    formData.Registration,
+    formData.ExtraCost,
+  ]);
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      TtlAmount: formData.area * areainbuiltup,
+    }));
+  }, [areainbuiltup, formData.area]);
   useEffect(() => {
     if (formData.WingID) {
       axios
@@ -263,6 +337,18 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     };
 
     fetchData();
+  }, []);
+  useEffect(() => {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-bookingtype.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setBookingTypes(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching booking types:", error);
+      });
   }, []);
 
   useEffect(() => {
@@ -315,28 +401,42 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   }, [formData.WingID, formData.ProjectID, formData.FloorNo]);
 
   useEffect(() => {
-    if (formData.WingID && formData.ProjectID && formData.FloorNo) {
+    if (
+      formData.WingID &&
+      formData.ProjectID &&
+      formData.FloorNo &&
+      formData.FlatNo &&
+      formData.UnittypeID
+    ) {
       axios
         .get(
-          `https://apiforcorners.cubisysit.com/api/api-booking-flat.php?WingID=${formData.WingID}&ProjectID=${formData.ProjectID}&FloorNo=${formData.FloorNo}`
+          `https://apiforcorners.cubisysit.com/api/api-booking-area.php?ProjectID=${formData.ProjectID}&WingID=${formData.WingID}&FloorNo=${formData.FloorNo}&FlatNo=${formData.FlatNo}&UnittypeID=${formData.UnittypeID}`
         )
         .then((response) => {
           if (response.data.status === "Success") {
             console.log("Flat No Data:", response.data.data); // Log the fetched data
-            setFlatNoData(response.data.data);
+            const areaData = response.data.data[0].Area;
+            setAreainbuiltup(areaData); // Set the Area value
           }
         })
         .catch((error) => {
           console.error("Error fetching flat number data:", error);
         });
     }
-  }, [formData.WingID, formData.ProjectID, formData.FloorNo]);
+  }, [
+    formData.WingID,
+    formData.ProjectID,
+    formData.FloorNo,
+    formData.FlatNo,
+    formData.UnittypeID,
+  ]); // Use separate dependencies
 
   useEffect(() => {
     const fetchUnitTypeData = async () => {
       try {
         const response = await axios.get(
           `https://apiforcorners.cubisysit.com/api/api-booking-type.php`,
+
           {
             params: {
               WingID: formData.WingID,
@@ -389,7 +489,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         ? remark.RemarkDate.toISOString().split("T")[0]
         : null,
       RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
-     
+
       Status: 1, // default or calculated value
       CreateUID: 1, // default or fetched value
     }));
@@ -421,7 +521,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
       if (response.data.status === "Success") {
         console.log("hogaya submut");
-        const { BookingID } = response.data; 
+        const { BookingID } = response.data;
         onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
@@ -494,9 +594,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
-                {editData
-                  ? "Edit Rose Nagar Details"
-                  : "Add Rose Nagar Details"}
+                {editData ? "Edit Booking Details" : "Add Booking Details"}
               </Typography>
             </Box>
           </Grid>
@@ -605,6 +703,159 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Area in Builtup"
+                  name="Area"
+                  placeholder="Area in Builtup"
+                  value={areainbuiltup}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Rate per Sqft"
+                  name="area"
+                  placeholder="Rate per Sqft"
+                  value={formData.area}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="TTL Amount As Per Builtup"
+                  name="TtlAmount"
+                  placeholder="TTL Amount as per Builtup"
+                  value={formData.TtlAmount}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Development Charges"
+                  name="Charges"
+                  placeholder="Development Charges"
+                  value={formData.Charges}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Parking Facility"
+                  name="ParkingFacility"
+                  placeholder="Parking Facility"
+                  value={formData.ParkingFacility}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Advocate"
+                  name="Advocate"
+                  placeholder="Advocate"
+                  value={formData.Advocate}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Gross Flat Cost"
+                  name="FlatCost"
+                  placeholder="Flat Cost"
+                  value={formData.FlatCost}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { style: { textAlign: "left" } },
+                  }}
+                  type="text"
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="GST"
+                  name="Gst"
+                  placeholder="GST As per Govt. Notification"
+                  value={formData.Gst}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Stamp Duty"
+                  name="StampDuty"
+                  placeholder="Stamp Duty As per Govt. Notification"
+                  value={formData.StampDuty}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Registration"
+                  name="Registration"
+                  placeholder="Registration As per Govt. Notification"
+                  value={formData.Registration}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Extra Cost"
+                  name="ExtraCost"
+                  placeholder="Extra Cost"
+                  value={formData.ExtraCost}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { style: { textAlign: "left" } },
+                  }}
+                  type="text"
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Total Cost"
+                  name="TotalCost"
+                  placeholder="Total Cost"
+                  value={formData.TotalCost}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { style: { textAlign: "left" } },
+                  }}
+                  type="text"
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
                 <DatePicker
                   selected={formData.BookingDate}
                   onChange={handleDateChange}
@@ -696,6 +947,16 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
+                  label={<>Aadhar Card Numberr</>}
+                  name="Aadhar"
+                  placeholder="Aadhar Card Number"
+                  value={formData.Aadhar}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
                   label="Mobile"
                   name="Mobile"
                   value={formData.Mobile || ""}
@@ -719,89 +980,26 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                 {/* Add error handling for Email if needed */}
               </Grid>
 
+              {/* Other form fields */}
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Type of Booking"
-                  name="BookingType"
-                  value={formData.BookingType || ""}
-                  onChange={handleChange}
-                />
-                {/* Add error handling for Email if needed */}
+                <FormControl fullWidth>
+                  <InputLabel>Type of Booking</InputLabel>
+                  <Select
+                    label="Type of Booking"
+                    name="BookingType"
+                    value={formData.BookingType || ""}
+                    onChange={handleChange}
+                  >
+                    {bookingTypes.map((type) => (
+                      <MenuItem key={type.BookingType} value={type.BookingType}>
+                        {type.BookingTypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
+              {/* Other form fields */}
 
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Area in Builtup</>}
-                  name="Area"
-                  placeholder="Area in Builtup "
-                  value={formData.Area}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Rate per Sqft</>}
-                  name="area"
-                  placeholder="Area in Builtup "
-                  value={formData.area}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>TTL Amount As Per Builtup</>}
-                  name="TtlAmount"
-                  placeholder="TTL Amount as per Builtup "
-                  value={formData.TtlAmount}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Development Charges</>}
-                  name="Charges"
-                  placeholder="Development Charges"
-                  value={formData.Charges}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Parking Facility</>}
-                  name="ParkingFacility"
-                  placeholder="Parking Facility"
-                  value={formData.ParkingFacility}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Gross Flat Cost"
-                  name="FlatCost"
-                  placeholder="Flat Cost"
-                  value={formData.FlatCost}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">₹</InputAdornment>
-                    ),
-                    inputProps: { style: { textAlign: "left" } },
-                  }}
-                  type="text"
-                />
-              </Grid>
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -818,84 +1016,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label={<>GST</>}
-                  name="Gst"
-                  placeholder="GST As per Govt. Notification"
-                  value={formData.Gst}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Stamp Duty</>}
-                  name="StampDuty"
-                  placeholder="Stamp Duty As per Govt. Notification"
-                  value={formData.StampDuty}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Registration</>}
-                  name="Registration"
-                  placeholder="Registration As per Govt. Notification"
-                  value={formData.Registration}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Advocate</>}
-                  name="Advocate"
-                  placeholder="Advocate"
-                  value={formData.Advocate}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Extra Cost "
-                  name="ExtraCost"
-                  placeholder="Extra Cost"
-                  value={formData.ExtraCost}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">₹</InputAdornment>
-                    ),
-                    inputProps: { style: { textAlign: "left" } },
-                  }}
-                  type="text"
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Total Cost"
-                  name="TotalCost"
-                  placeholder="Total Cost"
-                  value={formData.TotalCost}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">₹</InputAdornment>
-                    ),
-                    inputProps: { style: { textAlign: "left" } },
-                  }}
-                  type="text"
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Unsable Area in Sqft</>}
+                  label={<>Usable Area in Sqft</>}
                   name="UnsableArea"
                   placeholder="Unsable Area in sqft"
                   value={formData.UnsableArea}
