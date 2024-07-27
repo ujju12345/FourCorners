@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
-
+import { useRouter } from 'next/router';
 const GlobalStyle = createGlobalStyle`
   @media print {
     body * {
@@ -37,7 +37,8 @@ const InvoiceBox = styled(Box)({
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
-const TemplateRosenagar = ({ bookingID }) => {
+const TemplateRosenagar = ({ bookingID , onGoBack }) => {
+  const router = useRouter();
   console.log(bookingID , 'booking id aaya');
   const printRef = useRef();
   const [data, setData] = useState(null);
@@ -71,6 +72,7 @@ const TemplateRosenagar = ({ bookingID }) => {
     }
   };
 
+
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -79,11 +81,12 @@ const TemplateRosenagar = ({ bookingID }) => {
     return <Typography>Error loading data</Typography>;
   }
 
+
   return (
     <>
       <GlobalStyle />
-      <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
-        Print
+      <Button variant="contained" color="primary"   onClick={onGoBack}  style={{ marginBottom: '10px' }}>
+        Go back 
       </Button>
 
       <InvoiceBox className="printableArea" ref={printRef}>
@@ -184,7 +187,7 @@ const TemplateRosenagar = ({ bookingID }) => {
                   {data.ProjectName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.WingID}
+                  {data.WingName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
                   {data.FloorNo}
@@ -193,7 +196,7 @@ const TemplateRosenagar = ({ bookingID }) => {
                   {data.FlatNo}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.UnittypeID}
+                  {data.UnittypeName}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -217,7 +220,7 @@ const TemplateRosenagar = ({ bookingID }) => {
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Rate Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.RatePerSqFt}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Ratesqft}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Registration* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Registration}</StyledTableCell>
 </TableRow>
@@ -228,10 +231,10 @@ const TemplateRosenagar = ({ bookingID }) => {
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Advocate}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
-        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Payment Schedule</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Development Charges</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Charges}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Extra Cost (B)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ExtraCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
@@ -241,7 +244,7 @@ const TemplateRosenagar = ({ bookingID }) => {
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Gross Flat Cost (A)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.FlatCost}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
       </TableRow>
@@ -264,7 +267,7 @@ const TemplateRosenagar = ({ bookingID }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Usable Area in Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UnsableArea}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UsableArea}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Agreement Carpet (RERA) in Sq.Ft</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.AgreementCarpet}</StyledTableCell>
 </TableRow>
@@ -277,7 +280,7 @@ const TemplateRosenagar = ({ bookingID }) => {
 {data.remarks && data.remarks.map((remark, index) => (
   <TableRow key={index} sx={{ padding: 0 }}>
     <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. Amount : {remark.Remarkamount} Remark : {remark.RemarkName} - Date : {remark.RemarkDate}
+      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
     </StyledTableCell>
   </TableRow>
 ))}

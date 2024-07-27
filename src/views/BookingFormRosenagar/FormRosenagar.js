@@ -42,7 +42,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   console.log(editData, "Edit data aaya");
   const initialRemark = {
     RemarkName: "",
-    RemarkDate: null,
+    RemarkDate: new Date(),
+    AmountTypeID:"",
     Remarkamount: "",
     Loan: 0,
   };
@@ -70,7 +71,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Advocate: "",
     ExtraCost: "",
     TotalCost: "",
-    UnsableArea: "",
+    UsableArea: "",
     AgreementCarpet: "",
     Area: "",
     ProjectID: "",
@@ -89,7 +90,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [areainbuiltup, setAreainbuiltup] = useState([]);
   const [bookingTypes, setBookingTypes] = useState([]);
   const [unitTypeData, setUnitTypeData] = useState([]);
-  // const [showForm, setShowForm] = useState(true);
+  const [amountTypes, setAmountTypes] = useState([]);
   const [titles, setTitles] = useState([]);
   const [errors, setErrors] = useState({});
   const [wingData, setWingData] = useState([]);
@@ -143,7 +144,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       "eighteen",
       "nineteen",
     ];
-
+  
     const convertTwoDigits = (n) => {
       if (n < 10) return singleDigits[n];
       if (n < 20) return tenToNineteen[n - 10];
@@ -152,37 +153,37 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         (n % 10 ? " " + singleDigits[n % 10] : "")
       );
     };
-
+  
     const convertThreeDigits = (n) => {
       return (
         (n >= 100 ? singleDigits[Math.floor(n / 100)] + " hundred " : "") +
         convertTwoDigits(n % 100)
       );
     };
-
+  
     if (num === 0) return "zero";
-
+  
     let result = "";
     let crore = Math.floor(num / 10000000);
     let lakh = Math.floor((num % 10000000) / 100000);
     let thousand = Math.floor((num % 100000) / 1000);
     let hundred = num % 1000;
-
+  
     if (crore > 0) result += convertTwoDigits(crore) + " crore ";
     if (lakh > 0) result += convertTwoDigits(lakh) + " lakh ";
     if (thousand > 0) result += convertTwoDigits(thousand) + " thousand ";
     if (hundred > 0) result += convertThreeDigits(hundred);
-
+  
     return result.trim();
   };
-
+  
   const handleChange = (event, index, field) => {
     const { type, checked, value } = event.target;
-
+  
     if (index !== undefined && field !== undefined) {
       // Handling changes in remarks array (dynamic fields)
       const newRemarks = [...remarks];
-
+  
       if (type === "checkbox") {
         // Set Loan to 1 if checked, 0 if unchecked
         newRemarks[index][field] = checked ? 1 : 0;
@@ -190,7 +191,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         // Update other fields
         newRemarks[index][field] = value;
       }
-
+  
       setRemarks(newRemarks);
     } else {
       // Handling changes in main form fields
@@ -199,25 +200,22 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         ...prevErrors,
         [name]: undefined,
       }));
-
+  
       if (name === "Mobile" || name === "AlternateMobileNo") {
         const numericValue = value.replace(/\D/g, "");
         setFormData((prevFormData) => ({
           ...prevFormData,
           [name]: numericValue,
         }));
-      } else if (name === "FlatCost" || name === "Amount") {
+      } else if (name === "TotalCost") {
         const numericValue = value.replace(/,/g, "");
         const formattedValue = formatNumber(numericValue);
-        const FlatCostInWords = numberToWordsIndian(
-          parseInt(numericValue || 0)
-        );
-
+        const FlatCostInWords = numberToWordsIndian(parseInt(numericValue || 0));
+  
         setFormData((prevFormData) => ({
           ...prevFormData,
-          FlatCost: formattedValue,
-          FlatCostInWords:
-            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+          [name]: formattedValue,
+          FlatCostInWords: FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       } else if (name === "area") {
         // Calculate TtlAmount when area changes
@@ -233,9 +231,9 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           [name]: value,
         }));
       }
-
+  
       // Recalculate Gross Flat Cost when any relevant field changes
-      const { TtlAmount, Charges, ParkingFacility, Advocate } = formData;
+      const { TtlAmount, Charges, ParkingFacility, Advocate, TotalCost } = formData;
       if (
         name === "TtlAmount" ||
         name === "Charges" ||
@@ -247,13 +245,20 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           (parseFloat(Charges) || 0) +
           (parseFloat(ParkingFacility) || 0) +
           (parseFloat(Advocate) || 0);
+  
+        const FlatCostInWords = numberToWordsIndian(parseInt(newFlatCost || 0));
+  
         setFormData((prevFormData) => ({
           ...prevFormData,
           FlatCost: newFlatCost.toFixed(2),
+          FlatCostInWords: FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       }
     }
   };
+  
+  
+  
 
   const formatNumber = (value) => {
     if (isNaN(value)) return value;
@@ -320,6 +325,22 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         });
     }
   }, [formData.WingID]);
+
+  useEffect(() => {
+    // Fetch amount types from the API
+    const fetchAmountTypes = async () => {
+      try {
+        const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-dropdown-amountype.php');
+        setAmountTypes(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching amount types:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchAmountTypes();
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -486,7 +507,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     const formattedRemarks = remarks.map((remark, index) => ({
       ...remark,
       RemarkDate: remark.RemarkDate
-        ? remark.RemarkDate.toISOString().split("T")[0]
+        ? remark.RemarkDate
         : null,
       RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
 
@@ -554,13 +575,6 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     }
   };
 
-  const handleChangeLoan = (e, field) => {
-    if (field === "RemarkChecked") {
-      setRemarkChecked(e.target.checked);
-    } else if (field === "RemarkName") {
-      setRemarkName(e.target.value);
-    }
-  };
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -580,9 +594,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     setRemarks(updatedRemarks);
   };
 
-  const handleDateLoan = (date) => {
-    setExpectedDate(date);
-  };
+
 
   return (
     <>
@@ -838,22 +850,36 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Total Cost"
-                  name="TotalCost"
-                  placeholder="Total Cost"
-                  value={formData.TotalCost}
-                  onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">₹</InputAdornment>
-                    ),
-                    inputProps: { style: { textAlign: "left" } },
-                  }}
-                  type="text"
-                />
-              </Grid>
+  <TextField
+    fullWidth
+    label="Total Cost"
+    name="TotalCost"
+    placeholder="Total Cost"
+    value={formData.TotalCost}
+    onChange={handleChange}
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">₹</InputAdornment>
+      ),
+      inputProps: { style: { textAlign: "left" } },
+    }}
+    type="text"
+  />
+</Grid>
+<Grid item xs={8} sm={4}>
+  <TextField
+    fullWidth
+    label="Amount in Words"
+    name="FlatCostInWords"
+    value={formData.FlatCostInWords}
+    InputProps={{
+      readOnly: true,
+    }}
+    type="text"
+  />
+</Grid>
+
+
 
               <Grid item xs={8} sm={4}>
                 <DatePicker
@@ -1000,26 +1026,14 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
               {/* Other form fields */}
 
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Amount in Words"
-                  name="FlatCostInWords"
-                  value={formData.FlatCostInWords}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  type="text"
-                />
-              </Grid>
-
+            
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={<>Usable Area in Sqft</>}
-                  name="UnsableArea"
+                  name="UsableArea"
                   placeholder="Unsable Area in sqft"
-                  value={formData.UnsableArea}
+                  value={formData.UsableArea}
                   onChange={handleChange}
                 />
               </Grid>
@@ -1035,79 +1049,98 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                 />
               </Grid>
               {remarks.map((remark, index) => (
-                <Grid container item spacing={2} key={index}>
-                  {/* Amount Field */}
-                  <Grid item xs={2}>
-                    <TextField
-                      fullWidth
-                      label={`Amount ${index + 1}`}
-                      value={remark.Remarkamount}
-                      onChange={(e) => handleChange(e, index, "Remarkamount")}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">₹</InputAdornment>
-                        ),
-                        inputProps: { style: { textAlign: "left" } },
-                      }}
-                      type="text"
-                    />
-                  </Grid>
+              <Grid container item spacing={2} key={index}>
+              {/* Amount Field */}
+              <Grid item xs={2}>
+                <TextField
+                  fullWidth
+                  label={`Amount ${index + 1}`}
+                  value={remark.Remarkamount}
+                  onChange={(e) => handleChange(e, index, "Remarkamount")}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { style: { textAlign: "left" } },
+                  }}
+                  type="text"
+                />
+              </Grid>
+  
+              {/* Amount Type Dropdown */}
+              <Grid item xs={2}>
+                <FormControl fullWidth>
+                  <InputLabel>Amount Type</InputLabel>
+                  <Select
+                    value={remark.AmountTypeID || ''}
+                    onChange={(e) => handleChange(e, index, "AmountTypeID")}
+                    label="Amount Type"
+                  >
+                    {amountTypes.map((type) => (
+                      <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
+                        {type.AmountTypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+  
+              {/* Remark Field */}
+              <Grid item xs={4}>
+                <TextField
+                  fullWidth
+                  label={`Remark ${index + 1}`}
+                  value={remark.RemarkName}
+                  onChange={(e) => handleChange(e, index, "RemarkName")}
+                />
+              </Grid>
+  
+              {/* Date Field */}
+              <Grid item xs={4}>
+            <DatePicker
+              selected={remark.RemarkDate}
+              onChange={(date) => handleDateRemarks(date, index)}
+              dateFormat="dd-MM-yyyy"
+              customInput={
+                <TextField fullWidth label="Expected Date" />
+              }
+            />
+          </Grid>
 
-                  {/* Remark Field */}
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      label={`Remark ${index + 1}`}
-                      value={remark.RemarkName}
-                      onChange={(e) => handleChange(e, index, "RemarkName")}
+  
+              {/* Loan Process Checkbox */}
+              <Grid item xs={2}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={remark.Loan === 1}
+                      onChange={(e) => handleChange(e, index, "Loan")}
                     />
-                  </Grid>
-
-                  {/* Date Field */}
-                  <Grid item xs={4}>
-                    <DatePicker
-                      selected={remark.RemarkDate}
-                      onChange={(date) => handleDateRemarks(date, index)}
-                      dateFormat="dd-MM-yyyy"
-                      customInput={
-                        <TextField fullWidth label="Expected Date" />
-                      }
-                    />
-                  </Grid>
-
-                  {/* Loan Process Checkbox */}
-                  <Grid item xs={2}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={remark.Loan === 1}
-                          onChange={(e) => handleChange(e, index, "Loan")}
-                        />
-                      }
-                      label="Loan Process"
-                    />
-                  </Grid>
-
-                  {/* Add and Delete Buttons */}
-                  {index === remarks.length - 1 && (
-                    <Grid item xs={2}>
-                      <IconButton
-                        color="primary"
-                        sx={{ color: "#1976d2" }}
-                        onClick={handleAddRemark}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        sx={{ color: "#f44336", ml: 1 }}
-                        onClick={() => handleRemoveRemark(index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
-                  )}
+                  }
+                  label="Loan Process"
+                />
+              </Grid>
+  
+              {/* Add and Delete Buttons */}
+              {index === remarks.length - 1 && (
+                <Grid item xs={2}>
+                  <IconButton
+                    color="primary"
+                    sx={{ color: "#1976d2" }}
+                    onClick={handleAddRemark}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  <IconButton
+                    color="primary"
+                    sx={{ color: "#f44336", ml: 1 }}
+                    onClick={() => handleRemoveRemark(index)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </Grid>
+              )}
+            </Grid>
               ))}
 
               <Grid item xs={12}>
