@@ -85,7 +85,7 @@ const UploadExcel = ({ show, rowData }) => {
       setLoading(true);
       
       const response = await axios.post(
-        "https://api-backend.devasmriti.com/api/test_u",
+        "https://apiforcorners.cubisysit.com/api/api-excel-projectroom.php",
         formDataFile,
         {
           headers: {
