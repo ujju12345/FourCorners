@@ -23,7 +23,8 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 import  Photo  from 'src/pages/404'
 import Listprojectbookng from 'src/views/BookingFormRosenagar/ListProjectBooking/Listprojectbookng';
 import SidebarBookingProject from 'src/views/BookingFormRosenagar/SidebarBookingProject/SidebarBookingProject';
-
+import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
+import Reciept from 'src/views/BookingFormRosenagar/Reciept/Reciept';
 const salesData = [
   {
     stats: '245k',
@@ -152,11 +153,15 @@ const Addpayment = () => {
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null);
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
+  const [showReceipt, setShowReceipt] = useState(false);
+
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
-  
+  const [showTemplate, setShowTemplate] = useState(false);
+const [bookingID, setBookingID] = useState(null);
+
 
   useEffect(() => {
     fetchData();
@@ -218,7 +223,7 @@ const Addpayment = () => {
     setShowHistory(false);
     setRowDataToUpdate(null);
     setShowDashboard(false); // Reset showDashboard when going back
-
+    setShowReceipt(false); // Reset showReceipt when going back
     fetchData();
   };
 
@@ -229,7 +234,7 @@ const Addpayment = () => {
     setShowHistory(false);
     setFirstVisit(false);
     setShowDashboard(false); // Reset showDashboard when editing
-
+    setShowReceipt(false); // Reset showReceipt when editing
   };
 
   const handleShow = (item) => {
@@ -238,7 +243,7 @@ const Addpayment = () => {
     setShowHistory(false);
     setFirstVisit(false);
     setShowDashboard(false); // Reset showDashboard when showing details
-
+    setShowReceipt(false); // Reset showReceipt when showing details
   };
 
   const handleAddTelecaller = () => {
@@ -248,7 +253,7 @@ const Addpayment = () => {
     setShowHistory(false);
     setFirstVisit(false);
     setShowDashboard(false); // Reset showDashboard when showing details
-
+    setShowReceipt(false); // Reset showReceipt when showing details
     setTimeout(() => {
       setShowAddDetails(true);
     }, 0);
@@ -258,68 +263,112 @@ const Addpayment = () => {
     setShowHistory(true);
     setShowAddDetails(false);
     setShowDashboard(false); // Reset showDashboard when showing details
-
+    setShowReceipt(false); // Reset showReceipt when showing details
     setFirstVisit(false);
+  };
+
+  const handleFormSubmitSuccess = (bookingId) => {
+    setBookingID(bookingId);
+    setShowTemplate(true);
   };
 
   const handleNavigation = () => {
     setShowDashboard(true);
     setShowAddDetails(false); // Ensure the AddContact form is hidden when navigating to the dashboard
+    setShowReceipt(false); // Ensure Receipt is hidden when navigating to the dashboard
+  };
+
+  const handleGoBackFromTemplate = () => {
+    setShowDashboard(true);
+    setShowTemplate(false);
+    setShowAddDetails(false); // Ensure AddDetails is not visible
+    setShowHistory(false); // Ensure History is not visible
+    setRowDataToUpdate(null); // Clear the selected row data
+    setShowReceipt(false); // Ensure Receipt is not visible
+  };
+
+  const handleChequeReciept = () => {
+    setShowReceipt(true);
+    setShowAddDetails(false);
+    setShowHistory(false);
+    setShowDashboard(false);
+    setRowDataToUpdate(null);
+    setShowTemplate(false);
   };
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={4}>
-        <SidebarBookingProject rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
-      </Grid>
-      <Grid item xs={8}>
-        {loading && <CircularProgress />}
-        {/* {error && <Alert></Alert>} */}
-        {showDashboard && !loading && !error && <WelcomeScreen />}
-        {!showDashboard && firstVisit && !loading && !error && !leadData && (
-          <WelcomeScreen />
-        )}
-
-        {leadData && (
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Converted Lead Details
-            </Typography>
-            {/* Render lead data details */}
-            <pre>{JSON.stringify(leadData, null, 2)}</pre>
-          </Box>
-        )}
-
-        {showAddDetails &&  !showDashboard &&(
-          <AddTellecallingDetails show={handleBack} editData={editData} />
-        )}
-
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
-          <Listprojectbookng
-            item={rowDataToUpdate}
-            onDelete={handleDelete}
-            onHistoryClick={handleShowHistory}
-            onEdit={handleEdit}
-          />
-        )}
-
-        {!loading && !error && showHistory && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-          >
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
-              User History
-            </Typography>
-            <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
-        )}
-      </Grid>
+    <Grid item xs={4}>
+      <SidebarBookingProject
+        rows={rows}
+        onItemClick={handleShow}
+        onEdit={handleEdit}
+        onCreate={handleAddTelecaller}
+        onDashboardClick={handleNavigation}
+        // Assuming you have this function in SidebarBookingProject
+      />
     </Grid>
+    <Grid item xs={8}>
+      {loading && <CircularProgress />}
+      {showDashboard && !loading && !error && <WelcomeScreen />}
+      {!showDashboard && firstVisit && !loading && !error && !leadData && (
+        <WelcomeScreen />
+      )}
+      {leadData && (
+        <Box>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Converted Lead Details
+          </Typography>
+          <pre>{JSON.stringify(leadData, null, 2)}</pre>
+        </Box>
+      )}
+      {showAddDetails && !showDashboard && (
+        <AddTellecallingDetails show={handleBack} editData={editData} />
+      )}
+      {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
+        <Listprojectbookng
+          item={rowDataToUpdate}
+          onDelete={handleDelete}
+          onHistoryClick={handleShowHistory}
+          onEdit={handleEdit}
+          handleTemplateClick={handleFormSubmitSuccess}
+          onChequeReceiptClick={handleChequeReciept}
+        />
+      )}
+      {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleGoBackFromTemplate} />}
+      {!loading && !error && showReceipt && (
+        <Reciept />
+      )}
+      {!loading && !error && showHistory && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+        >
+          <Typography variant="body1">
+            <HistoryTelecalling />
+          </Typography>
+        </Box>
+      )}
+      {!loading && error && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+        >
+          <Typography variant="body1">
+            Error occurred: {error.message}
+          </Typography>
+        </Box>
+      )}
+    </Grid>
+  </Grid>
   );
+  
 };
 
 export default Addpayment;

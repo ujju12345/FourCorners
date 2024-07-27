@@ -100,11 +100,7 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/BookingForm",
         },
-        {
-          title: "List Booking Details",
-          icon: CubeOutlineIcon,
-          path: "/project-details/ListProjectDetails",
-        },
+      
         {
           title: "Add payment",
           icon: CubeOutlineIcon,
