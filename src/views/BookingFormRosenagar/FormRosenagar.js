@@ -612,6 +612,95 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
+
+            <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={<>Name of Purchaser</>}
+                  name="Name"
+                  placeholder="Name of Purchaser"
+                  value={formData.Name}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={<>Address</>}
+                  name="Address"
+                  placeholder="Address"
+                  value={formData.Address}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={<>Pan Card Number</>}
+                  name="Pancard"
+                  placeholder="Pan Card Number"
+                  value={formData.Pancard}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label={<>Aadhar Card Numberr</>}
+                  name="Aadhar"
+                  placeholder="Aadhar Card Number"
+                  value={formData.Aadhar}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Mobile"
+                  name="Mobile"
+                  value={formData.Mobile || ""}
+                  onChange={handleChange}
+                  inputProps={{
+                    pattern: "[0-9]*",
+                    maxLength: 10,
+                  }}
+                />
+                {/* Add error handling for Mobile if needed */}
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="Email"
+                  value={formData.Email || ""}
+                  onChange={handleChange}
+                />
+                {/* Add error handling for Email if needed */}
+              </Grid>
+
+              {/* Other form fields */}
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Type of Booking</InputLabel>
+                  <Select
+                    label="Type of Booking"
+                    name="BookingType"
+                    value={formData.BookingType || ""}
+                    onChange={handleChange}
+                  >
+                    {bookingTypes.map((type) => (
+                      <MenuItem key={type.BookingType} value={type.BookingType}>
+                        {type.BookingTypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* Other form fields */}
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Project Name</InputLabel>
@@ -772,7 +861,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label="Advocate"
+                  label="Advocate Fees"
                   name="Advocate"
                   placeholder="Advocate"
                   value={formData.Advocate}
@@ -812,7 +901,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label="Stamp Duty"
+                  label="Stamp Duty Fee"
                   name="StampDuty"
                   placeholder="Stamp Duty As per Govt. Notification"
                   value={formData.StampDuty}
@@ -823,7 +912,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label="Registration"
+                  label="Registration Fee"
                   name="Registration"
                   placeholder="Registration As per Govt. Notification"
                   value={formData.Registration}
@@ -937,94 +1026,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   </Typography>
                 )}
               </Grid> */}
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Name of Purchaser</>}
-                  name="Name"
-                  placeholder="Name of Purchaser"
-                  value={formData.Name}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Address</>}
-                  name="Address"
-                  placeholder="Address"
-                  value={formData.Address}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Pan Card Number</>}
-                  name="Pancard"
-                  placeholder="Pan Card Number"
-                  value={formData.Pancard}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Aadhar Card Numberr</>}
-                  name="Aadhar"
-                  placeholder="Aadhar Card Number"
-                  value={formData.Aadhar}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Mobile"
-                  name="Mobile"
-                  value={formData.Mobile || ""}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-                {/* Add error handling for Mobile if needed */}
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="Email"
-                  value={formData.Email || ""}
-                  onChange={handleChange}
-                />
-                {/* Add error handling for Email if needed */}
-              </Grid>
-
-              {/* Other form fields */}
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Type of Booking</InputLabel>
-                  <Select
-                    label="Type of Booking"
-                    name="BookingType"
-                    value={formData.BookingType || ""}
-                    onChange={handleChange}
-                  >
-                    {bookingTypes.map((type) => (
-                      <MenuItem key={type.BookingType} value={type.BookingType}>
-                        {type.BookingTypeName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              {/* Other form fields */}
+       
 
             
               <Grid item xs={8} sm={4}>

@@ -49,18 +49,18 @@ const NoDataIcon = () => (
   />
 );
 
-const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick }) => {
+const Listprojectbookng = ({
+  onChequeReceiptClick,
+  item,
+  handleTemplateClick,
+}) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [wings, setWings] = useState([]);
   const [selectedWing, setSelectedWing] = useState(null);
   const [wingDetails, setWingDetails] = useState([]);
   const [open, setOpen] = useState(false);
-  
-  const [formDatapayment, setFormDatapayment] = useState({
-    fromdate: new Date(),
-    todate: new Date(),
-  });
+  const [amountType, setAmountType] = useState("");
   const [page, setPage] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRowMenu, setSelectedRowMenu] = useState(null);
@@ -79,15 +79,21 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [cashPaid, setCashPaid] = useState("");
-  const [cashPaidRemark, setCashPaidRemarks] = useState("");
-  const [chequePaidRemarks, setChequePaidRemarks] = useState("");
   const [chequePaid, setChequePaid] = useState("");
   const [totalCost, setTotalCost] = useState("");
   const [formData, setFormData] = useState({ AmountGiven: new Date() });
+  const [cashDate, setCashdate] = useState({ CashDate: new Date() });
+
   const [paymentTypes, setPaymentTypes] = useState([]);
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const [remarks, setRemarks] = useState([
-    { Remarkamount: "", RemarkName: "", RemarkDate: new Date(),AmountTypeID:"", Loan: 0 },
+    {
+      Remarkamount: "",
+      RemarkName: "",
+      RemarkDate: new Date(),
+      AmountTypeID: "",
+      Loan: 0,
+    },
   ]);
   const [paymentData, setPaymentData] = useState({
     proccess_null: [],
@@ -129,11 +135,13 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
     // Fetch amount types from the API
     const fetchAmountTypes = async () => {
       try {
-        const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-dropdown-amountype.php');
+        const response = await axios.get(
+          "https://apiforcorners.cubisysit.com/api/api-dropdown-amountype.php"
+        );
         setAmountTypes(response.data.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching amount types:', error);
+        console.error("Error fetching amount types:", error);
         setLoading(false);
       }
     };
@@ -180,6 +188,7 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
         `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${bookingID}`
       );
       if (response.data.status === "Success") {
+        console.log(response.data.data , 'aagaya daata remakrs');
         const bookingRemarksData = response.data.data;
         setBookingRemarks(bookingRemarksData);
 
@@ -249,8 +258,6 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
     setPage(0);
   };
 
-  
-
   useEffect(() => {
     if (searchQuery) {
       setFilteredRows(
@@ -280,13 +287,18 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
     setSelectedRow(null);
   };
 
-  const handleAddition = () => {
-    return parseFloat(cashPaid || 0) + parseFloat(chequePaid || 0);
-  };
+
 
   const handleDateChange = (date) => {
     setFormData({ ...formData, AmountGiven: date });
   };
+
+  const handleDateChangeCash = (date) => {
+    setCashdate({ ...cashDate, CashDate: date });
+  };
+
+
+  
   const handleDateChangePayment = (date, key) => {
     setFormData({ ...formData, [key]: date });
   };
@@ -320,7 +332,6 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
     newRemarks[index][field] = event.target.value;
     setRemarks(newRemarks);
   };
-  
 
   const handleLoanChange = (e, index) => {
     const newRemarks = [...remarks];
@@ -347,8 +358,6 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
     }
   };
 
-  
-
   const handleSubmit = async () => {
     // Prepare the data for the API request
     const payload = {
@@ -362,8 +371,10 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
         Cash: cashPaid || "0",
         ChequeAmount: chequePaid || "0",
         BankName: bankName || "",
+        AmountTypeID:amountType || "",
         ChequeNumber: cheqNo || "",
         ChequeDate: formData.AmountGiven.toISOString().split("T")[0],
+        Date:cashDate.CashDate.toISOString().split("T")[0],
         PLoan: 1,
         paymenttypeID: 1,
         CreateUID: 1,
@@ -528,7 +539,6 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
                                 <MenuItem onClick={handleMenuClose}>
                                   NOC
                                 </MenuItem>
-
                               </Menu>
                             </TableCell>
                             <TableCell>
@@ -631,98 +641,136 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
                 </>
               )}
             </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Cash Paid"
-                type="number"
-                value={cashPaid}
-                onChange={(e) => setCashPaid(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">₹</InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Cheque Paid"
-                type="number"
-                value={chequePaid}
-                onChange={(e) => setChequePaid(e.target.value)}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">₹</InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Total Amount"
-                type="number"
-                value={handleAddition()}
-                InputProps={{
-                  readOnly: true,
-                  startAdornment: (
-                    <InputAdornment position="start">₹</InputAdornment>
-                  ),
-                }}
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Bank Name"
-                type="text"
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Cheque Number"
-                type="Number"
-                value={cheqNo}
-                onChange={(e) => setCheqNo(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-            <Grid item xs={3} mt={3.5}>
-              <DatePicker
-                selected={formData.AmountGiven}
-                onChange={handleDateChange}
-                dateFormat="yyyy-MM-dd"
-                customInput={<TextField label="Date" fullWidth />}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                select
-                label="Select Payment Type"
-                value={selectedPaymentType}
-                onChange={handleChangePayment}
-                fullWidth
-                margin="normal"
-              >
-                {paymentTypes.map((option) => (
-                  <MenuItem
-                    key={option.paymenttypeID}
-                    value={option.paymenttypeName}
-                  >
-                    {option.paymenttypeName}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+
+            <Grid item xs={3} mt={3}>
+  <FormControl fullWidth>
+    <InputLabel>Amount Type</InputLabel>
+    <Select
+      value={amountType}
+      onChange={(e) => setAmountType(e.target.value)}
+      label="Amount Type"
+    >
+      {amountTypes.map((type) => (
+        <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
+          {type.AmountTypeName}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
+{amountType === '1' ? (
+  <>
+    <Grid item xs={4}>
+      <TextField
+        label="Cash Paid"
+        type="number"
+        value={cashPaid}
+        onChange={(e) => setCashPaid(e.target.value)}
+        fullWidth
+        margin="normal"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">₹</InputAdornment>
+          ),
+        }}
+      />
+    </Grid>
+    <Grid item xs={3} mt={3.5}>
+      <DatePicker
+        selected={cashDate.CashDate}
+        onChange={handleDateChangeCash}
+        dateFormat="yyyy-MM-dd"
+        customInput={<TextField label="Cash date" fullWidth />}
+      />
+    </Grid>
+    <Grid item xs={4}>
+      <TextField
+        select
+        label="Select Payment Type"
+        value={selectedPaymentType}
+        onChange={handleChangePayment}
+        fullWidth
+        margin="normal"
+      >
+        {paymentTypes.map((option) => (
+          <MenuItem
+            key={option.paymenttypeID}
+            value={option.paymenttypeName}
+          >
+            {option.paymenttypeName}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Grid>
+  </>
+) : (
+  <>
+    <Grid item xs={4}>
+      <TextField
+        label="Cheque Paid"
+        type="number"
+        value={chequePaid}
+        onChange={(e) => setChequePaid(e.target.value)}
+        fullWidth
+        margin="normal"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">₹</InputAdornment>
+          ),
+        }}
+      />
+    </Grid>
+    <Grid item xs={4}>
+      <TextField
+        label="Bank Name"
+        type="text"
+        value={bankName}
+        onChange={(e) => setBankName(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </Grid>
+    <Grid item xs={4}>
+      <TextField
+        label="Cheque Number"
+        type="number"
+        value={cheqNo}
+        onChange={(e) => setCheqNo(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+    </Grid>
+    <Grid item xs={3} mt={3.5}>
+      <DatePicker
+        selected={formData.AmountGiven}
+        onChange={handleDateChange}
+        dateFormat="yyyy-MM-dd"
+        customInput={<TextField label="Date" fullWidth />}
+      />
+    </Grid>
+    <Grid item xs={4}>
+      <TextField
+        select
+        label="Select Payment Type"
+        value={selectedPaymentType}
+        onChange={handleChangePayment}
+        fullWidth
+        margin="normal"
+      >
+        {paymentTypes.map((option) => (
+          <MenuItem
+            key={option.paymenttypeID}
+            value={option.paymenttypeName}
+          >
+            {option.paymenttypeName}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Grid>
+  </>
+)}
+
             {selectedPaymentType === "Partial payment" && (
               <>
                 <Grid item xs={12}>
@@ -761,22 +809,27 @@ const Listprojectbookng = ({ onChequeReceiptClick,  item, handleTemplateClick })
                       />
                     </Grid>
                     <Grid item xs={3} mt={3}>
-                <FormControl fullWidth>
-                  <InputLabel>Amount Type</InputLabel>
-                  <Select
-                    value={remark.AmountTypeID || ''}
-                    onChange={(e) => handleChange(e, index, "AmountTypeID")}
-                    label="Amount Type"
-                  >
-                    {amountTypes.map((type) => (
-                      <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
-                        {type.AmountTypeName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-  
+                      <FormControl fullWidth>
+                        <InputLabel>Amount Type</InputLabel>
+                        <Select
+                          value={remark.AmountTypeID || ""}
+                          onChange={(e) =>
+                            handleChange(e, index, "AmountTypeID")
+                          }
+                          label="Amount Type"
+                        >
+                          {amountTypes.map((type) => (
+                            <MenuItem
+                              key={type.AmountTypeID}
+                              value={type.AmountTypeID}
+                            >
+                              {type.AmountTypeName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
                     <Grid item xs={3} mt={3}>
                       <DatePicker
                         selected={remark.RemarkDate}

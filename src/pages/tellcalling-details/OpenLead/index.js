@@ -121,17 +121,18 @@ const OpenLead = () => {
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
   const [cookies] = useCookies(['amr']);
 
-  const userid = cookies.amr?.UserID || 'Role';
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    
+  const userid = cookies.amr?.UserID || 'Role';
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-openlead.php?UserID=${userid}`);
+      const response = await axios.get(` https://apiforcorners.cubisysit.com/api/api-fetch-openlead.php?UserID=${userid}`);
       setRows(response.data.data || []);
     } catch (error) {
       setError(error);
@@ -187,7 +188,7 @@ const OpenLead = () => {
 
   const renderContent = () => {
     if (loading) return <CircularProgress />;
-    if (error) return <Typography>Error loading data</Typography>;
+    // if (error) return <Typography>Error loading data</Typography>;
 
     switch (view) {
       case 'dashboard':

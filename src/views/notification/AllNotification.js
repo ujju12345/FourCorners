@@ -28,6 +28,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import { useTheme } from '@mui/material/styles';
+import  Grid  from '@mui/material/Grid';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 
 const AllNotifications = ({ onEdit }) => {
   const [rows, setRows] = useState([]);
@@ -182,50 +185,66 @@ const AllNotifications = ({ onEdit }) => {
     setAnchorEl(null);
     setSelectedNotification(null);
   };
-
-  const DropdownMenu = () => (
-    <Menu
-      anchorEl={anchorEl}
-      open={Boolean(anchorEl)}
-      onClose={handleDropdownClose}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-    >
-      <MenuItem disableRipple>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <Typography sx={{ fontWeight: 600 }}>Data</Typography>
-        </Box>
-      </MenuItem>
-      {selectedNotification ? (
-        <MenuItem key={selectedNotification.NotificationID} onClick={handleDropdownClose}>
-          <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-            <Avatar alt='notification' src='/images/avatars/3.png' />
-            <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
+  const DropdownMenu = () => {
+    const details = selectedNotification?.Details;
+  
+    return (
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleDropdownClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuItem disableRipple>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <Typography sx={{ fontWeight: 600 }}>Data</Typography>
+          </Box>
+        </MenuItem>
+        {selectedNotification ? (
+          <MenuItem key={selectedNotification.NotificationID} onClick={handleDropdownClose}>
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               <Typography variant='subtitle1'>Table: {selectedNotification.TableName}</Typography>
               <Typography variant='body2'>Action: {selectedNotification.ActionType}</Typography>
               <Typography variant='body2'>Name: {selectedNotification.Name}</Typography>
-              {Array.isArray(selectedNotification.Details) ? (
-                selectedNotification.Details.map((detail, detailIndex) => (
-                  <Typography key={detailIndex} variant='body2'>{JSON.stringify(detail)}</Typography>
-                ))
+              {details ? (
+                <Box sx={{ mt: 2 }}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell><Typography variant='body2'><strong>Field</strong></Typography></TableCell>
+                        <TableCell><Typography variant='body2'><strong>Data</strong></Typography></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.keys(details).map((key, index) => (
+                        <TableRow key={index}>
+                          <TableCell><Typography variant='body2'>{key}</Typography></TableCell>
+                          <TableCell><Typography variant='body2'>{JSON.stringify(details[key])}</Typography></TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
               ) : (
-                <Typography variant='body2'>{JSON.stringify(selectedNotification.Details)}</Typography>
+                <Typography variant='body2'>No details available</Typography>
               )}
             </Box>
-          </Box>
+          </MenuItem>
+        ) : (
+          <MenuItem>
+            <Typography variant='body2' sx={{ p: 2 }}>No details available</Typography>
+          </MenuItem>
+        )}
+        <MenuItem
+          disableRipple
+          sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
+        >
         </MenuItem>
-      ) : (
-        <MenuItem>
-          <Typography variant='body2' sx={{ p: 2 }}>No details available</Typography>
-        </MenuItem>
-      )}
-      <MenuItem
-        disableRipple
-        sx={{ py: 3.5, borderBottom: 0, borderTop: theme => `1px solid ${theme.palette.divider}` }}
-      >
-      </MenuItem>
-    </Menu>
-  );
+      </Menu>
+    );
+  };
+  
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -238,6 +257,24 @@ const AllNotifications = ({ onEdit }) => {
   return (
     <Card>
       <TableContainer>
+      <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Typography
+                variant="body2"
+                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+              >
+                Recent Activity
+              </Typography>
+              {/* <Button
+          variant="contained"
+          onClick={onDashboardClick}
+          style={{ marginTop: 0 }}
+        >
+          Dashboard
+        </Button> */}
+            </Box>
+           
+          </Grid>
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
@@ -262,9 +299,12 @@ const AllNotifications = ({ onEdit }) => {
                       <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={(event) => handleDropdownOpen(event, row)} aria-label="notifications">
-                      <NotificationsOutlinedIcon />
+                      <MoreVertIcon />
                     </IconButton>
                     {/* Dropdown Menu integrated here */}
+
+
+                 
                     {anchorEl && <DropdownMenu />}
                   </TableCell>
                 </TableRow>

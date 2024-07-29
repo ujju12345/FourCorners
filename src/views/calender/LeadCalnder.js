@@ -31,7 +31,7 @@ const LeadCalnder = () => {
             let backgroundColor = "#f0f0f0"; // Default color
 
             if (startDate < today) {
-              backgroundColor = "#FF6347"; // Red for past dates
+              backgroundColor = "#FF6347"; 
             } else if (startDate > today) {
               backgroundColor = "#32CD32"; // Green for future dates
             } else {
