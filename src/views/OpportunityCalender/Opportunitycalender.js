@@ -3,6 +3,8 @@ import enLocale from "@fullcalendar/core/locales/en-gb";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
+import { useCookies } from "react-cookie";
+
 import {
   Avatar,
   Typography,
@@ -16,12 +18,13 @@ const Opportunitycalender = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [dateAppointments, setDateAppointments] = useState([]);
   const [modalDetails, setModalDetails] = useState(null);
-
+  const [cookies, setCookie] = useCookies(["amr"]);
   useEffect(() => {
     async function fetchAppointments() {
+      const userid = cookies.amr?.UserID || 'Role';
       try {
         const response = await fetch(
-          "https://apiforcorners.cubisysit.com/api/api-fetch-opportunityfollowup.php"
+          `https://apiforcorners.cubisysit.com/api/api-fetch-opportunityfollowup.php?UserID=${userid}`
         );
         const result = await response.json();
         if (result.code === 200) {

@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import enLocale from "@fullcalendar/core/locales/en-gb";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useCookies } from "react-cookie";
+
 import FullCalendar from "@fullcalendar/react";
 import {
   Avatar,
@@ -16,12 +18,13 @@ const LeadCalnder = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [dateAppointments, setDateAppointments] = useState([]);
   const [modalDetails, setModalDetails] = useState(null);
-
+  const [cookies, setCookie] = useCookies(["amr"]);
   useEffect(() => {
     async function fetchAppointments() {
+      const userid = cookies.amr?.UserID || 'Role';
       try {
         const response = await fetch(
-          "https://apiforcorners.cubisysit.com/api/api-fetch-telecalender.php"
+          `https://apiforcorners.cubisysit.com/api/api-fetch-telecalender.php?UserID=${userid}`
         );
         const result = await response.json();
         if (result.code === 200) {
@@ -31,7 +34,7 @@ const LeadCalnder = () => {
             let backgroundColor = "#f0f0f0"; // Default color
 
             if (startDate < today) {
-              backgroundColor = "#FF6347"; 
+              backgroundColor = "#FF6347"; // Red for past dates
             } else if (startDate > today) {
               backgroundColor = "#32CD32"; // Green for future dates
             } else {
