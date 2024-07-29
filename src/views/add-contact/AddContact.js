@@ -18,6 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from 'sweetalert2';
+
 import {
   Snackbar,
   FormControlLabel,
@@ -84,7 +85,9 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const [loading, setLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
+  const userid = cookies.amr?.UserID || 'Role';
   useEffect(() => {
     fetchData();
     fetchDataBhk();
@@ -141,7 +144,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const fetchDataCustomerType = async () => {
     try {
       const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php"
+        `https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php?UserID=${{userid}}`
       );
       if (response.data.status === "Success") {
         setCustomerType(response.data.data);
@@ -481,8 +484,8 @@ const handleSubmit = async (event) => {
   
     // Prepare API URL based on editData flag
     const url = editData
-      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-contacts.php"
-      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-contacts.php";
+      ? "https://apiforcorners.cubisysit.com/api/api-update-contacts.php"
+      : "https://apiforcorners.cubisysit.com/api/api-insert-contacts.php";
   
 
 
@@ -514,8 +517,6 @@ const handleSubmit = async (event) => {
           title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
-        }).then(() => {
-          window.location.reload();
         });
 
       } else {
