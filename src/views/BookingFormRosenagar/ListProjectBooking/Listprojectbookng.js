@@ -73,7 +73,7 @@ const Listprojectbookng = ({
   const [cheqNo, setCheqNo] = useState("");
   const [bookingRemarks, setBookingRemarks] = useState([]);
   const [amountTypes, setAmountTypes] = useState([]);
-
+  const [mergedData, setMergedData] = useState({ proccess_null: [], proccess_one: [] });
   const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
   const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -347,17 +347,20 @@ const Listprojectbookng = ({
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php",
         {
-          BookingID: 61,
+          BookingID: 108,
           fromdate: formData.fromdate?.toISOString().split("T")[0],
           todate: formData.todate?.toISOString().split("T")[0],
         }
       );
-      setPaymentData(response.data.data);
+      const paymentData = response.data.data;
+      setMergedData({
+        proccess_null: paymentData.payment.cash.filter(payment => payment.PLoan === 0),
+        proccess_one: paymentData.payment.cash.filter(payment => payment.PLoan === 1),
+      });
     } catch (error) {
       console.error("Error fetching payment data", error);
     }
   };
-
   const handleSubmit = async () => {
     // Prepare the data for the API request
     const payload = {
@@ -433,6 +436,47 @@ const Listprojectbookng = ({
     }
   };
 
+  useEffect(() => {
+    if (!paymentData) return;
+    
+    const bookingInfo = paymentData.booking && paymentData.booking[0];
+  
+    if (!bookingInfo || !paymentData.bookingremark || !paymentData.payment) return;
+  
+    const processNull = paymentData.bookingremark
+      .filter(remark => remark.Proccess === null)
+      .map(remark => {
+        const cash = paymentData.payment.cash.find(cash => cash.BookingremarkID === remark.BookingremarkID);
+        const cheque = paymentData.payment.cheque.find(cheque => cheque.BookingremarkID === remark.BookingremarkID);
+  
+        return {
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          Cash: cash ? cash.Cash : 0,
+          ChequeAmount: cheque ? cheque.ChequeAmount : 0
+        };
+      });
+  
+    const processOne = paymentData.bookingremark
+      .filter(remark => remark.Proccess === 'one')
+      .map(remark => {
+        const cash = paymentData.payment.cash.find(cash => cash.BookingremarkID === remark.BookingremarkID);
+        const cheque = paymentData.payment.cheque.find(cheque => cheque.BookingremarkID === remark.BookingremarkID);
+  
+        return {
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          Cash: cash ? cash.Cash : 0,
+          ChequeAmount: cheque ? cheque.ChequeAmount : 0
+        };
+      });
+  
+    setMergedData({ proccess_null: processNull, proccess_one: processOne });
+  }, [paymentData]);
+  
+  
+  
+  
   return (
     <>
       <Grid
@@ -898,148 +942,148 @@ const Listprojectbookng = ({
       </Modal>
 
       <Modal open={open} onClose={handleClose}>
-        <Card
-          style={{
-            maxWidth: "800px",
-            margin: "auto",
-            marginTop: "50px",
-            padding: "20px",
-          }}
-        >
-          <CardContent>
-            <Typography variant="h5" gutterBottom align="center">
-              Payment Details
-            </Typography>
-            <Grid container spacing={4} mb={3}>
-              <Grid item xs={12} sm={6} md={4}>
-                <DatePicker
-                  selected={formData.fromdate}
-                  onChange={(date) => handleDateChangePayment(date, "fromdate")}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label="From When"
-                      InputProps={{
-                        readOnly: true,
-                        sx: { width: "100%" },
-                      }}
-                    />
-                  }
-                />
-              </Grid>
+      <Card
+        style={{
+          maxWidth: "800px",
+          margin: "auto",
+          marginTop: "50px",
+          padding: "20px",
+        }}
+      >
+        <CardContent>
+          <Typography variant="h5" gutterBottom align="center">
+            Payment Details
+          </Typography>
+          <Grid container spacing={4} mb={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <DatePicker
+                selected={formData.fromdate}
+                onChange={(date) => handleDateChangePayment(date, "fromdate")}
+                dateFormat="dd-MM-yyyy"
+                className="form-control"
+                customInput={
+                  <TextField
+                    fullWidth
+                    label="From When"
+                    InputProps={{
+                      readOnly: true,
+                      sx: { width: "100%" },
+                    }}
+                  />
+                }
+              />
+            </Grid>
 
-              <Grid item xs={12} sm={6} md={4}>
-                <DatePicker
-                  selected={formData.todate}
-                  onChange={(date) => handleDateChangePayment(date, "todate")}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label="Till When"
-                      InputProps={{
-                        readOnly: true,
-                        sx: { width: "100%" },
-                      }}
-                    />
-                  }
-                />
-              </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <DatePicker
+                selected={formData.todate}
+                onChange={(date) => handleDateChangePayment(date, "todate")}
+                dateFormat="dd-MM-yyyy"
+                className="form-control"
+                customInput={
+                  <TextField
+                    fullWidth
+                    label="Till When"
+                    InputProps={{
+                      readOnly: true,
+                      sx: { width: "100%" },
+                    }}
+                  />
+                }
+              />
+            </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={4}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={4}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Button
+                variant="contained"
+                onClick={handleDateSearch}
+                style={{ width: "100%" }}
               >
-                <Button
-                  variant="contained"
-                  onClick={handleDateSearch}
-                  style={{ width: "100%" }}
-                >
-                  Search
-                </Button>
-              </Grid>
+                Search
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Upcoming Payments</Typography>
+              <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Customer Name</TableCell>
+                      <TableCell>Flat Number</TableCell>
+                      <TableCell>Cash (A)</TableCell>
+                      <TableCell>Cheque (B)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {mergedData.proccess_null.length > 0 ? (
+                      mergedData.proccess_null.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.Name}</TableCell>
+                          <TableCell>{item.FlatNo}</TableCell>
+                          <TableCell>{item.Cash}</TableCell>
+                          <TableCell>{item.ChequeAmount}</TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} align="center">
+                          No Upcoming Payments
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h6">Upcoming Payments</Typography>
-                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Remark Amount</TableCell>
-                        <TableCell>Remark Name</TableCell>
-                        <TableCell>Remark Date</TableCell>
-                        <TableCell>Loan</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {paymentData.proccess_null.length > 0 ? (
-                        paymentData.proccess_null.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item.Remarkamount}</TableCell>
-                            <TableCell>{item.RemarkName}</TableCell>
-                            <TableCell>{item.RemarkDate}</TableCell>
-                            <TableCell>{item.Loan ? "Yes" : "No"}</TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} align="center">
-                            No Upcoming Payments
-                          </TableCell>
+            <Grid item xs={12}>
+              <Typography variant="h6">Received Payments</Typography>
+              <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Customer Name</TableCell>
+                      <TableCell>Flat Number</TableCell>
+                      <TableCell>Cash (A)</TableCell>
+                      <TableCell>Cheque (B)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {mergedData.proccess_one.length > 0 ? (
+                      mergedData.proccess_one.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.Name}</TableCell>
+                          <TableCell>{item.FlatNo}</TableCell>
+                          <TableCell>{item.Cash}</TableCell>
+                          <TableCell>{item.ChequeAmount}</TableCell>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="h6">Received Payments</Typography>
-                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
-                    <TableHead>
+                      ))
+                    ) : (
                       <TableRow>
-                        <TableCell>Remark Amount</TableCell>
-                        <TableCell>Remark Name</TableCell>
-                        <TableCell>Remark Date</TableCell>
-                        <TableCell>Loan</TableCell>
+                        <TableCell colSpan={4} align="center">
+                          No Received Payments
+                        </TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {paymentData.proccess_one.length > 0 ? (
-                        paymentData.proccess_one.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item.Remarkamount}</TableCell>
-                            <TableCell>{item.RemarkName}</TableCell>
-                            <TableCell>{item.RemarkDate}</TableCell>
-                            <TableCell>{item.Loan ? "Yes" : "No"}</TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} align="center">
-                            No Received Payments
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
-          </CardContent>
-        </Card>
-      </Modal>
+          </Grid>
+        </CardContent>
+      </Card>
+    </Modal>
     </>
   );
 };

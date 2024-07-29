@@ -208,7 +208,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Type of Booking</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingType}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingTypeName}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>GST* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Gst}</StyledTableCell>
 </TableRow>

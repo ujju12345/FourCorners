@@ -42,14 +42,15 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   console.log(editData, "Edit data aaya");
   const initialRemark = {
     RemarkName: "",
-    RemarkDate: new Date(),
-    AmountTypeID:"",
+    RemarkDate: null, // or new Date() if you want a default date
+    AmountTypeID: "",
     Remarkamount: "",
     Loan: 0,
   };
+  
   const dateStr = "2023-07-19";
   const initialFormData = {
-    BookingDate: moment(dateStr, "YYYY-MM-DD").toDate(),
+    BookingDate: null,
     BookedByID: "",
     Mobile: "",
     Name: "",
@@ -67,13 +68,14 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Gst: "",
     StampDuty: "",
     Registration: "",
+    Ratesqft:"",
     UnittypeID: "",
     Advocate: "",
     ExtraCost: "",
     TotalCost: "",
     UsableArea: "",
     AgreementCarpet: "",
-    Area: "",
+    Area:"",
     ProjectID: "",
     WingID: "",
     FlatNo: "",
@@ -438,6 +440,10 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
             console.log("Flat No Data:", response.data.data); // Log the fetched data
             const areaData = response.data.data[0].Area;
             setAreainbuiltup(areaData); // Set the Area value
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              Area: areaData,
+            })); // Update formData with Area value
           }
         })
         .catch((error) => {
@@ -451,6 +457,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     formData.FlatNo,
     formData.UnittypeID,
   ]); // Use separate dependencies
+  
 
   useEffect(() => {
     const fetchUnitTypeData = async () => {
@@ -499,55 +506,48 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
-
+  
     const formattedRemarks = remarks.map((remark, index) => ({
       ...remark,
-      RemarkDate: remark.RemarkDate
-        ? remark.RemarkDate
-        : null,
+      RemarkDate: remark.RemarkDate ? remark.RemarkDate.toISOString().split("T")[0] : null,
       RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
-
       Status: 1, // default or calculated value
       CreateUID: 1, // default or fetched value
     }));
-    console.log(formattedRemarks, "format dekh<<<<<<<>>>>>>");
-
+    console.log(formattedRemarks, "Formatted Remarks");
+  
     const dataToSend = editData
       ? {
           ...formData,
           ModifyUID: cookies.amr?.UserID || 1,
-          remarks: remarks.map(({ RemarkName, RemarkDate, Status }) => ({
-            RemarkName,
-            RemarkDate: RemarkDate.toISOString().split("T")[0],
-            Status,
-          })),
+          remarks: formattedRemarks,
         }
       : {
           ...formData,
           Remarks: formattedRemarks,
         };
-
-    console.log(dataToSend, "FORM ROSE NAGAR<<<<<<<>>>>>>");
-
+  
+    console.log(dataToSend, "Data to Send");
+  
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.data.status === "Success") {
-        console.log("hogaya submut");
+        console.log("Submission successful");
         const { BookingID } = response.data;
         onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
         // show(false);
-
+  
         // Optionally show success message
         // Swal.fire({
         //   icon: "success",
@@ -555,7 +555,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         //   showConfirmButton: false,
         //   timer: 1000,
         // });
-
+  
         // Navigate to the desired page with BookingID
         // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
       } else {
@@ -574,6 +574,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       });
     }
   };
+  
+  
 
 
   const handleAlertClose = (event, reason) => {
@@ -593,7 +595,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     updatedRemarks[index] = { ...updatedRemarks[index], RemarkDate: date };
     setRemarks(updatedRemarks);
   };
-
+  
 
 
   return (
@@ -804,23 +806,23 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Area in Builtup"
-                  name="Area"
-                  placeholder="Area in Builtup"
-                  value={areainbuiltup}
-                  onChange={handleChange}
-                />
-              </Grid>
+  <TextField
+    fullWidth
+    label="Area in Builtup"
+    name="Area"
+    placeholder="Area in Builtup"
+    value={formData.Area}
+    onChange={handleChange}
+  />
+</Grid>
 
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label="Rate per Sqft"
-                  name="area"
+                  name="Ratesqft"
                   placeholder="Rate per Sqft"
-                  value={formData.area}
+                  value={formData.Ratesqft}
                   onChange={handleChange}
                 />
               </Grid>
