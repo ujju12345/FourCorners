@@ -351,6 +351,12 @@ const OpenLeadSidebar = ({ onItemClick, onCreate , onDashboardClick }) => {
                   >
                Assign By:  {item.AttendedByName}
                   </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+               Source:  {item.SourceName}
+                  </Typography>
                 </>}
               />
                    <Box

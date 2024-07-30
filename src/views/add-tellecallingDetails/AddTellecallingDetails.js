@@ -13,6 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import {Checkbox ,FormGroup } from '@mui/material';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -297,13 +298,11 @@ const [cNames, setCNames] = useState([]);
   // }, [item]);
 
   const handleNotificationChange = (event) => {
-    const value = event.target.value === "sms" ? 1 : 0;
-    setFormData({
-      ...formData,
-      SmsNotification: value,
-      EmailNotification: value === 1 ? 0 : 1,
-    });
-  };
+    const { name, checked } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: checked ? 1 : 0,
+    }))};
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -473,7 +472,7 @@ const [cNames, setCNames] = useState([]);
         }
       : {
           ...formData,
-          CreateUID: cookies.amr?.UserID || 1 // Fallback to 1 if UserID is not found in cookies
+          CreateUID: cookies.amr?.UserID || 1 
         };
     
     console.log(dataToSend, "ALL the data of telecalling");
@@ -1024,31 +1023,35 @@ const [cNames, setCNames] = useState([]);
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    Notification Preferences
-                  </FormLabel>
-                  <RadioGroup
-                    aria-label="notification"
-                    name="notification"
-                    value={
-                      formData.SmsNotification === 1 ? "sms" : "notification"
-                    }
-                    onChange={handleNotificationChange}
-                  >
-                    <FormControlLabel
-                      value="sms"
-                      control={<Radio />}
-                      label="Send on SMS"
-                    />
-                    <FormControlLabel
-                      value="notification"
-                      control={<Radio />}
-                      label="Send on Notification"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Notification Preferences</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.SmsNotification === 1}
+                onChange={handleNotificationChange}
+                name="SmsNotification"
+                value="sms"
+              />
+            }
+            label="Send on SMS"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.Notification === 1}
+                onChange={handleNotificationChange}
+                name="Notification"
+                value="notification"
+              />
+            }
+            label="Send on Notification"
+          />
+        </FormGroup>
+      </FormControl>
+    </Grid>
+
 
               <Grid item xs={12}>
                 <Button

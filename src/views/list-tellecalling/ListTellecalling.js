@@ -104,10 +104,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleClick = (event) => {
-    setAnchorElOpportunity(event.currentTarget);
-    fetchUserMasterData();
-  };
+
 
   const handleHistoryClick = () => {
     if (onHistoryClick) {
@@ -218,7 +215,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
       });
     }
   };
-
+  const handleClick = (event) => {
+    setAnchorElOpportunity(event.currentTarget);
+    fetchUserMasterData();
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 

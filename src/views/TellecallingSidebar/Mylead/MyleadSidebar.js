@@ -353,7 +353,13 @@ const MyleadSidebar = ({ onItemClick, onCreate , onDashboardClick}) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Assign By: {item.Name}
+                   Assign By: {item.AttendedByName}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                    Source: {item.SourceName}
                   </Typography>
                 </>}
               />

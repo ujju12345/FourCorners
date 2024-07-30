@@ -9,6 +9,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import HistoryIcon from "@mui/icons-material/History";
+
 import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
@@ -47,9 +48,13 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [formData, setFormData] = useState(intialName);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  
+ 
   const [bhkOptions, setBhkOptions] = useState([]);
   const [currentUpdate, setCurrentUpdate] = useState([]);
   const [setRowDataToUpdate] = useState(null);
+  const [anchorElOpportunity, setAnchorElOpportunity] = useState(null);
+  const [userMaster, setUserMaster] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -84,9 +89,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     handleDropdownClose();
     setOpen(true);
   };
-
+ 
   const handleClose = () => {
     setOpen(false);
+    setAnchorElOpportunity(null);
   };
 
   const handleChange = (e) => {
@@ -193,7 +199,93 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     const values = json.map((obj) => Object.values(obj).join(",")).join("\n");
     return `${header}\n${values}`;
   };
+  const fetchUserMasterData = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-usersales.php"
+      );
+      if (response.data.status === "Success") {
+        setUserMaster(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  const handleMenuItemClick = async (event, userID) => {
+    event.preventDefault();
+
+    // Ensure item and Tid are available
+    if (!item || !item.Tid) {
+      console.error("No valid item or Tid found.");
+      return;
+    }
+
+    // Add Tid to formData
+    const formData = {
+      UserID:userID,
+      Cid:item?.Cid,
+      Tid: item.Tid,
+      Status:1,
+      CreateUID: cookies?.amr?.UserID || 1,
+
+    };
+
+    console.log(formData, "COVERT TO OPPORTUNITY Data 1");
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convtoppo.php";
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(formData, "COVERT TO OPPORTUNITY Data 2");
+
+      if (response.data.status === "Success") {
+        // setFormData(intialName);
+        setOpen(false);
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        // Show success message using SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: 
+             "Lead Converted to opportunity Successfully",
+            
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        // Show error message using SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
+      });
+    }
+  };
+  const handleClick = (event) => {
+    setAnchorElOpportunity(event.currentTarget);
+    fetchUserMasterData();
+  };
   const downloadCSV = () => {
     const csvData = [
       {
@@ -283,7 +375,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Button
             variant="contained"
             startIcon={<ArrowForwardIosIcon />}
-            onClick={handlenavigate}
+            onClick={handleClick}
             sx={{
               color: "#333333",
               backgroundColor: "#f0f0f0",
@@ -297,6 +389,30 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Opportunity
           </Button>
+          <Menu
+            anchorEl={anchorElOpportunity}
+            open={Boolean(anchorElOpportunity)}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                maxHeight: 300, // Set the desired height in pixels
+                overflowY: "auto", // Make the content scrollable if it exceeds the height
+              },
+            }}
+          >
+            <MenuItem disabled>
+              <Typography variant="subtitle1">Convert Lead to</Typography>
+            </MenuItem>
+            {userMaster.length > 0 ? (
+              userMaster.map((user, index) => (
+                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+                {index + 1}. {user.Name}
+              </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Menu>
         </Grid>
         <Grid item>
           <Button
