@@ -287,7 +287,9 @@ const [bookingID, setBookingID] = useState(null);
     setShowReceipt(false); // Ensure Receipt is not visible
   };
 
-  const handleChequeReciept = () => {
+  const handleChequeReciept = (bookingId) => {
+    console.log("Setting BookingID:", bookingId);
+    setBookingID(bookingId);
     setShowReceipt(true);
     setShowAddDetails(false);
     setShowHistory(false);
@@ -296,77 +298,78 @@ const [bookingID, setBookingID] = useState(null);
     setShowTemplate(false);
   };
 
+
   return (
-    <Grid container spacing={6}>
-    <Grid item xs={4}>
-      <SidebarBookingProject
-        rows={rows}
-        onItemClick={handleShow}
-        onEdit={handleEdit}
-        onCreate={handleAddTelecaller}
-        onDashboardClick={handleNavigation}
-        // Assuming you have this function in SidebarBookingProject
-      />
-    </Grid>
-    <Grid item xs={8}>
-      {loading && <CircularProgress />}
-      {showDashboard && !loading && !error && <WelcomeScreen />}
-      {!showDashboard && firstVisit && !loading && !error && !leadData && (
-        <WelcomeScreen />
-      )}
-      {leadData && (
-        <Box>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Converted Lead Details
-          </Typography>
-          <pre>{JSON.stringify(leadData, null, 2)}</pre>
-        </Box>
-      )}
-      {showAddDetails && !showDashboard && (
-        <AddTellecallingDetails show={handleBack} editData={editData} />
-      )}
-      {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
-        <Listprojectbookng
-          item={rowDataToUpdate}
-          onDelete={handleDelete}
-          onHistoryClick={handleShowHistory}
-          onEdit={handleEdit}
-          handleTemplateClick={handleFormSubmitSuccess}
-          onChequeReceiptClick={handleChequeReciept}
-        />
-      )}
-      {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleGoBackFromTemplate} />}
-      {!loading && !error && showReceipt && (
-        <Reciept />
-      )}
-      {!loading && !error && showHistory && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh"
-        >
-          <Typography variant="body1">
-            <HistoryTelecalling />
-          </Typography>
-        </Box>
-      )}
-      {!loading && error && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh"
-        >
-          <Typography variant="body1">
-            Error occurred: {error.message}
-          </Typography>
-        </Box>
-      )}
-    </Grid>
+<Grid container spacing={6}>
+  <Grid item xs={4}>
+    <SidebarBookingProject
+      rows={rows}
+      onItemClick={handleShow}
+      onEdit={handleEdit}
+      onCreate={handleAddTelecaller}
+      onDashboardClick={handleNavigation}
+    />
   </Grid>
+  <Grid item xs={8}>
+    {loading && <CircularProgress />}
+    {showDashboard && !loading && !error && <WelcomeScreen />}
+    {!showDashboard && firstVisit && !loading && !error && !leadData && (
+      <WelcomeScreen />
+    )}
+    {leadData && (
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Converted Lead Details
+        </Typography>
+        <pre>{JSON.stringify(leadData, null, 2)}</pre>
+      </Box>
+    )}
+    {showAddDetails && !showDashboard && (
+      <AddTellecallingDetails show={handleBack} editData={editData} />
+    )}
+    {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
+      <Listprojectbookng
+        item={rowDataToUpdate}
+        onDelete={handleDelete}
+        onHistoryClick={handleShowHistory}
+        onEdit={handleEdit}
+        handleTemplateClick={handleFormSubmitSuccess}
+        onChequeReceiptClick={handleChequeReciept}
+      />
+    )}
+    {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleGoBackFromTemplate} />}
+    {showReceipt && <Reciept bookingID={bookingID} />}
+
+
+    {!loading && !error && showHistory && (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <Typography variant="body1">
+          <HistoryTelecalling />
+        </Typography>
+      </Box>
+    )}
+    {!loading && error && (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <Typography variant="body1">
+          Error occurred: {error.message}
+        </Typography>
+      </Box>
+    )}
+  </Grid>
+</Grid>
+
   );
   
 };

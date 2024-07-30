@@ -49,7 +49,7 @@ const InvoiceBox = styled(Box)({
 });
 
 const Reciept = ({ bookingID }) => {
-  console.log(bookingID , 'id bookinggg<<>>>> ayaa');
+  console.log(bookingID, "booking id aaya");
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -65,17 +65,14 @@ const Reciept = ({ bookingID }) => {
     window.location.reload(); // Reload the page to reset the original contents
   };
 
-
   useEffect(() => {
-    if (bookingID) {
-      fetchData(bookingID);
-    }
+    fetchData();
   }, [bookingID]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=108`
       );
       console.log("data aaya dekh", response.data);
       setData(response.data.data[0]);
@@ -86,7 +83,6 @@ const Reciept = ({ bookingID }) => {
       setLoading(false);
     }
   };
-
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -202,13 +198,13 @@ const Reciept = ({ bookingID }) => {
                               style={{ width: "20%", padding: 0 }}
                               colSpan={10}
                             >
-                              <Typography>Date:</Typography>
+                              <Typography>Date</Typography>
                             </StyledTableCell>
                             <StyledTableCell
                               style={{ width: "30%", padding: 0 }}
                               colSpan={10}
                             >
-                              <Typography>{data.BookingDate}</Typography>
+                              <Typography>{data}</Typography>
                             </StyledTableCell>
                           </TableRow>
                         </TableBody>
@@ -237,7 +233,7 @@ const Reciept = ({ bookingID }) => {
           <div
             style={{ marginLeft: 20, alignItems: "center", display: "flex" }}
           >
-            <Typography style={{ fontSize: 26 }}>Mr {data.Name}</Typography>
+            <Typography style={{ fontSize: 26 }}>{data.Name}</Typography>
           </div>
         </div>
 
@@ -252,41 +248,19 @@ const Reciept = ({ bookingID }) => {
         >
           <div style={{ width: "20%" }}>
             <Typography>Part</Typography>
-            <Typography style={{ fontWeight: "bold" }}>TYPE : 1BHK</Typography>
+            <Typography style={{ fontWeight: "bold" }}>
+              TYPE : {data.BookingType}
+            </Typography>
           </div>
           <div
             style={{ marginLeft: 20, alignItems: "center", display: "flex" }}
           >
             <Typography style={{ fontSize: 17 }}>
-              Payment Against Flat No. {data.FlatNo} On {data.FloorNo} Floor Of the Building Known as
-              "THE HEAVEN'S PALACE"
+              Payment Against Flat No. {data.FlatNo} On {data.FloorNo}th Floor Of the Building Known as
+              "THE HEAVEN'S PALACE", Building No.01
             </Typography>
           </div>
         </div>
-        {/* <div
-          style={{
-            width: "100%",
-            borderWidth: 1,
-            borderStyle: "solid",
-            paddingLeft: 10,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ alignItems: "center", width: "35%", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>
-              Payment Against Flat No. 907
-            </Typography>
-          </div>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>On 9th Floor</Typography>
-          </div>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>
-              Of the Building Known as "THE HEAVEN'S PALACE", Building No.01
-            </Typography>
-          </div>
-        </div> */}
 
         <TableContainer component={Paper}>
           <Table style={{ border: "1px solid black" }}>
@@ -319,204 +293,127 @@ const Reciept = ({ bookingID }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
+                  style={{ width: "25%", padding: 0 }}
                   colSpan={10}
                 >
-                 {data.ChequeDate}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                  {data.BankName}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                {data.ChequeNumber}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                 {data.ChequeAmount}
-                </StyledTableCell>
-              </TableRow>
-        
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TableContainer component={Paper}>
-          <Table style={{ border: "1px solid black" }}>
-            <TableBody>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell
-                  style={{ width: "75%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography style={{ textAlign: "left", marginLeft: 10 }}>
-                    Total
-                  </Typography>
+                  <Typography>{data.Date.split(" ")[0]}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{ width: "25%", padding: 0 }}
                   colSpan={10}
                 >
-                  <Typography></Typography>
+                  <Typography>{data.Bank}</Typography>
                 </StyledTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <TableContainer component={Paper}>
-          <Table className="info-border">
-            <TableBody>
-              <TableRow style={{ border: "1px solid black", padding: 0 }}>
                 <StyledTableCell
-                  style={{
-                    textAlign: "left",
-                    padding: 0,
-                    paddingLeft: 10,
-                    fontSize: 22,
-                  }}
+                  style={{ width: "25%", padding: 0 }}
                   colSpan={10}
                 >
-                  In Words :{data.FlatCostInWords}
+                  <Typography>{data.ChequeNo}</Typography>
+                </StyledTableCell>
+                <StyledTableCell
+                  style={{ width: "25%", padding: 0 }}
+                  colSpan={10}
+                >
+                  <Typography>{data.Amount}</Typography>
                 </StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
 
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              paddingTop: 10,
-              width: "50%",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <StyledTableCell
-              style={{
-                marginTop: 10,
-                textAlign: "center",
-                color: "#000",
-                fontSize: 25,
-                fontWeight: 500,
-                padding: 0,
-                width: "100%",
-                paddingTop: 5,
-                paddingBottom: 5,
-                marginBottom: 10,
-              }}
-              colSpan={10}
-            >
-              ₹ 1,00,000/-
-            </StyledTableCell>
-            <StyledTableCell
-              style={{
-                textAlign: "center",
-                color: "#000",
-                fontSize: 16,
-                fontWeight: 500,
-                padding: 0,
-                width: "100%",
-                marginBottom: 10,
-                paddingTop: 5,
-                paddingBottom: 5,
-              }}
-              colSpan={10}
-            >
-              T&C: Subject to Realisation of Cheque*
-            </StyledTableCell>
-          </div>
-          <div
-            style={{
-              marginLeft: 10,
-              minWidth: "25%",
-            }}
-          >
-            <StyledTableCell
-              style={{
-                marginTop: 10,
-                textAlign: "center",
-                color: "#000",
-                fontSize: 25,
-                fontWeight: 500,
-                padding: 0,
-                width: "25%",
-                minWidth: "25%",
-                marginBottom: 10,
-              }}
-              colSpan={10}
-            >
-              <img
-                src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png"
-                alt="200 * 200"
-                width="80"
-                height="100%"
-              />
-            </StyledTableCell>
-          </div>
-          <div
-            style={{
-              marginLeft: 10,
-              minWidth: "25%",
-            }}
-          >
-            <StyledTableCell
-              style={{
-                marginTop: 10,
-                textAlign: "center",
-                color: "#000",
-                fontSize: 25,
-                fontWeight: 500,
-                padding: 0,
-                width: "25%",
-                minWidth: "50%",
-                marginBottom: 10,
-              }}
-              colSpan={10}
-            >
-              <img
-                src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png"
-                alt="200 * 200"
-                width="80"
-                height="100%"
-              />
-            </StyledTableCell>
-          </div>
-        </div>
-
         <TableContainer component={Paper}>
-          <Table className="info-border">
+          <Table style={{ border: "1px solid black" }}>
             <TableBody>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{
-                    textAlign: "center",
-                    color: "#000",
-                    fontSize: 25,
-                    fontWeight: 500,
-                    padding: 0,
-                  }}
+                  style={{ width: "50%", padding: 0 }}
                   colSpan={10}
                 >
-                  Thank You
+                  <Typography>Amount In Words :</Typography>
+                </StyledTableCell>
+                <StyledTableCell
+                  style={{ width: "50%", padding: 0 }}
+                  colSpan={10}
+                >
+                  <Typography>{data.AmountInWords}</Typography>
                 </StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
+
+        <Grid container spacing={2}>
+          <Grid item xs={8}>
+            <div style={{ border: "1px solid black", padding: 20 }}>
+              <Typography style={{ fontWeight: "bold" }}>
+                Payment Schedule
+              </Typography>
+              <ul>
+                <li>Booking Amount - Rs. 100,000.00</li>
+                <li>
+                  20% within 20 days of Booking - Rs. 347,300.00
+                </li>
+                <li>
+                  5% on plinth completion - Rs. 88,175.00
+                </li>
+                <li>
+                  7% on stilt slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 1st slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 2nd slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 3rd slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 4th slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 5th slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 6th slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 7th slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  7% on 8th slab completion - Rs. 123,445.00
+                </li>
+                <li>
+                  3% on brickwork completion - Rs. 88,175.00
+                </li>
+                <li>
+                  3% on internal plaster - Rs. 88,175.00
+                </li>
+                <li>
+                  3% on external plaster - Rs. 88,175.00
+                </li>
+                <li>
+                  3% on painting - Rs. 88,175.00
+                </li>
+                <li>
+                  3% on possession - Rs. 88,175.00
+                </li>
+              </ul>
+            </div>
+          </Grid>
+          <Grid item xs={4}>
+            <div style={{ border: "1px solid black", padding: 20 }}>
+              <Typography style={{ fontWeight: "bold" }}>
+                For Office Use Only
+              </Typography>
+              <ul>
+                <li>Received by:</li>
+                <li>Date:</li>
+                <li>Signature:</li>
+              </ul>
+            </div>
+          </Grid>
+        </Grid>
       </InvoiceBox>
     </>
   );

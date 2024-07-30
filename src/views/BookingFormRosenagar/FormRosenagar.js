@@ -35,7 +35,7 @@ import { useCookies } from "react-cookie";
 import { toWords } from "number-to-words";
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
-
+import { format } from "date-fns";
 const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const router = useRouter();
 
@@ -47,8 +47,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Remarkamount: "",
     Loan: 0,
   };
-  
-  const dateStr = "2023-07-19";
+
   const initialFormData = {
     BookingDate: null,
     BookedByID: "",
@@ -68,14 +67,14 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Gst: "",
     StampDuty: "",
     Registration: "",
-    Ratesqft:"",
+    Ratesqft: "",
     UnittypeID: "",
     Advocate: "",
     ExtraCost: "",
     TotalCost: "",
     UsableArea: "",
     AgreementCarpet: "",
-    Area:"",
+    Area: "",
     ProjectID: "",
     WingID: "",
     FlatNo: "",
@@ -146,7 +145,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       "eighteen",
       "nineteen",
     ];
-  
+
     const convertTwoDigits = (n) => {
       if (n < 10) return singleDigits[n];
       if (n < 20) return tenToNineteen[n - 10];
@@ -155,37 +154,38 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         (n % 10 ? " " + singleDigits[n % 10] : "")
       );
     };
-  
+
     const convertThreeDigits = (n) => {
       return (
         (n >= 100 ? singleDigits[Math.floor(n / 100)] + " hundred " : "") +
         convertTwoDigits(n % 100)
       );
     };
-  
+
     if (num === 0) return "zero";
-  
+
     let result = "";
     let crore = Math.floor(num / 10000000);
     let lakh = Math.floor((num % 10000000) / 100000);
     let thousand = Math.floor((num % 100000) / 1000);
     let hundred = num % 1000;
-  
+
     if (crore > 0) result += convertTwoDigits(crore) + " crore ";
     if (lakh > 0) result += convertTwoDigits(lakh) + " lakh ";
     if (thousand > 0) result += convertTwoDigits(thousand) + " thousand ";
     if (hundred > 0) result += convertThreeDigits(hundred);
-  
+
     return result.trim();
   };
-  
+
   const handleChange = (event, index, field) => {
     const { type, checked, value } = event.target;
-  
+    const name = event.target.name;
+
     if (index !== undefined && field !== undefined) {
       // Handling changes in remarks array (dynamic fields)
       const newRemarks = [...remarks];
-  
+
       if (type === "checkbox") {
         // Set Loan to 1 if checked, 0 if unchecked
         newRemarks[index][field] = checked ? 1 : 0;
@@ -193,16 +193,15 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         // Update other fields
         newRemarks[index][field] = value;
       }
-  
+
       setRemarks(newRemarks);
     } else {
       // Handling changes in main form fields
-      const name = event.target.name;
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name]: undefined,
       }));
-  
+
       if (name === "Mobile" || name === "AlternateMobileNo") {
         const numericValue = value.replace(/\D/g, "");
         setFormData((prevFormData) => ({
@@ -212,20 +211,28 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       } else if (name === "TotalCost") {
         const numericValue = value.replace(/,/g, "");
         const formattedValue = formatNumber(numericValue);
-        const FlatCostInWords = numberToWordsIndian(parseInt(numericValue || 0));
-  
+        const FlatCostInWords = numberToWordsIndian(
+          parseInt(numericValue || 0)
+        );
+
         setFormData((prevFormData) => ({
           ...prevFormData,
           [name]: formattedValue,
-          FlatCostInWords: FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+          FlatCostInWords:
+            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
-      } else if (name === "area") {
-        // Calculate TtlAmount when area changes
-        const newArea = value;
+      } else if (name === "Area" || name === "Ratesqft") {
+        // Calculate TtlAmount when Area or Ratesqft changes
+        const newArea = name === "Area" ? value : formData.Area;
+        const newRatesqft = name === "Ratesqft" ? value : formData.Ratesqft;
+        const newTtlAmount =
+          (parseFloat(newArea) || 0) * (parseFloat(newRatesqft) || 0);
+
         setFormData((prevFormData) => ({
           ...prevFormData,
-          area: newArea,
-          TtlAmount: newArea * areainbuiltup,
+          Area: name === "Area" ? value : prevFormData.Area,
+          Ratesqft: name === "Ratesqft" ? value : prevFormData.Ratesqft,
+          TtlAmount: newTtlAmount.toFixed(2),
         }));
       } else {
         setFormData((prevFormData) => ({
@@ -233,9 +240,10 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           [name]: value,
         }));
       }
-  
+
       // Recalculate Gross Flat Cost when any relevant field changes
-      const { TtlAmount, Charges, ParkingFacility, Advocate, TotalCost } = formData;
+      const { TtlAmount, Charges, ParkingFacility, Advocate, TotalCost } =
+        formData;
       if (
         name === "TtlAmount" ||
         name === "Charges" ||
@@ -247,20 +255,18 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           (parseFloat(Charges) || 0) +
           (parseFloat(ParkingFacility) || 0) +
           (parseFloat(Advocate) || 0);
-  
+
         const FlatCostInWords = numberToWordsIndian(parseInt(newFlatCost || 0));
-  
+
         setFormData((prevFormData) => ({
           ...prevFormData,
           FlatCost: newFlatCost.toFixed(2),
-          FlatCostInWords: FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+          FlatCostInWords:
+            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       }
     }
   };
-  
-  
-  
 
   const formatNumber = (value) => {
     if (isNaN(value)) return value;
@@ -332,11 +338,13 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     // Fetch amount types from the API
     const fetchAmountTypes = async () => {
       try {
-        const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-dropdown-amountype.php');
+        const response = await axios.get(
+          "https://apiforcorners.cubisysit.com/api/api-dropdown-amountype.php"
+        );
         setAmountTypes(response.data.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching amount types:', error);
+        console.error("Error fetching amount types:", error);
         setLoading(false);
       }
     };
@@ -438,12 +446,14 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         .then((response) => {
           if (response.data.status === "Success") {
             console.log("Flat No Data:", response.data.data); // Log the fetched data
-            const areaData = response.data.data[0].Area;
-            setAreainbuiltup(areaData); // Set the Area value
+            const { Area, UsableArea, AgreementCarpet } = response.data.data[0];
+            setAreainbuiltup(Area); // Set the Area value
             setFormData((prevFormData) => ({
               ...prevFormData,
-              Area: areaData,
-            })); // Update formData with Area value
+              Area,
+              UsableArea,
+              AgreementCarpet,
+            })); // Update formData with Area, UsableArea, and AgreementCarpet values
           }
         })
         .catch((error) => {
@@ -457,7 +467,6 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     formData.FlatNo,
     formData.UnittypeID,
   ]); // Use separate dependencies
-  
 
   useEffect(() => {
     const fetchUnitTypeData = async () => {
@@ -506,20 +515,22 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
-  
+
     const formattedRemarks = remarks.map((remark, index) => ({
       ...remark,
-      RemarkDate: remark.RemarkDate ? remark.RemarkDate.toISOString().split("T")[0] : null,
+      RemarkDate: remark.RemarkDate
+        ? format(new Date(remark.RemarkDate), "yyyy-MM-dd") // Correctly format the date
+        : null,
       RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
       Status: 1, // default or calculated value
       CreateUID: 1, // default or fetched value
     }));
     console.log(formattedRemarks, "Formatted Remarks");
-  
+
     const dataToSend = editData
       ? {
           ...formData,
@@ -530,24 +541,24 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           ...formData,
           Remarks: formattedRemarks,
         };
-  
+
     console.log(dataToSend, "Data to Send");
-  
+
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.data.status === "Success") {
-        console.log("Submission successful");
+        console.log(response.data.data, "Submission successful");
         const { BookingID } = response.data;
         onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
         // show(false);
-  
+
         // Optionally show success message
         // Swal.fire({
         //   icon: "success",
@@ -555,13 +566,13 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         //   showConfirmButton: false,
         //   timer: 1000,
         // });
-  
+
         // Navigate to the desired page with BookingID
         // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
       } else {
         Swal.fire({
           icon: "error",
-          title: "Oops...",
+        title: "Oops...",
           text: "Something went wrong!",
         });
       }
@@ -574,9 +585,6 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       });
     }
   };
-  
-  
-
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -587,7 +595,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   };
 
   const handleDateChange = (date) => {
-    setFormData({ ...formData, BookingDate: date });
+    const formattedDate = format(date, "yyyy-MM-dd");
+    setFormData({ ...formData, BookingDate: formattedDate });
   };
 
   const handleDateRemarks = (date, index) => {
@@ -595,8 +604,6 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     updatedRemarks[index] = { ...updatedRemarks[index], RemarkDate: date };
     setRemarks(updatedRemarks);
   };
-  
-
 
   return (
     <>
@@ -614,8 +621,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-
-            <Grid item xs={8} sm={4}>
+              <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={<>Name of Purchaser</>}
@@ -806,15 +812,15 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-  <TextField
-    fullWidth
-    label="Area in Builtup"
-    name="Area"
-    placeholder="Area in Builtup"
-    value={formData.Area}
-    onChange={handleChange}
-  />
-</Grid>
+                <TextField
+                  fullWidth
+                  label="Area in Builtup"
+                  name="Area"
+                  placeholder="Area in Builtup"
+                  value={formData.Area}
+                  onChange={handleChange}
+                />
+              </Grid>
 
               <Grid item xs={8} sm={4}>
                 <TextField
@@ -941,40 +947,40 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               </Grid>
 
               <Grid item xs={8} sm={4}>
-  <TextField
-    fullWidth
-    label="Total Cost"
-    name="TotalCost"
-    placeholder="Total Cost"
-    value={formData.TotalCost}
-    onChange={handleChange}
-    InputProps={{
-      startAdornment: (
-        <InputAdornment position="start">₹</InputAdornment>
-      ),
-      inputProps: { style: { textAlign: "left" } },
-    }}
-    type="text"
-  />
-</Grid>
-<Grid item xs={8} sm={4}>
-  <TextField
-    fullWidth
-    label="Amount in Words"
-    name="FlatCostInWords"
-    value={formData.FlatCostInWords}
-    InputProps={{
-      readOnly: true,
-    }}
-    type="text"
-  />
-</Grid>
-
-
+                <TextField
+                  fullWidth
+                  label="Total Cost"
+                  name="TotalCost"
+                  placeholder="Total Cost"
+                  value={formData.TotalCost}
+                  onChange={handleChange}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">₹</InputAdornment>
+                    ),
+                    inputProps: { style: { textAlign: "left" } },
+                  }}
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Amount in Words"
+                  name="FlatCostInWords"
+                  value={formData.FlatCostInWords}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  type="text"
+                />
+              </Grid>
 
               <Grid item xs={8} sm={4}>
                 <DatePicker
-                  selected={formData.BookingDate}
+                  selected={
+                    formData.BookingDate ? new Date(formData.BookingDate) : null
+                  }
                   onChange={handleDateChange}
                   dateFormat="dd-MM-yyyy"
                   className="form-control"
@@ -1028,15 +1034,13 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   </Typography>
                 )}
               </Grid> */}
-       
 
-            
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label={<>Usable Area in Sqft</>}
+                  label="Usable Area in Sqft"
                   name="UsableArea"
-                  placeholder="Unsable Area in sqft"
+                  placeholder="Usable Area in sqft"
                   value={formData.UsableArea}
                   onChange={handleChange}
                 />
@@ -1045,106 +1049,108 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label={<>Agreemnent carpet (RERA) in Sqft</>}
+                  label="Agreement Carpet (RERA) in Sqft"
                   name="AgreementCarpet"
-                  placeholder="Agreement Carpet "
+                  placeholder="Agreement Carpet"
                   value={formData.AgreementCarpet}
                   onChange={handleChange}
                 />
               </Grid>
               {remarks.map((remark, index) => (
-              <Grid container item spacing={2} key={index}>
-              {/* Amount Field */}
-              <Grid item xs={2}>
-                <TextField
-                  fullWidth
-                  label={`Amount ${index + 1}`}
-                  value={remark.Remarkamount}
-                  onChange={(e) => handleChange(e, index, "Remarkamount")}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">₹</InputAdornment>
-                    ),
-                    inputProps: { style: { textAlign: "left" } },
-                  }}
-                  type="text"
-                />
-              </Grid>
-  
-              {/* Amount Type Dropdown */}
-              <Grid item xs={2}>
-                <FormControl fullWidth>
-                  <InputLabel>Amount Type</InputLabel>
-                  <Select
-                    value={remark.AmountTypeID || ''}
-                    onChange={(e) => handleChange(e, index, "AmountTypeID")}
-                    label="Amount Type"
-                  >
-                    {amountTypes.map((type) => (
-                      <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
-                        {type.AmountTypeName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-  
-              {/* Remark Field */}
-              <Grid item xs={4}>
-                <TextField
-                  fullWidth
-                  label={`Remark ${index + 1}`}
-                  value={remark.RemarkName}
-                  onChange={(e) => handleChange(e, index, "RemarkName")}
-                />
-              </Grid>
-  
-              {/* Date Field */}
-              <Grid item xs={4}>
-            <DatePicker
-              selected={remark.RemarkDate}
-              onChange={(date) => handleDateRemarks(date, index)}
-              dateFormat="dd-MM-yyyy"
-              customInput={
-                <TextField fullWidth label="Expected Date" />
-              }
-            />
-          </Grid>
-
-  
-              {/* Loan Process Checkbox */}
-              <Grid item xs={2}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={remark.Loan === 1}
-                      onChange={(e) => handleChange(e, index, "Loan")}
+                <Grid container item spacing={2} key={index}>
+                  {/* Amount Field */}
+                  <Grid item xs={2}>
+                    <TextField
+                      fullWidth
+                      label={`Amount ${index + 1}`}
+                      value={remark.Remarkamount}
+                      onChange={(e) => handleChange(e, index, "Remarkamount")}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">₹</InputAdornment>
+                        ),
+                        inputProps: { style: { textAlign: "left" } },
+                      }}
+                      type="text"
                     />
-                  }
-                  label="Loan Process"
-                />
-              </Grid>
-  
-              {/* Add and Delete Buttons */}
-              {index === remarks.length - 1 && (
-                <Grid item xs={2}>
-                  <IconButton
-                    color="primary"
-                    sx={{ color: "#1976d2" }}
-                    onClick={handleAddRemark}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    sx={{ color: "#f44336", ml: 1 }}
-                    onClick={() => handleRemoveRemark(index)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  </Grid>
+
+                  {/* Amount Type Dropdown */}
+                  <Grid item xs={2}>
+                    <FormControl fullWidth>
+                      <InputLabel>Amount Type</InputLabel>
+                      <Select
+                        value={remark.AmountTypeID || ""}
+                        onChange={(e) => handleChange(e, index, "AmountTypeID")}
+                        label="Amount Type"
+                      >
+                        {amountTypes.map((type) => (
+                          <MenuItem
+                            key={type.AmountTypeID}
+                            value={type.AmountTypeID}
+                          >
+                            {type.AmountTypeName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  {/* Remark Field */}
+                  <Grid item xs={4}>
+                    <TextField
+                      fullWidth
+                      label={`Remark ${index + 1}`}
+                      value={remark.RemarkName}
+                      onChange={(e) => handleChange(e, index, "RemarkName")}
+                    />
+                  </Grid>
+
+                  {/* Date Field */}
+                  <Grid item xs={4}>
+                    <DatePicker
+                      selected={remark.RemarkDate}
+                      onChange={(date) => handleDateRemarks(date, index)}
+                      dateFormat="dd-MM-yyyy"
+                      customInput={
+                        <TextField fullWidth label="Expected Date" />
+                      }
+                    />
+                  </Grid>
+
+                  {/* Loan Process Checkbox */}
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={remark.Loan === 1}
+                          onChange={(e) => handleChange(e, index, "Loan")}
+                        />
+                      }
+                      label="Loan Process"
+                    />
+                  </Grid>
+
+                  {/* Add and Delete Buttons */}
+                  {index === remarks.length - 1 && (
+                    <Grid item xs={2}>
+                      <IconButton
+                        color="primary"
+                        sx={{ color: "#1976d2" }}
+                        onClick={handleAddRemark}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton
+                        color="primary"
+                        sx={{ color: "#f44336", ml: 1 }}
+                        onClick={() => handleRemoveRemark(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
                 </Grid>
-              )}
-            </Grid>
               ))}
 
               <Grid item xs={12}>

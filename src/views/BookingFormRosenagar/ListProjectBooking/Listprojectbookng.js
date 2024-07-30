@@ -574,15 +574,11 @@ const Listprojectbookng = ({
                                   Template
                                 </MenuItem>
 
-                                <MenuItem onClick={handleMenuClose}>
-                                  Agreement
-                                </MenuItem>
+
                                 <MenuItem onClick={onChequeReceiptClick}>
                                   Cheque Receipt
                                 </MenuItem>
-                                <MenuItem onClick={handleMenuClose}>
-                                  NOC
-                                </MenuItem>
+                               
                               </Menu>
                             </TableCell>
                             <TableCell>
