@@ -102,7 +102,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
                 <StyledTableCell colSpan={3} sx={{ padding: 0 }}>
                   <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.</Typography>
                   <Typography style={{ float: 'left', fontSize: 15, fontWeight: 200 }}>Date: {data.BookingDate}</Typography>
-                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.BookedBy}</Typography>
+                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.UserName}</Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
@@ -125,7 +125,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
                   <Typography>Name Of Purchase</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
-                  {data.Name}
+                  {data.BookingName}
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
