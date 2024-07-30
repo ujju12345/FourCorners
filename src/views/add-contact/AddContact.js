@@ -18,6 +18,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from 'sweetalert2';
+import {getUserData} from "../sidebarContacts/SidebarContactDetails";
 
 import {
   Snackbar,
@@ -144,7 +145,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const fetchDataCustomerType = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php?UserID=${{userid}}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php`
       );
       if (response.data.status === "Success") {
         setCustomerType(response.data.data);
@@ -484,8 +485,8 @@ const handleSubmit = async (event) => {
   
     // Prepare API URL based on editData flag
     const url = editData
-      ? "https://apiforcorners.cubisysit.com/api/api-update-contacts.php"
-      : "https://apiforcorners.cubisysit.com/api/api-insert-contacts.php";
+      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-contacts.php"
+      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-contacts.php";
   
 
 
@@ -505,19 +506,25 @@ const handleSubmit = async (event) => {
         },
       });
   
-      if (response.data.status === "Success") {
+      if (response && response.data.status.toUpperCase() === "SUCCESS") {
+        console.log("111");
+        getUserData();
+        console.log("2222");
         setFormData(initialFormData); // Reset form data after successful submission
         setErrors({});
         setSubmitSuccess(true);
         setSubmitError(false);
         show(false); // Hide the modal or close form
-  
+        
         Swal.fire({
           icon: "success",
           title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         });
+       
+        
+
 
       } else {
         setSubmitSuccess(false);
