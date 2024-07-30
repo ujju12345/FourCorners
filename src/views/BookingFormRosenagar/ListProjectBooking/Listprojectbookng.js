@@ -53,6 +53,8 @@ const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
   handleTemplateClick,
+
+  onCheque
 }) => {
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
@@ -62,6 +64,8 @@ const Listprojectbookng = ({
   const [open, setOpen] = useState(false);
   const [amountType, setAmountType] = useState("");
   const [page, setPage] = useState(0);
+  const [bookingID, setBookingID] = useState(null);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRowMenu, setSelectedRowMenu] = useState(null);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -232,10 +236,12 @@ const Listprojectbookng = ({
     setSelectedRowMenu(null);
   };
 
-  const handleReportClick = () => {
-    handleOpenPayment(selectedRowMenu);
+  const handleReportClick = (id) => {
+    setBookingID(id);  // Set the BookingID state
+    handleOpenPayment(selectedRowMenu);  // Open the modal
     handleMenuClose();
   };
+  
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -341,26 +347,74 @@ const Listprojectbookng = ({
 
   const handleOpenPayment = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const handleDateSearch = async () => {
     try {
-      const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php",
-        {
-          BookingID: 108,
-          fromdate: formData.fromdate?.toISOString().split("T")[0],
-          todate: formData.todate?.toISOString().split("T")[0],
-        }
+      if (!bookingID) {
+        console.error("No BookingID provided");
+        return;
+      }
+
+      const response = await axios.get(
+        `https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php?BookingID=${bookingID}`
       );
+
       const paymentData = response.data.data;
+
+      const bookingInfo = paymentData.booking[0];
+
+      const mergedPayments = [
+        ...paymentData.payment.cash.map(payment => ({
+          ...payment,
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          PaymentType: 'Cash',
+        })),
+        ...paymentData.payment.cheque.map(payment => ({
+          ...payment,
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          PaymentType: 'Cheque',
+        })),
+        ...paymentData.bookingremark.cash.map(remark => ({
+          ...remark,
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          PaymentType: 'Cash',
+        })),
+        ...paymentData.bookingremark.cheque.map(remark => ({
+          ...remark,
+          Name: bookingInfo.Name,
+          FlatNo: bookingInfo.FlatNo,
+          PaymentType: 'Cheque',
+        }))
+      ];
+
+      const proccess_null = mergedPayments.filter(payment => payment.PLoan === 0 || payment.Proccess === null);
+      const proccess_one = mergedPayments.filter(payment => payment.PLoan === 1 && payment.Proccess !== null);
+
       setMergedData({
-        proccess_null: paymentData.payment.cash.filter(payment => payment.PLoan === 0),
-        proccess_one: paymentData.payment.cash.filter(payment => payment.PLoan === 1),
+        proccess_null,
+        proccess_one,
+        totalCash: paymentData.payment.totalCash,
+        totalCheque: paymentData.payment.totalCheque,
+        totalCost: paymentData.payment.TotalCost,
       });
     } catch (error) {
       console.error("Error fetching payment data", error);
     }
   };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   const handleSubmit = async () => {
     // Prepare the data for the API request
     const payload = {
@@ -563,7 +617,9 @@ const Listprojectbookng = ({
                                 open={Boolean(anchorEl)}
                                 onClose={handleMenuClose}
                               >
-                                <MenuItem onClick={handleReportClick}>
+                                <MenuItem o  onClick={() =>
+                                    handleReportClick(row.BookingID)
+                                  }>
                                   Report
                                 </MenuItem>
                                 <MenuItem
@@ -575,7 +631,9 @@ const Listprojectbookng = ({
                                 </MenuItem>
 
 
-                                <MenuItem onClick={onChequeReceiptClick}>
+                                <MenuItem onClick={() =>
+                                    onCheque(row.BookingID)
+                                  }>
                                   Cheque Receipt
                                 </MenuItem>
                                
@@ -1009,73 +1067,102 @@ const Listprojectbookng = ({
           </Grid>
 
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6">Upcoming Payments</Typography>
-              <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Customer Name</TableCell>
-                      <TableCell>Flat Number</TableCell>
-                      <TableCell>Cash (A)</TableCell>
-                      <TableCell>Cheque (B)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mergedData.proccess_null.length > 0 ? (
-                      mergedData.proccess_null.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.Name}</TableCell>
-                          <TableCell>{item.FlatNo}</TableCell>
-                          <TableCell>{item.Cash}</TableCell>
-                          <TableCell>{item.ChequeAmount}</TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={4} align="center">
-                          No Upcoming Payments
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
+          <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="h6">Upcoming Payments</Typography>
+        <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Customer Name</TableCell>
+                <TableCell>Flat Number</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Payment Type</TableCell>
+                <TableCell>Date</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mergedData.proccess_null.length > 0 ? (
+                mergedData.proccess_null.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{item.Name}</TableCell>
+                    <TableCell>{item.FlatNo}</TableCell>
+                    <TableCell>{item.Remarkamount}</TableCell>
+                    <TableCell>{item.PaymentType}</TableCell>
+                    <TableCell>{new Date(item.RemarkDate).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    No Upcoming Payments
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
+
+
+
+
+
 
             <Grid item xs={12}>
-              <Typography variant="h6">Received Payments</Typography>
-              <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Customer Name</TableCell>
-                      <TableCell>Flat Number</TableCell>
-                      <TableCell>Cash (A)</TableCell>
-                      <TableCell>Cheque (B)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mergedData.proccess_one.length > 0 ? (
-                      mergedData.proccess_one.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.Name}</TableCell>
-                          <TableCell>{item.FlatNo}</TableCell>
-                          <TableCell>{item.Cash}</TableCell>
-                          <TableCell>{item.ChequeAmount}</TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={4} align="center">
-                          No Received Payments
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
+  <Typography variant="h6">Received Payments</Typography>
+  <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+    <Table stickyHeader>
+      <TableHead>
+        <TableRow>
+          <TableCell>Customer Name</TableCell>
+          <TableCell>Flat Number</TableCell>
+          <TableCell>Cash (A)</TableCell>
+          <TableCell>Cheque (B)</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {mergedData.proccess_one.length > 0 ? (
+          mergedData.proccess_one.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{item.Name}</TableCell>
+              <TableCell>{item.FlatNo}</TableCell>
+              <TableCell>{item.PaymentType === 'Cash' ? item.Cash : '-'}</TableCell>
+              <TableCell>{item.PaymentType === 'Cheque' ? item.ChequeAmount : '-'}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={4} align="center">
+              No Received Payments
+            </TableCell>
+          </TableRow>
+        )}
+
+        {/* Totals Row */}
+        {mergedData.proccess_one.length > 0 && (
+          <TableRow>
+            <TableCell colSpan={2} align="right"><strong>Total</strong></TableCell>
+            <TableCell><strong>{mergedData.totalCash}</strong></TableCell>
+            <TableCell><strong>{mergedData.totalCheque}</strong></TableCell>
+          </TableRow>
+        )}
+
+        {/* Total Cost Row */}
+        {mergedData.proccess_one.length > 0 && (
+          <TableRow>
+            <TableCell colSpan={2} align="right"><strong>Total Cost</strong></TableCell>
+            <TableCell colSpan={2}><strong>{mergedData.totalCost}</strong></TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Grid>
+
+
+
           </Grid>
         </CardContent>
       </Card>

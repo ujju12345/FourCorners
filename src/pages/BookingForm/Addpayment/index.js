@@ -161,6 +161,10 @@ const Addpayment = () => {
   const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
   const [showTemplate, setShowTemplate] = useState(false);
 const [bookingID, setBookingID] = useState(null);
+const [bookingIDCheque, setBookingIDCheque] = useState(null);
+const [bookingIDReport, setBookingIDReport] = useState(null);
+
+
 
 
   useEffect(() => {
@@ -272,6 +276,14 @@ const [bookingID, setBookingID] = useState(null);
     setShowTemplate(true);
   };
 
+  const handleCheque = (bookingId) => {
+    setBookingIDCheque(bookingId);
+    setShowReceipt(true);
+  };
+  const handleReport = (bookingId) => {
+    setBookingIDReport(bookingId);
+    // setS(true);
+  };
   const handleNavigation = () => {
     setShowDashboard(true);
     setShowAddDetails(false); // Ensure the AddContact form is hidden when navigating to the dashboard
@@ -335,10 +347,13 @@ const [bookingID, setBookingID] = useState(null);
         onEdit={handleEdit}
         handleTemplateClick={handleFormSubmitSuccess}
         onChequeReceiptClick={handleChequeReciept}
+        handleReportClick={handleReport}
+        onCheque={handleCheque}
+        
       />
     )}
     {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleGoBackFromTemplate} />}
-    {showReceipt && <Reciept bookingID={bookingID} />}
+    {showReceipt && <Reciept bookingID={bookingIDCheque} />}
 
 
     {!loading && !error && showHistory && (

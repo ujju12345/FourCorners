@@ -11,6 +11,7 @@ import {
   Paper,
   Button,
   Grid,
+  TableHead,
 } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
@@ -78,7 +79,8 @@ const Reciept = ({ bookingID }) => {
         `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}`
       );
       console.log("data aaya dekh", response.data);
-      setData(response.data.data[0]);
+      // Extract the data array from the response
+      setData(response.data.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -86,6 +88,7 @@ const Reciept = ({ bookingID }) => {
       setLoading(false);
     }
   };
+  
 
 
   if (loading) {
@@ -181,39 +184,39 @@ const Reciept = ({ bookingID }) => {
                   <div>
                     <h4 style={{}}>Receipt</h4>
                     <TableContainer component={Paper}>
-                      <Table style={{ border: "1px solid black" }}>
-                        <TableBody>
-                          <TableRow sx={{ padding: 0 }}>
-                            <StyledTableCell
-                              style={{ width: "20%", padding: 0 }}
-                              colSpan={10}
-                            >
-                              <Typography>R.No.:</Typography>
-                            </StyledTableCell>
-                            <StyledTableCell
-                              style={{ width: "30%", padding: 0 }}
-                              colSpan={10}
-                            >
-                              <Typography>{data.paymentID}</Typography>
-                            </StyledTableCell>
-                          </TableRow>
-                          <TableRow sx={{ padding: 0 }}>
-                            <StyledTableCell
-                              style={{ width: "20%", padding: 0 }}
-                              colSpan={10}
-                            >
-                              <Typography>Date:</Typography>
-                            </StyledTableCell>
-                            <StyledTableCell
-                              style={{ width: "30%", padding: 0 }}
-                              colSpan={10}
-                            >
-                              <Typography>{data.BookingDate}</Typography>
-                            </StyledTableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+      <Table style={{ border: "1px solid black" }}>
+        <TableBody>
+          <TableRow sx={{ padding: 0 }}>
+            <StyledTableCell
+              style={{ width: "20%", padding: 0 }}
+              colSpan={10}
+            >
+              <Typography>R.No.:</Typography>
+            </StyledTableCell>
+            <StyledTableCell
+              style={{ width: "30%", padding: 0 }}
+              colSpan={10}
+            >
+              <Typography>{data.paymentID}</Typography>
+            </StyledTableCell>
+          </TableRow>
+          <TableRow sx={{ padding: 0 }}>
+            <StyledTableCell
+              style={{ width: "20%", padding: 0 }}
+              colSpan={10}
+            >
+              <Typography>Date:</Typography>
+            </StyledTableCell>
+            <StyledTableCell
+              style={{ width: "30%", padding: 0 }}
+              colSpan={10}
+            >
+              <Typography>{data.BookingDate}</Typography>
+            </StyledTableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
                   </div>
                 </div>
               </Grid>
@@ -287,66 +290,30 @@ const Reciept = ({ bookingID }) => {
             </Typography>
           </div>
         </div> */}
+<TableContainer component={Paper}>
+  <Table style={{ border: "1px solid black" }}>
+    <TableHead>
+      <TableRow>
+        <TableCell>Cheque Date</TableCell>
+        <TableCell>Bank Name</TableCell>
+        <TableCell>Cheque Number</TableCell>
+        <TableCell>Cheque Amount</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {data.map(payment => (
+        <TableRow key={payment.paymentID}>
+          <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
+          <StyledTableCell>{payment.BankName}</StyledTableCell>
+          <StyledTableCell>{payment.ChequeNumber}</StyledTableCell>
+          <StyledTableCell>{payment.ChequeAmount}</StyledTableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
 
-        <TableContainer component={Paper}>
-          <Table style={{ border: "1px solid black" }}>
-            <TableBody>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell
-                  style={{ width: "25%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography>Date</Typography>
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "25%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography>Bank</Typography>
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "25%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography>Chq. No.</Typography>
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "25%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography>Amount</Typography>
-                </StyledTableCell>
-              </TableRow>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                 {data.ChequeDate}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                  {data.BankName}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                {data.ChequeNumber}
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "20%", padding: 0 }}
-                  colSpan={10}
-                >
-                 {data.ChequeAmount}
-                </StyledTableCell>
-              </TableRow>
-        
-            </TableBody>
-          </Table>
-        </TableContainer>
+
         <TableContainer component={Paper}>
           <Table style={{ border: "1px solid black" }}>
             <TableBody>
@@ -420,7 +387,7 @@ const Reciept = ({ bookingID }) => {
               }}
               colSpan={10}
             >
-              ₹ 1,00,000/-
+              ₹ {data.ChequeAmount} /-
             </StyledTableCell>
             <StyledTableCell
               style={{

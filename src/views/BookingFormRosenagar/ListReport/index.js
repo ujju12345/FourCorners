@@ -51,19 +51,19 @@ const ListReport = ({ item }) => {
 
     try {
       setLoading(true);
-      const response = await axios.post(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-paymentreceived.php",
-        {
-          BookingID: formData.BookingID,
-          fromdate: formData.fromdate.toISOString().split('T')[0],
-          todate: formData.todate.toISOString().split('T')[0],
-        }
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-paymentreceived.php?BookingID=${formData.BookingID}`
       );
 
       if (response.data.status === "Success") {
         setPaymentReceivedData(response.data.data.proccess_one || []);
         setUpcomingPaymentData(response.data.data.proccess_null || []);
-        setDataAvailable(response.data.data.proccess_one.length > 0 || response.data.data.proccess_null.length > 0);
+        setDataAvailable(
+          response.data.data.proccess_one.length > 0 ||
+            response.data.data.proccess_null.length > 0
+        );
+      } else {
+        setDataAvailable(false);
       }
     } catch (error) {
       console.error("Error fetching payment data:", error);
@@ -92,6 +92,11 @@ const ListReport = ({ item }) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleAddPayment = (row) => {
+    // Implement your payment add logic here
+    console.log("Add payment", row);
   };
 
   const SortableTableCell = ({ label }) => (
@@ -154,7 +159,9 @@ const ListReport = ({ item }) => {
               justifyContent="center"
               alignItems="flex-end"
             >
-              <Button variant="contained" onClick={fetchData}>Search</Button>
+              <Button variant="contained" onClick={fetchData}>
+                Search
+              </Button>
             </Grid>
           </Grid>
         </CardContent>
@@ -182,10 +189,10 @@ const ListReport = ({ item }) => {
                   <TableHead>
                     <TableRow>
                       <SortableTableCell label="Customer Name" />
-                      <SortableTableCell label="Building Number" />
-                      <SortableTableCell label="Flat Number" />
-                      <SortableTableCell label="Amount (A)" />
-                      <SortableTableCell label="Amount (B)" />
+                      <SortableTableCell label="Bank Name" />
+                      <SortableTableCell label="Cheque Number" />
+                      <SortableTableCell label="Cheque Date" />
+                      <SortableTableCell label="Amount" />
                       <TableCell>Actions</TableCell>
                     </TableRow>
                   </TableHead>
@@ -193,12 +200,12 @@ const ListReport = ({ item }) => {
                     {paymentReceivedData
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
-                        <TableRow key={row.RemarkID}>
+                        <TableRow key={row.paymentID}>
                           <TableCell>{row.RemarkName}</TableCell>
-                          <TableCell>{row.BuildingNumber}</TableCell>
-                          <TableCell>{row.FlatNo}</TableCell>
-                          <TableCell>{row.Remarkamount}</TableCell>
-                          <TableCell>{row.Loan}</TableCell>
+                          <TableCell>{row.BankName}</TableCell>
+                          <TableCell>{row.ChequeNumber}</TableCell>
+                          <TableCell>{row.ChequeDate}</TableCell>
+                          <TableCell>{row.ChequeAmount}</TableCell>
                           <TableCell>
                             <IconButton color="primary" onClick={() => handleAddPayment(row)}>
                               <PaymentIcon />
@@ -258,10 +265,10 @@ const ListReport = ({ item }) => {
                   <TableHead>
                     <TableRow>
                       <SortableTableCell label="Customer Name" />
-                      <SortableTableCell label="Building Number" />
-                      <SortableTableCell label="Flat Number" />
+                      <SortableTableCell label="Bank Name" />
+                      <SortableTableCell label="Cheque Number" />
+                      <SortableTableCell label="Cheque Date" />
                       <SortableTableCell label="Amount" />
-                      <SortableTableCell label="Date" />
                       <TableCell>Actions</TableCell>
                     </TableRow>
                   </TableHead>
@@ -269,12 +276,12 @@ const ListReport = ({ item }) => {
                     {upcomingPaymentData
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
-                        <TableRow key={row.RemarkID}>
+                        <TableRow key={row.paymentID}>
                           <TableCell>{row.RemarkName}</TableCell>
-                          <TableCell>{row.BuildingNumber}</TableCell>
-                          <TableCell>{row.FlatNo}</TableCell>
-                          <TableCell>{row.Remarkamount}</TableCell>
-                          <TableCell>{row.RemarkDate}</TableCell>
+                          <TableCell>{row.BankName}</TableCell>
+                          <TableCell>{row.ChequeNumber}</TableCell>
+                          <TableCell>{row.ChequeDate}</TableCell>
+                          <TableCell>{row.ChequeAmount}</TableCell>
                           <TableCell>
                             <IconButton color="primary" onClick={() => handleAddPayment(row)}>
                               <PaymentIcon />
