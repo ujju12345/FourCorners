@@ -18,8 +18,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from 'sweetalert2';
-import {getUserData} from "../sidebarContacts/SidebarContactDetails";
-
 import {
   Snackbar,
   FormControlLabel,
@@ -86,9 +84,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const [loading, setLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
-  const userName = cookies.amr?.FullName || 'User';
-  const roleName = cookies.amr?.RoleName || 'Admin';
-  const userid = cookies.amr?.UserID || 'Role';
+
   useEffect(() => {
     fetchData();
     fetchDataBhk();
@@ -145,7 +141,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const fetchDataCustomerType = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php`
+        "https://apiforcorners.cubisysit.com/api/api-fetch-customertype.php"
       );
       if (response.data.status === "Success") {
         setCustomerType(response.data.data);
@@ -506,25 +502,21 @@ const handleSubmit = async (event) => {
         },
       });
   
-      if (response && response.data.status.toUpperCase() === "SUCCESS") {
-        console.log("111");
-        getUserData();
-        console.log("2222");
+      if (response.data.status === "Success") {
         setFormData(initialFormData); // Reset form data after successful submission
         setErrors({});
         setSubmitSuccess(true);
         setSubmitError(false);
         show(false); // Hide the modal or close form
-        
+  
         Swal.fire({
           icon: "success",
           title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
-       
-        
-
 
       } else {
         setSubmitSuccess(false);
@@ -973,4 +965,4 @@ const handleSubmit = async (event) => {
   );
 };
 
-export default AddContact;
+export default AddContact;
