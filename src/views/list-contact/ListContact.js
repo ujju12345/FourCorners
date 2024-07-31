@@ -755,7 +755,18 @@ Email
     mt: 12,
   }}
 >
+
   <Grid container spacing={3}>
+  {/* <Grid item xs={4}>
+      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Location
+        </Typography>
+        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+          {item?.LocationID}
+        </Typography>
+      </Card>
+    </Grid> */}
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
         <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
@@ -766,20 +777,11 @@ Email
         </Typography>
       </Card>
     </Grid>
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
-          Source Type
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.SourceTypename}
-        </Typography>
-      </Card>
-    </Grid>
+  
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
         <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Telecall Attended By
+          Attended By
         </Typography>
         <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
       </Card>

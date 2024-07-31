@@ -28,8 +28,13 @@ import {
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 
+
+ 
 const AddContact = ({ show, editData  , onDashboardClick}) => {
-  console.log(editData , 'Edit data aaya contact ka');
+  const [cookies, setCookie] = useCookies(["amr"]);
+  console.log(editData, 'Edit data aaya contact ka');
+
+
   const initialFormData = {
     TitleID: "",
     CName:"",
@@ -45,7 +50,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
     KeyWordID:1,
     SourceID:"",
     SourceTypeID: "",
-    UserID: "",
+    UserID: cookies.amr?.UserID || 1 ,
     Status:1,
     CreateUID:1,
     Cid:"",
@@ -73,7 +78,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   const [customerType, setCustomerType] = useState([]);
   const requiredFields = ['TitleID', 'CName', 'CustomerTypeID', 'ContactTypeID', 'CountryCodeID', 'Mobile', 'Email', 'CityID', 'LocationID', 'PinCode', 'SourceID', 'SourceTypeID', 'UserID'];
   const [errors, setErrors] = useState({});
-  const [cookies, setCookie] = useCookies(["amr"]);
+  
   
   const [source, setSource] = useState([]);
   const [estimatedBudget, setEstimatedBudget] = useState([]);
@@ -108,11 +113,10 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
         OtherNumbers: OtherNumbers || "",
         Email: Email || "",
         CityID: CityID || "",
-        LocationID: LocationID || "",
+        LocationID: LocationID || "", 
         PinCode: PinCode || "",
         SourceID: SourceID || "",
-        SourceTypeID: SourceTypeID || "",
-        UserID: UserID || "",
+        UserID:  CreateUID || 1, 
         Status: Status || 1,
         CreateUID: CreateUID || 1,
         Cid: Cid || "",
@@ -120,7 +124,6 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
        
       });
   
-      // Fetch contact types based on customer type if CustomerTypeID is available
       if (CustomerTypeID) {
         fetchContactTypes(CustomerTypeID);
       }
@@ -347,12 +350,6 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
   }, []);
 
 
- 
-
-
-
-
-
   const handleContactType = (event) => {
     const contactTypeID = event.target.value;
 
@@ -457,12 +454,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
     if (!data.SourceID) {
       errors.SourceID = "Source is required";
     }
-    if (!data.SourceTypeID) {
-      errors.SourceTypeID = "Source Type is required";
-    }
-    if (!data.UserID) {
-      errors.UserID = "User is required";
-    }
+
     return errors;
   };
 
@@ -491,7 +483,7 @@ const handleSubmit = async (event) => {
       ? formData
       : {
           ...formData,
-          CreateUID: cookies.amr?.UserID || 1, // Fallback to 1 if UserID is not found in cookies
+          CreateUID: cookies.amr?.UserID || 1, 
         };
 
 
@@ -503,7 +495,7 @@ const handleSubmit = async (event) => {
       });
   
       if (response.data.status === "Success") {
-        setFormData(initialFormData); // Reset form data after successful submission
+        setFormData(initialFormData); 
         setErrors({});
         setSubmitSuccess(true);
         setSubmitError(false);
@@ -863,7 +855,7 @@ const handleSubmit = async (event) => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={8} sm={4}>
+        {/* <Grid item xs={8} sm={4}>
           <FormControl fullWidth>
             <InputLabel>Source Type <RequiredIndicator /></InputLabel>
             <Select
@@ -881,13 +873,13 @@ const handleSubmit = async (event) => {
               ))}
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
         
         {/* Other form elements */}
   
       
 
-            <Grid item xs={8} sm={4}>
+            {/* <Grid item xs={8} sm={4}>
               <FormControl fullWidth>
                 <InputLabel>Telecall Attended By <RequiredIndicator /></InputLabel>
                 <Select
@@ -904,7 +896,7 @@ const handleSubmit = async (event) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
    
             <Grid item xs={12}>
