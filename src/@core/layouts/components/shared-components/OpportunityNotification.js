@@ -124,6 +124,9 @@ const OpportunityNotification = () => {
     audio.play();
   };
 
+  const handleOpportunity = () => {
+    window.location.href = "/opportunity/";
+  };
   const handleDropdownOpen = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -168,7 +171,7 @@ const OpportunityNotification = () => {
         <ScrollWrapper>
           {notifications.map((notification, index) => (
             <MenuItem key={index} onClick={handleDropdownClose}>
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' , onClick: handleOpportunity  }}>
                 <Avatar alt='notification' src='/images/avatars/3.png' />
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                   <MenuItemTitle>Name: {notification.TitleName}{notification.CName}</MenuItemTitle>
