@@ -171,11 +171,13 @@ const OpportunityNotification = () => {
         <ScrollWrapper>
           {notifications.map((notification, index) => (
             <MenuItem key={index} onClick={handleDropdownClose}>
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' , onClick: handleOpportunity  }}>
+              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Avatar alt='notification' src='/images/avatars/3.png' />
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                   <MenuItemTitle>Name: {notification.TitleName}{notification.CName}</MenuItemTitle>
                   <MenuItemSubtitle variant='body2'>Date: {notification.CreateDate}</MenuItemSubtitle>
+                  <MenuItemSubtitle variant='body2'>Converted By: {notification.Name}</MenuItemSubtitle>
+
                 </Box>
               </Box>
             </MenuItem>
