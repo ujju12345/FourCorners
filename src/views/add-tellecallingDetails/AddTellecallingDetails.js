@@ -510,7 +510,7 @@ const [cNames, setCNames] = useState([]);
 
         Swal.fire({
           icon: "error",
-          title: "Oops...",
+          title: "Oopsii...",
           text: "Something went wrong!",
         });
       }
@@ -522,7 +522,7 @@ const [cNames, setCNames] = useState([]);
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Something went wrong!",
+        text: "Mobile number is already Exits!",
       });
     }
     // } else {

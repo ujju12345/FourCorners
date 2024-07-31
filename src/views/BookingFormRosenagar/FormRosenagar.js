@@ -9,10 +9,6 @@ import InputLabel from "@mui/material/InputLabel";
 import CardContent from "@mui/material/CardContent";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import GroupIcon from "@mui/icons-material/Group";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -92,7 +88,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [bookingTypes, setBookingTypes] = useState([]);
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [amountTypes, setAmountTypes] = useState([]);
-  const [titles, setTitles] = useState([]);
+  const [cNames, setCNames] = useState([]);
+  const [selectedCid, setSelectedCid] = useState("");
   const [errors, setErrors] = useState({});
   const [wingData, setWingData] = useState([]);
   const [bookedByOptions, setBookedByOptions] = useState([]);
@@ -503,6 +500,23 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     }
   }, [formData.FlatNo, formData.WingID, formData.ProjectID, formData.FloorNo]);
 
+  useEffect(() => {
+    const userid = cookies.amr?.UserID || "Role";
+
+    axios
+      .get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-convertbooking.php?UserID=${userid}`
+      )
+      .then((response) => {
+        if (response.data.status === "Success") {
+          setCNames(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   const handleAddRemark = () => {
     setRemarks([...remarks, { ...initialRemark }]);
   };
@@ -531,16 +545,10 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     }));
     console.log(formattedRemarks, "Formatted Remarks");
 
-    const dataToSend = editData
-      ? {
-          ...formData,
-          ModifyUID: cookies.amr?.UserID || 1,
-          remarks: formattedRemarks,
-        }
-      : {
-          ...formData,
-          Remarks: formattedRemarks,
-        };
+    const dataToSend = {
+      ...formData,
+      Remarks: formattedRemarks,
+    };
 
     console.log(dataToSend, "Data to Send");
 
@@ -560,19 +568,19 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         // show(false);
 
         // Optionally show success message
-        // Swal.fire({
-        //   icon: "success",
-        //   title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-        //   showConfirmButton: false,
-        //   timer: 1000,
-        // });
+        Swal.fire({
+          icon: "success",
+          title: "Data Added Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
 
-        // Navigate to the desired page with BookingID
+        // Navigate to the desired pagse with BookingID
         // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
       } else {
         Swal.fire({
           icon: "error",
-        title: "Oops...",
+          title: "Oops...",
           text: "Something went wrong!",
         });
       }
@@ -605,6 +613,41 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     setRemarks(updatedRemarks);
   };
 
+  const handleSelectChange = async (event) => {
+    const selectedCid = event.target.value;
+    setSelectedCid(selectedCid);
+
+    try {
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-convertbooking.php?Cid=${selectedCid}`;
+      const response = await axios.get(apiUrl);
+
+      if (response.data.status === "Success") {
+        console.log("data dekh ", response.data.data);
+        const data = response.data.data;
+
+        // Assuming you want to set the first item from the array
+        if (data.length > 0) {
+          const fetchedData = data[0];
+
+          setFormData({
+            Name: fetchedData.CName || "",
+            Mobile: fetchedData.Mobile || "",
+            Email: fetchedData.Email || "",
+            Status: 1,
+            CreateUID: 1,
+            BookingDate: null,
+          });
+        } else {
+          console.warn("No data available for the selected Cid.");
+        }
+      } else {
+        console.error("API response status not success:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching single telecalling data:", error);
+    }
+  };
+
   return (
     <>
       <Card sx={{ height: "auto" }}>
@@ -622,16 +665,25 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Name of Purchaser</>}
-                  name="Name"
-                  placeholder="Name of Purchaser"
-                  value={formData.Name}
-                  onChange={handleChange}
-                />
+                <FormControl fullWidth>
+                  <InputLabel id="select-cname-label">
+                    Name of Purchaser
+                  </InputLabel>
+                  <Select
+                    labelId="select-cname-label"
+                    id="select-cname"
+                    value={selectedCid}
+                    onChange={handleSelectChange}
+                    label="Type of Booking"
+                  >
+                    {cNames?.map((item) => (
+                      <MenuItem key={item.Cid} value={item.Cid}>
+                        {item.CName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
-
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
