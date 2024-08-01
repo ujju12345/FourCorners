@@ -220,7 +220,7 @@ const [cNames, setCNames] = useState([]);
     setSelectedCid(selectedCid);
 
     try {
-      const apiUrl =`https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
       const response = await axios.get(apiUrl);
 
       if (response.data.status === "Success") {
