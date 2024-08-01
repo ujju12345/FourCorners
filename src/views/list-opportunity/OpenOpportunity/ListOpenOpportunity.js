@@ -47,6 +47,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [submitError, setSubmitError] = useState(false);
   const [bhkOptions, setBhkOptions] = useState([]);
   const [currentUpdate, setCurrentUpdate] = useState([]);
+  const [anchorElOpportunity, setAnchorElOpportunity] = useState(null);
   const [setRowDataToUpdate] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
@@ -77,7 +78,96 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleDropdownClose = () => {
     setAnchorEl(null);
   };
+  const handleClick = (event) => {
+    setAnchorElOpportunity(event.currentTarget);
+    fetchUserMasterData();
+  };
+  const [userMaster, setUserMaster] = useState([]);
+  const fetchUserMasterData = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-useradmin.php"
+      );
+      if (response.data.status === "Success") {
+        setUserMaster(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const handleCloseBooking = () => {
+    setAnchorElOpportunity(null);
+  };
+  const handleMenuItemClick = async (event, userID) => {
+    // console.log('press');
+    event.preventDefault();
 
+    // Ensure item and Tid are available
+    if (!item || !item.Oid) {
+      console.error("No valid item or Tid found.");
+      return;
+    }
+
+    // Add Tid to formData
+    const formData = {
+      UserID:userID,
+      Cid:item?.Cid,
+      Oid:item?.Oid,
+      CreateUID: cookies?.amr?.UserID || 1,
+
+    };
+
+    console.log(formData, "COVERT TO Booking Data 1");
+
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convertbooking.php";
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(formData, "COVERT TO Booking Data 2");
+
+      if (response.data.status === "Success") {
+        // setFormData(intialName);
+        setOpen(false);
+        setSubmitSuccess(true);
+        setSubmitError(false);
+        // Show success message using SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: 
+             "Lead Converted to Booking Successfully",
+            
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        // Show error message using SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      setSubmitSuccess(false);
+      setSubmitError(true);
+      // Show error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
+      });
+    }
+  };
   const handleAddFollowUpClick = () => {
     handleDropdownClose();
     setOpen(true);
@@ -229,6 +319,131 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   return (
     <>
+     <Grid
+        container
+        justifyContent="center"
+        spacing={2}
+        sx={{ marginBottom: 5 }}
+      >
+        <Grid item>
+          <Button
+            variant="contained"
+            onClick={handleEdit}
+            startIcon={<EditIcon />}
+            sx={{
+              // Light gray background color
+              color: "#333333", // Dark gray text color
+              fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
+              minWidth: "auto",
+              minHeight: 20, // Decrease button height
+              "&:hover": {
+                backgroundColor: "#dcdcdc", // Darken background on hover
+              },
+            }}
+          >
+            Edit Details
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            // onClick={downloadCSV}
+            startIcon={<GetAppIcon />}
+            sx={{
+              color: "#333333",
+              fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
+              minWidth: "auto",
+              minHeight: 20,
+              "&:hover": {
+                backgroundColor: "#dcdcdc",
+              },
+            }}
+          >
+            Download
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<ArrowForwardIosIcon />}
+            onClick={handleClick}
+            sx={{
+              color: "#333333",
+              backgroundColor: "#f0f0f0",
+              fontSize: "0.6rem",
+              minWidth: "auto",
+              minHeight: 20,
+              "&:hover": {
+                backgroundColor: "#dcdcdc",
+              },
+            }}
+          >
+            Booking
+          </Button>
+        </Grid>
+        <Menu
+            anchorEl={anchorElOpportunity}
+            open={Boolean(anchorElOpportunity)}
+            onClose={handleCloseBooking}
+            PaperProps={{
+              style: {
+                maxHeight: 300, // Set the desired height in pixels
+                overflowY: "auto", // Make the content scrollable if it exceeds the height
+              },
+            }}
+          >
+            <MenuItem disabled>
+              <Typography variant="subtitle1">Convert to Booking</Typography>
+            </MenuItem>
+            {userMaster.length > 0 ? (
+              userMaster.map((user, index) => (
+                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+                {index + 1}. {user.Name}
+              </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Menu>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<PersonAddIcon />}
+            onClick={handleDropdownClick}
+            sx={{
+              mr: 30,
+
+              color: "#333333",
+              fontSize: "0.6rem",
+              backgroundColor: "#f0f0f0",
+              minWidth: "auto",
+              minHeight: 20,
+              "&:hover": {
+                backgroundColor: "#dcdcdc",
+              },
+            }}
+          >
+            Next FollowUp
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleDropdownClose}
+          >
+            <MenuItem onClick={handleAddFollowUpClick}>
+              <AddIcon sx={{ mr: 1 }} />
+              Add Follow Up
+            </MenuItem>
+            <MenuItem onClick={handleHistoryClick}>
+              <HistoryIcon sx={{ mr: 1 }} />
+              History
+            </MenuItem>
+          </Menu>
+        </Grid>
+      </Grid>
+
       <Grid
         container
         justifyContent="center"
