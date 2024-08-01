@@ -20,7 +20,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
-import { format, parseISO } from 'date-fns';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -37,23 +36,14 @@ const TabInfo = ({ setShowTabAccount }) => {
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    // Apply search filter
     const filteredData = rows.filter((row) => {
       return (
-        String(row.CompanyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.CompanyCode).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.CommAddress).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.CityName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.ERPLiveDate).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.CompanyStatusName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.StateName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.BookBeginingFrom).toLowerCase().includes(searchQuery.toLowerCase())
+        String(row.CompanyName).toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
     setFilteredRows(filteredData);
@@ -62,7 +52,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
-      console.log('API Response COMPANYYYYY', response.data);
+      console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
@@ -81,12 +71,10 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
-  
   const handleClose = () => {
     setOpen(false);
     setDeleteId(null);
   };
-
 
   const handleDelete = async () => {
     const body = {
@@ -118,7 +106,7 @@ const TabInfo = ({ setShowTabAccount }) => {
   };
 
   const handleEdit = (rowData) => {
-    setShowTabAccount(rowData); // Pass selected row data to the parent component
+    setShowTabAccount(rowData);
     console.log(`Editing company with ID ${rowData.CompanyID}`);
   };
 
@@ -159,50 +147,41 @@ const TabInfo = ({ setShowTabAccount }) => {
       </Box>
     </TableCell>
   );
-  
-  
+
   const handleOpen = (CompanyID) => {
     setDeleteId(CompanyID);
     setOpen(true);
   };
-  
 
   return (
     <Card>
       <Box sx={{ padding: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-      <TextField
-    size="small" // Set size to small
-    placeholder="Search"
-    variant="outlined"
-    value={searchQuery}
-    onChange={handleSearchChange}
-    InputProps={{
-      startAdornment: (
-        <InputAdornment position="start">
-          <SearchIcon color="action" />
-        </InputAdornment>
-      ),
-      sx: {
-        borderRadius: '20px', // Adjust the border radius as needed
-        "& fieldset": {
-          borderRadius: '20px', // Adjust the border radius as needed
-        },
-      },
-    }}
-  />
+        <TextField
+          size="small"
+          placeholder="Search"
+          variant="outlined"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+            sx: {
+              borderRadius: '20px',
+              "& fieldset": {
+                borderRadius: '20px',
+              },
+            },
+          }}
+        />
       </Box>
       <TableContainer>
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
-            <SortableTableCell label="Company Name" onClick={() => handleSort('CompanyName')} />
-              <SortableTableCell label="Company Code" onClick={() => handleSort('CompanyCode')} />
-              <SortableTableCell label="Communication Address" onClick={() => handleSort('CommAddress')} />
-              <SortableTableCell label="City Name" onClick={() => handleSort('CityName')} />
-              <SortableTableCell label="ERP Live Date" onClick={() => handleSort('ERPLiveDate')} />
-              <SortableTableCell label="Company Status Name" onClick={() => handleSort('CompanyStatusName')} />
-              <SortableTableCell label="State Name" onClick={() => handleSort('StateName')} />
-               <SortableTableCell label="Book Beginning From" onClick={() => handleSort('BookBeginingFrom')} />
+              <SortableTableCell label="Company Name" onClick={() => handleSort('CompanyName')} />
               <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -215,13 +194,6 @@ const TabInfo = ({ setShowTabAccount }) => {
                       <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.CompanyName}</Typography>
                     </Box>
                   </TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyCode}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CommAddress}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CityName}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{formatDate(row.ERPLiveDate)}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.CompanyStatusName}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.StateName}</TableCell>
-                  <TableCell sx={{ padding: '15px', fontSize: '0.75rem' }}>{row.BookBeginingFrom}</TableCell>
                   <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
                     <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
                       <EditIcon />
@@ -233,22 +205,17 @@ const TabInfo = ({ setShowTabAccount }) => {
                 </TableRow>
               ))
             ) : (
-    <TableRow>
-      <TableCell colSpan={9} align="center">
-        {/* SVG image */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
-  <path d="M0 0h24v24H0z" fill="none"/>
-  <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
-</svg>
-
-
-        {/* Optional message */}
-        <Typography variant="body1">Data not found</Typography>
-      </TableCell>
-    </TableRow>
-  )}
-</TableBody>
-
+              <TableRow>
+                <TableCell colSpan={2} align="center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
+                  </svg>
+                  <Typography variant="body1">Data not found</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
@@ -267,15 +234,15 @@ const TabInfo = ({ setShowTabAccount }) => {
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this company ?
+            Are you sure you want to delete this company?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
-            Confirm
+          <Button onClick={handleDelete} color="secondary">
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

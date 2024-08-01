@@ -31,7 +31,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
@@ -107,7 +107,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorElOpportunity(false);
   };
 
   const handleChange = (e) => {
@@ -387,29 +387,38 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
             Opportunity
           </Button>
           <Menu
-            anchorEl={anchorElOpportunity}
-            open={Boolean(anchorElOpportunity)}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: 300, // Set the desired height in pixels
-                overflowY: "auto", // Make the content scrollable if it exceeds the height
-              },
-            }}
+      anchorEl={anchorElOpportunity}
+      open={Boolean(anchorElOpportunity)}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          maxHeight: 300, // Set the desired height in pixels
+          overflowY: "auto", // Make the content scrollable if it exceeds the height
+        },
+      }}
+    >
+      <MenuItem disabled>
+        <Typography variant="subtitle1" style={{ display: 'flex', alignItems: 'center' }}>
+          Convert Lead to
+          <IconButton
+            size="small"
+            onClick={handleClose}
+            style={{ marginLeft: 'auto' }} // Push the icon to the right
           >
-            <MenuItem disabled>
-              <Typography variant="subtitle1">Convert Lead to</Typography>
-            </MenuItem>
-            {userMaster.length > 0 ? (
-              userMaster.map((user, index) => (
-                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
-                {index + 1}. {user.Name}
-              </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>No data available</MenuItem>
-            )}
-          </Menu>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Typography>
+      </MenuItem>
+      {userMaster.length > 0 ? (
+        userMaster.map((user, index) => (
+          <MenuItem key={user.UserID} onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+            {index + 1}. {user.Name}
+          </MenuItem>
+        ))
+      ) : (
+        <MenuItem disabled>No data available</MenuItem>
+      )}
+    </Menu>
         </Grid>
         <Grid item>
           <Button

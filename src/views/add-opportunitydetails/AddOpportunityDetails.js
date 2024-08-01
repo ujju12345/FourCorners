@@ -38,7 +38,7 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
     KeywordID: "",
     SourceID: "",
     SourceNameID: "",
-    OpportunityAttendedByID: "",
+    OpportunityAttendedByID: cookies.amr?.UserID || 1,
     Description: "",
     Cid: "",
     Status: 1,
@@ -294,6 +294,44 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
     setErrors({ ...tempErrors });
     return Object.values(tempErrors).every((x) => x === "");
   };
+
+  const handleSelectChange = async (event) => {
+    const selectedCid = event.target.value;
+    setFormData({ ...formData, Cid: selectedCid });
+
+    const selectedContact = contacts.find((contact) => contact.Cid === selectedCid);
+    if (selectedContact) {
+      try {
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-convtooppo.php?ConvertID=${selectedContact.ConvertID}`;
+        const response = await axios.get(apiUrl);
+
+        if (response.data.status === 'Success') {
+          const data = response.data.data[0];
+          console.log(response.data.data[0] , 'oppportuity single data ');
+          setFormData({
+            ...formData,
+            Cid: data.Cid || '',
+            Name: data.CName || '',
+            Mobile: data.Mobile || '',
+            Description: data.Comments || '',
+            UnittypeID:data.UnittypeID || '',
+            SourceID: data.SourceID || '',
+            Status: data.Status || 1,
+            OpportunityAttendedByID: cookies.amr?.UserID || 1,
+            CreateUID:cookies.amr?.UserID || 1,
+            BookingDate: null,
+          });
+        } else {
+          console.error('API response status not success:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching single convert booking data:', error);
+      }
+    } else {
+      console.warn('Selected contact not found.');
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -359,28 +397,26 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-              <FormControl fullWidth error={!!errors.contactId}>
-                <InputLabel>Contact</InputLabel>
-                <Select
-                  label="Contact"
-                  value={formData.Cid}
-                  onChange={(e) =>
-                    setFormData({ ...formData, Cid: e.target.value })
-                  }
-                >
-                  {contacts.map((contact) => (
-                    <MenuItem key={contact.Cid} value={contact.Cid}>
-                      {contact.CName || "NA"}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {!!errors.Cid && (
-                  <Typography variant="caption" color="error">
-                    {errors.contactId}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
+        <FormControl fullWidth error={!!errors.Cid}>
+          <InputLabel>Contact</InputLabel>
+          <Select
+            label="Contact"
+            value={formData.Cid}
+            onChange={handleSelectChange}
+          >
+            {contacts.map((contact) => (
+              <MenuItem key={contact.Cid} value={contact.Cid}>
+                {contact.CName || 'NA'}
+              </MenuItem>
+            ))}
+          </Select>
+          {!!errors.Cid && (
+            <Typography variant="caption" color="error">
+              {errors.Cid}
+            </Typography>
+          )}
+        </FormControl>
+      </Grid>
             {/* Add rest of the form fields similarly */}
             <Grid item xs={4}>
               <TextField
@@ -657,7 +693,7 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            {/* <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Source Type</InputLabel>
                 <Select
@@ -677,8 +713,8 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={4}>
+            </Grid> */}
+            {/* <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Opportunity Attended By</InputLabel>
                 <Select
@@ -698,7 +734,7 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 fullWidth
