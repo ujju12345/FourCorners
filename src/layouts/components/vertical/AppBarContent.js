@@ -1,101 +1,76 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import React, { useState, Fragment } from 'react';
 import IconButton from '@mui/material/IconButton';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import InputAdornment from '@mui/material/InputAdornment';
-import { useRouter } from 'next/router';
-
-// Icons Imports
-import Menu from 'mdi-material-ui/Menu';
-import Magnify from 'mdi-material-ui/Magnify';
+import Badge from '@mui/material/Badge';
 import BellRing from 'mdi-material-ui/BellRing';
-import { useCookies } from 'react-cookie';
-// import Menu from '@mui/icons-material/Menu';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
-// Components
-import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler';
-import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown';
+import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'; // Import your UserDropdown component
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown';
-import TelecallingNotification from 'src/@core/layouts/components/shared-components/TelecallingNotification';
-import OpportunityNotification from 'src/@core/layouts/components/shared-components/OpportunityNotification';
+import Box from "@mui/material/Box";
+const AppBarContent = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorBooking, setAnchorElBooking] = useState(null);
 
-const AppBarContent = (props) => {
-  // Props
-  const { hidden, settings, saveSettings, toggleNavVisibility } = props;
+  const [notifications, setNotifications] = useState([]); // Define notifications state
+  const [notificationsBooking, setNotificationsBooking] = useState([]); // Define notificationsBooking state
 
-  // Hook
-  const hiddenSm = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const [cookies, setCookie] = useCookies(['amr']);
-  const roleid = cookies.amr?.roleid || '3';
-  const router = useRouter();
-  const isDashboard = router.pathname === '/';
-  const isSalesDashboard = router.pathname === '/SaleDashboard';
+  const handleDropdownOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // Render the appropriate component based on roleid and path
-  const renderNotificationDropdown = () => {
-    if (isDashboard) {
-      return <NotificationDropdown />;
-    }
-    if (isSalesDashboard) {
-      return <OpportunityNotification />;
-    }
-    switch (roleid) {
-      case 1:
-        return <NotificationDropdown />;
-      case 2:
-        return <TelecallingNotification />;
-      case 3:
-        return <OpportunityNotification />;
-      default:
-        return null;
-    }
+  const handleConvertBooking = (event) => {
+    setAnchorElBooking(event.currentTarget);
+  };
+
+  const handleDropdownClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDropdownBookingClose = () => {
+    setAnchorElBooking(null);
   };
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Box
-        className='actions-left'
-        sx={{ mr: 2, display: 'flex', alignItems: 'center' }}
+    <Fragment>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}>
+     <IconButton 
+        color='inherit' 
+        aria-haspopup='true' 
+        onClick={handleConvertBooking} 
+        aria-controls='booking-menu'
       >
-        {hidden ? (
-          <IconButton
-            color='inherit'
-            onClick={toggleNavVisibility}
-            sx={{ ml: -2.75, ...(hiddenSm ? {} : { mr: 3.5 }) }}
-          >
-            <Menu />
-          </IconButton>
-        ) : null}
-        <TextField
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Badge badgeContent={notificationsBooking.length} color='error'>
+          <BellRing />
+        </Badge>
+      </IconButton>
+
+      <IconButton 
+        color='inherit' 
+        aria-haspopup='true' 
+        onClick={handleDropdownOpen} 
+        aria-controls='notification-menu'
+        sx={{ marginLeft: 2 }} // Add margin for spacing
+      >
+        <Badge badgeContent={notifications.length} color='error'>
+          <TimelineIcon />
+        </Badge>
+      </IconButton>
+
+      <NotificationDropdown
+        anchorEl={anchorEl}
+        handleDropdownClose={handleDropdownClose}
+        anchorBooking={anchorBooking}
+        handleDropdownBookingClose={handleDropdownBookingClose}
+        handleConvertBooking={handleConvertBooking}
+        notifications={notifications} // Pass notifications
+        notificationsBooking={notificationsBooking} // Pass notificationsBooking
+        setNotifications={setNotifications} // Pass setNotifications if needed
+        setNotificationsBooking={setNotificationsBooking} // Pass setNotificationsBooking if needed
+      />
+
+      <UserDropdown />
       </Box>
-      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* {isDashboard && ( */}
-          {/* <IconButton color='inherit'>
-            <Menu />
-          </IconButton> */}
-        {/* )} */}
-        {renderNotificationDropdown()}
-        <UserDropdown />
-      </Box>
-    </Box>
+    </Fragment>
   );
 };
 
