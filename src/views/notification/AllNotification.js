@@ -283,7 +283,7 @@ const AllNotifications = ({ onEdit }) => {
               <SortableTableCell label="Action Type" sortBy="ActionType" />
               <SortableTableCell label="Created By" sortBy="Createddate" />
               <SortableTableCell label="Created Date" sortBy="CreatedDate" />
-              <TableCell align="left">Action</TableCell>
+          
             </TableRow>
           </TableHead>
           <TableBody>
@@ -295,12 +295,7 @@ const AllNotifications = ({ onEdit }) => {
                   <TableCell align="left">{row.ActionType}</TableCell>
                   <TableCell align="left">{row.Name}</TableCell>
                   <TableCell align="left">{row.CreatedDate}</TableCell>
-                  <TableCell align="left">
-                    <IconButton onClick={(event) => handleDropdownOpen(event, row)} aria-label="notifications">
-                      <MoreVertIcon /> 
-                    </IconButton>
-                    {anchorEl && <DropdownMenu />}
-                  </TableCell>
+                
                 </TableRow>
               ))
             ) : (
