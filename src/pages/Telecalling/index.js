@@ -34,7 +34,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios"; // Import Axios for API requests
 import ApexChartWrapper from "src/@core/styles/libs/react-apexcharts";
-import StatisticsCard from "src/views/dashboard/StatisticsCard";
+import StatisticsCardtelecaller from "src/views/dashboard/StatisticsCardtelecaller";
 import Trophy from "src/views/dashboard/Trophy";
 import WeeklyOverview from "src/views/dashboard/WeeklyOverview";
 import TotalEarning from "src/views/dashboard/TotalEarning";
@@ -228,11 +228,11 @@ const TeleDashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Trophy />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <StatisticsCard />
+        </Grid> */}
+        <Grid item xs={12}>
+          <StatisticsCardtelecaller />
         </Grid>
 
         <Grid item xs={12}>

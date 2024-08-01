@@ -105,95 +105,100 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  const numberToWordsIndian = (num) => {
-    const singleDigits = [
-      "",
-      "one",
-      "two",
-      "three",
-      "four",
-      "five",
-      "six",
-      "seven",
-      "eight",
-      "nine",
-    ];
-    const twoDigits = [
-      "",
-      "",
-      "twenty",
-      "thirty",
-      "forty",
-      "fifty",
-      "sixty",
-      "seventy",
-      "eighty",
-      "ninety",
-    ];
-    const tenToNineteen = [
-      "ten",
-      "eleven",
-      "twelve",
-      "thirteen",
-      "fourteen",
-      "fifteen",
-      "sixteen",
-      "seventeen",
-      "eighteen",
-      "nineteen",
-    ];
+const numberToWordsIndian = (num) => {
+  const singleDigits = [
+    "",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+  ];
+  const twoDigits = [
+    "",
+    "",
+    "twenty",
+    "thirty",
+    "forty",
+    "fifty",
+    "sixty",
+    "seventy",
+    "eighty",
+    "ninety",
+  ];
+  const tenToNineteen = [
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+    "seventeen",
+    "eighteen",
+    "nineteen",
+  ];
 
-    const convertTwoDigits = (n) => {
-      if (n < 10) return singleDigits[n];
-      if (n < 20) return tenToNineteen[n - 10];
-      return (
-        twoDigits[Math.floor(n / 10)] +
-        (n % 10 ? " " + singleDigits[n % 10] : "")
-      );
-    };
-
-    const convertThreeDigits = (n) => {
-      return (
-        (n >= 100 ? singleDigits[Math.floor(n / 100)] + " hundred " : "") +
-        convertTwoDigits(n % 100)
-      );
-    };
-
-    if (num === 0) return "zero";
-
-    let result = "";
-    let crore = Math.floor(num / 10000000);
-    let lakh = Math.floor((num % 10000000) / 100000);
-    let thousand = Math.floor((num % 100000) / 1000);
-    let hundred = num % 1000;
-
-    if (crore > 0) result += convertTwoDigits(crore) + " crore ";
-    if (lakh > 0) result += convertTwoDigits(lakh) + " lakh ";
-    if (thousand > 0) result += convertTwoDigits(thousand) + " thousand ";
-    if (hundred > 0) result += convertThreeDigits(hundred);
-
-    return result.trim();
+  const convertTwoDigits = (n) => {
+    if (n < 10) return singleDigits[n];
+    if (n < 20) return tenToNineteen[n - 10];
+    return (
+      twoDigits[Math.floor(n / 10)] + (n % 10 ? " " + singleDigits[n % 10] : "")
+    );
   };
+
+  const convertThreeDigits = (n) => {
+    return (
+      (n >= 100 ? singleDigits[Math.floor(n / 100)] + " hundred " : "") +
+      convertTwoDigits(n % 100)
+    );
+  };
+
+  if (num === 0) return "zero";
+
+  let result = "";
+  let crore = Math.floor(num / 10000000);
+  let lakh = Math.floor((num % 10000000) / 100000);
+  let thousand = Math.floor((num % 100000) / 1000);
+  let hundred = num % 1000;
+
+  if (crore > 0) result += convertTwoDigits(crore) + " crore ";
+  if (lakh > 0) result += convertTwoDigits(lakh) + " lakh ";
+  if (thousand > 0) result += convertTwoDigits(thousand) + " thousand ";
+  if (hundred > 0) result += convertThreeDigits(hundred);
+
+  return result.trim();
+};
+
+  useEffect(() => {
+    const numericValue = parseInt(formData.TotalCost.replace(/,/g, "") || 0);
+    const FlatCostInWords = numberToWordsIndian(numericValue);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      FlatCostInWords:
+        FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+    }));
+  }, [formData.TotalCost]);
 
   const handleChange = (event, index, field) => {
     const { type, checked, value } = event.target;
     const name = event.target.name;
 
     if (index !== undefined && field !== undefined) {
-      // Handling changes in remarks array (dynamic fields)
       const newRemarks = [...remarks];
 
       if (type === "checkbox") {
-        // Set Loan to 1 if checked, 0 if unchecked
         newRemarks[index][field] = checked ? 1 : 0;
       } else {
-        // Update other fields
         newRemarks[index][field] = value;
       }
 
       setRemarks(newRemarks);
     } else {
-      // Handling changes in main form fields
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name]: undefined,
@@ -208,18 +213,12 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       } else if (name === "TotalCost") {
         const numericValue = value.replace(/,/g, "");
         const formattedValue = formatNumber(numericValue);
-        const FlatCostInWords = numberToWordsIndian(
-          parseInt(numericValue || 0)
-        );
 
         setFormData((prevFormData) => ({
           ...prevFormData,
           [name]: formattedValue,
-          FlatCostInWords:
-            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       } else if (name === "Area" || name === "Ratesqft") {
-        // Calculate TtlAmount when Area or Ratesqft changes
         const newArea = name === "Area" ? value : formData.Area;
         const newRatesqft = name === "Ratesqft" ? value : formData.Ratesqft;
         const newTtlAmount =
@@ -238,9 +237,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         }));
       }
 
-      // Recalculate Gross Flat Cost when any relevant field changes
-      const { TtlAmount, Charges, ParkingFacility, Advocate, TotalCost } =
-        formData;
+      const { TtlAmount, Charges, ParkingFacility, Advocate } = formData;
       if (
         name === "TtlAmount" ||
         name === "Charges" ||
@@ -265,9 +262,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     }
   };
 
-  const formatNumber = (value) => {
-    if (isNaN(value)) return value;
-    return new Intl.NumberFormat().format(value);
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   useEffect(() => {

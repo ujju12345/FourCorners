@@ -47,7 +47,7 @@ const AddTellecallingDetails = ({ show, editData , onDashboardClick}) => {
     Comments: "",
     Location: "",
     FollowupThrough: "",
-    NextFollowUpDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
+    NextFollowUpDate:"",
     NextFollowUpTime: getCurrentTime(),
     SourceID: "",
     SourceName: "",
@@ -247,9 +247,7 @@ const [cNames, setCNames] = useState([]);
           Comments: "", // Assuming Comments are not available in fetched data
           Location: fetchedData.LocationName || "",
           FollowupThrough: "", // Assuming FollowupThrough is not available in fetched data
-          NextFollowUpDate: new Date(
-            new Date().getTime() + 2 * 24 * 60 * 60 * 1000
-          ),
+          NextFollowUpDate:"",
           NextFollowUpTime: getCurrentTime(),
           SourceID: fetchedData.SourceID || "",
           SourceName: fetchedData.SourceName || "",
@@ -538,14 +536,7 @@ const [cNames, setCNames] = useState([]);
     setSubmitSuccess(false);
     setSubmitError(false);
   };
-  useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      NextFollowUpDate: new Date(
-        new Date().getTime() + 2 * 24 * 60 * 60 * 1000
-      ), // 2 days ahead
-    }));
-  }, []);
+
 
   const handleDateChange = (date) => {
     setFormData({ ...formData, NextFollowUpDate: date });
@@ -917,7 +908,7 @@ const [cNames, setCNames] = useState([]);
                 </FormControl>
               </Grid>
 
-              <Grid item xs={8} sm={4}>
+              {/* <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
                   label={
@@ -930,7 +921,7 @@ const [cNames, setCNames] = useState([]);
                   value={formData.SourceName}
                   onChange={handleChange}
                 />
-              </Grid>
+              </Grid> */}
 
               {/* <Grid item xs={8} sm={4}>
               <TextField
