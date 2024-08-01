@@ -62,6 +62,7 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
 
   
   const [rows, setRows] = useState([]);
+  const [localities, setLocalities] = useState([]);
 
 
   const [contactTypes, setContactTypes] = useState([]);
@@ -264,6 +265,26 @@ const AddContact = ({ show, editData  , onDashboardClick}) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (formData.CityID) {
+      axios
+        .get(
+          "https://apiforcorners.cubisysit.com/api/api-fetch-locationmaster.php",
+          {
+            params: { CityID: formData.CityID },
+          }
+        )
+        .then((response) => {
+          if (response.data.status === "Success") {
+            setLocalities(response.data.data);
+          }
+        })
+        .catch((error) => console.error("Error fetching localities:", error));
+    } else {
+      setLocalities([]);
+    }
+  }, [formData.CityID]);
 
   useEffect(() => {
     if (dynamicSourceID) {
@@ -495,7 +516,7 @@ const handleSubmit = async (event) => {
       });
   
       if (response.data.status === "Success") {
-        setFormData(initialFormData); 
+        setFormData(initialFormData); // Reset form data after successful submission
         setErrors({});
         setSubmitSuccess(true);
         setSubmitError(false);
@@ -528,7 +549,7 @@ const handleSubmit = async (event) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Something went wrong!',
+        text: 'Mobile Number is already Exits!',
       });
     }
   };
@@ -794,23 +815,25 @@ const handleSubmit = async (event) => {
               </Grid>
 
        
-
-
-            <Grid item xs={8} sm={4}>
-              <TextField
-                fullWidth
-                label={
-                  <>
-                    Location <RequiredIndicator />
-                  </>
-                }
-                name="LocationID"
-                placeholder="Location"
-                value={formData.LocationID}
-                onChange={handleChange}
-                error={!!errors.LocationID}
-                helperText={errors.LocationID}
-              />
+              <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Locality</InputLabel>
+                <Select
+                  name="LocationID"
+                  label="Location"
+                  value={formData.LocationID}
+                  onChange={handleChange}
+                >
+                  {localities.map((locality) => (
+                    <MenuItem
+                      key={locality.LocationID}
+                      value={locality.LocationID}
+                    >
+                      {locality.LocationName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
 
             <Grid item xs={8} sm={4}>

@@ -220,7 +220,7 @@ const [cNames, setCNames] = useState([]);
     setSelectedCid(selectedCid);
 
     try {
-      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
+      const apiUrl =`https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
       const response = await axios.get(apiUrl);
 
       if (response.data.status === "Success") {
@@ -245,7 +245,7 @@ const [cNames, setCNames] = useState([]);
           EstimatedbudgetID: "", // Assuming EstimatedbudgetID is not available in fetched data
           leadstatusID: "", // Assuming leadstatusID is not available in fetched data
           Comments: "", // Assuming Comments are not available in fetched data
-          Location: fetchedData.LocationID || "",
+          Location: fetchedData.LocationName || "",
           FollowupThrough: "", // Assuming FollowupThrough is not available in fetched data
           NextFollowUpDate: new Date(
             new Date().getTime() + 2 * 24 * 60 * 60 * 1000

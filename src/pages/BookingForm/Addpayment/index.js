@@ -225,11 +225,13 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
     setEditData(null);
     setShowAddDetails(false);
     setShowHistory(false);
-    setRowDataToUpdate(null);
-    setShowDashboard(false); // Reset showDashboard when going back
-    setShowReceipt(false); // Reset showReceipt when going back
+    setRowDataToUpdate(rowDataToUpdate); // Ensure rowDataToUpdate is set to display Listprojectbookng
+    setShowDashboard(false); // Ensure Dashboard is hidden
+    setShowReceipt(false); // Ensure Receipt is hidden
+    setShowTemplate(false); // Ensure Template is hidden
     fetchData();
   };
+  
 
   const handleEdit = (row) => {
     setEditData(row);
@@ -312,78 +314,75 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
 
 
   return (
-<Grid container spacing={6}>
-  <Grid item xs={4}>
-    <SidebarBookingProject
-      rows={rows}
-      onItemClick={handleShow}
-      onEdit={handleEdit}
-      onCreate={handleAddTelecaller}
-      onDashboardClick={handleNavigation}
-    />
-  </Grid>
-  <Grid item xs={8}>
-    {loading && <CircularProgress />}
-    {showDashboard && !loading && !error && <WelcomeScreen />}
-    {!showDashboard && firstVisit && !loading && !error && !leadData && (
-      <WelcomeScreen />
-    )}
-    {leadData && (
-      <Box>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Converted Lead Details
-        </Typography>
-        <pre>{JSON.stringify(leadData, null, 2)}</pre>
-      </Box>
-    )}
-    {showAddDetails && !showDashboard && (
-      <AddTellecallingDetails show={handleBack} editData={editData} />
-    )}
-    {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
-      <Listprojectbookng
-        item={rowDataToUpdate}
-        onDelete={handleDelete}
-        onHistoryClick={handleShowHistory}
+    <Grid container spacing={6}>
+    <Grid item xs={4}>
+      <SidebarBookingProject
+        rows={rows}
+        onItemClick={handleShow}
         onEdit={handleEdit}
-        handleTemplateClick={handleFormSubmitSuccess}
-        onChequeReceiptClick={handleChequeReciept}
-        handleReportClick={handleReport}
-        onCheque={handleCheque}
-        
+        onCreate={handleAddTelecaller}
+        onDashboardClick={handleNavigation}
       />
-    )}
-    {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleGoBackFromTemplate} />}
-    {showReceipt && <Reciept bookingID={bookingIDCheque} />}
-
-
-    {!loading && !error && showHistory && (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        minHeight="100vh"
-      >
-        <Typography variant="body1">
-          <HistoryTelecalling />
-        </Typography>
-      </Box>
-    )}
-    {!loading && error && (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        minHeight="100vh"
-      >
-        <Typography variant="body1">
-          Error occurred: {error.message}
-        </Typography>
-      </Box>
-    )}
+    </Grid>
+    <Grid item xs={8}>
+      {loading && <CircularProgress />}
+      {showDashboard && !loading && !error && <WelcomeScreen />}
+      {!showDashboard && firstVisit && !loading && !error && !leadData && (
+        <WelcomeScreen />
+      )}
+      {leadData && (
+        <Box>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Converted Lead Details
+          </Typography>
+          <pre>{JSON.stringify(leadData, null, 2)}</pre>
+        </Box>
+      )}
+      {showAddDetails && !showDashboard && (
+        <AddTellecallingDetails show={handleBack} editData={editData} />
+      )}
+      {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
+        <Listprojectbookng
+          item={rowDataToUpdate}
+          onDelete={handleDelete}
+          onHistoryClick={handleShowHistory}
+          onEdit={handleEdit}
+          handleTemplateClick={handleFormSubmitSuccess}
+          onChequeReceiptClick={handleChequeReciept}
+          handleReportClick={handleReport}
+          onCheque={handleCheque}
+        />
+      )}
+      {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleBack} />}
+      {showReceipt && <Reciept bookingID={bookingIDCheque} />}
+      {!loading && !error && showHistory && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+        >
+          <Typography variant="body1">
+            <HistoryTelecalling />
+          </Typography>
+        </Box>
+      )}
+      {!loading && error && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+        >
+          <Typography variant="body1">
+            Error occurred: {error.message}
+          </Typography>
+        </Box>
+      )}
+    </Grid>
   </Grid>
-</Grid>
 
   );
   
