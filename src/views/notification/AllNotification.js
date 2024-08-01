@@ -261,7 +261,7 @@ const AllNotifications = ({ onEdit }) => {
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography
                 variant="body2"
-                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+                sx={{ margin: 5, fontWeight: "bold", fontSize: 20 }}
               >
                 Recent Activity
               </Typography>
@@ -278,8 +278,10 @@ const AllNotifications = ({ onEdit }) => {
         <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
           <TableHead>
             <TableRow>
+            <SortableTableCell label="Name" sortBy="Name" />
               <SortableTableCell label="Table Name" sortBy="TableName" />
               <SortableTableCell label="Action Type" sortBy="ActionType" />
+              <SortableTableCell label="Created By" sortBy="Createddate" />
               <SortableTableCell label="Created Date" sortBy="CreatedDate" />
               <TableCell align="left">Action</TableCell>
             </TableRow>
@@ -288,23 +290,15 @@ const AllNotifications = ({ onEdit }) => {
             {filteredRows.length > 0 ? (
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                 <TableRow key={index}>
+                  <TableCell align="left" sx={{ fontWeight: 900 }}>{row.Details?.CName}</TableCell>
                   <TableCell align="left">{row.TableName}</TableCell>
                   <TableCell align="left">{row.ActionType}</TableCell>
+                  <TableCell align="left">{row.Name}</TableCell>
                   <TableCell align="left">{row.CreatedDate}</TableCell>
                   <TableCell align="left">
-                    <IconButton onClick={() => onEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteNotification(row.NotificationID)} aria-label="delete" sx={{ color: 'red' }}>
-                      <DeleteIcon />
-                    </IconButton>
                     <IconButton onClick={(event) => handleDropdownOpen(event, row)} aria-label="notifications">
-                      <MoreVertIcon />
+                      <MoreVertIcon /> 
                     </IconButton>
-                    {/* Dropdown Menu integrated here */}
-
-
-                 
                     {anchorEl && <DropdownMenu />}
                   </TableCell>
                 </TableRow>

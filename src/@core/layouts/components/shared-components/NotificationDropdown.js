@@ -2,9 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import {
   Box,
-  Chip,
   Button,
-  IconButton,
   Menu as MuiMenu,
   Avatar as MuiAvatar,
   MenuItem as MuiMenuItem,
@@ -13,6 +11,7 @@ import {
 import { styled } from '@mui/material/styles';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 import { useRouter } from 'next/router';
+import { useCookies } from "react-cookie";
 
 // ** Styled components
 const Menu = styled(MuiMenu)(({ theme }) => ({
@@ -35,15 +34,11 @@ const MenuItem = styled(MuiMenuItem)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`
 }));
 
-const styles = {
+const PerfectScrollbar = styled(PerfectScrollbarComponent)({
   maxHeight: 349,
   '& .MuiMenuItem-root:last-of-type': {
     border: 0
   }
-};
-
-const PerfectScrollbar = styled(PerfectScrollbarComponent)({
-  ...styles
 });
 
 const Avatar = styled(MuiAvatar)({
@@ -69,16 +64,16 @@ const MenuItemSubtitle = styled(Typography)({
   textOverflow: 'ellipsis'
 });
 
-const NotificationDropdown = ({ 
-  anchorEl, 
-  handleDropdownClose, 
-  anchorBooking, 
-  handleDropdownBookingClose, 
+const NotificationDropdown = ({
+  anchorEl,
+  handleDropdownClose,
+  anchorBooking,
+  handleDropdownBookingClose,
   handleConvertBooking,
-  notifications, 
-  notificationsBooking, 
-  setNotifications, 
-  setNotificationsBooking 
+  notifications,
+  notificationsBooking,
+  setNotifications,
+  setNotificationsBooking
 }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,15 +84,18 @@ const NotificationDropdown = ({
     fetchDataBooking();
   }, []);
 
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
+
   const fetchDataBooking = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-convertbooking.php`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-convertbooking.php?UserID=${userid}`
       );
       if (Array.isArray(response.data.data)) {
-        const newNotifications = response.data.data;
-        if (newNotifications.length > notificationsBooking.length) {
-          setNotificationsBooking(newNotifications);
+        const newNotificationsBooking = response.data.data;
+        if (newNotificationsBooking.length > notificationsBooking.length) {
+          setNotificationsBooking(newNotificationsBooking);
         }
       } else {
         console.error("Expected an array of notifications for booking");
@@ -137,7 +135,7 @@ const NotificationDropdown = ({
   };
 
   const handleBookingReadAllNotifications = () => {
-    router.push('/booking-notification');
+    router.push('/BookingForm');
     handleDropdownBookingClose();
   };
 
@@ -162,10 +160,12 @@ const NotificationDropdown = ({
               <MenuItem key={index}>
                 <Avatar src='/images/avatars/1.png' alt='Avatar' />
                 <Box sx={{ marginLeft: 2, flex: 1 }}>
-                  <MenuItemTitle>{notification.Name}</MenuItemTitle>
-                  <MenuItemSubtitle>{notification.Details?.CName}</MenuItemSubtitle>
+                  <MenuItemTitle sx={{ fontSize:16 }} >Contact : {notification.Details?.CName}</MenuItemTitle>
+                  <MenuItemSubtitle sx={{ fontSize:12 }}>Created By : {notification.Name}</MenuItemSubtitle>
+                  <MenuItemSubtitle sx={{ fontSize:12 }}>Created IN :  {notification.TableName}  </MenuItemSubtitle>
+                  <MenuItemSubtitle sx={{ fontSize:12 }}>Created Date : {notification.CreatedDate}</MenuItemSubtitle>
                 </Box>
-              </MenuItem>
+              </MenuItem>  
             ))
           )}
           {error && (
@@ -173,12 +173,12 @@ const NotificationDropdown = ({
               <Typography color='error'>Error fetching notifications</Typography>
             </Box>
           )}
-          <MenuItem onClick={handleReadAllNotifications}>
-            <Button variant='outlined' fullWidth>
-              View All Notifications
-            </Button>
-          </MenuItem>
         </PerfectScrollbar>
+        <MenuItem onClick={handleReadAllNotifications}>
+          <Button variant='outlined' fullWidth>
+            View All Notifications
+          </Button>
+        </MenuItem>
       </Menu>
 
       <Menu
@@ -199,9 +199,11 @@ const NotificationDropdown = ({
             notificationsBooking.map((notification, index) => (
               <MenuItem key={index}>
                 <Avatar src='/images/avatars/1.png' alt='Avatar' />
-                <Box sx={{ marginLeft: 2, flex: 1 }}>
-                  <MenuItemTitle>{notification.Name}</MenuItemTitle>
-                  <MenuItemSubtitle>{notification.Details?.CName}</MenuItemSubtitle>
+                <Box sx={{ marginLeft: 2, flex: 1 }} onClick={handleBookingReadAllNotifications}>
+                  <MenuItemTitle sx={{ fontSize:16 }} >Booking Name : {notification?.TitleName}{notification?.CName}</MenuItemTitle>
+                  <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer By : {notification?.UserName} </MenuItemSubtitle>
+                  <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer Date: {notification?.CreateDate} </MenuItemSubtitle>
+
                 </Box>
               </MenuItem>
             ))
@@ -211,12 +213,12 @@ const NotificationDropdown = ({
               <Typography color='error'>Error fetching booking notifications</Typography>
             </Box>
           )}
-          <MenuItem onClick={handleBookingReadAllNotifications}>
-            <Button variant='outlined' fullWidth>
-              View All Booking Notifications
-            </Button>
-          </MenuItem>
         </PerfectScrollbar>
+        <MenuItem onClick={handleBookingReadAllNotifications}>
+          <Button variant='outlined' fullWidth>
+            View All Booking Notifications
+          </Button>
+        </MenuItem>
       </Menu>
     </Fragment>
   );

@@ -41,15 +41,7 @@ const ProjectFinance = () => {
 
   return (
     <>
-     <Grid item xs={12}>
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={() => setShowForm(true)}
-            >
-              Add
-            </Button>
-          </Grid>
+   
       {showForm ? (
         <>
          
