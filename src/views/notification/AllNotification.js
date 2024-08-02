@@ -288,7 +288,7 @@ const AllNotifications = ({ onEdit }) => {
           </TableHead>
           <TableBody>
             {filteredRows.length > 0 ? (
-              filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+              filteredRows.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell align="left" sx={{ fontWeight: 900 }}>{row.Details?.CName}</TableCell>
                   <TableCell align="left">{row.TableName}</TableCell>
@@ -307,15 +307,7 @@ const AllNotifications = ({ onEdit }) => {
             )}
           </TableBody>
         </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+
       </TableContainer>
 
       {/* Dialog for Delete Confirmation */}

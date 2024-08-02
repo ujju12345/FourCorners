@@ -75,7 +75,7 @@ const StatisticsCard = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Today Follow Up</Typography>
-              <Typography variant='h6'>213</Typography>
+              <Typography variant='h6'>23</Typography>
             </Box>
            
           </Box>
@@ -97,7 +97,7 @@ const StatisticsCard = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Backlog Pending</Typography>
-              <Typography variant='h6'>123</Typography>
+              <Typography variant='h6'>42</Typography>
             </Box>
           </Box>
         </Grid>
@@ -119,7 +119,7 @@ const StatisticsCard = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Open Opportunity</Typography>
-              <Typography variant='h6'>12</Typography>
+              <Typography variant='h6'>2423</Typography>
             </Box>
 
          
@@ -142,7 +142,7 @@ const StatisticsCard = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>All Opportunity</Typography>
-              <Typography variant='h6'>234</Typography>
+              <Typography variant='h6'>223</Typography>
             </Box>
        
           </Box>
@@ -163,7 +163,7 @@ const StatisticsCard = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 20 % growth
+              Total 234 % growth
             </Box>{' '}
             😎 this month
           </Typography>
