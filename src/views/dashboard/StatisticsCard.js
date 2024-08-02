@@ -22,27 +22,7 @@ const StatisticsCard = () => {
   const userid = cookies.amr?.UserID || 'Role';
   const [apiData, setApiData] = useState(null);
 
-  useEffect(() => {
-    const fetchApiData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
 
-        console.log(data , "dekhh<<<<<<>>>>>");
-        setApiData(data);
-      } catch (error) {
-        console.error('Error fetching API data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApiData();
-  }, []);
 
   const renderStats = () => {
     if (loading) {
