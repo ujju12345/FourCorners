@@ -36,7 +36,7 @@
     "themeselection"
   ],
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --max-old-space-size=4096 node_modules/.bin/next dev",
     "build": "next build",
     "start": "next start",
     "export": "next export",
@@ -68,7 +68,6 @@
     "http-proxy-middleware": "^3.0.0",
     "mdi-material-ui": "^7.1.0",
     "moment": "^2.30.1",
-    "next": "^12.3.4",
     "notistack": "^3.0.1",
     "nprogress": "^0.2.0",
     "number-to-words": "^1.2.4",

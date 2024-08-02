@@ -75,7 +75,7 @@ const StatisticsCard = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Today Follow Up</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.todayCount : '--'}</Typography>
+              <Typography variant='h6'>213</Typography>
             </Box>
            
           </Box>
@@ -97,7 +97,7 @@ const StatisticsCard = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Backlog Pending</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.pastCount : '--'}</Typography>
+              <Typography variant='h6'>123</Typography>
             </Box>
           </Box>
         </Grid>
@@ -119,7 +119,7 @@ const StatisticsCard = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Open Opportunity</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.futureCount : '--'}</Typography>
+              <Typography variant='h6'>12</Typography>
             </Box>
 
          
@@ -142,7 +142,7 @@ const StatisticsCard = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>All Opportunity</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.totalCount : '--'}</Typography>
+              <Typography variant='h6'>234</Typography>
             </Box>
        
           </Box>
@@ -163,7 +163,7 @@ const StatisticsCard = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total {apiData ? apiData.summary.totalCount : '--'}% growth
+              Total 20 % growth
             </Box>{' '}
             😎 this month
           </Typography>
