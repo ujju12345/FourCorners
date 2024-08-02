@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import axios from 'axios';
 import {
   Box,
   Button,
@@ -63,37 +64,6 @@ const MenuItemSubtitle = styled(Typography)({
   textOverflow: 'ellipsis'
 });
 
-// Dummy data
-const dummyNotifications = [
-  {
-    Details: { CName: 'John Doe' },
-    Name: 'Admin',
-    TableName: 'Users',
-    CreatedDate: '2024-08-01'
-  },
-  {
-    Details: { CName: 'Jane Smith' },
-    Name: 'Moderator',
-    TableName: 'Orders',
-    CreatedDate: '2024-08-02'
-  }
-];
-
-const dummyNotificationsBooking = [
-  {
-    TitleName: 'Booking A',
-    CName: 'Client A',
-    UserName: 'User A',
-    CreateDate: '2024-08-03'
-  },
-  {
-    TitleName: 'Booking B',
-    CName: 'Client B',
-    UserName: 'User B',
-    CreateDate: '2024-08-04'
-  }
-];
-
 const NotificationDropdown = ({
   anchorEl,
   handleDropdownClose,
@@ -105,15 +75,59 @@ const NotificationDropdown = ({
   setNotifications,
   setNotificationsBooking
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    // Using dummy data instead of fetching from API
-    setNotifications(dummyNotifications);
-    setNotificationsBooking(dummyNotificationsBooking);
+    fetchData();
+    fetchDataBooking();
   }, []);
+
+  const [cookies, setCookie] = useCookies(["amr"]);
+  const userid = cookies.amr?.UserID || 'Role';
+
+  const fetchDataBooking = async () => {
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-convertbooking.php?UserID=${userid}`
+      );
+      if (Array.isArray(response.data.data)) {
+        const newNotificationsBooking = response.data.data;
+        if (newNotificationsBooking.length > notificationsBooking.length) {
+          setNotificationsBooking(newNotificationsBooking);
+        }
+      } else {
+        console.error("Expected an array of notifications for booking");
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching booking data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-notification.php`
+      );
+      if (Array.isArray(response.data.data)) {
+        const newNotifications = response.data.data;
+        if (newNotifications.length > notifications.length) {
+          setNotifications(newNotifications);
+        }
+      } else {
+        console.error("Expected an array of notifications");
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
 
   const handleReadAllNotifications = () => {
     router.push('/notification');
@@ -189,6 +203,7 @@ const NotificationDropdown = ({
                   <MenuItemTitle sx={{ fontSize:16 }} >Booking Name : {notification?.TitleName}{notification?.CName}</MenuItemTitle>
                   <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer By : {notification?.UserName} </MenuItemSubtitle>
                   <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer Date: {notification?.CreateDate} </MenuItemSubtitle>
+
                 </Box>
               </MenuItem>
             ))
