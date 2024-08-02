@@ -17,8 +17,7 @@ import { useCookies } from "react-cookie";
 
 const StatisticsCardtelecaller = () => {
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
-
+  const [cookies] = useCookies(["amr"]);
   const userid = cookies.amr?.UserID || 'Role';
   const [apiData, setApiData] = useState(null);
 
@@ -31,8 +30,6 @@ const StatisticsCardtelecaller = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-
-        console.log(data , "dekhh<<<<<<>>>>>");
         setApiData(data);
       } catch (error) {
         console.error('Error fetching API data:', error);
@@ -42,7 +39,7 @@ const StatisticsCardtelecaller = () => {
     };
 
     fetchApiData();
-  }, []);
+  }, [userid]);
 
   const renderStats = () => {
     if (loading) {
@@ -54,6 +51,8 @@ const StatisticsCardtelecaller = () => {
         </Grid>
       );
     }
+
+    const counts = apiData?.counts || {};
 
     return (
       <Grid container spacing={[5, 0]}>
@@ -72,12 +71,10 @@ const StatisticsCardtelecaller = () => {
             >
               <TrendingUp sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Today's Follow Up</Typography>
-              <Typography variant='h6'>234</Typography>
+              <Typography variant='h6'>{counts.todayFollowup ?? '--'}</Typography>
             </Box>
-           
           </Box>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -97,7 +94,7 @@ const StatisticsCardtelecaller = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Backlog Lead</Typography>
-              <Typography variant='h6'>234</Typography>
+              <Typography variant='h6'>{counts.backlogFollowup ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
@@ -116,13 +113,10 @@ const StatisticsCardtelecaller = () => {
             >
               <CellphoneLink sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Open Lead</Typography>
-              <Typography variant='h6'>123</Typography>
+              <Typography variant='caption'>Next Follow Up</Typography>
+              <Typography variant='h6'>{counts.nextFollowup ?? '--'}</Typography>
             </Box>
-
-         
           </Box>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -141,10 +135,9 @@ const StatisticsCardtelecaller = () => {
               <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Tranfer To Sales</Typography>
-              <Typography variant='h6'>123</Typography>
+              <Typography variant='caption'>Transfer To Sales</Typography>
+              <Typography variant='h6'>{counts.transfertooppo ?? '--'}</Typography>
             </Box>
-       
           </Box>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -157,18 +150,15 @@ const StatisticsCardtelecaller = () => {
                 height: 44,
                 boxShadow: 3,
                 color: 'common.white',
-                backgroundColor: 'warning.main',
+                backgroundColor: 'error.main',
               }}
             >
-              <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+              <AccountOutline sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Not Interested</Typography>
-              <Typography variant='h6'>123</Typography>
+              <Typography variant='h6'>{counts.notInterested ?? '--'}</Typography>
             </Box>
-
-         
           </Box>
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -187,10 +177,9 @@ const StatisticsCardtelecaller = () => {
               <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>All Lead</Typography>
-              <Typography variant='h6'>123</Typography>
+              <Typography variant='caption'>Total Follow Ups</Typography>
+              <Typography variant='h6'>{counts.totalFollowup ?? '--'}</Typography>
             </Box>
-       
           </Box>
         </Grid>
       </Grid>
@@ -209,7 +198,7 @@ const StatisticsCardtelecaller = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 123 % growth
+              Total {apiData ? apiData.counts.totalFollowup : '--'} follow ups
             </Box>{' '}
             😎 this month
           </Typography>
