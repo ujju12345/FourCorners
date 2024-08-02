@@ -33,7 +33,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 // import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
-  console.log(item , 'CIDD MIL JAYEGAA<<<>>>>>>');
+  console.log(item, 'CIDD MIL JAYEGAA<<<>>>>>>');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -156,10 +156,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
     // Add Tid to formData
     const formData = {
-      UserID:userID,
-      Cid:item?.Cid,
+      UserID: userID,
+      Cid: item?.Cid,
       Tid: item.Tid,
-      Status:1,
+      Status: 1,
       CreateUID: cookies?.amr?.UserID || 1,
 
     };
@@ -185,9 +185,9 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
         // Show success message using SweetAlert
         Swal.fire({
           icon: "success",
-          title: 
-             "Lead Converted to opportunity Successfully",
-            
+          title:
+            "Lead Converted to opportunity Successfully",
+
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -409,9 +409,9 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </MenuItem>
             {userMaster.length > 0 ? (
               userMaster.map((user, index) => (
-                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
-                {index + 1}. {user.Name}
-              </MenuItem>
+                <MenuItem key={user.UserID} onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+                  {index + 1}. {user.Name}
+                </MenuItem>
               ))
             ) : (
               <MenuItem disabled>No data available</MenuItem>
@@ -696,7 +696,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <PhoneIcon />
                 </IconButton>
               </a>
-              <a style={{ marginRight: 10 }}>
+              <a style={{ marginRight: 1 }}>
                 <IconButton
                   aria-label="share"
                   size="small"
@@ -714,7 +714,25 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <ShareIcon />
                 </IconButton>
               </a>
-
+              <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
               <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
                 <IconButton
                   aria-label="email"
@@ -732,6 +750,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <EmailIcon />
                 </IconButton>
               </a>
+
               <a
                 href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
                 target="_blank"

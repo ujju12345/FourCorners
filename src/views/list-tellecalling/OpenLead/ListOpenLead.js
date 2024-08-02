@@ -711,43 +711,60 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
             <PhoneIcon />
           </IconButton>
         </a>
-        <a  style={{ marginRight: 10 }}>
-
-        <IconButton
-          aria-label="share"
-          size="small"
-          sx={{
-            color: "blue",
-            backgroundColor: "#e3f2fd",
-            borderRadius: "50%",
-            padding: "10px",
-            marginRight: 15,
-            "&:hover": {
-              backgroundColor: "#bbdefb",
-            },
-          }}
-        >
-          <ShareIcon />
-        </IconButton>
-        </a>
-
-        <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
-          <IconButton
-            aria-label="email"
-            size="small"
-            sx={{
-              color: "red",
-              backgroundColor: "#ffebee",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#ffcdd2",
-              },
-            }}
-          >
-            <EmailIcon />
-          </IconButton>
-        </a>
+        <a style={{ marginRight: 1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "blue",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
+              </a>
+              <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 1,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
+              <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+                <IconButton
+                  aria-label="email"
+                  size="small"
+                  sx={{
+                    color: "red",
+                    backgroundColor: "#ffebee",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    "&:hover": {
+                      backgroundColor: "#ffcdd2",
+                    },
+                  }}
+                >
+                  <EmailIcon />
+                </IconButton>
+              </a>
         <a
           href={`https://wa.me/${item?.Mobile}`}
           target="_blank"

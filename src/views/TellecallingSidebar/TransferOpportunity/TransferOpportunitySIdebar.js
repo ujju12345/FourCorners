@@ -313,12 +313,9 @@ const TransferOpportunitySIdebar = ({ onItemClick, onCreate }) => {
                   </Typography>
                 }
                 secondary={ <>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                    Phone: {item.Mobile}
-                  </Typography>
+                  <Typography variant="body2" style={{ fontSize: 10 }}>  Phone: {item.Mobile} </Typography>
+                  <Typography variant="body2" style={{ fontSize: 10 }}>  Assign By: {item.UserName} </Typography>
+                  <Typography variant="body2" style={{ fontSize: 10 }}>  Source: {item.SourceName} </Typography>
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}

@@ -951,7 +951,7 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
                     Telecall Attended By
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.TelecallAttendedByName}
+                    {item?.UserName}
                   </Typography>
                 </Card>
               </Grid>
