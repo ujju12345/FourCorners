@@ -39,7 +39,7 @@ import GetAppIcon from "@mui/icons-material/GetApp";
 import SortIcon from "@mui/icons-material/Sort";
 
 
-const SidebarReport = ({ onEdit, onItemClick, onCreate }) => {
+const SidebarReport = ({ handleListItemClick, onCreate }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -146,10 +146,6 @@ const SidebarReport = ({ onEdit, onItemClick, onCreate }) => {
     } else {
       return null;
     }
-  };
-  
-  const handleListItemClick = (item) => {
-    onItemClick(item);
   };
 
   const handleCloseConfirmDelete = () => {
@@ -378,7 +374,7 @@ const SidebarReport = ({ onEdit, onItemClick, onCreate }) => {
               .map((item) => (
                 <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>
-                   <ListItem disablePadding onClick={() => handleListItemClick(item)}>
+                   <ListItem disablePadding onClick={() => handleListItemClick(item.ProjectID)}>
                    <ListItemAvatar>
  
         <ApartmentIcon style={{ width: 40, height: 40, margin: 2 ,color: '#b187fd' }} />

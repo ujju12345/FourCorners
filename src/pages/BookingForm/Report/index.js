@@ -272,7 +272,7 @@ const Report = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <SidebarReport rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
+        <SidebarReport rows={rows} handleListItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}

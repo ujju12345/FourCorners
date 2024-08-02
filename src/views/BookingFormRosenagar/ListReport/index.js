@@ -33,6 +33,7 @@ const NoDataIcon = () => (
 );
 
 const ListReport = ({ item }) => {
+  console.log(item , 'ye dekh');
   const [formData, setFormData] = useState({
     fromdate: new Date(),
     todate: new Date(),
@@ -52,7 +53,7 @@ const ListReport = ({ item }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-paymentreceived.php?BookingID=${formData.BookingID}`
+        `https://apiforcorners.cubisysit.com/api/api-project-networth.php?ProjectID=${item}`
       );
 
       if (response.data.status === "Success") {

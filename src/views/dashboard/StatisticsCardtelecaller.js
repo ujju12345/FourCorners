@@ -75,7 +75,7 @@ const StatisticsCardtelecaller = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Today's Follow Up</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.todayCount : '--'}</Typography>
+              <Typography variant='h6'>234</Typography>
             </Box>
            
           </Box>
@@ -97,7 +97,7 @@ const StatisticsCardtelecaller = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Backlog Lead</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.pastCount : '--'}</Typography>
+              <Typography variant='h6'>234</Typography>
             </Box>
           </Box>
         </Grid>
@@ -119,7 +119,7 @@ const StatisticsCardtelecaller = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Open Lead</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.futureCount : '--'}</Typography>
+              <Typography variant='h6'>123</Typography>
             </Box>
 
          
@@ -142,7 +142,7 @@ const StatisticsCardtelecaller = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Tranfer To Sales</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.totalCount : '--'}</Typography>
+              <Typography variant='h6'>123</Typography>
             </Box>
        
           </Box>
@@ -165,7 +165,7 @@ const StatisticsCardtelecaller = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Not Interested</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.futureCount : '--'}</Typography>
+              <Typography variant='h6'>123</Typography>
             </Box>
 
          
@@ -188,7 +188,7 @@ const StatisticsCardtelecaller = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>All Lead</Typography>
-              <Typography variant='h6'>{apiData ? apiData.summary.totalCount : '--'}</Typography>
+              <Typography variant='h6'>123</Typography>
             </Box>
        
           </Box>
@@ -209,7 +209,7 @@ const StatisticsCardtelecaller = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total {apiData ? apiData.summary.totalCount : '--'}% growth
+              Total 123 % growth
             </Box>{' '}
             😎 this month
           </Typography>
