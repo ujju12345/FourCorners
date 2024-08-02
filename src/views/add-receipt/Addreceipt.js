@@ -48,6 +48,7 @@ const Addreceipt = () => {
     window.location.reload(); // Reload the page to reset the original contents
   };
 
+  
   return (
     <>
       <GlobalStyle />
