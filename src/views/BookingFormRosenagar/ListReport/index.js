@@ -33,7 +33,7 @@ const NoDataIcon = () => (
 );
 
 const ListReport = ({ item }) => {
-  console.log(item , 'ye dekh');
+  console.log(item, "ye dekh");
   const [formData, setFormData] = useState({
     fromdate: new Date(),
     todate: new Date(),
@@ -48,7 +48,7 @@ const ListReport = ({ item }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const fetchData = async () => {
-    if (!item || !formData.BookingID) return; // Exit if no item or BookingID
+    if (!item) return; // Exit if no item or BookingID
 
     try {
       setLoading(true);
@@ -57,11 +57,21 @@ const ListReport = ({ item }) => {
       );
 
       if (response.data.status === "Success") {
-        setPaymentReceivedData(response.data.data.proccess_one || []);
-        setUpcomingPaymentData(response.data.data.proccess_null || []);
+        setPaymentReceivedData(
+          response.data.receivedpayment.cash.concat(
+            response.data.receivedpayment.cheque
+          ) || []
+        );
+        setUpcomingPaymentData(
+          response.data.upcomingpayment.cash.concat(
+            response.data.upcomingpayment.cheque
+          ) || []
+        );
         setDataAvailable(
-          response.data.data.proccess_one.length > 0 ||
-            response.data.data.proccess_null.length > 0
+          response.data.receivedpayment.cash.length > 0 ||
+            response.data.receivedpayment.cheque.length > 0 ||
+            response.data.upcomingpayment.cash.length > 0 ||
+            response.data.upcomingpayment.cheque.length > 0
         );
       } else {
         setDataAvailable(false);
@@ -101,9 +111,7 @@ const ListReport = ({ item }) => {
   };
 
   const SortableTableCell = ({ label }) => (
-    <TableCell
-      sx={{ fontWeight: "bold", fontSize: "1rem", cursor: "pointer" }}
-    >
+    <TableCell sx={{ fontWeight: "bold", fontSize: "1rem", cursor: "pointer" }}>
       {label}
     </TableCell>
   );
@@ -160,9 +168,9 @@ const ListReport = ({ item }) => {
               justifyContent="center"
               alignItems="flex-end"
             >
-              <Button variant="contained" onClick={fetchData}>
+              {/* <Button variant="contained" onClick={fetchData}>
                 Search
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
         </CardContent>
@@ -186,20 +194,26 @@ const ListReport = ({ item }) => {
           ) : dataAvailable ? (
             <>
               <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 800 }} aria-label="payment received table">
+                <Table
+                  sx={{ minWidth: 800 }}
+                  aria-label="payment received table"
+                >
                   <TableHead>
                     <TableRow>
-                      <SortableTableCell label="Customer Name" />
+                      <SortableTableCell label="Remakrs Name" />
                       <SortableTableCell label="Bank Name" />
                       <SortableTableCell label="Cheque Number" />
                       <SortableTableCell label="Cheque Date" />
                       <SortableTableCell label="Amount" />
-                      <TableCell>Actions</TableCell>
+                      {/* <TableCell>Actions</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {paymentReceivedData
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                       .map((row) => (
                         <TableRow key={row.paymentID}>
                           <TableCell>{row.RemarkName}</TableCell>
@@ -207,11 +221,14 @@ const ListReport = ({ item }) => {
                           <TableCell>{row.ChequeNumber}</TableCell>
                           <TableCell>{row.ChequeDate}</TableCell>
                           <TableCell>{row.ChequeAmount}</TableCell>
-                          <TableCell>
-                            <IconButton color="primary" onClick={() => handleAddPayment(row)}>
+                          {/* <TableCell>
+                            <IconButton
+                              color="primary"
+                              onClick={() => handleAddPayment(row)}
+                            >
                               <PaymentIcon />
                             </IconButton>
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       ))}
                   </TableBody>
@@ -262,10 +279,13 @@ const ListReport = ({ item }) => {
           ) : dataAvailable ? (
             <>
               <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 800 }} aria-label="upcoming payment table">
+                <Table
+                  sx={{ minWidth: 800 }}
+                  aria-label="upcoming payment table"
+                >
                   <TableHead>
                     <TableRow>
-                      <SortableTableCell label="Customer Name" />
+                      <SortableTableCell label="Remark Name" />
                       <SortableTableCell label="Bank Name" />
                       <SortableTableCell label="Cheque Number" />
                       <SortableTableCell label="Cheque Date" />
@@ -275,7 +295,10 @@ const ListReport = ({ item }) => {
                   </TableHead>
                   <TableBody>
                     {upcomingPaymentData
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                       .map((row) => (
                         <TableRow key={row.paymentID}>
                           <TableCell>{row.RemarkName}</TableCell>
@@ -284,7 +307,10 @@ const ListReport = ({ item }) => {
                           <TableCell>{row.ChequeDate}</TableCell>
                           <TableCell>{row.ChequeAmount}</TableCell>
                           <TableCell>
-                            <IconButton color="primary" onClick={() => handleAddPayment(row)}>
+                            <IconButton
+                              color="primary"
+                              onClick={() => handleAddPayment(row)}
+                            >
                               <PaymentIcon />
                             </IconButton>
                           </TableCell>
