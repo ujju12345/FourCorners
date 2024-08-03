@@ -16,6 +16,7 @@ const UploadExcel = ({ show, rowData }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [parkingFile, setParkingFile] = useState(null);
   const [projectMaster, setProjectMaster] = useState([]);
   const [formData, setFormData] = useState({
     ProjectID: "",
@@ -57,7 +58,9 @@ const UploadExcel = ({ show, rowData }) => {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
+  const handleParkingFileChange = (e) => {
+    setParkingFile(e.target.files[0]);
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -73,19 +76,20 @@ const UploadExcel = ({ show, rowData }) => {
       setError("Please select a file.");
       return;
     }
-  
+
     const formDataFile = new FormData();
     formDataFile.append("file", file);
+    formDataFile.append("ParkingAvilability", parkingFile);
     formDataFile.append("ProjectID", formData.ProjectID);
     formDataFile.append("WingID", formData.WingID);
     formDataFile.append("Status", formData.Status);
     formDataFile.append("CreateUID", formData.CreateUID);
-  
+
     try {
       setLoading(true);
-      
+
       const response = await axios.post(
-        "https://apiforcorners.cubisysit.com/api/api-excel-projectroom.php",
+        "https://apiforcorners.cubisysit.com/api/api-excel.php",
         formDataFile,
         {
           headers: {
@@ -132,7 +136,7 @@ const UploadExcel = ({ show, rowData }) => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={2}>
             <FormControl fullWidth>
               <InputLabel>Project Name</InputLabel>
               <Select
@@ -150,7 +154,7 @@ const UploadExcel = ({ show, rowData }) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={2}>
             <FormControl fullWidth>
               <InputLabel>Wings</InputLabel>
               <Select
@@ -168,21 +172,40 @@ const UploadExcel = ({ show, rowData }) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={2}>
             <Box display="flex" alignItems="center">
               <input
                 type="file"
                 accept=".xls,.xlsx"
+                name="Project File"
                 onChange={handleFileChange}
                 style={{ marginRight: "10px" }}
               />
-              <Button
+          
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Box display="flex" alignItems="center">
+            <input
+                type="file"
+                 name="Parking File"
+                accept=".xls,.xlsx"
+                onChange={handleParkingFileChange}
+                style={{ marginRight: "10px" }}
+              />
+
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box display="flex" alignItems="center">
+            <Button
                 variant="contained"
                 onClick={handleSubmitFile}
                 disabled={loading}
               >
                 {loading ? "Uploading..." : "Upload File"}
               </Button>
+          
             </Box>
           </Grid>
 

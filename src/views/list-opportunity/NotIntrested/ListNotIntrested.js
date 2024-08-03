@@ -696,7 +696,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </Grid>
           </Box>
 
-          {/* Comments */}
+          
           <Box
             sx={{
               width: "auto",
@@ -709,7 +709,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
             <Grid container spacing={3}>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
+                  variant="outlined"                                            
                   sx={{
                     borderRadius: 1,
                     padding: "10px",
@@ -749,7 +749,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
+                  variant="outlined"   
                   sx={{
                     borderRadius: 1,
 
@@ -758,7 +758,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 >
                   <Typography
                     variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}  
                   >
                     SourceName
                   </Typography>
