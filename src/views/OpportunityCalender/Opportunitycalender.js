@@ -46,7 +46,7 @@ const Opportunitycalender = () => {
               start: item.NextFollowUpDate,
               color: "#87CEEB",
               backgroundColor: backgroundColor, // Set the background color
-              Nid: item.Nid,
+              fid: item.fid,
             };
           });
           setAppointments(data);
@@ -83,10 +83,10 @@ const Opportunitycalender = () => {
     }
   }
 
-  async function fetchAppointmentDetails(Nid) {
+  async function fetchAppointmentDetails(fid) {
     try {
       const response = await fetch(
-        `https://ideacafe-backend.vercel.app/api/proxy/api-singel-telecalender.php?Nid=${Nid}`
+        `https://ideacafe-backend.vercel.app/api/proxy/api-singel-oppocalender.php?fid=${fid}`
       );
       const result = await response.json();
       if (result.code === 200) {
@@ -109,7 +109,7 @@ const Opportunitycalender = () => {
       setClickedDate(formattedDate);
       setDateAppointments(eventsOnDate);
       setIsDateModalOpen(true);
-      fetchAppointmentDetails(clickInfo.event.extendedProps.Nid);
+      fetchAppointmentDetails(clickInfo.event.extendedProps.fid);
     }
   }
 

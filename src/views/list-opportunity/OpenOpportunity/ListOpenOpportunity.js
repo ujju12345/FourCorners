@@ -108,7 +108,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
       return;
     }
 
-    // Add Tid to formData
     const formData = {
       UserID:userID,
       Cid:item?.Cid,
@@ -198,7 +197,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     const fetchData = async () => {
       if (!item) return; // Exit if no item is provided
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-mylead.php?Nid=${item.Nid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-myead.php?Nid=${item.Nid}`;
 
         const response = await axios.get(apiUrl);
 
@@ -218,7 +217,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     event.preventDefault();
 
     // Ensure item and Nid are available
-    if (!item || !item.Nid) {
+    if (!item || !item.Oid) {
       console.error("No valid item or Nid found.");
       return;
     }
@@ -226,11 +225,11 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     // Add Nid to formData
     const formDataWithNid = {
       ...formData,
-      Tid: item.Tid,
+      Oid: item.Oid,
     };
 
     const url =
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-opportunityfollowup.php";
 
     try {
       const response = await axios.post(url, formDataWithNid, {
@@ -688,7 +687,230 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Typography>
             </div>
           </Box>
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ml: 12,
+              mt: 15,
+            }}
+          >
+            <Grid container spacing={3}>
+              {/* Email */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Estimated Budget
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.EstimatedbudgetName}
+                  </Typography>
+                </Card>
+              </Grid>
 
+              {/* Project Name */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Purpose 
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.PurposeName}
+                  </Typography>
+                </Card>
+              </Grid>
+
+              {/* Unit Type */}
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Source Name
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.SourceName}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+           
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    City
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.CityName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Area from
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.AreaFrom}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Area to 
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.AreaTo}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+
+       
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              alignItems: "center",
+              ml: 12,
+              mt: 12,
+            }}
+          >
+            <Grid container spacing={3}>
+         
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Scale 
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.ScaleName}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Interest
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Interest}
+                  </Typography>
+                </Card>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined" // Use outlined variant for a border without shadow
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Follow Up Note
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Note}
+                  </Typography>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
           <Box
             sx={{
               width: "auto",
@@ -767,59 +989,8 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </Grid>
           </Box>
 
-          {/* Comments */}
-          <Box
-            sx={{
-              width: "auto",
-              display: "flex",
-              alignItems: "center",
-              ml: 12,
-              mt: 12,
-            }}
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Interest
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.Interest}
-                  </Typography>
-                </Card>
-              </Grid>
-
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-
-                    padding: "10px",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                    Follow Up Note
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.Note}
-                  </Typography>
-                </Card>
-              </Grid>
-            </Grid>
-          </Box>
+        
+         
         </Paper>
       </Card>
     </>
