@@ -167,7 +167,7 @@ const ListReport = ({ item }) => {
             </CardContent>
           </Card>
 
-        <Card>
+        {/* <Card>
           <CardContent>
             <Grid container spacing={4}>
               <Grid item xs={12} sm={3}>
@@ -217,13 +217,13 @@ const ListReport = ({ item }) => {
                 justifyContent="center"
                 alignItems="flex-end"
               >
-                {/* <Button variant="contained" onClick={fetchData}>
+               * <Button variant="contained" onClick={fetchData}>
                   Search
-                </Button> */}
+                </Button> 
               </Grid>
             </Grid>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Grid container justifyContent="center" spacing={2} mt={5}>
           <Grid item>
@@ -251,9 +251,13 @@ const ListReport = ({ item }) => {
                       <TableRow>
                         <SortableTableCell label="Purchaser Name" />
                         <SortableTableCell label="Project Name" />
+                        <SortableTableCell label="Wing Name" />
+
+                        <SortableTableCell label="Flat No" />
+
                         <SortableTableCell label="Post" />
                         <SortableTableCell label="Current" />
-                        <SortableTableCell label="Date" />
+                     
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -266,9 +270,12 @@ const ListReport = ({ item }) => {
                           <TableRow key={row.paymentID}>
                             <TableCell>{row.Name}</TableCell>
                             <TableCell>{row.ProjectName}</TableCell>
+                            <TableCell>{row.WingName}</TableCell>
+
+                            <TableCell>{row.FlatNo}</TableCell>
                             <TableCell>{row.ChequeAmount}</TableCell>
                             <TableCell>{row.Cash}</TableCell>
-                            <TableCell>{row.paymentDate}</TableCell>
+                          
                           </TableRow>
                         ))}
                     </TableBody>
@@ -325,11 +332,14 @@ const ListReport = ({ item }) => {
                   >
                     <TableHead>
                       <TableRow>
-                        <SortableTableCell label="Remark Name" />
-                        <SortableTableCell label="Bank Name" />
-                        <SortableTableCell label="Cheque Number" />
-                        <SortableTableCell label="Cheque Date" />
-                        <SortableTableCell label="Amount" />
+                        <SortableTableCell label="Purchaser Name" />
+                        <SortableTableCell label="Project Name" />
+                        <SortableTableCell label="Wing Name" />
+
+                        <SortableTableCell label="Flat No" />
+
+                        <SortableTableCell label="RemarkAmount" />
+                       
                         <TableCell>Actions</TableCell>
                       </TableRow>
                     </TableHead>
@@ -341,11 +351,12 @@ const ListReport = ({ item }) => {
                         )
                         .map((row) => (
                           <TableRow key={row.paymentID}>
-                            <TableCell>{row.RemarkName}</TableCell>
-                            <TableCell>{row.BankName}</TableCell>
-                            <TableCell>{row.ChequeNumber}</TableCell>
-                            <TableCell>{row.ChequeDate}</TableCell>
-                            <TableCell>{row.ChequeAmount}</TableCell>
+                            <TableCell>{row.Name}</TableCell>
+                            <TableCell>{row.ProjectName}</TableCell>
+                            <TableCell>{row.WingName}</TableCell>
+
+                            <TableCell>{row.FlatNo}</TableCell>
+                            <TableCell>{row.Remarkamount}</TableCell>
                             <TableCell>
                               <IconButton
                                 color="primary"
