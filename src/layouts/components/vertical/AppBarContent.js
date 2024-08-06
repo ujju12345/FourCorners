@@ -76,7 +76,16 @@ const AppBarContent = () => {
       case 2: // Example role ID for Manager
         return (
           <Fragment>
-            
+              <IconButton 
+              color='inherit' 
+              aria-haspopup='true' 
+             
+              aria-controls='booking-menu'
+            >
+              <Badge color='error'>
+                <BellRing />
+              </Badge>
+            </IconButton>
           </Fragment>
         );
       case 3: // Example role ID for Admin
