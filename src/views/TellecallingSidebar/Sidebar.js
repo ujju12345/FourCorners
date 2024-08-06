@@ -426,7 +426,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  , onDashboardClick}) => {
                           <>
                       
                             <Typography variant="body2" style={{ fontSize: 10 }}>
-                             follow Up: {item.NextFollowUpDate}  {item.NextFollowUpTime}
+                             follow Up: {item.NextFollowUpDate}  
                             
                             </Typography>
                             <Typography variant="body2" style={{ fontSize: 10 }}>
