@@ -96,18 +96,15 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
         UnittypeID: leadData.UnittypeID || prevFormData.UnittypeID,
         PropertyAgeID: leadData.PropertyAgeID || prevFormData.PropertyAgeID,
         PurposeID: leadData.PurposeID || prevFormData.PurposeID,
-        ScheduleDate: leadData.ScheduleDate || prevFormData.ScheduleDate,
-        ScheduleTime: leadData.ScheduleTime || prevFormData.ScheduleTime,
         KeywordID: leadData.KeywordID || prevFormData.KeywordID,
         SourceID: leadData.SourceID || prevFormData.SourceID,
         SourceNameID: leadData.SourceNameID || prevFormData.SourceNameID,
         OpportunityAttendedByID: leadData.OpportunityAttendedByID || prevFormData.OpportunityAttendedByID,
         Description: leadData.Description || prevFormData.Description,
         Cid: leadData.Cid || prevFormData.Cid,
-        Status: leadData.Status || prevFormData.Status,
-        CreateUID: leadData.CreateUID || prevFormData.CreateUID,
-        ModifyUID: leadData.ModifyUID || prevFormData.ModifyUID,
-        Oid: leadData.Oid || prevFormData.Oid,
+        Status: 1,
+        CreateUID: cookies.amr?.UserID || 1,
+
       }));
     }
   }, [leadData]);

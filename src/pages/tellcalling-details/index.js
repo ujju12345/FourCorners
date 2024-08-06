@@ -35,10 +35,19 @@ const Tellecalling = () => {
   const userName = cookies.amr?.FullName || 'User';
   const roleName = cookies.amr?.RoleName || 'Admin';
   useEffect(() => {
-    const storedContact = localStorage.getItem('selectedContact');
-    if (storedContact) {
-      setContactData(JSON.parse(storedContact));
+  const showAddDetailsFlag = localStorage.getItem('showAddDetails');
+    const selectedContact = localStorage.getItem('selectedContact');
+
+    if (showAddDetailsFlag === 'true') {
+      setShowAddDetails(true);
+      setContactData(selectedContact ? JSON.parse(selectedContact) : null);
+      localStorage.removeItem('showAddDetails'); // Clear flag
+    } else {
+      setShowAddDetails(false);
     }
+    // if (selectedContact) {
+    //   setContactData(JSON.parse(selectedContact));
+    // }
   }, []);
   
 
@@ -46,11 +55,7 @@ const Tellecalling = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (leadData) {
-      console.log('Converted Lead:', leadData);
-    }
-  }, [leadData]);
+  
 
   const fetchData = async () => {
     const userid = cookies.amr?.UserID || 25;
@@ -112,23 +117,24 @@ const Tellecalling = () => {
     setShowDashboard(false);
   };
 
+
+  
   const handleAddTelecaller = () => {
     setEditData(null);
-    setShowAddDetails(false);
     setRowDataToUpdate(null);
     setShowHistory(false);
     setFirstVisit(false);
     setShowDashboard(false);
-  
+    
     const storedContact = localStorage.getItem('selectedContact');
     if (storedContact) {
       setContactData(JSON.parse(storedContact));
       setShowAddDetails(true);
     } else {
-      // Handle case where contactData is not available
       console.warn('No contact data available');
     }
   };
+  
   
 
   const handleShowHistory = () => {
@@ -143,6 +149,8 @@ const Tellecalling = () => {
     setShowDashboard(true);
     setShowAddDetails(false);
   };
+  
+  
 
   const renderStats = () => {
     console.log(counts, 'dekh>>>>>>>>>>>>>>>>>>');
