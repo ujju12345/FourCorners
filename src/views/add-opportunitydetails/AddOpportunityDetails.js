@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
 const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) => {
-  console.log(leadData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
+  console.log(editData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formData, setFormData] = useState({
@@ -87,6 +87,8 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
       setFormData((prevFormData) => ({
         ...prevFormData,
         LookingForID: leadData.LookingForID || prevFormData.LookingForID,
+        CName: leadData.CName || prevFormData.CName,
+
         EstimatedbudgetID: leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
         AreaFrom: leadData.AreaFrom || prevFormData.AreaFrom,
         AreaTo: leadData.AreaTo || prevFormData.AreaTo,
@@ -99,7 +101,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
         KeywordID: leadData.KeywordID || prevFormData.KeywordID,
         SourceID: leadData.SourceID || prevFormData.SourceID,
         SourceNameID: leadData.SourceNameID || prevFormData.SourceNameID,
-        OpportunityAttendedByID: leadData.OpportunityAttendedByID || prevFormData.OpportunityAttendedByID,
+        OpportunityAttendedByID: cookies.amr?.UserID || 1,
         Description: leadData.Description || prevFormData.Description,
         Cid: leadData.Cid || prevFormData.Cid,
         Status: 1,
@@ -115,6 +117,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
       // Merge formData and editData
       setFormData((prevFormData) => ({
         ...prevFormData,
+        CName: editData.CName || prevFormData.CName,
         LookingForID: editData.LookingForID || prevFormData.LookingForID,
         EstimatedbudgetID:
           editData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
@@ -137,8 +140,8 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
         Description: editData.Description || prevFormData.Description,
         Cid: editData.Cid || prevFormData.Cid,
         Status: editData.Status || prevFormData.Status,
-        CreateUID: editData.CreateUID || prevFormData.CreateUID,
-        ModifyUID: editData.ModifyUID || prevFormData.ModifyUID,
+        CreateUID: cookies.amr?.UserID || 1,
+        ModifyUID: 1,
         Oid: editData.Oid || prevFormData.Oid,
       }));
 
@@ -414,7 +417,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
     <Card>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
+          <Grid container spacing={4}>
             <Grid item xs={12}>
               <Typography
                 variant="body2"
@@ -425,24 +428,27 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
                   : "Add Opportunity Details"}
               </Typography>
             </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth error={!!errors.Cid}>
-                <InputLabel shrink>Contact</InputLabel>
-                <TextField
-                  label="Contact"
-                  value={contacts.find(contact => contact.Cid === formData.Cid)?.CName || 'NA'}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-                <input type="hidden" name="Cid" value={formData.Cid} />
-                {!!errors.Cid && (
-                  <Typography variant="caption" color="error">
-                    {errors.Cid}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
+            {contacts.length > 0 && (
+  <Grid item xs={4}>
+    <FormControl fullWidth error={!!errors.Cid}>
+      <InputLabel shrink>Contact</InputLabel>
+      <TextField
+        label="Contact"
+        value={formData.CName}
+        InputProps={{
+          readOnly: true,
+        }}
+      />
+      <input type="hidden" name="Cid" value={formData.Cid} />
+      {!!errors.Cid && (
+        <Typography variant="caption" color="error">
+          {errors.Cid}
+        </Typography>
+      )}
+    </FormControl>
+  </Grid>
+)}
+
             {/* Add rest of the form fields similarly */}
 
 

@@ -221,17 +221,6 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  , onDashboardClick}) => {
       return `${header}\n${values}`;
   };
 
-  const handleDownload = () => {
-    const csv = jsonToCSV(rows);
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Telecalling.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
 
   return (
     <Card

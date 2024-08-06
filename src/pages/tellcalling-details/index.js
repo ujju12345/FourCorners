@@ -74,21 +74,6 @@ const Tellecalling = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
-        Tid: id,
-        DeleteUID: 1
-      });
-      if (response.data.status === 'Success') {
-        setRows(rows.filter(row => row.Tid !== id));
-        setRowDataToUpdate(null);
-        setShowAddDetails(false);
-      }
-    } catch (error) {
-      setError(error);
-    }
-  };
 
   const handleBack = () => {
     setEditData(null);
@@ -293,7 +278,7 @@ const Tellecalling = () => {
     <Grid container spacing={6}>
       <Grid item xs={4}>
         <Sidebar 
-          rows={rows} 
+          // rows={rows} 
           onItemClick={handleShow} 
           onEdit={handleEdit} 
           onCreate={handleAddTelecaller} 
@@ -302,7 +287,7 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">{error.message}</Alert>}
+        {/* {error && <Alert severity="error">{error.message}</Alert>} */}
         {showDashboard && !loading && !error && <WelcomeScreen />}
         {!showDashboard && firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />
@@ -325,7 +310,7 @@ const Tellecalling = () => {
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <ListTellecalling
             item={rowDataToUpdate}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />

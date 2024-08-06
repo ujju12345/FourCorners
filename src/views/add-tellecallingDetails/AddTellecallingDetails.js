@@ -13,7 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Checkbox, FormGroup } from '@mui/material';
+import { Checkbox, FormGroup } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -25,13 +25,21 @@ import {
   RadioGroup,
   Radio,
   FormLabel,
-  Autocomplete
+  Autocomplete,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 
-const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardClick }) => {
-  console.log(contactDataTele, "contactDataTele data aaya<<<<<<<<<<<<><>>>>>>>>>>>>>>>>>>");
+const AddTellecallingDetails = ({
+  show,
+  editData,
+  contactDataTele,
+  onDashboardClick,
+}) => {
+  console.log(
+    editData,
+    "contactDataTele data aaya<<<<<<<<<<<<><>>>>>>>>>>>>>>>>>>"
+  );
   const initialFormData = {
     titleprefixID: "",
     Cid: "",
@@ -86,7 +94,7 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
   useEffect(() => {
     fetchData();
     fetchDataBhk();
-    fetchDataTellecalling();
+    // fetchDataTellecalling();
     fetchDataTitle();
   }, []);
 
@@ -201,16 +209,16 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
     }
   };
 
-  const fetchDataTellecalling = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
-      );
-      setTellecallingID(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const fetchDataTellecalling = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://apiforcorners.cubisysit.com/api/api-fetch-telecalling.php"
+  //     );
+  //     setTellecallingID(response.data.data || []);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const fetchDataTitle = async () => {
     try {
@@ -223,13 +231,12 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
     }
   };
 
-
   const handleNotificationChange = (event) => {
     const { name, checked } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: checked ? 1 : 0,
-    }))
+    }));
   };
 
   const handleChange = (event) => {
@@ -392,16 +399,15 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
 
-
     const dataToSend = editData
       ? {
-        ...formData,
-        ModifyUID: cookies.amr?.UserID || 1
-      }
+          ...formData,
+          ModifyUID: cookies.amr?.UserID || 1,
+        }
       : {
-        ...formData,
-        CreateUID: cookies.amr?.UserID || 1
-      };
+          ...formData,
+          CreateUID: cookies.amr?.UserID || 1,
+        };
 
     console.log(dataToSend, "ALL the data of telecalling");
     try {
@@ -467,7 +473,6 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
     setSubmitError(false);
   };
 
-
   const handleDateChange = (date) => {
     setFormData({ ...formData, NextFollowUpDate: date });
   };
@@ -477,14 +482,16 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
       <Card sx={{ height: "auto" }}>
         <CardContent>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Typography
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
-                {editData
-                  ? "Edit Lead Details"
-                  : "Add Lead Details"}
+                {editData ? "Edit Lead Details" : "Add Lead Details"}
               </Typography>
               <Button
                 variant="contained"
@@ -494,33 +501,48 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
                 Dashboard
               </Button>
             </Box>
-
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    Title <RequiredIndicator />
-                  </InputLabel>
-                  <Select
-                    value={formData.titleprefixID || (contactDataTele ? contactDataTele.TitleID : '')}
-                    onChange={handleTitleChange}
-                    label="Title"
-                  >
-                    {titles.map((title) => (
-                      <MenuItem key={title.TitleID} value={title.TitleID}>
-                        {title.TitleName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.titleprefixID && (
-                    <Typography variant="caption" color="error">
-                      {errors.titleprefixID}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Grid>
+            <Grid item xs={8} sm={4}>
+  <FormControl fullWidth>
+    {editData ? (
+      <>
+        <InputLabel>
+          Title <RequiredIndicator />
+        </InputLabel>
+        <Select
+          value={formData.titleprefixID || contactDataTele?.TitleID || ""}
+          onChange={handleTitleChange}
+          label="Title"
+        >
+          {titles.map((title) => (
+            <MenuItem key={title.TitleID} value={title.TitleID}>
+              {title.TitleName}
+            </MenuItem>
+          ))}
+        </Select>
+      </>
+    ) : (
+      <Box
+        sx={{
+          padding: "16px",
+          border: "1px solid #ced4da",
+          borderRadius: "4px",
+          color: "rgba(0, 0, 0, 0.87)",
+        }}
+      >
+        {titles.find(title => title.TitleID === formData.titleprefixID || contactDataTele?.TitleID)?.TitleName || 'No Title'}
+      </Box>
+    )}
+    {errors.titleprefixID && (
+      <Typography variant="caption" color="error">
+        {errors.titleprefixID}
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   {editData ? (
@@ -552,27 +574,52 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
               </Grid>
 
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={
-                    <>
-                      Country Code <RequiredIndicator />
-                    </>
-                  }
-                  type="tel"
-                  name="Countrycode"
-                  value={formData.Countrycode || (contactDataTele ? contactDataTele.CountryCode : '')}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                  }}
-                />
-                {errors.Countrycode && (
-                  <Typography variant="caption" color="error">
-                    {errors.Countrycode}
-                  </Typography>
-                )}
+                <FormControl fullWidth>
+                  {editData ? (
+                    // Editable text field when in edit mode
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                          Country Code <RequiredIndicator />
+                        </>
+                      }
+                      type="tel"
+                      name="Countrycode"
+                      value={
+                        formData.Countrycode ||
+                        contactDataTele?.CountryCode ||
+                        ""
+                      }
+                      onChange={handleChange}
+                      inputProps={{
+                        pattern: "[0-9]*",
+                      }}
+                    />
+                  ) : (
+                    // Display country code as non-editable text when not in edit mode
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {contactDataTele?.CountryCode || "No Code"}
+                    </Box>
+                  )}
+                  {errors.Countrycode && (
+                    <Typography variant="caption" color="error">
+                      {errors.Countrycode}
+                    </Typography>
+                  )}
+                </FormControl>
               </Grid>
+
+
+
+
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -803,7 +850,10 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
                   }
                   name="Location"
                   placeholder="Location"
-                  value={formData.Location || (contactDataTele ? contactDataTele.Location : '')}
+                  value={
+                    formData.Location ||
+                    (contactDataTele ? contactDataTele.Location : "")
+                  }
                   onChange={handleChange}
                 />
               </Grid>
@@ -880,7 +930,7 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
                     </Typography>
                   )}
                 </FormControl>
-              </Grid> */ }
+              </Grid> */}
 
               <Grid item xs={8} sm={4}>
                 <DatePicker
@@ -937,7 +987,9 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
 
               <Grid item xs={8} sm={4}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Notification Preferences</FormLabel>
+                  <FormLabel component="legend">
+                    Notification Preferences
+                  </FormLabel>
                   <FormGroup>
                     <FormControlLabel
                       control={
@@ -964,7 +1016,6 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
                   </FormGroup>
                 </FormControl>
               </Grid>
-
 
               <Grid item xs={12}>
                 <Button
@@ -1000,8 +1051,8 @@ const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardCl
               {editData
                 ? "Data Updated Successfully"
                 : submitSuccess
-                  ? "Data Added Successfully"
-                  : ""}
+                ? "Data Added Successfully"
+                : ""}
             </MuiAlert>
           </Snackbar>
 
