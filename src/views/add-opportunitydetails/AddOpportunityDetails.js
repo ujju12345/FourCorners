@@ -397,44 +397,25 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-        <FormControl fullWidth error={!!errors.Cid}>
-          <InputLabel>Contact</InputLabel>
-          <Select
-            label="Contact"
-            value={formData.Cid}
-            onChange={handleSelectChange}
-          >
-            {contacts.map((contact) => (
-              <MenuItem key={contact.Cid} value={contact.Cid}>
-                {contact.CName || 'NA'}
-              </MenuItem>
-            ))}
-          </Select>
-          {!!errors.Cid && (
-            <Typography variant="caption" color="error">
-              {errors.Cid}
-            </Typography>
-          )}
-        </FormControl>
-      </Grid>
-            {/* Add rest of the form fields similarly */}
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                label="Schedule Time"
-                type="time"
-                value={formData.ScheduleTime}
-                onChange={(e) =>
-                  setFormData({ ...formData, ScheduleTime: e.target.value })
-                }
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
-                }}
-              />
+              <FormControl fullWidth error={!!errors.Cid}>
+                <InputLabel shrink>Contact</InputLabel>
+                <TextField
+                  label="Contact"
+                  value={contacts.find(contact => contact.Cid === formData.Cid)?.CName || 'NA'}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <input type="hidden" name="Cid" value={formData.Cid} />
+                {!!errors.Cid && (
+                  <Typography variant="caption" color="error">
+                    {errors.Cid}
+                  </Typography>
+                )}
+              </FormControl>
             </Grid>
+            {/* Add rest of the form fields similarly */}
+
 
             <Grid item xs={4}>
               <FormControl fullWidth error={!!errors.LookingForID}>
@@ -661,9 +642,27 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                // inputProps={{
-                //   step: 300, // 5 minute intervals
-                // }}
+              // inputProps={{
+              //   step: 300, // 5 minute intervals
+              // }}
+              />
+            </Grid>
+
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="Schedule Time"
+                type="time"
+                value={formData.ScheduleTime}
+                onChange={(e) =>
+                  setFormData({ ...formData, ScheduleTime: e.target.value })
+                }
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
               />
             </Grid>
 

@@ -60,21 +60,8 @@ const SalesManagerNavigation = () => {
     {
       title: "Availibilty List",
       icon: TrendingUpIcon,
-      path: "/opportunity",
-      children: [
-        {
-          title: "Heaven Palace",
-          icon: CubeOutlineIcon,
-          path: "/opportunity",
-        },
-        {
-          title: "Heaven Palace II",
-          icon: CubeOutlineIcon,
-          path: "/opportunity",
-        },
-       
-       
-      ],
+      path: "/availableList",
+     
     },
   
     
@@ -90,7 +77,7 @@ const SalesManagerNavigation = () => {
         {
           title: "Todays payment ",
           icon: CubeOutlineIcon,
-          path: "/payment-reminder",
+          path: "/payment-reminder/TodaysPayment",
         },
         {
           title: "Open Payment",
@@ -114,17 +101,17 @@ const SalesManagerNavigation = () => {
         {
           title: "Todays payment ",
           icon: CubeOutlineIcon,
-          path: "/payment-reminder",
+          path: "/LoanReminder/TodaysReminder",
         },
         {
-          title: "Open Payment",
+          title: "Open Loan Payment ",
           icon: CubeOutlineIcon,
-          path: "/payment-reminder/Openpayment",
+          path: "/LoanReminder/OpenReminder",
         },
         {
-          title: "Backlog Payment",
+          title: "Backlog Loan Payment",
           icon: CubeOutlineIcon,
-          path: "/payment-reminder/BacklogPaymentReminder",
+          path: "/LoanReminder/BacklogReminder",
         },
       ],
     },

@@ -13,7 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import {Checkbox ,FormGroup } from '@mui/material';
+import { Checkbox, FormGroup } from '@mui/material';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -30,8 +30,8 @@ import {
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 
-const AddTellecallingDetails = ({ show, editData , onDashboardClick}) => {
-  console.log(editData, "Edit data aaya");
+const AddTellecallingDetails = ({ show, editData, contactDataTele, onDashboardClick }) => {
+  console.log(contactDataTele, "contactDataTele data aaya<<<<<<<<<<<<><>>>>>>>>>>>>>>>>>>");
   const initialFormData = {
     titleprefixID: "",
     Cid: "",
@@ -47,12 +47,12 @@ const AddTellecallingDetails = ({ show, editData , onDashboardClick}) => {
     Comments: "",
     Location: "",
     FollowupThrough: "",
-    NextFollowUpDate:"",
+    NextFollowUpDate: "",
     NextFollowUpTime: getCurrentTime(),
     SourceID: "",
     SourceName: "",
     SourceDescription: "",
-    TelecallAttendedByID: "",
+    TelecallAttendedByID: cookies?.amr?.UserID || 1,
     SmsNotification: 0,
     EmailNotification: 0,
     ModifyUID: 1,
@@ -68,7 +68,7 @@ const AddTellecallingDetails = ({ show, editData , onDashboardClick}) => {
   const [errors, setErrors] = useState({});
   const [projectTypes, setProjectTypes] = useState([]);
   const [source, setSource] = useState([]);
-const [cNames, setCNames] = useState([]);
+  const [cNames, setCNames] = useState([]);
   const [selectedCid, setSelectedCid] = useState("");
   const [estimatedBudget, setEstimatedBudget] = useState([]);
   const [leadStatus, setLeadStatus] = useState([]);
@@ -91,7 +91,15 @@ const [cNames, setCNames] = useState([]);
   }, []);
 
   useEffect(() => {
-    if (editData) {
+    if (contactDataTele) {
+      setFormData({
+        ...contactDataTele,
+        NextFollowUpDate: contactDataTele.NextFollowUpDate
+          ? new Date(contactDataTele.NextFollowUpDate)
+          : null,
+        NextFollowUpTime: contactDataTele.NextFollowUpTime || "",
+      });
+    } else if (editData) {
       setFormData({
         ...editData,
         NextFollowUpDate: editData.NextFollowUpDate
@@ -100,7 +108,7 @@ const [cNames, setCNames] = useState([]);
         NextFollowUpTime: editData.NextFollowUpTime || "",
       });
     }
-  }, [editData]);
+  }, [contactDataTele, editData]);
 
   // Fetch source, estimated budget, lead status, and user master data (similar to your existing useEffects)
 
@@ -215,92 +223,14 @@ const [cNames, setCNames] = useState([]);
     }
   };
 
-  const handleSelectChange = async (event) => {
-    const selectedCid = event.target.value;
-    setSelectedCid(selectedCid);
-
-    try {
-      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${selectedCid}`;
-      const response = await axios.get(apiUrl);
-
-      if (response.data.status === "Success") {
-        console.log(
-          "Single telecalling data fetched for telecalling:",
-          response.data
-        );
-        const fetchedData = response.data.data;
-        console.log(fetchedData , 'see this cc');
-
-        // Update formData state with all fetched data
-        setFormData({
-          titleprefixID: fetchedData.TitleID || "",
-          Cid: fetchedData.Cid || "",
-          CName: fetchedData.CName || "",
-          Mobile: fetchedData.Mobile || "",
-          AlternateMobileNo: fetchedData.OtherNumbers || "",
-          TelephoneNo: null, // Set as null if not available in fetched data
-          AlternateTelephoneNo: null, // Set as null if not available in fetched data
-          Email: fetchedData.Email || "",
-          ProjectID: "", // Assuming ProjectID is not available in fetched data
-          EstimatedbudgetID: "", // Assuming EstimatedbudgetID is not available in fetched data
-          leadstatusID: "", // Assuming leadstatusID is not available in fetched data
-          Comments: "", // Assuming Comments are not available in fetched data
-          Location: fetchedData.LocationName || "",
-          FollowupThrough: "", // Assuming FollowupThrough is not available in fetched data
-          NextFollowUpDate:"",
-          NextFollowUpTime: getCurrentTime(),
-          SourceID: fetchedData.SourceID || "",
-          SourceName: fetchedData.SourceName || "",
-          SourceDescription: "", // Assuming SourceDescription is not available in fetched data
-          TelecallAttendedByID: cookies.amr?.UserID || 1 ,
-          SmsNotification: 0, // Assuming SmsNotification default value
-          EmailNotification: 0, // Assuming EmailNotification default value
-          ModifyUID: cookies.amr?.UserID || 1 , // Assuming ModifyUID is constant
-          Tid: "", // Assuming Tid is not available in fetched data
-          UnittypeID: "", // Assuming UnittypeID is not available in fetched data
-          Countrycode: fetchedData.CountryCode || "",
-          Status: 1, // Assuming Status default value
-        });
-      } else {
-        console.error("API response status not success:", response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching single telecalling data:", error);
-    }
-  };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (!item) return; // Exit if no item is provided
-  //     try {
-  //       const apiUrl = https://apiforcorners.cubisysit.com/api/api-singel-contacts.php?Cid=${item.Cid};
-  //       const response = await axios.get(apiUrl);
-
-  //       console.log("seee this", response.data); // Log the API response to debug
-
-  //       if (response.data.status === "Success") {
-  //         console.log(
-  //           response.data,
-  //           "Single telecalling data fetched for telecalling"
-  //         );
-  //         // Update item state with fetched data
-  //         setRowDataToUpdate(response.data);
-  //       } else {
-  //         console.error("API response status not success:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching single telecalling data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [item]);
 
   const handleNotificationChange = (event) => {
     const { name, checked } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: checked ? 1 : 0,
-    }))};
+    }))
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -463,16 +393,16 @@ const [cNames, setCNames] = useState([]);
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
 
 
-      const dataToSend = editData
+    const dataToSend = editData
       ? {
-          ...formData,
-          ModifyUID: cookies.amr?.UserID || 1
-        }
+        ...formData,
+        ModifyUID: cookies.amr?.UserID || 1
+      }
       : {
-          ...formData,
-          CreateUID: cookies.amr?.UserID || 1 
-        };
-    
+        ...formData,
+        CreateUID: cookies.amr?.UserID || 1
+      };
+
     console.log(dataToSend, "ALL the data of telecalling");
     try {
       const response = await axios.post(url, dataToSend, {
@@ -481,7 +411,7 @@ const [cNames, setCNames] = useState([]);
         },
       });
 
-    console.log(dataToSend, "ALL the data of telecalling");
+      console.log(dataToSend, "ALL the data of telecalling");
 
       if (response.data.status === "Success") {
         setFormData(initialFormData);
@@ -557,14 +487,14 @@ const [cNames, setCNames] = useState([]);
                   : "Add Lead Details"}
               </Typography>
               <Button
-          variant="contained"
-          onClick={onDashboardClick}
-          style={{ marginTop: 0 }}
-        >
-          Dashboard
-        </Button>
+                variant="contained"
+                onClick={onDashboardClick}
+                style={{ marginTop: 0 }}
+              >
+                Dashboard
+              </Button>
             </Box>
-           
+
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
@@ -574,7 +504,7 @@ const [cNames, setCNames] = useState([]);
                     Title <RequiredIndicator />
                   </InputLabel>
                   <Select
-                    value={formData.titleprefixID}
+                    value={formData.titleprefixID || (contactDataTele ? contactDataTele.TitleID : '')}
                     onChange={handleTitleChange}
                     label="Title"
                   >
@@ -591,7 +521,6 @@ const [cNames, setCNames] = useState([]);
                   )}
                 </FormControl>
               </Grid>
-
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   {editData ? (
@@ -604,25 +533,20 @@ const [cNames, setCNames] = useState([]);
                         color: "rgba(0, 0, 0, 0.87)",
                       }}
                     >
-                      {formData.CName}
+                      {contactDataTele?.CName || formData.CName || "No Name"}
                     </Box>
                   ) : (
-                    // Display Select component when not in edit mode
-                    <>
-                      <InputLabel id="select-cname-label">Full name</InputLabel>
-                      <Select
-                        labelId="select-cname-label"
-                        id="select-cname"
-                        value={selectedCid}
-                        onChange={handleSelectChange}
-                      >
-                        {cNames.map((item) => (
-                          <MenuItem key={item.Cid} value={item.Cid}>
-                            {item.CName || ""}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </>
+                    // Optionally, you can provide a default message if not in edit mode
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {contactDataTele?.CName || "No Name"}
+                    </Box>
                   )}
                 </FormControl>
               </Grid>
@@ -637,7 +561,7 @@ const [cNames, setCNames] = useState([]);
                   }
                   type="tel"
                   name="Countrycode"
-                  value={formData.Countrycode}
+                  value={formData.Countrycode || (contactDataTele ? contactDataTele.CountryCode : '')}
                   onChange={handleChange}
                   inputProps={{
                     pattern: "[0-9]*",
@@ -879,11 +803,10 @@ const [cNames, setCNames] = useState([]);
                   }
                   name="Location"
                   placeholder="Location"
-                  value={formData.Location}
+                  value={formData.Location || (contactDataTele ? contactDataTele.Location : '')}
                   onChange={handleChange}
                 />
               </Grid>
-
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   <InputLabel>
@@ -1005,43 +928,42 @@ const [cNames, setCNames] = useState([]);
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
-                  label="Comment"
+                  label="Comments"
                   name="Comments"
-                  placeholder="Comment"
-                  value={formData.Comments}
+                  value={formData.Comments || ""}
                   onChange={handleChange}
                 />
               </Grid>
 
               <Grid item xs={8} sm={4}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Notification Preferences</FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.SmsNotification === 1}
-                onChange={handleNotificationChange}
-                name="SmsNotification"
-                value="sms"
-              />
-            }
-            label="Send on SMS"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.Notification === 1}
-                onChange={handleNotificationChange}
-                name="Notification"
-                value="notification"
-              />
-            }
-            label="Send on Notification"
-          />
-        </FormGroup>
-      </FormControl>
-    </Grid>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Notification Preferences</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={formData.SmsNotification === 1}
+                          onChange={handleNotificationChange}
+                          name="SmsNotification"
+                          value="sms"
+                        />
+                      }
+                      label="Send on SMS"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={formData.Notification === 1}
+                          onChange={handleNotificationChange}
+                          name="Notification"
+                          value="notification"
+                        />
+                      }
+                      label="Send on Notification"
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
 
 
               <Grid item xs={12}>
@@ -1078,8 +1000,8 @@ const [cNames, setCNames] = useState([]);
               {editData
                 ? "Data Updated Successfully"
                 : submitSuccess
-                ? "Data Added Successfully"
-                : ""}
+                  ? "Data Added Successfully"
+                  : ""}
             </MuiAlert>
           </Snackbar>
 

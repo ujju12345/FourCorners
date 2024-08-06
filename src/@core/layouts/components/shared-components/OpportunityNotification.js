@@ -8,6 +8,7 @@ import {
   Menu as MuiMenu,
   Avatar as MuiAvatar,
   MenuItem as MuiMenuItem,
+  Badge,
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -15,6 +16,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useCookies } from "react-cookie";
 import BellOutline from 'mdi-material-ui/BellOutline';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+import { useRouter } from 'next/router';
+import CancelIcon from "@mui/icons-material/Cancel";
 
 // ** Styled Menu component
 const Menu = styled(MuiMenu)(({ theme }) => ({
@@ -37,7 +40,7 @@ const MenuItem = styled(MuiMenuItem)(({ theme }) => ({
   paddingBottom: theme.spacing(3),
   borderBottom: `1px solid ${theme.palette.divider}`
 }));
-
+  
 const styles = {
   maxHeight: 349,
   '& .MuiMenuItem-root:last-of-type': {
@@ -84,14 +87,14 @@ const OpportunityNotification = () => {
   const [error, setError] = useState(null);
   const [cookies] = useCookies(["amr"]);
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'));
-
+  const router = useRouter();
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   const fetchData = async () => {
     const userid = cookies.amr?.UserID || 'Role';
-  
+
     try {
       const response = await axios.get(
         `https://apiforcorners.cubisysit.com/api/api-fetch-convtooppo.php?UserID=${userid}`
@@ -101,16 +104,16 @@ const OpportunityNotification = () => {
       // Ensure the data is an array before setting notifications
       if (Array.isArray(response.data.data)) {
         const newNotifications = response.data.data;
-        
+
         if (newNotifications.length > notifications.length) {
           playNotificationSound();
         }
-        
+
         setNotifications(newNotifications);
       } else {
         console.error("Expected an array of notifications");
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -130,10 +133,19 @@ const OpportunityNotification = () => {
   const handleDropdownOpen = event => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleDropdownClose = () => {
-    setAnchorEl(null);
+  const handleClose = () => {
+    setAnchorEl(false)
+  }
+  const handleDropdownClose = (notification) => {
+    // Store the notification data and flag in local storage
+    localStorage.setItem('selectedNotification', JSON.stringify(notification));
+    localStorage.setItem('showAddDetails', 'true'); // Set flag
+    // Redirect to the Opportunity page
+    router.push('/opportunity');
+    handleClose();
   };
+
+
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
@@ -147,8 +159,19 @@ const OpportunityNotification = () => {
 
   return (
     <Fragment>
-      <IconButton color='inherit' aria-haspopup='true' onClick={handleDropdownOpen} aria-controls='customized-menu'>
-        <BellOutline />
+      <IconButton
+        color='inherit'
+        aria-haspopup='true'
+        onClick={handleDropdownOpen}
+        aria-controls='customized-menu'
+      >
+        <Badge
+          badgeContent={notifications.length}
+          color='error'
+          overlap='circular'
+        >
+          <BellOutline />
+        </Badge>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -160,24 +183,38 @@ const OpportunityNotification = () => {
         <MenuItem disableRipple>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
-            <Chip
-              size='small'
-              label={`${notifications.length} New`}
-              color='primary'
-              sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
-            />
+            <IconButton
+              aria-label="cancel"
+              onClick={handleClose}
+              sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton>
           </Box>
         </MenuItem>
         <ScrollWrapper>
           {notifications.map((notification, index) => (
-            <MenuItem key={index} onClick={handleDropdownClose}>
+            <MenuItem key={index} onClick={() => handleDropdownClose(notification)}>
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Avatar alt='notification' src='/images/avatars/3.png' />
-                <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>Name: {notification.TitleName}{notification.CName}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>Date: {notification.CreateDate}</MenuItemSubtitle>
-                  <MenuItemSubtitle variant='body2'>Converted By: {notification.Name}</MenuItemSubtitle>
-
+                <Box
+                  sx={{
+                    mx: 4,
+                    flex: '1 1',
+                    display: 'flex',
+                    overflow: 'hidden',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <MenuItemTitle>
+                    Name: {notification.TitleName} {notification.CName}
+                  </MenuItemTitle>
+                  <MenuItemSubtitle variant='body2'>
+                    Date: {notification.CreateDate}
+                  </MenuItemSubtitle>
+                  <MenuItemSubtitle variant='body2'>
+                    Converted By: {notification.Name}
+                  </MenuItemSubtitle>
                 </Box>
               </Box>
             </MenuItem>

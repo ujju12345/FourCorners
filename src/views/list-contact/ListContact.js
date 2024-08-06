@@ -19,6 +19,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import EmailIcon from '@mui/icons-material/Email';
 import { useCookies } from "react-cookie";
+import { useRouter } from 'next/router';
 
 import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
@@ -50,6 +51,9 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
   const [currentUpdate, setCurrentUpdate] = useState([]);
 
   const [setRowDataToUpdate] = useState(null);
+
+  const router = useRouter();
+
 
   const [anchorEl, setAnchorEl] = useState(null);
   const handleDropdownClick = (event) => {
@@ -103,10 +107,19 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-const handlenavigate =() => {
-  window.location.href = "/tellcalling-details/";
+// const handlenavigate =() => {
+//   window.location.href = "/tellcalling-details/";
 
-}
+// }
+
+const handleNavigation = () => {
+  // Store the contact data in local storage
+  localStorage.setItem('selectedContact', JSON.stringify(item));
+  
+  // Redirect to the telecalling-details page
+  router.push('/tellcalling-details');
+};
+
   const handleSave = () => {
     console.log(formData);
     setOpen(false);
@@ -306,7 +319,7 @@ const handlenavigate =() => {
         <Grid item>
           <Button
             variant="contained"
-             onClick={handlenavigate}
+             onClick={handleNavigation}
             startIcon={<TransformIcon />}
             sx={{
               backgroundColor: "#f0f0f0",

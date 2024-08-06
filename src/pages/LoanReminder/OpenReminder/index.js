@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, CircularProgress, Alert, Typography, Box } from '@mui/material';
+import { Grid, CircularProgress, Alert, Typography, Box, Avatar, Card, CardContent, CardHeader } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useCookies } from "react-cookie";
 import axios from 'axios';
+
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
-import MyleadSidebar from 'src/views/TellecallingSidebar/Mylead/MyleadSidebar';
-import Listmylead from 'src/views/list-tellecalling/Mylead/Listmylead';
+import Sidebar from 'src/views/TellecallingSidebar/Sidebar';
+import ListTellecalling from 'src/views/list-tellecalling/ListTellecalling';
 import HistoryTelecalling from 'src/views/history-telecalling/HistoryTelecalling';
 import PieChartIcon from '@mui/icons-material/PieChart';
-import Card from '@mui/material/Card'
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import CardContent from '@mui/material/CardContent'
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import TrendingUp from 'mdi-material-ui/TrendingUp';
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
+import CellphoneLink from 'mdi-material-ui/CellphoneLink';
+import AccountOutline from 'mdi-material-ui/AccountOutline';
+import OpenLoanReminderSidebar from 'src/views/SidebarLoan/OpenLoanReminderSidebar';
+import OpenLoanlist from 'src/views/ListLoanReminder/OpenLoanlist';
 
-import AddIcon from "@mui/icons-material/Add";
-import CardHeader from '@mui/material/CardHeader'
-import Avatar from '@mui/material/Avatar'
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CancelIcon from '@mui/icons-material/Cancel';
-import MyOpportunitySidebar from 'src/views/opportunitysidebar/MyOpportunity/MyOpportunitySidebar';
-import Listmyopportunity from 'src/views/list-opportunity/MyOpportunity/Listmyopportunity';
-import HistoryOpportunitylead from 'src/views/history-apportunity/HistoryOppoerunityLead/HistoryOpportunitylead';
-import { useCookies } from "react-cookie";
-
-const MyOpportunity = () => {
+const TodaysLoanReminder = () => {
+  const router = useRouter();
+  const { lead } = router.query;
+  const leadData = lead ? JSON.parse(lead) : null;
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,28 +29,108 @@ const MyOpportunity = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
-  const [cookies, setCookie] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
+  const [showDashboard, setShowDashboard] = useState(false);
   const [counts, setCounts] = useState(null);
+
+  const [cookies] = useCookies(["amr"]);
+  const userName = cookies.amr?.FullName || 'User';
+  const roleName = cookies.amr?.RoleName || 'Admin';
 
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (leadData) {
+      console.log('Converted Lead:', leadData);
+    }
+  }, [leadData]);
+
   const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
-    setLoading(true);
-    setError(null);
+    const userid = cookies.amr?.UserID || 25;
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-graph-oppo.php?UserID=${userid}`);
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-fetch-todayloan.php?UserID=${userid}`
+      );
+      console.log("API Response:", response.data);
       setRows(response.data.data || []);
       setCounts(response.data.counts || {});
+      setLoading(false);
     } catch (error) {
+      console.error("Error fetching data:", error);
       setError(error);
-    } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
+        Tid: id,
+        DeleteUID: 1
+      });
+      if (response.data.status === 'Success') {
+        setRows(rows.filter(row => row.Tid !== id));
+        setRowDataToUpdate(null);
+        setShowAddDetails(false);
+      }
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const handleBack = () => {
+    setEditData(null);
+    setShowAddDetails(false);
+    setShowHistory(false);
+    setRowDataToUpdate(null);
+    setShowDashboard(false);
+
+    fetchData();
+  };
+
+  const handleEdit = (row) => {
+    setEditData(row);
+    setRowDataToUpdate(null);
+    setShowAddDetails(true);
+    setShowHistory(false);
+    setFirstVisit(false);
+    setShowDashboard(false);
+  };
+
+  const handleShow = (item) => {
+    setRowDataToUpdate(item);
+    setShowAddDetails(false);
+    setShowHistory(false);
+    setFirstVisit(false);
+    setShowDashboard(false);
+  };
+
+  const handleAddTelecaller = () => {
+    setEditData(null);
+    setShowAddDetails(false);
+    setRowDataToUpdate(null);
+    setShowHistory(false);
+    setFirstVisit(false);
+    setShowDashboard(false);
+
+    setTimeout(() => {
+      setShowAddDetails(true);
+    }, 0);
+  };
+
+  const handleShowHistory = () => {
+    setShowHistory(true);
+    setShowAddDetails(false);
+    setShowDashboard(false);
+
+    setFirstVisit(false);
+  };
+
+  const handleNavigation = () => {
+    setShowDashboard(true);
+    setShowAddDetails(false);
   };
 
   const renderStats = () => {
@@ -132,7 +205,6 @@ const MyOpportunity = () => {
     ];
   };
 
-
   const pieData = getPieData();
 
   const StatisticsCard = () => {
@@ -178,100 +250,61 @@ const MyOpportunity = () => {
     );
   };
 
-const WelcomeScreen = () => {
-  return (
-  <Card>
-      <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-        <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
-        <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-          Welcome to Opportunity Dashboard
-        </Typography>
-        <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
-          <StatisticsCard />
-        </Grid>
-      </Box>
-    </Card>
-  );
-};
+  const WelcomeScreen = () => {
+    return (
+      <Card>
+        <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
+          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
+            Welcome to Loan Dashboard
+          </Typography>
 
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
-        Tid: id,
-        DeleteUID: 1
-      });
-      if (response.data.status === 'Success') {
-        setRows(rows.filter(row => row.Tid !== id));
-        setRowDataToUpdate(null);
-        setShowAddDetails(false);
-      }
-    } catch (error) {
-      setError(error);
-    }
+
+
+          <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
+            <StatisticsCard />
+          </Grid>
+        </Box>
+      </Card>
+    );
   };
-
-  const handleBack = () => {
-    setEditData(null);
-    setShowAddDetails(false);
-    setShowHistory(false);
-    setRowDataToUpdate(null);
-    fetchData();
-  };
-
-  const handleEdit = (row) => {
-    setEditData(row);
-    setRowDataToUpdate(null);
-    setShowAddDetails(true);
-    setShowHistory(false);
-    setFirstVisit(false);
-  };
-
-  const handleShow = (item) => {
-    setRowDataToUpdate(item);
-    setShowAddDetails(false);
-    setShowHistory(false);
-    setFirstVisit(false);
-  };
-
-  const handleAddTelecaller = () => {
-    setEditData(null);
-    setShowAddDetails(false);
-    setRowDataToUpdate(null);
-    setShowHistory(false);
-    setFirstVisit(false);
-    setTimeout(() => {
-      setShowAddDetails(true);
-    }, 0);
-  };
-
-  const handleShowHistory = () => {
-    setShowHistory(true);
-    setShowAddDetails(false);
-    setFirstVisit(false);
-  };
-
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <MyOpportunitySidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <OpenLoanReminderSidebar 
+          rows={rows} 
+          onItemClick={handleShow} 
+          onEdit={handleEdit} 
+          onCreate={handleAddTelecaller} 
+          onDashboardClick={handleNavigation} 
+        />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
-
-        {firstVisit && !loading && !error && (
+        {error && <Alert severity="error">{error.message}</Alert>}
+        {showDashboard && !loading && !error && <WelcomeScreen />}
+        {!showDashboard && firstVisit && !loading && !error && !leadData && (
           <WelcomeScreen />
-
         )}
 
-        {showAddDetails && (
+        {leadData && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Converted Lead Details
+            </Typography>
+            {/* Render lead data details */}
+            <pre>{JSON.stringify(leadData, null, 2)}</pre>
+          </Box>
+        )}
+
+        {showAddDetails && !showDashboard && (
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <Listmyopportunity
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
+          <OpenLoanlist
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
@@ -279,22 +312,23 @@ const WelcomeScreen = () => {
           />
         )}
 
-{!loading && !error && showHistory && (
-          <Box display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",alignItems:'center',textAlign:'center', fontSize: 20, }}>
+        {!loading && !error && showHistory && (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            minHeight="100vh"
+          >
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
               User History
             </Typography>
-            <HistoryOpportunitylead item={rowDataToUpdate} onBack={handleBack} />
+            <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
           </Box>
         )}
-
       </Grid>
     </Grid>
   );
 };
 
-export default MyOpportunity;
+export default TodaysLoanReminder;

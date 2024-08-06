@@ -92,8 +92,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [cNames, setCNames] = useState([]);
   const [selectedCid, setSelectedCid] = useState("");
   const [errors, setErrors] = useState({});
-  const [source, setSource] = useState([]);
-
+  const [notification, setNotification] = useState(null);
   const [wingData, setWingData] = useState([]);
   const [bookedByOptions, setBookedByOptions] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
@@ -101,11 +100,55 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [cookies, setCookie] = useCookies(["amr"]);
-  const [remarkChecked, setRemarkChecked] = useState(false);
-  const [remarkName, setRemarkName] = useState("");
-  const [expectedDate, setExpectedDate] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const storedNotification = localStorage.getItem('selectedNotification');
+    
+    if (storedNotification) {
+      const notificationData = JSON.parse(storedNotification);
+      console.log('Fetched Notification Data:', notificationData); // Log the data
+  
+      setFormData({
+        ...formData,
+        Cid : notificationData.Cid || '',
+        Name: notificationData.CName || '',
+        SourceName: notificationData.SourceName || '',
+        Address: notificationData.Address || '',
+        Pancard: notificationData.Pancard || '',
+        Aadhar: notificationData.Aadhar || '',
+        Mobile: notificationData.Mobile || '',
+        Email: notificationData.Email || '',
+        BookingType: notificationData.BookingType || '',
+        ProjectID: notificationData.ProjectID || '',
+        WingID: notificationData.WingID || '',
+        FloorNo: notificationData.FloorNo || '',
+        FlatNo: notificationData.FlatNo || '',
+        UnittypeID: notificationData.UnittypeID || '',
+        Area: notificationData.Area || '',
+        Ratesqft: notificationData.Ratesqft || '',
+        TtlAmount: notificationData.TtlAmount || '',
+        Charges: notificationData.Charges || '',
+        ParkingFacility: notificationData.ParkingFacility || '',
+        Advocate: notificationData.Advocate || '',
+        FlatCost: notificationData.FlatCost || '',
+        Gst: notificationData.Gst || '',
+        StampDuty: notificationData.StampDuty || '',
+        Registration: notificationData.Registration || '',
+        ExtraCost: notificationData.ExtraCost || '',
+        TotalCost: notificationData.TotalCost || '',
+        FlatCostInWords: notificationData.FlatCostInWords || '',
+        BookingDate: notificationData.BookingDate || '',
+        BookedByID: notificationData.BookedByID || '',
+        UsableArea: notificationData.UsableArea || '',
+        AgreementCarpet: notificationData.AgreementCarpet || '',
+        remarks: notificationData.remarks || []
+      });
+  
+      localStorage.removeItem('selectedNotification');
+    }
+  }, []);
+  
+  
 
 const numberToWordsIndian = (num) => {
   const singleDigits = [
@@ -312,6 +355,7 @@ const numberToWordsIndian = (num) => {
       TtlAmount: formData.area * areainbuiltup,
     }));
   }, [areainbuiltup, formData.area]);
+
   useEffect(() => {
     if (formData.WingID) {
       axios
@@ -527,53 +571,52 @@ const numberToWordsIndian = (num) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
-
+  
     const formattedRemarks = remarks.map((remark, index) => ({
       ...remark,
       RemarkDate: remark.RemarkDate
-        ? format(new Date(remark.RemarkDate), "yyyy-MM-dd") // Correctly format the date
+        ? format(new Date(remark.RemarkDate), "yyyy-MM-dd")
         : null,
-      RemarkUpdateID: index + 1, // or any logic you use to generate/update ID
-      Status: 1, // default or calculated value
-      CreateUID: 1, // default or fetched value
+      RemarkUpdateID: index + 1,
+      Status: 1,
+      CreateUID: 1,
     }));
     console.log(formattedRemarks, "Formatted Remarks");
-
+  
     const dataToSend = {
       ...formData,
+    
       Remarks: formattedRemarks,
     };
-
+  
     console.log(dataToSend, "Data to Send");
-
+  
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.data.status === "Success") {
         console.log(response.data.data, "Submission successful");
         const { BookingID } = response.data;
         onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
-        // show(false);
-
-        // Optionally show success message
+  
         Swal.fire({
           icon: "success",
           title: "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         });
-
-        // Navigate to the desired pagse with BookingID
+  
+        // Navigate to the desired page with BookingID
         // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
       } else {
         Swal.fire({
@@ -591,6 +634,7 @@ const numberToWordsIndian = (num) => {
       });
     }
   };
+  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -665,36 +709,18 @@ const numberToWordsIndian = (num) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel id="select-cname-label">
-                    Name of Purchaser
-                  </InputLabel>
-                  <Select
-                    labelId="select-cname-label"
-                    id="select-cname"
-                    value={selectedCid}
-                    onChange={handleSelectChange}
-                    label="Type of Booking"
-                  >
-                    {cNames?.map((item) => (
-                      <MenuItem key={item.Cid} value={item.Cid}>
-                        {item.CName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Name of the Purchaser</>}
-                  name="Name"
-                  placeholder="Name of the Purchaser"
-                  value={formData.Name}
-                  onChange={handleChange}
-                />
-              </Grid>
+             
+            <Grid item xs={8} sm={4}>
+  <TextField
+    fullWidth
+    label="Name of the Purchaser"
+    name="Name"
+    placeholder="Name of the Purchaser"
+    value={formData.Name}
+    onChange={handleChange}
+  />
+</Grid>
+
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth

@@ -134,11 +134,14 @@ const NotificationDropdown = ({
     handleDropdownClose();
   };
 
-  const handleBookingReadAllNotifications = () => {
+  const handleBookingReadAllNotifications = (notification) => {
+    // Store the notification data in local storage
+    localStorage.setItem('selectedNotification', JSON.stringify(notification));
+    // Redirect to the BookingForm page
     router.push('/BookingForm');
     handleDropdownBookingClose();
   };
-
+  
   return (
     <Fragment>
       <Menu
@@ -199,7 +202,8 @@ const NotificationDropdown = ({
             notificationsBooking.map((notification, index) => (
               <MenuItem key={index}>
                 <Avatar src='/images/avatars/1.png' alt='Avatar' />
-                <Box sx={{ marginLeft: 2, flex: 1 }} onClick={handleBookingReadAllNotifications}>
+                <Box sx={{ marginLeft: 2, flex: 1 }} onClick={() => handleBookingReadAllNotifications(notification)}>
+
                   <MenuItemTitle sx={{ fontSize:16 }} >Booking Name : {notification?.TitleName}{notification?.CName}</MenuItemTitle>
                   <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer By : {notification?.UserName} </MenuItemSubtitle>
                   <MenuItemSubtitle sx={{ fontSize:12 }}>Transfer Date: {notification?.CreateDate} </MenuItemSubtitle>

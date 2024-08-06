@@ -15,111 +15,163 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import { useRouter } from 'next/router';
+
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import { useCookies } from 'react-cookie';
 
-const salesData = [
-  {
-    stats: '245k',
-    title: 'Sales',
-    color: 'primary',
-    icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '12.5k',
-    title: 'Customers',
-    color: 'success',
-    icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '1.54k',
-    color: 'warning',
-    title: 'Products',
-    icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
-    color: 'info',
-    title: 'Revenue',
-    icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
-  }
-];
+const opportunity = () => {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
+  const [showAddDetails, setShowAddDetails] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [firstVisit, setFirstVisit] = useState(true);
+  const [showDashboard, setShowDashboard] = useState(false); 
+  const [counts, setCounts] = useState(null);
+  const [cookies, setCookie] = useCookies(["amr"]);
 
-const pieData = [
-  { name: 'Sales', value: 2000, color: '#3f51b5' },
-  { name: 'Customers', value: 1200, color: '#4caf50' },
-  { name: 'Products', value: 1540, color: '#ff9800' },
-  { name: 'Revenue', value: 8000, color: '#00acc1' }
-];
 
-const renderStats = () => {
-  return salesData.map((item, index) => (
-    <Grid item xs={12} sm={3} key={index}>
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar
-          variant='rounded'
-          sx={{
-            mr: 3,
-            width: 44,
-            height: 44,
-            boxShadow: 3,
-            color: 'common.white',
-            backgroundColor: `${item.color}.main`
-          }}
-        >
-          {item.icon}
-        </Avatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='caption'>{item.title}</Typography>
-          <Typography variant='h6'>{item.stats}</Typography>
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 'Role';
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-graph-oppo.php?UserID=${userid}`);
+      setRows(response.data.data || []);
+      setCounts(response.data.counts || {});
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const router = useRouter();
+
+  const renderStats = () => {
+    console.log(counts, 'dekh>>>>>>>>>>>>>>>>>>');
+    
+    if (!counts) {
+      return null;
+    }
+
+    const dynamicSalesData = [
+      {
+        stats: counts?.todayFollowup,
+        title: 'Today Followups',
+        color: 'primary',
+        icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      },
+      {
+        stats: counts?.backlogFollowup,
+        title: 'Backlog Followups',
+        color: 'success',
+        icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      },
+      {
+        stats: counts.transfertooppo,
+        color: 'warning',
+        title: 'Transfer to Opportunity',
+        icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      },
+      {
+        stats: counts.totalFollowup,
+        color: 'info',
+        title: 'Total Followups',
+        icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+      }
+    ];
+
+    return dynamicSalesData.map((item, index) => (
+      <Grid item xs={12} sm={3} key={index}>
+        <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: `${item.color}.main`
+            }}
+          >
+            {item.icon}
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>{item.title}</Typography>
+            <Typography variant='h6'>{item.stats}</Typography>
+          </Box>
         </Box>
-      </Box>
-    </Grid>
-  ));
-};
+      </Grid>
+    ));
+  };
 
-const StatisticsCard = () => {
-  return (
-    <>
-      <CardHeader
-        title='Statistics Card'
-        subheader={
-          <Typography variant='body2'>
-            <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 48.5% growth
-            </Box>{' '}
-            😎 this month
-          </Typography>
-        }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: '2rem !important',
-            letterSpacing: '0.15px !important'
+  const getPieData = () => {
+    if (!counts) {
+      return [];
+    }
+
+    return [
+      { name: 'Today Followups', value: counts.todayFollowup, color: '#8884d8' },
+      { name: 'Backlog Followups', value: counts.backlogFollowup, color: '#82ca9d' },
+      { name: 'Next Followups', value: counts.nextFollowup, color: '#ffc658' },
+      { name: 'Total Followups', value: counts.totalFollowup, color: '#a4de6c' }
+    ];
+  };
+
+
+  const pieData = getPieData();
+
+  const StatisticsCard = () => {
+    return (
+      <>
+        <CardHeader
+          title='Statistics Card'
+          subheader={
+            <Typography variant='body2'>
+              <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Total 48.5% growth
+              </Box>{' '}
+              😎 this month
+            </Typography>
           }
-        }}
-      />
-      <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
-        <Grid container spacing={[5, 0]}>
-          {renderStats()}
-          <Grid item xs={12}>
-            <ResponsiveContainer width='100%' height={400}>
-              <PieChart>
-                <Pie data={pieData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={120} fill='#8884d8' label>
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+          titleTypographyProps={{
+            sx: {
+              mb: 2.5,
+              lineHeight: '2rem !important',
+              letterSpacing: '0.15px !important'
+            }
+          }}
+        />
+        <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
+          <Grid container spacing={[5, 0]}>
+            {renderStats()}
+            <Grid item xs={12}>
+              <ResponsiveContainer width='100%' height={400}>
+                <PieChart>
+                  <Pie data={pieData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={120} fill='#8884d8' label>
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
-    </>
-  );
-};
+        </CardContent>
+      </>
+    );
+  };
 
 const WelcomeScreen = () => {
   return (
@@ -137,35 +189,53 @@ const WelcomeScreen = () => {
   );
 };
 
-const Tellecalling = () => {
-  const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [editData, setEditData] = useState(null);
-  const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
-  const [showAddDetails, setShowAddDetails] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [firstVisit, setFirstVisit] = useState(true);
-  const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
-  const [cookies, setCookie] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
 
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`);
-      setRows(response.data.data || []);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+useEffect(() => {
+  // Fetch data on initial render
+  fetchData();
+
+  // Retrieve the notification flag and selected notification from localStorage
+  const showAddDetailsFlag = localStorage.getItem('showAddDetails');
+  const selectedNotification = localStorage.getItem('selectedNotification');
+  
+  // Log the retrieved data
+  console.log('showAddDetailsFlag:>>>>>>>>>>>>>>>>>>', showAddDetailsFlag);
+  console.log('selectedNotification:>>>>>>>>>>>>>>>>>>>>>>>>>>>', selectedNotification ? JSON.parse(selectedNotification) : null);
+
+  if (showAddDetailsFlag === 'true') {
+    setShowAddDetails(true);
+    setEditData(selectedNotification ? JSON.parse(selectedNotification) : null);
+    localStorage.removeItem('showAddDetails'); // Clear flag
+  } else {
+    setShowAddDetails(false);
+  }
+
+  // If the route query has showAddDetails parameter, set the state
+  if (router.query.showAddDetails) {
+    setShowAddDetails(true);
+    setFirstVisit(false);
+  }
+
+  // Log route query parameters
+  console.log('Router Query:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', router.query);
+
+}, [router.query]);
+
+
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-opportunity.php?UserID=${userid}`);
+  //     setRows(response.data.data || []);
+  //   } catch (error) {
+  //     setError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     try {
@@ -236,14 +306,23 @@ const Tellecalling = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <Sidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} onDashboardClick={handleNavigation} />
+        <Sidebar 
+          rows={rows} 
+          onItemClick={handleShow} 
+          onEdit={handleEdit} 
+          onCreate={handleAddTelecaller} 
+          onDashboardClick={handleNavigation} 
+        />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
         {error && <Alert severity="error">Error fetching data: {error.message}</Alert>}
 
-        {firstVisit && !loading && !error && !showDashboard && (
-          <WelcomeScreen />
+        {showAddDetails && !loading && !error && (
+          <AddOpportunityDetails 
+            show={handleBack} 
+            editData={editData} 
+          />
         )}
 
         {showDashboard && !loading && !error && (
@@ -268,7 +347,8 @@ const Tellecalling = () => {
             display="flex"
             flexDirection="row"
             alignItems="flex-start"
-            minHeight="100vh">
+            minHeight="100vh"
+          >
             <Box flex="1">
               <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
                 User History
@@ -282,4 +362,4 @@ const Tellecalling = () => {
   );
 };
 
-export default Tellecalling;
+export default opportunity;
