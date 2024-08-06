@@ -96,7 +96,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   };
 
   const handleClose = () => {
-    setAnchorElOpportunity(null);
+    setOpen(false);
   };
 
   const handleChange = (e) => {

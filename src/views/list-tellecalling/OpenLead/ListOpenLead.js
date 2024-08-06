@@ -107,7 +107,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
   };
 
   const handleClose = () => {
-    setAnchorElOpportunity(false);
+    setOpen(false);
   };
 
   const handleChange = (e) => {
