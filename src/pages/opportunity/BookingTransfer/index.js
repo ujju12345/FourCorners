@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Grid, CircularProgress, Alert, Typography, Box } from "@mui/material";
+import { Grid, CircularProgress,Card , Alert, Typography, Box } from "@mui/material";
 import axios from "axios";
 // import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
-
 import CardContent from "@mui/material/CardContent";
-
+import PieChartIcon from '@mui/icons-material/PieChart';
 import AddIcon from "@mui/icons-material/Add";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
@@ -23,8 +22,8 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-import BacklogPaymentSidebar from "src/views/payment-reminder/ BacklogPaymentSidebar/BacklogPaymentSidebar";
-import BacklogPaymentTemplate from "src/views/payment-reminder/BacklogPaymentTemplate/BacklogPaymentTemplate";
+import BookingTransferSidebar from "src/views/bookingtransfer/BookingTransferSidebar";
+import BookingTransferTemplate from "src/views/bookingtransfer/BookingTransferTemplate";
 const salesData = [
   {
     stats: "50",
@@ -160,7 +159,69 @@ const BacklogPayment = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  const StatisticsCard = () => {
+    return (
+      <>
+        <CardHeader
+          title='Statistics Card'
+          // action={
+          //   <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
+          //     <DotsVertical />
+          //   </IconButton>
+          // }
+          subheader={
+            <Typography variant='body2'>
+              <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Total 48.5% growth
+              </Box>{' '}
+              😎 this month
+            </Typography>
+          }
+          titleTypographyProps={{
+            sx: {
+              mb: 2.5,
+              lineHeight: '2rem !important',
+              letterSpacing: '0.15px !important'
+            }
+          }}
+        />
+        <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
+          <Grid container spacing={[5, 0]}>
+            {renderStats()}
+            <Grid item xs={12}>
+              <ResponsiveContainer width='100%' height={400}>
+                <PieChart>
+                  <Pie data={pieData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={120} fill='#8884d8' label>
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </>
+    )
+  }
+  
+  const WelcomeScreen = () => {
+    return (
+      <Card>
+        <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
+          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
+            Welcome to Not Interested Dashboard
+          </Typography>
+          <Grid variant="body1" sx={{ marginTop: 10 , marginLeft:20}}>
+            <StatisticsCard/>
+          </Grid>
+        </Box>
+      </Card>
+    );
+  };
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -237,25 +298,33 @@ const BacklogPayment = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={4}>
-        <BacklogPaymentSidebar
-          rows={rows}
-          onItemClick={handleShow}
-          onEdit={handleEdit}
-          onCreate={handleAddTelecaller}
-        />
-      </Grid>
-
-      {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <BacklogPaymentTemplate
-            item={rowDataToUpdate}
-            onDelete={handleDelete}
-            onHistoryClick={handleShowHistory}
-            onEdit={handleEdit}
-          />
-        )}
-     
+    <Grid item xs={4}>
+      <BookingTransferSidebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
     </Grid>
+    <Grid item xs={8}>
+      {loading && <CircularProgress />}
+      {/* {error && <Photo/>} */}
+
+      {firstVisit && !loading && !error && (
+        <WelcomeScreen />
+
+      )}
+
+      {/* {showAddDetails && (
+        <AddTellecallingDetails show={handleBack} editData={editData} />
+      )} */}
+
+      {!loading && !error && !showAddDetails && (
+        <BookingTransferTemplate
+          item={rowDataToUpdate}
+          onDelete={handleDelete}
+          onHistoryClick={handleShowHistory}
+          onEdit={handleEdit}
+        />
+      )}
+
+    </Grid>
+  </Grid>
   );
 };
 

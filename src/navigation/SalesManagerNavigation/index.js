@@ -63,7 +63,15 @@ const SalesManagerNavigation = () => {
       path: "/availableList",
      
     },
-  
+    {
+      sectionTitle: "Transfered to Booking",
+    },
+
+    {
+      title: "Transfer Booking",
+      icon: ContactPhoneIcon,
+      path: "/opportunity/BookingTransfer",
+    },
     
     {
       sectionTitle: "Post Sales",
