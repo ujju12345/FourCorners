@@ -115,6 +115,7 @@ const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
 const handleNavigation = () => {
   // Store the contact data in local storage
   localStorage.setItem('selectedContact', JSON.stringify(item));
+  localStorage.setItem('showAddDetails', 'true'); // Set flag
   
   // Redirect to the telecalling-details page
   router.push('/tellcalling-details');
