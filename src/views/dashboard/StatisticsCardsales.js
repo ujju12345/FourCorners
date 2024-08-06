@@ -97,7 +97,7 @@ const StatisticsCardsales = () => {
               <HistoryIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Backlog Lead</Typography>
+              <Typography variant='caption'>Backlog Pending</Typography>
               <Typography variant='h6'>{counts.backlogFollowup ?? '--'}</Typography>
             </Box>
           </Box>
@@ -118,7 +118,7 @@ const StatisticsCardsales = () => {
               <ScheduleIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Next Follow Up</Typography>
+              <Typography variant='caption'>Open Lead</Typography>
               <Typography variant='h6'>{counts.nextFollowup ?? '--'}</Typography>
             </Box>
           </Box>
@@ -139,7 +139,7 @@ const StatisticsCardsales = () => {
               <BookmarkIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Transfer To Sales</Typography>
+              <Typography variant='caption'>Transfer To Opportunity</Typography>
               <Typography variant='h6'>{counts.transfertooppo ?? '--'}</Typography>
             </Box>
           </Box>
@@ -180,10 +180,7 @@ const StatisticsCardsales = () => {
             >
               <DashboardIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Total Follow Ups</Typography>
-              <Typography variant='h6'>{counts.totalFollowup ?? '--'}</Typography>
-            </Box>
+           
           </Box>
         </Grid>
       </Grid>

@@ -50,9 +50,9 @@ const InvoiceBox = styled(Box)({
 });
 
 const Reciept = ({ bookingID }) => {
-  console.log(bookingID , 'id bookinggg<<>>>> ayaa');
+  console.log(bookingID, 'id bookinggg<<>>>> ayaa');
   const printRef = useRef();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -66,21 +66,19 @@ const Reciept = ({ bookingID }) => {
     window.location.reload(); // Reload the page to reset the original contents
   };
 
-
   useEffect(() => {
     if (bookingID) {
       fetchData(bookingID);
     }
   }, [bookingID]);
 
-  const fetchData = async () => {
+  const fetchData = async (id) => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${id}`
       );
       console.log("data aaya dekh", response.data);
-      // Extract the data array from the response
-      setData(response.data.data);
+      setData(response.data.data || []); // Ensure data is an array
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -88,8 +86,6 @@ const Reciept = ({ bookingID }) => {
       setLoading(false);
     }
   };
-  
-
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -184,39 +180,39 @@ const Reciept = ({ bookingID }) => {
                   <div>
                     <h4 style={{}}>Receipt</h4>
                     <TableContainer component={Paper}>
-      <Table style={{ border: "1px solid black" }}>
-        <TableBody>
-          <TableRow sx={{ padding: 0 }}>
-            <StyledTableCell
-              style={{ width: "20%", padding: 0 }}
-              colSpan={10}
-            >
-              <Typography>R.No.:</Typography>
-            </StyledTableCell>
-            <StyledTableCell
-              style={{ width: "30%", padding: 0 }}
-              colSpan={10}
-            >
-              <Typography>{data.paymentID}</Typography>
-            </StyledTableCell>
-          </TableRow>
-          <TableRow sx={{ padding: 0 }}>
-            <StyledTableCell
-              style={{ width: "20%", padding: 0 }}
-              colSpan={10}
-            >
-              <Typography>Date:</Typography>
-            </StyledTableCell>
-            <StyledTableCell
-              style={{ width: "30%", padding: 0 }}
-              colSpan={10}
-            >
-              <Typography>{data.BookingDate}</Typography>
-            </StyledTableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+                      <Table style={{ border: "1px solid black" }}>
+                        <TableBody>
+                          <TableRow sx={{ padding: 0 }}>
+                            <StyledTableCell
+                              style={{ width: "20%", padding: 0 }}
+                              colSpan={10}
+                            >
+                              <Typography>R.No.:</Typography>
+                            </StyledTableCell>
+                            <StyledTableCell
+                              style={{ width: "30%", padding: 0 }}
+                              colSpan={10}
+                            >
+                              <Typography>{data[0]?.paymentID || ""}</Typography>
+                            </StyledTableCell>
+                          </TableRow>
+                          <TableRow sx={{ padding: 0 }}>
+                            <StyledTableCell
+                              style={{ width: "20%", padding: 0 }}
+                              colSpan={10}
+                            >
+                              <Typography>Date:</Typography>
+                            </StyledTableCell>
+                            <StyledTableCell
+                              style={{ width: "30%", padding: 0 }}
+                              colSpan={10}
+                            >
+                              <Typography>{data[0]?.BookingDate || ""}</Typography>
+                            </StyledTableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </div>
                 </div>
               </Grid>
@@ -234,13 +230,12 @@ const Reciept = ({ bookingID }) => {
         >
           <div>
             <Typography style={{ fontWeight: "bold" }}>Received</Typography>
-
             <Typography>With Thanks from:</Typography>
           </div>
           <div
             style={{ marginLeft: 20, alignItems: "center", display: "flex" }}
           >
-            <Typography style={{ fontSize: 26 }}>Mr {data.Name}</Typography>
+            <Typography style={{ fontSize: 26 }}>Mr {data[0]?.Name || ""}</Typography>
           </div>
         </div>
 
@@ -261,36 +256,13 @@ const Reciept = ({ bookingID }) => {
             style={{ marginLeft: 20, alignItems: "center", display: "flex" }}
           >
             <Typography style={{ fontSize: 17 }}>
-              Payment Against Flat No. {data.FlatNo} On {data.FloorNo} Floor Of the Building Known as
+              Payment Against Flat No. {data[0]?.FlatNo || ""} On {data[0]?.FloorNo || ""} Floor Of the Building Known as
               "THE HEAVEN'S PALACE"
             </Typography>
           </div>
         </div>
-        {/* <div
-          style={{
-            width: "100%",
-            borderWidth: 1,
-            borderStyle: "solid",
-            paddingLeft: 10,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ alignItems: "center", width: "35%", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>
-              Payment Against Flat No. 907
-            </Typography>
-          </div>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>On 9th Floor</Typography>
-          </div>
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <Typography style={{ fontSize: 16 }}>
-              Of the Building Known as "THE HEAVEN'S PALACE", Building No.01
-            </Typography>
-          </div>
-        </div> */}
-<TableContainer component={Paper}>
+
+        <TableContainer component={Paper}>
   <Table style={{ border: "1px solid black" }}>
     <TableHead>
       <TableRow>
@@ -330,7 +302,7 @@ const Reciept = ({ bookingID }) => {
                   style={{ width: "25%", padding: 0 }}
                   colSpan={10}
                 >
-                  <Typography></Typography>
+                  <Typography>{data[0]?.TotalCost}</Typography>
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -350,7 +322,7 @@ const Reciept = ({ bookingID }) => {
                   }}
                   colSpan={10}
                 >
-                  In Words :{data.FlatCostInWords}
+                  In Words :{data[0]?.FlatCostInWords}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -387,7 +359,7 @@ const Reciept = ({ bookingID }) => {
               }}
               colSpan={10}
             >
-              ₹ {data.ChequeAmount} /-
+              ₹ {data[0].TotalCost } /-
             </StyledTableCell>
             <StyledTableCell
               style={{

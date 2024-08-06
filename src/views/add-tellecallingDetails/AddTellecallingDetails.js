@@ -37,7 +37,7 @@ const AddTellecallingDetails = ({
   onDashboardClick,
 }) => {
   console.log(
-    editData,
+    contactDataTele,
     "contactDataTele data aaya<<<<<<<<<<<<><>>>>>>>>>>>>>>>>>>"
   );
   const initialFormData = {
@@ -407,12 +407,18 @@ const AddTellecallingDetails = ({
           ...formData,
           ModifyUID: cookies.amr?.UserID || 1,
          TelecallAttendedByID: cookies?.amr?.UserID || 1,
+         titleprefixID:editData?.titleprefixID,
+        //  CountryCode:editData?.CountryCode
 
         }
       : {
           ...formData,
           CreateUID: cookies.amr?.UserID || 1,
          TelecallAttendedByID: cookies?.amr?.UserID || 1,
+         titleprefixID:contactDataTele?.titleprefixID,
+        //  CountryCode:contactDataTele?.CountryCode
+
+
 
         };
 

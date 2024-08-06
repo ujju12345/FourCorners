@@ -433,80 +433,84 @@ const Listprojectbookng = ({
   
   
   
-  const handleSubmit = async () => {
-    // Prepare the data for the API request
-    const payload = {
-      BookingID: selectedRow,
-      Payment: {
-        BookingremarkID: selectedBookingRemark,
-        PRemarkamount: remarks.reduce(
-          (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
-          0
-        ),
-        Cash: cashPaid || "0",
-        ChequeAmount: chequePaid || "0",
-        BankName: bankName || "",
-        AmountTypeID:amountType || "",
-        ChequeNumber: cheqNo || "",
-        ChequeDate: formData.AmountGiven.toISOString().split("T")[0],
-        Date:cashDate.CashDate.toISOString().split("T")[0],
-        PLoan: parseInt(remark.Loan) || 0,
-        paymenttypeID: 1,
-        CreateUID: 1,
-        CreateDate: new Date().toISOString().split("T")[0],
-      },
-      Remarks: remarks.map((remark) => ({
-        Remarkamount: parseFloat(remark.Remarkamount) || 0,
-        RemarkName: remark.RemarkName || "",
-        RemarkDate:
-          new Date(remark.RemarkDate).toISOString().split("T")[0] || "",
-        Loan: parseInt(remark.Loan) || 0,
-        Status: parseInt(remark.Status) || 1,
-      })),
-      Proccess: 1,
-      ModifyUID: 1,
-    };
+const handleSubmit = async () => {
+  // Prepare the data for the API request
+  const payload = {
+    BookingID: selectedRow,
+    Payment: {
+      BookingremarkID: selectedBookingRemark,
+      PRemarkamount: remarks.reduce(
+        (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
+        0
+      ),
+      Cash: cashPaid || "0",
+      ChequeAmount: chequePaid || "0",
+      BankName: bankName || "",
+      AmountTypeID: amountType || "",
+      ChequeNumber: cheqNo || "",
+      ChequeDate: formData.AmountGiven.toISOString().split("T")[0],
+      Date: cashDate.CashDate.toISOString().split("T")[0],
+      PLoan: remarks.reduce(
+        (acc, remark) => acc + (parseInt(remark.Loan) || 0),
+        0
+      ),
+      paymenttypeID: 1,
+      CreateUID: 1,
+      CreateDate: new Date().toISOString().split("T")[0],
+    },
+    Remarks: remarks.map((remark) => ({
+      Remarkamount: parseFloat(remark.Remarkamount) || 0,
+      RemarkName: remark.RemarkName || "",
+      RemarkDate:
+        new Date(remark.RemarkDate).toISOString().split("T")[0] || "",
+      Loan: parseInt(remark.Loan) || 0,
+      Status: parseInt(remark.Status) || 1,
+    })),
+    Proccess: 1,
+    ModifyUID: 1,
+  };
 
-    console.log(payload, "ye jaa raha");
-    try {
-      const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
-        payload
-      );
-      console.log("ye gaya data", response.data);
-      if (response.data.status === "Success") {
-        console.log("Payment successfully submitted:", response.data);
-        setCashPaid("");
-        setChequePaid("");
-        setBankName("");
-        setCheqNo("");
-        setFormData({ AmountGiven: new Date() });
-        setSelectedPaymentType("");
-        setRemarks([
-          { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
-        ]);
-        setSelectedBookingRemark("");
-        setBookingRemarkDetails({});
-        setSelectedRow(null);
+  console.log(payload, "ye jaa raha");
+  try {
+    const response = await axios.post(
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
+      payload
+    );
+    console.log("ye gaya data", response.data);
+    if (response.data.status === "Success") {
+      console.log("Payment successfully submitted:", response.data);
+      setCashPaid("");
+      setChequePaid("");
+      setBankName("");
+      setCheqNo("");
+      setFormData({ AmountGiven: new Date() });
+      setSelectedPaymentType("");
+      setRemarks([
+        { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
+      ]);
+      setSelectedBookingRemark("");
+      setBookingRemarkDetails({});
+      setSelectedRow(null);
 
-        Swal.fire({
-          icon: "successs",
-          title: "Data Submitted Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+      Swal.fire({
+        icon: "success",
+        title: "Data Submitted Successfully",
+        showConfirmButton: false,
+        timer: 1000,
+      });
 
-        handleModalClose();
-      } else {
-        // Handle unsuccessful response
-        console.error("Failed to submit payment:", response.data.message);
-        // Show an error message to the user if needed
-      }
-    } catch (error) {
-      console.error("Error submitting payment:", error);
+      handleModalClose();
+    } else {
+      // Handle unsuccessful response
+      console.error("Failed to submit payment:", response.data.message);
       // Show an error message to the user if needed
     }
-  };
+  } catch (error) {
+    console.error("Error submitting payment:", error);
+    // Show an error message to the user if needed
+  }
+};
+
 
   useEffect(() => {
     if (!paymentData) return;
