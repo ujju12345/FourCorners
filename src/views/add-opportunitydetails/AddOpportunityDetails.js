@@ -18,8 +18,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
-const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
-  console.log(editData, "AAGAYA");
+const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) => {
+  console.log(leadData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formData, setFormData] = useState({
@@ -80,6 +80,38 @@ const AddOpportunityDetails = ({ show, editData , onDashboardClick }) => {
 
     return payload;
   };
+
+  useEffect(() => {
+    if (leadData) {
+      // Merge formData and leadData
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        LookingForID: leadData.LookingForID || prevFormData.LookingForID,
+        EstimatedbudgetID: leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
+        AreaFrom: leadData.AreaFrom || prevFormData.AreaFrom,
+        AreaTo: leadData.AreaTo || prevFormData.AreaTo,
+        ScaleID: leadData.ScaleID || prevFormData.ScaleID,
+        CityID: leadData.CityID || prevFormData.CityID,
+        LocationID: leadData.LocationID || prevFormData.LocationID,
+        UnittypeID: leadData.UnittypeID || prevFormData.UnittypeID,
+        PropertyAgeID: leadData.PropertyAgeID || prevFormData.PropertyAgeID,
+        PurposeID: leadData.PurposeID || prevFormData.PurposeID,
+        ScheduleDate: leadData.ScheduleDate || prevFormData.ScheduleDate,
+        ScheduleTime: leadData.ScheduleTime || prevFormData.ScheduleTime,
+        KeywordID: leadData.KeywordID || prevFormData.KeywordID,
+        SourceID: leadData.SourceID || prevFormData.SourceID,
+        SourceNameID: leadData.SourceNameID || prevFormData.SourceNameID,
+        OpportunityAttendedByID: leadData.OpportunityAttendedByID || prevFormData.OpportunityAttendedByID,
+        Description: leadData.Description || prevFormData.Description,
+        Cid: leadData.Cid || prevFormData.Cid,
+        Status: leadData.Status || prevFormData.Status,
+        CreateUID: leadData.CreateUID || prevFormData.CreateUID,
+        ModifyUID: leadData.ModifyUID || prevFormData.ModifyUID,
+        Oid: leadData.Oid || prevFormData.Oid,
+      }));
+    }
+  }, [leadData]);
+  
 
   useEffect(() => {
     if (editData) {
