@@ -340,22 +340,13 @@ const AddTellecallingDetails = ({
       leadstatusID: value,
     });
   };
-
   const handleTitleChange = (event) => {
-    const { value } = event.target;
-
-    // Update form data with the new value
     setFormData({
       ...formData,
-      titleprefixID: value,
+      titleprefixID: event.target.value
     });
-
-    // Clear error message for titseprefixID
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      titleprefixID: undefined,
-    }));
   };
+  
 
   useEffect(() => {
     if (tellecallingID.length > 0) {
@@ -393,68 +384,45 @@ const AddTellecallingDetails = ({
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Validate form
-    // const isValid = validateForm();
-
-    // if (isValid) {
+  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
+  
+    const dataToSend = {
+      ...formData,
+      ModifyUID: cookies.amr?.UserID || 1,
+      TelecallAttendedByID: cookies?.amr?.UserID || 1,
+      titleprefixID: editData ? editData?.TitleID : contactDataTele?.TitleID,
+      // titleprefixID: editData ? editData?.TitleID : contactDataTele?.TitleID,
 
-    const dataToSend = editData
-      ? {
-          ...formData,
-          ModifyUID: cookies.amr?.UserID || 1,
-         TelecallAttendedByID: cookies?.amr?.UserID || 1,
-         titleprefixID:editData?.titleprefixID,
-        //  CountryCode:editData?.CountryCode
-
-        }
-      : {
-          ...formData,
-          CreateUID: cookies.amr?.UserID || 1,
-         TelecallAttendedByID: cookies?.amr?.UserID || 1,
-         titleprefixID:contactDataTele?.titleprefixID,
-        //  CountryCode:contactDataTele?.CountryCode
-
-
-
-        };
-
-    console.log(dataToSend, "ALL the data of telecalling");
+    };
+  
+    console.log("Data to Send:", dataToSend);
+  
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log(dataToSend, "ALL the data of telecalling");
-
+  
       if (response.data.status === "Success") {
         setFormData(initialFormData);
-
-        // setSubmitSuccess(true);
         setSubmitError(false);
         show(false);
-
         setErrors({});
-
+  
         Swal.fire({
           icon: "success",
-          title: editData
-            ? "Data Updated Successfully"
-            : "Data Added Successfully",
+          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
           window.location.reload();
         });
       } else {
-        setSubmitSuccess(false);
         setSubmitError(true);
-
         Swal.fire({
           icon: "error",
           title: "Oopsii...",
@@ -463,20 +431,15 @@ const AddTellecallingDetails = ({
       }
     } catch (error) {
       console.error("There was an error!", error);
-      setSubmitSuccess(false);
       setSubmitError(true);
-
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Mobile number is already Exits!",
+        text: "An error occurred!",
       });
     }
-    // } else {
-    //   // Handle validation errors if any
-    //   console.log("Form validation failed");
-    // }
   };
+  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
