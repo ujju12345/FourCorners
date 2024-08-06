@@ -251,13 +251,13 @@ const Sidebar = ({ onEdit, onItemClick, onCreate , onDashboardClick}) => {
             >
               <Dashboard />
             </IconButton>
-          <IconButton
+          {/* <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}
               onClick={onCreate}
             >
               <AddIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               aria-label="filter"
               sx={{ color: "grey" }}

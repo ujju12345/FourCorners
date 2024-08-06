@@ -65,7 +65,7 @@ const AddTellecallingDetails = ({
     EmailNotification: 0,
     ModifyUID: 1,
     Tid: "",
-    CreateUID: 1,
+    CreateUID: cookies?.amr?.UserID || 1,
     UnittypeID: "",
     Countrycode: "",
     Status: 1,
@@ -106,6 +106,7 @@ const AddTellecallingDetails = ({
           ? new Date(contactDataTele.NextFollowUpDate)
           : null,
         NextFollowUpTime: contactDataTele.NextFollowUpTime || "",
+        TelecallAttendedByID: cookies?.amr?.UserID || 1,
       });
     } else if (editData) {
       setFormData({
@@ -114,6 +115,8 @@ const AddTellecallingDetails = ({
           ? new Date(editData.NextFollowUpDate)
           : null,
         NextFollowUpTime: editData.NextFollowUpTime || "",
+        TelecallAttendedByID: cookies?.amr?.UserID || 1,
+
       });
     }
   }, [contactDataTele, editData]);
@@ -403,10 +406,14 @@ const AddTellecallingDetails = ({
       ? {
           ...formData,
           ModifyUID: cookies.amr?.UserID || 1,
+         TelecallAttendedByID: cookies?.amr?.UserID || 1,
+
         }
       : {
           ...formData,
           CreateUID: cookies.amr?.UserID || 1,
+         TelecallAttendedByID: cookies?.amr?.UserID || 1,
+
         };
 
     console.log(dataToSend, "ALL the data of telecalling");
