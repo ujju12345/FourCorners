@@ -25,6 +25,9 @@ const opportunity = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editData, setEditData] = useState(null);
+  const [leadData, setLeadData] = useState(null);
+
+  
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -206,7 +209,7 @@ useEffect(() => {
 
   if (showAddDetailsFlag === 'true') {
     setShowAddDetails(true);
-    setEditData(selectedNotification ? JSON.parse(selectedNotification) : null);
+    setLeadData(selectedNotification ? JSON.parse(selectedNotification) : null);
     localStorage.removeItem('showAddDetails'); // Clear flag
   } else {
     setShowAddDetails(false);
@@ -322,6 +325,7 @@ useEffect(() => {
           <AddOpportunityDetails 
             show={handleBack} 
             editData={editData} 
+            leadData={leadData}
           />
         )}
 
@@ -329,9 +333,7 @@ useEffect(() => {
          <WelcomeScreen/>
         )}
 
-        {showAddDetails && (
-          <AddOpportunityDetails show={handleBack} editData={editData} />
-        )}
+     
 
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <ListOpportunity
