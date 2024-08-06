@@ -314,7 +314,7 @@ const BacklogPayment = () => {
         <AddTellecallingDetails show={handleBack} editData={editData} />
       )} */}
 
-      {!loading && !error && !showAddDetails && (
+{!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
         <BookingTransferTemplate
           item={rowDataToUpdate}
           onDelete={handleDelete}

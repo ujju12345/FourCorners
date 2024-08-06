@@ -33,11 +33,10 @@ const NoDataIcon = () => (
 );
 
 const ListReport = ({ item }) => {
-  console.log(item, "ye dekh");
   const [formData, setFormData] = useState({
     fromdate: new Date(),
     todate: new Date(),
-    BookingID: item?.BookingID || "", // Assuming `item` has BookingID
+    BookingID: item?.BookingID || "",
   });
 
   const [paymentReceivedData, setPaymentReceivedData] = useState([]);
@@ -47,8 +46,20 @@ const ListReport = ({ item }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [totalReceived, setTotalReceived] = useState({
+    cash: 0,
+    cheque: 0,
+    total: 0
+  });
+
+  const [totalUpcoming, setTotalUpcoming] = useState({
+    cash: 0,
+    cheque: 0,
+    total: 0
+  });
+
   const fetchData = async () => {
-    if (!item) return; // Exit if no item or BookingID
+    if (!item) return;
 
     try {
       setLoading(true);
@@ -67,6 +78,16 @@ const ListReport = ({ item }) => {
             response.data.upcomingpayment.cheque
           ) || []
         );
+        setTotalReceived(response.data.totalReceivedPayment || {
+          cash: 0,
+          cheque: 0,
+          total: 0
+        });
+        setTotalUpcoming(response.data.totalUpcomingPayment || {
+          cash: 0,
+          cheque: 0,
+          total: 0
+        });
         setDataAvailable(
           response.data.receivedpayment.cash.length > 0 ||
             response.data.receivedpayment.cheque.length > 0 ||
@@ -117,235 +138,255 @@ const ListReport = ({ item }) => {
   );
 
   return (
-    <>
-      <Card>
-        <CardContent>
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={3}>
-              <DatePicker
-                selected={formData.fromdate}
-                onChange={(date) => handleDateChange(date, "fromdate")}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="From When"
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                  />
-                }
-              />
-            </Grid>
+    <Grid container spacing={4}>
+      <Grid item xs={12} sm={12}>
+      <Card sx={{ padding: 2, marginBottom: 3 }}>
+            <CardContent>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: "bold", textAlign: "center" }}
+              >
+                Total Payment Summary
+              </Typography>
+              <Box mt={2}>
+                <Typography variant="body1">
+                  <strong>Received Payments:</strong>
+                </Typography>
+                <Typography variant="body2">Current: {totalReceived.cash}</Typography>
+                <Typography variant="body2">Post: {totalReceived.cheque}</Typography>
+                <Typography variant="body2">Total: {totalReceived.total}</Typography>
+              </Box>
+              <Box mt={2}>
+                <Typography variant="body1">
+                  <strong>Upcoming Payments:</strong>
+                </Typography>
+                <Typography variant="body2">Current: {totalUpcoming.cash}</Typography>
+                <Typography variant="body2">Post: {totalUpcoming.cheque}</Typography>
+                <Typography variant="body2">Total: {totalUpcoming.total}</Typography>
+              </Box>
+            </CardContent>
+          </Card>
 
-            <Grid item xs={12} sm={3}>
-              <DatePicker
-                selected={formData.todate}
-                onChange={(date) => handleDateChange(date, "todate")}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                customInput={
-                  <TextField
-                    fullWidth
-                    label="Till When"
-                    InputProps={{
-                      readOnly: true,
-                      sx: { width: "100%" },
-                    }}
-                  />
-                }
-              />
-            </Grid>
+        <Card>
+          <CardContent>
+            <Grid container spacing={4}>
+              <Grid item xs={12} sm={3}>
+                <DatePicker
+                  selected={formData.fromdate}
+                  onChange={(date) => handleDateChange(date, "fromdate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="From When"
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
 
-            <Grid
-              item
-              xs={12}
-              sm={3}
-              mb={3}
-              display="flex"
-              justifyContent="center"
-              alignItems="flex-end"
+              <Grid item xs={12} sm={3}>
+                <DatePicker
+                  selected={formData.todate}
+                  onChange={(date) => handleDateChange(date, "todate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="Till When"
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                mb={3}
+                display="flex"
+                justifyContent="center"
+                alignItems="flex-end"
+              >
+                {/* <Button variant="contained" onClick={fetchData}>
+                  Search
+                </Button> */}
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+
+        <Grid container justifyContent="center" spacing={2} mt={5}>
+          <Grid item>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", textAlign: "center" }}
             >
-              {/* <Button variant="contained" onClick={fetchData}>
-                Search
-              </Button> */}
-            </Grid>
+              Dashboard of Payment Received
+            </Typography>
           </Grid>
-        </CardContent>
-      </Card>
-
-      <Grid container justifyContent="center" spacing={2} mt={5}>
-        <Grid item>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", textAlign: "center" }}
-          >
-            Dashboard of Payment Received
-          </Typography>
         </Grid>
-      </Grid>
 
-      <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
-        <CardContent>
-          {loading ? (
-            <CircularProgress />
-          ) : dataAvailable ? (
-            <>
-              <TableContainer component={Paper}>
-                <Table
-                  sx={{ minWidth: 800 }}
-                  aria-label="payment received table"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <SortableTableCell label="Remakrs Name" />
-                      <SortableTableCell label="Bank Name" />
-                      <SortableTableCell label="Cheque Number" />
-                      <SortableTableCell label="Cheque Date" />
-                      <SortableTableCell label="Amount" />
-                      {/* <TableCell>Actions</TableCell> */}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {paymentReceivedData
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row) => (
-                        <TableRow key={row.paymentID}>
-                          <TableCell>{row.RemarkName}</TableCell>
-                          <TableCell>{row.BankName}</TableCell>
-                          <TableCell>{row.ChequeNumber}</TableCell>
-                          <TableCell>{row.ChequeDate}</TableCell>
-                          <TableCell>{row.ChequeAmount}</TableCell>
-                          {/* <TableCell>
-                            <IconButton
-                              color="primary"
-                              onClick={() => handleAddPayment(row)}
-                            >
-                              <PaymentIcon />
-                            </IconButton>
-                          </TableCell> */}
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={paymentReceivedData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </>
-          ) : (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection="column"
-              minHeight={200}
+        <Card sx={{margin: "auto", padding: 2 }}>
+          <CardContent>
+            {loading ? (
+              <CircularProgress />
+            ) : dataAvailable ? (
+              <>
+                <TableContainer component={Paper}>
+                  <Table
+                    sx={{ minWidth: 800 }}
+                    aria-label="payment received table"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <SortableTableCell label="Purchaser Name" />
+                        <SortableTableCell label="Project Name" />
+                        <SortableTableCell label="Post" />
+                        <SortableTableCell label="Current" />
+                        <SortableTableCell label="Date" />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {paymentReceivedData
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row) => (
+                          <TableRow key={row.paymentID}>
+                            <TableCell>{row.Name}</TableCell>
+                            <TableCell>{row.ProjectName}</TableCell>
+                            <TableCell>{row.ChequeAmount}</TableCell>
+                            <TableCell>{row.Cash}</TableCell>
+                            <TableCell>{row.paymentDate}</TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={paymentReceivedData.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </>
+            ) : (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+                minHeight={200}
+              >
+                <NoDataIcon />
+                <Typography variant="h6" color="textSecondary" align="center">
+                  No data available for this booking.
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+
+        <Grid container justifyContent="center" spacing={2} mt={5}>
+          <Grid item>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", textAlign: "center" }}
             >
-              <NoDataIcon />
-              <Typography variant="h6" color="textSecondary" align="center">
-                No data available for this booking.
-              </Typography>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-
-      <Grid container justifyContent="center" spacing={2} mt={5}>
-        <Grid item>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", textAlign: "center" }}
-          >
-            Dashboard of Upcoming Payment
-          </Typography>
+              Dashboard of Upcoming Payment
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
-        <CardContent>
-          {loading ? (
-            <CircularProgress />
-          ) : dataAvailable ? (
-            <>
-              <TableContainer component={Paper}>
-                <Table
-                  sx={{ minWidth: 800 }}
-                  aria-label="upcoming payment table"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <SortableTableCell label="Remark Name" />
-                      <SortableTableCell label="Bank Name" />
-                      <SortableTableCell label="Cheque Number" />
-                      <SortableTableCell label="Cheque Date" />
-                      <SortableTableCell label="Amount" />
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {upcomingPaymentData
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row) => (
-                        <TableRow key={row.paymentID}>
-                          <TableCell>{row.RemarkName}</TableCell>
-                          <TableCell>{row.BankName}</TableCell>
-                          <TableCell>{row.ChequeNumber}</TableCell>
-                          <TableCell>{row.ChequeDate}</TableCell>
-                          <TableCell>{row.ChequeAmount}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              color="primary"
-                              onClick={() => handleAddPayment(row)}
-                            >
-                              <PaymentIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={upcomingPaymentData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </>
-          ) : (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection="column"
-              minHeight={200}
-            >
-              <NoDataIcon />
-              <Typography variant="h6" color="textSecondary" align="center">
-                No data available for this booking.
-              </Typography>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
-    </>
+        <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
+          <CardContent>
+            {loading ? (
+              <CircularProgress />
+            ) : dataAvailable ? (
+              <>
+                <TableContainer component={Paper}>
+                  <Table
+                    sx={{ minWidth: 800 }}
+                    aria-label="upcoming payment table"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <SortableTableCell label="Remark Name" />
+                        <SortableTableCell label="Bank Name" />
+                        <SortableTableCell label="Cheque Number" />
+                        <SortableTableCell label="Cheque Date" />
+                        <SortableTableCell label="Amount" />
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {upcomingPaymentData
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row) => (
+                          <TableRow key={row.paymentID}>
+                            <TableCell>{row.RemarkName}</TableCell>
+                            <TableCell>{row.BankName}</TableCell>
+                            <TableCell>{row.ChequeNumber}</TableCell>
+                            <TableCell>{row.ChequeDate}</TableCell>
+                            <TableCell>{row.ChequeAmount}</TableCell>
+                            <TableCell>
+                              <IconButton
+                                color="primary"
+                                onClick={() => handleAddPayment(row)}
+                              >
+                                <PaymentIcon />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={upcomingPaymentData.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </>
+            ) : (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+                minHeight={200}
+              >
+                <NoDataIcon />
+                <Typography variant="h6" color="textSecondary" align="center">
+                  No data available for this booking.
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 
