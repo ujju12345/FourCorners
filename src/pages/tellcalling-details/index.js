@@ -35,9 +35,9 @@ const Tellecalling = () => {
   const userName = cookies.amr?.FullName || 'User';
   const roleName = cookies.amr?.RoleName || 'Admin';
   useEffect(() => {
-  const showAddDetailsFlag = localStorage.getItem('showAddDetails');
+    const showAddDetailsFlag = localStorage.getItem('showAddDetails');
     const selectedContact = localStorage.getItem('selectedContact');
-
+  
     if (showAddDetailsFlag === 'true') {
       setShowAddDetails(true);
       setContactData(selectedContact ? JSON.parse(selectedContact) : null);
@@ -45,9 +45,6 @@ const Tellecalling = () => {
     } else {
       setShowAddDetails(false);
     }
-    // if (selectedContact) {
-    //   setContactData(JSON.parse(selectedContact));
-    // }
   }, []);
   
 
@@ -275,63 +272,66 @@ const Tellecalling = () => {
   };
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={4}>
-        <Sidebar 
-          // rows={rows} 
-          onItemClick={handleShow} 
-          onEdit={handleEdit} 
-          onCreate={handleAddTelecaller} 
-          onDashboardClick={handleNavigation} 
-        />
-      </Grid>
-      <Grid item xs={8}>
-        {loading && <CircularProgress />}
-        {/* {error && <Alert severity="error">{error.message}</Alert>} */}
-        {showDashboard && !loading && !error && <WelcomeScreen />}
-        {!showDashboard && firstVisit && !loading && !error && !leadData && (
-          <WelcomeScreen />
-        )}
+<Grid container spacing={6}>
+  <Grid item xs={4}>
+    <Sidebar 
+      // rows={rows} 
+      onItemClick={handleShow} 
+      onEdit={handleEdit} 
+      onCreate={handleAddTelecaller} 
+      onDashboardClick={handleNavigation} 
+    />
+  </Grid>
+  <Grid item xs={8}>
+    {loading && <CircularProgress />}
+    {/* {error && <Alert severity="error">{error.message}</Alert>} */}
+    
+    {showDashboard && !loading && !error && !showAddDetails && <WelcomeScreen />}
+    
+    {!showDashboard && firstVisit && !loading && !error && !leadData && !showAddDetails && (
+      <WelcomeScreen />
+    )}
 
-        {leadData && (
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Converted Lead Details
-            </Typography>
-            {/* Render lead data details */}
-            <pre>{JSON.stringify(leadData, null, 2)}</pre>
-          </Box>
-        )}
+    {leadData && !showAddDetails && (
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Converted Lead Details
+        </Typography>
+        {/* Render lead data details */}
+        <pre>{JSON.stringify(leadData, null, 2)}</pre>
+      </Box>
+    )}
 
-        {showAddDetails && !showDashboard && (
-          <AddTellecallingDetails show={handleBack} editData={editData} contactDataTele={contactData}/>
-        )}
+    {showAddDetails && (
+      <AddTellecallingDetails show={handleBack} editData={editData} contactDataTele={contactData} />
+    )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
-          <ListTellecalling
-            item={rowDataToUpdate}
-            // onDelete={handleDelete}
-            onHistoryClick={handleShowHistory}
-            onEdit={handleEdit}
-          />
-        )}
+    {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
+      <ListTellecalling
+        item={rowDataToUpdate}
+        // onDelete={handleDelete}
+        onHistoryClick={handleShowHistory}
+        onEdit={handleEdit}
+      />
+    )}
 
-        {!loading && !error && showHistory && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-          >
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
-              User History
-            </Typography>
-            <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
-        )}
-      </Grid>
-    </Grid>
+    {!loading && !error && showHistory && (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
+          User History
+        </Typography>
+        <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
+      </Box>
+    )}
+  </Grid>
+</Grid>
+
   );
 };
 

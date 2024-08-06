@@ -55,7 +55,7 @@ const AddTellecallingDetails = ({
     Comments: "",
     Location: "",
     FollowupThrough: "",
-    NextFollowUpDate: "",
+    NextFollowUpDate: null,
     NextFollowUpTime: getCurrentTime(),
     SourceID: "",
     SourceName: "",
@@ -384,6 +384,10 @@ const AddTellecallingDetails = ({
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+
+
+
   
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
@@ -391,6 +395,7 @@ const AddTellecallingDetails = ({
   
     const dataToSend = {
       ...formData,
+      
       ModifyUID: cookies.amr?.UserID || 1,
       TelecallAttendedByID: cookies?.amr?.UserID || 1,
       titleprefixID: editData ? editData?.TitleID : contactDataTele?.TitleID,
@@ -413,14 +418,14 @@ const AddTellecallingDetails = ({
         show(false);
         setErrors({});
   
-        Swal.fire({
-          icon: "success",
-          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          window.location.reload();
-        });
+        // Swal.fire({
+        //   icon: "success",
+        //   title: editData ? "Data Updated Successfully" : "Data Added Successfully",
+        //   showConfirmButton: false,
+        //   timer: 1000,
+        // }).then(() => {
+        //   window.location.reload();
+        // });
       } else {
         setSubmitError(true);
         Swal.fire({
@@ -450,8 +455,15 @@ const AddTellecallingDetails = ({
   };
 
   const handleDateChange = (date) => {
-    setFormData({ ...formData, NextFollowUpDate: date });
+    if (date) {
+      // Convert date to UTC
+      const adjustedDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      setFormData({ ...formData, NextFollowUpDate: adjustedDate });
+    } else {
+      setFormData({ ...formData, NextFollowUpDate: date });
+    }
   };
+
 
   return (
     <>
@@ -908,28 +920,28 @@ const AddTellecallingDetails = ({
                 </FormControl>
               </Grid> */}
 
-              <Grid item xs={8} sm={4}>
-                <DatePicker
-                  selected={formData.NextFollowUpDate}
-                  onChange={handleDateChange}
-                  dateFormat="dd-MM-yyyy"
-                  className="form-control"
-                  customInput={
-                    <TextField
-                      fullWidth
-                      label={
-                        <>
-                          Next follow up-date <RequiredIndicator />
-                        </>
-                      }
-                      InputProps={{
-                        readOnly: true,
-                        sx: { width: "100%" },
-                      }}
-                    />
-                  }
-                />
-              </Grid>
+<Grid item xs={8} sm={4}>
+      <DatePicker
+        selected={formData.NextFollowUpDate}
+        onChange={handleDateChange}
+        dateFormat="dd-MM-yyyy"
+        className="form-control"
+        customInput={
+          <TextField
+            fullWidth
+            label={
+              <>
+                Next follow up-date <RequiredIndicator />
+              </>
+            }
+            InputProps={{
+              readOnly: true,
+              sx: { width: "100%" },
+            }}
+          />
+        }
+      />
+    </Grid>
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
