@@ -251,56 +251,7 @@ const navigation = () => {
       ],
     },
 
-  {
-    sectionTitle: "Post Sales",
-  },
-    {
-      title: "Payment Reminder",
-      icon: PhoneIcon,
-      path: "/tellcalling-details",
-      children: [
-        {
-          title: "Todays Follow up",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details",
-        },
-        {
-          title: "Backlog Payment",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/Mylead",
-        },
-        {
-          title: "Open Payment ",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/OpenLead",
-        },
-       
-      ],
-    },
 
-    {
-      title: "Loan Reminder",
-      icon: PhoneIcon,
-      path: "/tellcalling-details",
-      children: [
-        {
-          title: "Todays Follow up",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details",
-        },
-        {
-          title: "Backlog Payment",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/Mylead",
-        },
-        {
-          title: "Open Payment ",
-          icon: CubeOutlineIcon,
-          path: "/tellcalling-details/OpenLead",
-        },
-       
-      ],
-    },
 
     {
       sectionTitle: "Enquiries",

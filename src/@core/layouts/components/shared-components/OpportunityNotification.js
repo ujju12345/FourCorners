@@ -116,6 +116,11 @@ const OpportunityNotification = () => {
   //   }
   // }, []);
 
+  const playNotificationSound = () => {
+    const audio = new Audio('/notification.mp3');
+    audio.play();
+  };
+
   const fetchData = async () => {
     const userid = cookies.amr?.UserID || 'Role';
 
@@ -145,10 +150,7 @@ const OpportunityNotification = () => {
     }
   };
 
-  const playNotificationSound = () => {
-    const audio = new Audio('/notification.mp3');
-    audio.play();
-  };
+
 
   const handleOpportunity = () => {
     window.location.href = "/opportunity/";
