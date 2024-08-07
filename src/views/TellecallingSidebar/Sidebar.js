@@ -415,7 +415,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  , onDashboardClick}) => {
                                 height: 12,
                                 p: 3,
                                 backgroundColor: getChipColor(item.leadstatusName),
-                                color: "#000000", // Adjust text color for better contrast if needed
+                                color: "#000000",
                               }}
                             />
                           )}

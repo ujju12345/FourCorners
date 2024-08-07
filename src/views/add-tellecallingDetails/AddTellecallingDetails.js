@@ -111,11 +111,13 @@ const AddTellecallingDetails = ({
     } else if (editData) {
       setFormData({
         ...editData,
+
         NextFollowUpDate: editData.NextFollowUpDate
           ? new Date(editData.NextFollowUpDate)
           : null,
         NextFollowUpTime: editData.NextFollowUpTime || "",
         TelecallAttendedByID: cookies?.amr?.UserID || 1,
+       
 
       });
     }
@@ -418,14 +420,14 @@ const AddTellecallingDetails = ({
         show(false);
         setErrors({});
   
-        // Swal.fire({
-        //   icon: "success",
-        //   title: editData ? "Data Updated Successfully" : "Data Added Successfully",
-        //   showConfirmButton: false,
-        //   timer: 1000,
-        // }).then(() => {
-        //   window.location.reload();
-        // });
+        Swal.fire({
+          icon: "success",
+          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
       } else {
         setSubmitError(true);
         Swal.fire({
@@ -520,7 +522,7 @@ const AddTellecallingDetails = ({
           color: "rgba(0, 0, 0, 0.87)",
         }}
       >
-        {titles.find(title => title.TitleID === formData.titleprefixID || contactDataTele?.TitleID)?.TitleName || 'No Title'}
+         {contactDataTele?.TitleName || "No Code"}
       </Box>
     )}
     {errors.titleprefixID && (
@@ -647,20 +649,40 @@ const AddTellecallingDetails = ({
                 )}
               </Grid> */}
 
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Alternate Mobile Number"
-                  name="AlternateMobileNo"
-                  value={formData.AlternateMobileNo || ""}
-                  onChange={handleChange}
-                  inputProps={{
-                    pattern: "[0-9]*",
-                    maxLength: 10,
-                  }}
-                />
-                {/* Add error handling for Alternate Mobile Number if needed */}
-              </Grid>
+<Grid item xs={8} sm={4}>
+  <FormControl fullWidth>
+    {editData ? (
+      <TextField
+        fullWidth
+        label="Alternate Mobile Number"
+        name="AlternateMobileNo"
+        value={formData.AlternateMobileNo !== undefined ? formData.AlternateMobileNo : (contactDataTele?.OtherNumbers || "")}
+        onChange={handleChange}
+        inputProps={{
+          pattern: "[0-9]*",
+          maxLength: 10,
+        }}
+      />
+    ) : (
+      <Box
+        sx={{
+          padding: "16px",
+          border: "1px solid #ced4da",
+          borderRadius: "4px",
+          color: "rgba(0, 0, 0, 0.87)",
+        }}
+      >
+        {contactDataTele?.OtherNumbers || "No Alternate Mobile Number"}
+      </Box>
+    )}
+    {errors.AlternateMobileNo && (
+      <Typography variant="caption" color="error">
+        {errors.AlternateMobileNo}
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
 
               {/* <Grid item xs={8} sm={4}>
                 <TextField

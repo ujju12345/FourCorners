@@ -926,6 +926,27 @@ const numberToWordsIndian = (num) => {
                   onChange={handleChange}
                 />
               </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Usable Area in Sqft"
+                  name="UsableArea"
+                  placeholder="Usable Area in sqft"
+                  value={formData.UsableArea}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Agreement Carpet (RERA) in Sqft"
+                  name="AgreementCarpet"
+                  placeholder="Agreement Carpet"
+                  value={formData.AgreementCarpet}
+                  onChange={handleChange}
+                />
+              </Grid>
 
               <Grid item xs={8} sm={4}>
                 <TextField
@@ -1140,27 +1161,7 @@ const numberToWordsIndian = (num) => {
                 )}
               </Grid> */}
 
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Usable Area in Sqft"
-                  name="UsableArea"
-                  placeholder="Usable Area in sqft"
-                  value={formData.UsableArea}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Agreement Carpet (RERA) in Sqft"
-                  name="AgreementCarpet"
-                  placeholder="Agreement Carpet"
-                  value={formData.AgreementCarpet}
-                  onChange={handleChange}
-                />
-              </Grid>
+             
               {remarks.map((remark, index) => (
                 <Grid container item spacing={2} key={index}>
                   {/* Amount Field */}
