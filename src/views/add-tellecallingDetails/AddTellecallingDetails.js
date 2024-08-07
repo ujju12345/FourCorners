@@ -117,8 +117,6 @@ const AddTellecallingDetails = ({
           : null,
         NextFollowUpTime: editData.NextFollowUpTime || "",
         TelecallAttendedByID: cookies?.amr?.UserID || 1,
-       
-
       });
     }
   }, [contactDataTele, editData]);
@@ -345,10 +343,9 @@ const AddTellecallingDetails = ({
   const handleTitleChange = (event) => {
     setFormData({
       ...formData,
-      titleprefixID: event.target.value
+      titleprefixID: event.target.value,
     });
   };
-  
 
   useEffect(() => {
     if (tellecallingID.length > 0) {
@@ -387,42 +384,39 @@ const AddTellecallingDetails = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-
-
-
-  
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-telecalling.php";
-  
+
     const dataToSend = {
       ...formData,
-      
+
       ModifyUID: cookies.amr?.UserID || 1,
       TelecallAttendedByID: cookies?.amr?.UserID || 1,
       titleprefixID: editData ? editData?.TitleID : contactDataTele?.TitleID,
       // titleprefixID: editData ? editData?.TitleID : contactDataTele?.TitleID,
-
     };
-  
+
     console.log("Data to Send:", dataToSend);
-  
+
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.data.status === "Success") {
         setFormData(initialFormData);
         setSubmitError(false);
         show(false);
         setErrors({});
-  
+
         Swal.fire({
           icon: "success",
-          title: editData ? "Data Updated Successfully" : "Data Added Successfully",
+          title: editData
+            ? "Data Updated Successfully"
+            : "Data Added Successfully",
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -446,7 +440,6 @@ const AddTellecallingDetails = ({
       });
     }
   };
-  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -459,13 +452,14 @@ const AddTellecallingDetails = ({
   const handleDateChange = (date) => {
     if (date) {
       // Convert date to UTC
-      const adjustedDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const adjustedDate = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      );
       setFormData({ ...formData, NextFollowUpDate: adjustedDate });
     } else {
       setFormData({ ...formData, NextFollowUpDate: date });
     }
   };
-
 
   return (
     <>
@@ -494,44 +488,48 @@ const AddTellecallingDetails = ({
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
-            <Grid item xs={8} sm={4}>
-  <FormControl fullWidth>
-    {editData ? (
-      <>
-        <InputLabel>
-          Title <RequiredIndicator />
-        </InputLabel>
-        <Select
-          value={formData.titleprefixID || contactDataTele?.TitleID || ""}
-          onChange={handleTitleChange}
-          label="Title"
-        >
-          {titles.map((title) => (
-            <MenuItem key={title.TitleID} value={title.TitleID}>
-              {title.TitleName}
-            </MenuItem>
-          ))}
-        </Select>
-      </>
-    ) : (
-      <Box
-        sx={{
-          padding: "16px",
-          border: "1px solid #ced4da",
-          borderRadius: "4px",
-          color: "rgba(0, 0, 0, 0.87)",
-        }}
-      >
-         {contactDataTele?.TitleName || "No Code"}
-      </Box>
-    )}
-    {errors.titleprefixID && (
-      <Typography variant="caption" color="error">
-        {errors.titleprefixID}
-      </Typography>
-    )}
-  </FormControl>
-</Grid>
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  {editData ? (
+                    <>
+                      <InputLabel>
+                        Title <RequiredIndicator />
+                      </InputLabel>
+                      <Select
+                        value={
+                          formData.titleprefixID ||
+                          contactDataTele?.TitleID ||
+                          ""
+                        }
+                        onChange={handleTitleChange}
+                        label="Title"
+                      >
+                        {titles.map((title) => (
+                          <MenuItem key={title.TitleID} value={title.TitleID}>
+                            {title.TitleName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  ) : (
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {contactDataTele?.TitleName || "No Code"}
+                    </Box>
+                  )}
+                  {errors.titleprefixID && (
+                    <Typography variant="caption" color="error">
+                      {errors.titleprefixID}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
 
               <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
@@ -607,9 +605,6 @@ const AddTellecallingDetails = ({
                 </FormControl>
               </Grid>
 
-
-
-
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -649,40 +644,44 @@ const AddTellecallingDetails = ({
                 )}
               </Grid> */}
 
-<Grid item xs={8} sm={4}>
-  <FormControl fullWidth>
-    {editData ? (
-      <TextField
-        fullWidth
-        label="Alternate Mobile Number"
-        name="AlternateMobileNo"
-        value={formData.AlternateMobileNo !== undefined ? formData.AlternateMobileNo : (contactDataTele?.OtherNumbers || "")}
-        onChange={handleChange}
-        inputProps={{
-          pattern: "[0-9]*",
-          maxLength: 10,
-        }}
-      />
-    ) : (
-      <Box
-        sx={{
-          padding: "16px",
-          border: "1px solid #ced4da",
-          borderRadius: "4px",
-          color: "rgba(0, 0, 0, 0.87)",
-        }}
-      >
-        {contactDataTele?.OtherNumbers || "No Alternate Mobile Number"}
-      </Box>
-    )}
-    {errors.AlternateMobileNo && (
-      <Typography variant="caption" color="error">
-        {errors.AlternateMobileNo}
-      </Typography>
-    )}
-  </FormControl>
-</Grid>
-
+              <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  {editData ? (
+                    <TextField
+                      fullWidth
+                      label="Alternate Mobile Number"
+                      name="AlternateMobileNo"
+                      value={
+                        formData.AlternateMobileNo !== undefined
+                          ? formData.AlternateMobileNo
+                          : contactDataTele?.OtherNumbers || ""
+                      }
+                      onChange={handleChange}
+                      inputProps={{
+                        pattern: "[0-9]*",
+                        maxLength: 10,
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {contactDataTele?.OtherNumbers ||
+                        "No Alternate Mobile Number"}
+                    </Box>
+                  )}
+                  {errors.AlternateMobileNo && (
+                    <Typography variant="caption" color="error">
+                      {errors.AlternateMobileNo}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
 
               {/* <Grid item xs={8} sm={4}>
                 <TextField
@@ -942,28 +941,28 @@ const AddTellecallingDetails = ({
                 </FormControl>
               </Grid> */}
 
-<Grid item xs={8} sm={4}>
-      <DatePicker
-        selected={formData.NextFollowUpDate}
-        onChange={handleDateChange}
-        dateFormat="dd-MM-yyyy"
-        className="form-control"
-        customInput={
-          <TextField
-            fullWidth
-            label={
-              <>
-                Next follow up-date <RequiredIndicator />
-              </>
-            }
-            InputProps={{
-              readOnly: true,
-              sx: { width: "100%" },
-            }}
-          />
-        }
-      />
-    </Grid>
+              <Grid item xs={8} sm={4}>
+                <DatePicker
+                  selected={formData.NextFollowUpDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label={
+                        <>
+                          Next follow up-date <RequiredIndicator />
+                        </>
+                      }
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth

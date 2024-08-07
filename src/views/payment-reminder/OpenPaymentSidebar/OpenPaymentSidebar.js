@@ -326,7 +326,7 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
                         variant="subtitle1"
                         style={{ fontWeight: "bold" }}
                       >
-                        {item?.TitleName} {item.CName}
+                        {item?.TitleName} {item.Name}
                       </Typography>
                     }
                     secondary={

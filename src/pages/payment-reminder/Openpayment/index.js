@@ -37,6 +37,7 @@ import BacklogPaymentSidebar from "src/views/payment-reminder/ BacklogPaymentSid
 import BacklogPaymentTemplate from "src/views/payment-reminder/BacklogPaymentTemplate/BacklogPaymentTemplate";
 import OpenPaymentSidebar from "src/views/payment-reminder/OpenPaymentSidebar/OpenPaymentSidebar";
 import OpenpaymentTemplate from "src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate";
+import TemplateRosenagar from "src/views/TemplateRosenagar/TemplateRosenagar";
 const salesData = [
   {
     stats: "50",
@@ -261,6 +262,7 @@ const OpenPayment = () => {
       {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
           <OpenpaymentTemplate
             item={rowDataToUpdate}
+            rows={rows}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}

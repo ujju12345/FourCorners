@@ -18,8 +18,10 @@ import BellOutline from 'mdi-material-ui/BellOutline';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 import { useRouter } from 'next/router';
 import CancelIcon from "@mui/icons-material/Cancel";
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from 'src/firebase';
 
-// ** Styled Menu component
+// Styled components
 const Menu = styled(MuiMenu)(({ theme }) => ({
   '& .MuiMenu-paper': {
     width: 380,
@@ -34,13 +36,12 @@ const Menu = styled(MuiMenu)(({ theme }) => ({
   }
 }));
 
-// ** Styled MenuItem component
 const MenuItem = styled(MuiMenuItem)(({ theme }) => ({
   paddingTop: theme.spacing(3),
   paddingBottom: theme.spacing(3),
   borderBottom: `1px solid ${theme.palette.divider}`
 }));
-  
+
 const styles = {
   maxHeight: 349,
   '& .MuiMenuItem-root:last-of-type': {
@@ -48,19 +49,16 @@ const styles = {
   }
 };
 
-// ** Styled PerfectScrollbar component
 const PerfectScrollbar = styled(PerfectScrollbarComponent)({
   ...styles
 });
 
-// ** Styled Avatar component
 const Avatar = styled(MuiAvatar)({
   width: '2.375rem',
   height: '2.375rem',
   fontSize: '1.125rem'
 });
 
-// ** Styled component for the title in MenuItems
 const MenuItemTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   flex: '1 1 100%',
@@ -71,7 +69,6 @@ const MenuItemTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(0.75)
 }));
 
-// ** Styled component for the subtitle in MenuItems
 const MenuItemSubtitle = styled(Typography)({
   flex: '1 1 100%',
   overflow: 'hidden',
@@ -80,7 +77,6 @@ const MenuItemSubtitle = styled(Typography)({
 });
 
 const OpportunityNotification = () => {
-  // ** States
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
@@ -88,9 +84,37 @@ const OpportunityNotification = () => {
   const [cookies] = useCookies(["amr"]);
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'));
   const router = useRouter();
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined' && messaging) {
+  //     async function requestPermission() {
+  //       try {
+  //         const permission = await Notification.requestPermission();
+  //         if (permission === 'granted') {
+  //           const token = await getToken(messaging, { vapidKey: 'BAbIhsXFZd4XZZfjVTiwZQmX2fw_9coO2ab3yWaxX6mVisfua4ypPRDr_D8tJW56Jj29V2kJLUIi0CcQHld-3IE' });
+  //           console.log('Generted Token: ??????????????', token);
+  //         } else if (permission === 'denied') {
+  //           alert('You denied the notification.');
+  //         }
+  //       } catch (error) {
+  //         console.error('Error getting token:', error);
+  //       }
+  //     }
+
+  //     requestPermission();
+
+  //     onMessage(messaging, (payload) => {
+  //       console.log('Message received:', payload);
+  //       new Notification(payload.notification.title, {
+  //         body: payload.notification.body,
+  //       });
+  //     });
+  //   }
+  // }, []);
 
   const fetchData = async () => {
     const userid = cookies.amr?.UserID || 'Role';
@@ -99,9 +123,8 @@ const OpportunityNotification = () => {
       const response = await axios.get(
         `https://apiforcorners.cubisysit.com/api/api-fetch-convtooppo.php?UserID=${userid}`
       );
-      console.log("RESPONSEEEEEE DEKHHH<<<<<<<<<<<>>>>>>>>>>>>", response.data);
+      console.log("Response:", response.data);
 
-      // Ensure the data is an array before setting notifications
       if (Array.isArray(response.data.data)) {
         const newNotifications = response.data.data;
 
@@ -130,22 +153,21 @@ const OpportunityNotification = () => {
   const handleOpportunity = () => {
     window.location.href = "/opportunity/";
   };
+
   const handleDropdownOpen = event => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
-    setAnchorEl(false)
-  }
+    setAnchorEl(null);
+  };
+
   const handleDropdownClose = (notification) => {
-    // Store the notification data and flag in local storage
     localStorage.setItem('selectedNotification', JSON.stringify(notification));
-    localStorage.setItem('showAddDetails', 'true'); // Set flag
-    // Redirect to the Opportunity page
+    localStorage.setItem('showAddDetails', 'true');
     router.push('/opportunity');
     handleClose();
   };
-
-
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
@@ -176,7 +198,7 @@ const OpportunityNotification = () => {
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={handleDropdownClose}
+        onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
@@ -234,4 +256,3 @@ const OpportunityNotification = () => {
 };
 
 export default OpportunityNotification;
-
