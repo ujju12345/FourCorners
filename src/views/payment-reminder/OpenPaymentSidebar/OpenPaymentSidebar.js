@@ -335,10 +335,10 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
                           Phone: {item.Mobile}
                         </Typography>
                         <Typography variant="body2" style={{ fontSize: 10 }}>
-                          Date: {item.NextFollowUpDate} {item.NextFollowUpTime}
+                         Booking Date: {item.BookingDate} 
                         </Typography>
                         <Typography variant="body2" style={{ fontSize: 10 }}>
-                          Assign By: {item.OpportunityAttendedByName}
+                          Remark Amount: {item.Remarkamount}
                         </Typography>
                       </>
                     }
