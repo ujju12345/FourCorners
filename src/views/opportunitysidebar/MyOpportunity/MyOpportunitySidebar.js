@@ -346,6 +346,12 @@ const MyOpportunitySidebar = ({ onItemClick, onCreate }) => {
                   >
                    Assign By: {item.OpportunityAttendedByName}
                   </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Source Name : {item.SourceName}
+                  </Typography>
                 </>}
               />
                <IconButton

@@ -53,7 +53,9 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState([]);
-
+  const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
+  const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
+  const [bookingRemarks, setBookingRemarks] = useState([]);
   const [setRowDataToUpdate] = useState(null);
   const [anchorElOpportunity, setAnchorElOpportunity] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -61,12 +63,6 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCurrentUpdate = (event) => {
-    setFormData({
-      ...formData,
-      CurrentUpdateID: event.target.value,
-    });
-  };
 
   useEffect(() => {
     fetchDataCurrent();
@@ -99,10 +95,7 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+
 
 
 
@@ -127,123 +120,107 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
     }
   };
 
-  const handleMenuItemClick = async (event, userID) => {
-    event.preventDefault();
 
-    // Ensure item and Tid are available
-    if (!item || !item.Tid) {
-      console.error("No valid item or Tid found.");
-      return;
-    }
-
-    // Add Tid to formData
-    const formData = {
-      UserID: userID,
-      Cid: item?.Cid,
-      Tid: item.Tid,
-      Status: 1,
-      CreateUID: cookies?.amr?.UserID || 1,
-
-    };
-
-    console.log(formData, "COVERT TO OPPORTUNITY Data 1");
-
-    const url =
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-convtoppo.php";
-
-    try {
-      const response = await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(formData, "COVERT TO OPPORTUNITY Data 2");
-
-      if (response.data.status === "Success") {
-        // setFormData(intialName);
-        setOpen(false);
-        setSubmitSuccess(true);
-        setSubmitError(false);
-        // Show success message using SweetAlert
-        Swal.fire({
-          icon: "success",
-          title:
-            "Lead Converted to opportunity Successfully",
-
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          window.location.reload();
-        });
-      } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
-        // Show error message using SweetAlert
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong! Please try again later.",
-        });
-      }
-    } catch (error) {
-      console.error("There was an error!", error);
-      setSubmitSuccess(false);
-      setSubmitError(true);
-      // Show error message using SweetAlert
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong! Please try again later.",
-      });
-    }
-  };
   const handleClick = (event) => {
     setAnchorElOpportunity(event.currentTarget);
     fetchUserMasterData();
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+
+  const handleAddPayment = async () => {
+    setOpen(true);
+  
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${item?.BookingID}`
+      );
+      if (response.data.status === "Success") {
+        console.log(response.data.data, 'Received booking remarks data');
+        const bookingRemarksData = response.data.data;
+        setBookingRemarks(bookingRemarksData);
+  
+        // Fetch details for the first booking remark if available
+        if (bookingRemarksData.length > 0) {
+          const firstBookingRemarkID = bookingRemarksData[0].BookingremarkID;
+          await fetchBookingRemarkDetails(firstBookingRemarkID);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching booking remarks:", error);
+    }
+  };
+  const fetchBookingRemarkDetails = async (bookingRemarkID) => {
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremarkdetails.php?BookingremarkID=${bookingRemarkID}`
+      );
+      if (response.data.status === "Success") {
+        setBookingRemarkDetails(response.data.data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching booking remark details:", error);
+    }
+  };
+
+  const handleBookingRemarkChange = async (e) => {
+    const bookingRemarkID = e.target.value;
+    setSelectedBookingRemark(bookingRemarkID);
+    await fetchBookingRemarkDetails(bookingRemarkID);
+  };
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Ensure item and Tid are available
-    if (!item || !item.Tid) {
-      console.error("No valid item or Tid found.");
+    // Ensure item and selected booking remark are available
+    if (!item || !selectedBookingRemark) {
+      console.error("No valid item or selected booking remark found.");
       return;
     }
 
-    // Add Tid to formData
-    const formDataWithTid = {
-      ...formData,
-      Tid: item.Tid,
+    // Prepare the data object to be sent to the API
+    const payload = {
+      BookingID: item.BookingID,
+      Remarkamount: bookingRemarkDetails.Remarkamount || 0,
+      RemarkName: bookingRemarkDetails.RemarkName || '',
+      RemarkDate: formData.NextFollowUpDate, // Use the NextFollowUpDate as RemarkDate
+      AmountTypeID: bookingRemarkDetails.AmountTypeID || 1, // Use the fetched AmountTypeID
+      Loan: bookingRemarkDetails.Loan || formData.Loan || 0, // Use the fetched Loan value
+      Note: formData.Note,
+      CreateUID: cookies?.amr?.UserID || 1,
     };
+  
 
-    console.log(formDataWithTid, "sdf");
+    console.log(payload, "Payload to be sent to the API<<<<<<>>>>>>>>>>");
 
-    const url =
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-paymentreminder.php";
 
     try {
-      const response = await axios.post(url, formDataWithTid, {
+      const response = await axios.post(url, payload, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(formDataWithTid, "sdf");
 
       if (response.data.status === "Success") {
-        setFormData(intialName);
+        console.log('SUBMIITEDDD DATA ');
+        setFormData("");
         setOpen(false);
-        setSubmitSuccess(true);
-        setSubmitError(false);
-        // Show success message using SweetAlert
+        // setSubmitSuccess(true);
+        // setSubmitError(false);
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: "Follow-up details saved successfully.",
         });
       } else {
-        setSubmitSuccess(false);
-        setSubmitError(true);
-        // Show error message using SweetAlert
+        // setSubmitSuccess(false);
+        // setSubmitError(true);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -254,14 +231,13 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
       console.error("There was an error!", error);
       setSubmitSuccess(false);
       setSubmitError(true);
-      // Show error message using SweetAlert
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Something went wrong! Please try again later.",
       });
     }
-  };
+};
 
   const handlenavigate = () => {
     window.location.href = "/opportunity/";
@@ -359,35 +335,12 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
         </Grid>
         <Grid item>
         
-          <Menu
-            anchorEl={anchorElOpportunity}
-            open={Boolean(anchorElOpportunity)}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: 300, // Set the desired height in pixels
-                overflowY: "auto", // Make the content scrollable if it exceeds the height
-              },
-            }}
-          >
-            <MenuItem disabled>
-              <Typography variant="subtitle1">Convert Lead to</Typography>
-            </MenuItem>
-            {userMaster.length > 0 ? (
-              userMaster.map((user, index) => (
-                <MenuItem key={user.UserID} onClick={(event) => handleMenuItemClick(event, user.UserID)}>
-                  {index + 1}. {user.Name}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>No data available</MenuItem>
-            )}
-          </Menu>
+         
         </Grid>
         <Grid item>
           <Button
             variant="contained"
-            onClick={handleDropdownClick}
+            onClick={handleAddPayment}
             startIcon={<PersonAddIcon />}
             sx={{
               mr: 30,
@@ -404,27 +357,12 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
           >
             Next FollowUp
           </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleDropdownClose}
-          >
-            <MenuItem onClick={handleAddFollowUpClick}>
-              <AddIcon sx={{ mr: 1 }} />
-              Add Follow Up
-            </MenuItem>
-            <MenuItem onClick={handleHistoryClick}>
-              <HistoryIcon sx={{ mr: 1 }} />
-              History
-            </MenuItem>
-          </Menu>
+         
         </Grid>
       </Grid>
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
         <Box
           sx={{
@@ -436,11 +374,8 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
             boxShadow: 24,
             p: 4,
             minWidth: 500,
-            maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
-            mt: 5,
-            mx: 2,
-            minHeight: 400, // Adjust the minHeight to increase the height of the modal
-            height: "auto",
+            maxWidth: 700,
+            minHeight: 400,
           }}
         >
           <IconButton
@@ -455,37 +390,56 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
             variant="h7"
             component="h3"
             gutterBottom
+            mt={4}
           >
             Select Next Follow-Up Date and Time
           </Typography>
-
-          <Grid container spacing={2} mt={8}>
+          <Grid container spacing={4}>
             <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel>Current Update</InputLabel>
-                <Select
-                  value={formData.CurrentUpdateID}
-                  onChange={handleCurrentUpdate}
-                  label="Current Update"
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 180, // Adjust as needed
-                      },
-                    },
-                  }}
-                >
-                  {currentUpdate.map((bhk) => (
-                    <MenuItem
-                      key={bhk.CurrentUpdateID}
-                      value={bhk.CurrentUpdateID}
-                    >
-                      {bhk.CurrentUpdateName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <TextField
+                select
+                label="Select Booking Remark"
+                value={selectedBookingRemark}
+                onChange={(e) => {
+                  setSelectedBookingRemark(e.target.value);
+                  // Assuming setBookingRemarkDetails is populated accordingly
+                }}
+                fullWidth
+              >
+                {bookingRemarks.map((option) => (
+                  <MenuItem
+                    key={option.BookingremarkID}
+                    value={option.BookingremarkID}
+                  >
+                    {option.RemarkName}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
+            {selectedBookingRemark && (
+              <>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Remark Amount"
+                    value={bookingRemarkDetails.Remarkamount || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6 }>
+                  <TextField
+                    label="Remark Name"
+                    value={bookingRemarkDetails.RemarkName || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Grid>
+              </>
+            )}
 
             <Grid item xs={6}>
               <TextField
@@ -498,31 +452,6 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                // label="Next Follow-Up Time"
-                type="time"
-                name="NextFollowUpTime"
-                value={formData.NextFollowUpTime}
-                onChange={handleChange}
-                label="Next Follow Up Time"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Interest In"
-                type="text"
-                name="Interest"
-                value={formData.Interest}
-                onChange={handleChange}
-                InputLabelProps={{ sx: { mb: 1 } }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -538,24 +467,18 @@ const TodaysLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </Grid>
           </Grid>
 
-          <Box sx={{ textAlign: "left" }}>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                sx={{
-                  marginRight: 3.5,
-                  marginTop: 15,
-                  backgroundColor: "#9155FD",
-                  color: "#FFFFFF",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Grid>
+          <Box sx={{ textAlign: "left", mt: 3 }}>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#9155FD", color: "#FFFFFF" }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
           </Box>
         </Box>
       </Modal>
+
       <Card sx={{}}>
         <Paper sx={{ padding: 5 }}>
           <Box

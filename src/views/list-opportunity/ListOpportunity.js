@@ -667,7 +667,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         },
       }}
     >
-      Follow Up Time: {item?.NextFollowUpTime}
+      Source Name: {item?.SourceName}
     </Typography>
   </Box>
   <Box sx={{ display: "flex", ml:45, mt: 7 }}>

@@ -1,8 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, Modal, IconButton, TextField } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
+import { Grid } from 'mdi-material-ui';
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { useCookies } from "react-cookie";
+import Swal from 'sweetalert2';
 
 const GlobalStyle = createGlobalStyle`
   @media print {
@@ -39,60 +44,341 @@ const InvoiceBox = styled(Box)({
 });
 
 
-const OpenpaymentTemplate = ({ item  }) => {
-  const printRef = useRef();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  
-  const [error, setError] = useState(null);
+  const OpenpaymentTemplate = ({ item  }) => {
+    const printRef = useRef();
+    const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
 
-  const handlePrint = () => {
-    const printContents = printRef.current.innerHTML;
-    const originalContents = document.body.innerHTML;
 
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    window.location.reload(); // Reload the page to reset the original contents
-  };
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
+    const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
+    const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
+    const [bookingRemarks, setBookingRemarks] = useState([]);
+    const [formData, setFormData] = useState("");
+    
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!item) return; // Exit if no item is provided
+
+    const handleClose = () => setOpen(false);
+
+    const handlePrint = () => {
+      const printContents = printRef.current.innerHTML;
+      const originalContents = document.body.innerHTML;
+
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload(); // Reload the page to reset the original contents
+    };
+
+    useEffect(() => {
+      const fetchData = async () => {
+        if (!item) return; // Exit if no item is provided
+        try {
+          const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${item?.BookingID}`;
+
+          // const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=${item.BookingID}`;
+          const response = await axios.get(apiUrl);
+
+          if (response.data.status === "Success") {
+              console.log(response.data , 'data aaya deh');
+            setData(response.data.data);
+          } else {
+            setError('Failed to fetch data');
+          }
+        } catch (error) {
+          setError('Error fetching data');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }, [item]);
+
+    
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    };
+
+
+    const handleAddPayment = async () => {
+
+      setOpen(true);
+    
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${item?.BookingID}`;
-
-        // const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=${item.BookingID}`;
-        const response = await axios.get(apiUrl);
-
+        const response = await axios.get(
+          `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${item?.BookingID}`
+        );
         if (response.data.status === "Success") {
-            console.log(response.data , 'data aaya deh');
-          setData(response.data.data);
-        } else {
-          setError('Failed to fetch data');
+          console.log(response.data.data , 'aagaya daata remakrs');
+          const bookingRemarksData = response.data.data;
+          setBookingRemarks(bookingRemarksData);
+
+          // Assuming you want to fetch the details for the first booking remark in the list
+          if (bookingRemarksData.length > 0) {
+            const firstBookingRemarkID = bookingRemarksData[0].BookingremarkID;
+            await fetchBookingRemarkDetails(firstBookingRemarkID);
+          }
         }
       } catch (error) {
-        setError('Error fetching data');
-      } finally {
-        setLoading(false);
+        console.error("Error fetching booking remarks:", error);
+      }
+    };
+    const fetchBookingRemarkDetails = async (bookingRemarkID) => {
+      try {
+        const response = await axios.get(
+          `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremarkdetails.php?BookingremarkID=${bookingRemarkID}`
+        );
+        if (response.data.status === "Success") {
+          setBookingRemarkDetails(response.data.data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching booking remark details:", error);
       }
     };
 
-    fetchData();
-  }, [item]);
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
+    const handleBookingRemarkChange = async (e) => {
+      const bookingRemarkID = e.target.value;
+      setSelectedBookingRemark(bookingRemarkID);
+      await fetchBookingRemarkDetails(bookingRemarkID);
+    };
 
-  if (error) {
-    return <Typography>Error loading data</Typography>;
-  }
-
-  return (
-    <>
-    <GlobalStyle />
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+  
+      // Ensure item and selected booking remark are available
+      if (!item || !selectedBookingRemark) {
+        console.error("No valid item or selected booking remark found.");
+        return;
+      }
+  
+      // Prepare the data object to be sent to the API
+      const payload = {
+        BookingID: item.BookingID,
+        Remarkamount: bookingRemarkDetails.Remarkamount || 0,
+        RemarkName: bookingRemarkDetails.RemarkName || '',
+        RemarkDate: formData.NextFollowUpDate, // Use the NextFollowUpDate as RemarkDate
+        AmountTypeID: 1, // Assuming a static value, modify as needed
+        Loan: formData.Loan || 0, // Replace this with the actual Loan field if present
+        Note: formData.Note,
+        CreateUID: cookies?.amr?.UserID || 1,
+      };
+  
+      console.log(payload, "Payload to be sent to the API<<<<<<>>>>>>>>>>");
+  
+      const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-paymentreminder.php";
+  
+      try {
+        const response = await axios.post(url, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (response.data.status === "Success") {
+          console.log('SUBMIITEDDD DATA ');
+          setFormData("");
+          setOpen(false);
+          // setSubmitSuccess(true);
+          // setSubmitError(false);
+          Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "Follow-up details saved successfully.",
+          });
+        } else {
+          // setSubmitSuccess(false);
+          // setSubmitError(true);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong! Please try again later.",
+          });
+        }
+      } catch (error) {
+        console.error("There was an error!", error);
+        setSubmitSuccess(false);
+        setSubmitError(true);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        });
+      }
+  };
   
 
+
+    if (loading) {
+      return <Typography>Loading...</Typography>;
+    }
+
+    if (error) {
+      return <Typography>Error loading data</Typography>;
+    }
+
+    return (
+      <>
+    
+    <Grid container>
+    <Grid item>
+      <Button
+        variant="contained"
+        startIcon={<PersonAddIcon />}
+        onClick={handleAddPayment}
+        sx={{
+          marginRight: 30,
+          color: "#333333",
+          fontSize: "0.6rem",
+          backgroundColor: "#f0f0f0",
+          minWidth: "auto",
+          minHeight: 20,
+          "&:hover": {
+            backgroundColor: "#dcdcdc",
+          },
+        }}
+      >
+        Next FollowUp
+      </Button>
+    </Grid>
+  </Grid>
+
+  <GlobalStyle />
+
+  <Modal
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 4,
+        minWidth: 500,
+        maxWidth: 700,
+        mt: 5,
+        mx: 2,
+        minHeight: 400,
+        height: "auto",
+      }}
+    >
+      <IconButton
+        aria-label="cancel"
+        onClick={handleClose}
+        sx={{ position: "absolute", top: 6, right: 10 }}
+      >
+        <CancelIcon sx={{ color: "red" }} />
+      </IconButton>
+      <Typography
+        id="modal-modal-title"
+        variant="h7"
+        component="h3"
+        gutterBottom
+      >
+        Select Next Follow-Up Date and Time
+      </Typography>
+
+      <Grid container spacing={2} mt={8}>
+        <Grid item xs={4}>
+          <TextField
+            select
+            label="Select Booking Remark"
+            value={selectedBookingRemark}
+            onChange={(e) => setSelectedBookingRemark(e.target.value)}
+            fullWidth
+            margin="normal"
+          >
+            {bookingRemarks.map((option) => (
+              <MenuItem
+                key={option.BookingremarkID}
+                value={option.BookingremarkID}
+              >
+                {option.RemarkName}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        {selectedBookingRemark && (
+          <>
+            <Grid item xs={4}>
+              <TextField
+                label="Remark Amount"
+                value={bookingRemarkDetails.Remarkamount || ""}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Remark Name"
+                value={bookingRemarkDetails.RemarkName || ""}
+                fullWidth
+                margin="normal"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+          </>
+        )}
+
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            type="date"
+            name="NextFollowUpDate"
+            value={formData.NextFollowUpDate}
+            onChange={handleChange}
+            label="Next Follow Up Date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Note"
+            type="text"
+            name="Note"
+            value={formData.Note}
+            onChange={handleChange}
+            InputLabelProps={{ sx: { mb: 1 } }}
+          />
+        </Grid>
+      </Grid>
+
+      <Box sx={{ textAlign: "left" }}>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            sx={{
+              marginRight: 3.5,
+              marginTop: 15,
+              backgroundColor: "#9155FD",
+              color: "#FFFFFF",
+            }}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </Grid>
+      </Box>
+    </Box>
+  </Modal>
     <InvoiceBox className="printableArea" ref={printRef}>
       <TableContainer component={Paper}>
         <Table>

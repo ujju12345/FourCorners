@@ -171,7 +171,7 @@ const BacklogSidebar = ({ onItemClick, onCreate , onDashboardClick}) => {
   return (
     <Card
       sx={{
-        width: 330,
+        width: 390,
         padding: 5,
         height: 700,
         overflowY: "auto",
@@ -330,12 +330,7 @@ const BacklogSidebar = ({ onItemClick, onCreate , onDashboardClick}) => {
                   </Typography>
                 }
                 secondary={ <>
-                 <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                    Phone: {item.Mobile}
-                  </Typography>
+               
                    <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
@@ -347,6 +342,12 @@ const BacklogSidebar = ({ onItemClick, onCreate , onDashboardClick}) => {
                     style={{ fontSize: 10 }}
                   >
                    Assign By: {item.OpportunityAttendedByName}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Source Name: {item.SourceName}
                   </Typography>
                 </>}
               />

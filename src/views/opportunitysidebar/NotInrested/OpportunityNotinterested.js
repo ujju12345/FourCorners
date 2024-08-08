@@ -315,17 +315,18 @@ const OpportunityNotinterested = ({ onItemClick, onCreate ,onDashboardClick}) =>
                   </Typography>
                 }
                 secondary={ <>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 10 }}
-                  >
-                    Phone: {item.Mobile}
-                  </Typography>
+                
                   <Typography
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
                    Date: {item.NextFollowUpDate}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 10 }}
+                  >
+                   Source Name: {item.SourceName}
                   </Typography>
                 </>}
               />
