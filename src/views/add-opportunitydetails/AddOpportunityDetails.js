@@ -259,7 +259,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
   }, [rows]);
 
   const handleSourceChange = (event) => {
-    const selectedSourceId = event.target.value;
+  const selectedSourceId = event.target.value;
     setFormData({ ...formData, SourceID: selectedSourceId });
 
     axios
@@ -418,7 +418,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
       <InputLabel shrink>Project Name</InputLabel>
       <TextField
         label="Project Name"
-        value={formData.ProjectName}
+        value={formData.ProjectID }
         InputProps={{
           readOnly: true,
         }}

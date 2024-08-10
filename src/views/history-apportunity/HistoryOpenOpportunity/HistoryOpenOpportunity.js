@@ -188,7 +188,7 @@ export default function HistoryOpenOpportunity({ item }) {
                       Time: {data.NextFollowUpTime}
                     </Typography>
                   </Typography>
-                  <Typography>Note: wer</Typography>
+                  <Typography>Note: {data.Note}</Typography>
                 </CustomPaper>
               </TimelineContent>
             </TimelineItem>
