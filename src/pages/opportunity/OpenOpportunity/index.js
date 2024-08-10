@@ -20,6 +20,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import CellphoneLink from 'mdi-material-ui/CellphoneLink'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+import HistoryOpenOpportunity from 'src/views/history-apportunity/HistoryOpenOpportunity/HistoryOpenOpportunity';
 const OpenOpportunity = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -265,7 +266,7 @@ const WelcomeScreen = () => {
           />
         )}
         {view === 'history' && rowDataToUpdate && (
-          <HistoryTelecalling
+          <HistoryOpenOpportunity
             item={rowDataToUpdate}
             onBack={handleBack}
           />

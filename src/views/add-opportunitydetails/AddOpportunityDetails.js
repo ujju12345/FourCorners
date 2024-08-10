@@ -86,6 +86,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
       // Merge formData and leadData
       setFormData((prevFormData) => ({
         ...prevFormData,
+        Tid:leadData.Tid || prevFormData.Tid,
         LookingForID: leadData.LookingForID || prevFormData.LookingForID,
         CName: leadData.CName || prevFormData.CName,
         EstimatedbudgetID: leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
@@ -326,42 +327,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
     return Object.values(tempErrors).every((x) => x === "");
   };
 
-  const handleSelectChange = async (event) => {
-    const selectedCid = event.target.value;
-    setFormData({ ...formData, Cid: selectedCid });
 
-    const selectedContact = contacts.find((contact) => contact.Cid === selectedCid);
-    if (selectedContact) {
-      try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-convtooppo.php?ConvertID=${selectedContact.ConvertID}`;
-        const response = await axios.get(apiUrl);
-
-        if (response.data.status === 'Success') {
-          const data = response.data.data[0];
-          console.log(response.data.data[0] , 'oppportuity single data ');
-          setFormData({
-            ...formData,
-            Cid: data.Cid || '',
-            Name: data.CName || '',
-            Mobile: data.Mobile || '',
-            Description: data.Comments || '',
-            UnittypeID:data.UnittypeID || '',
-            SourceID: data.SourceID || '',
-            Status: data.Status || 1,
-            OpportunityAttendedByID: cookies.amr?.UserID || 1,
-            CreateUID:cookies.amr?.UserID || 1,
-            BookingDate: null,
-          });
-        } else {
-          console.error('API response status not success:', response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching single convert booking data:', error);
-      }
-    } else {
-      console.warn('Selected contact not found.');
-    }
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -457,7 +423,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
           readOnly: true,
         }}
       />
-      <input type="hidden" name="Cid" value={formData.Cid} />
+      {/* <input type="hidden" name="Cid" value={formData.Cid} /> */}
      
     </FormControl>
   </Grid>
