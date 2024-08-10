@@ -732,6 +732,25 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <ShareIcon />
       </IconButton>
     </a>
+    <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 1,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
     <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
       <IconButton
         aria-label="email"

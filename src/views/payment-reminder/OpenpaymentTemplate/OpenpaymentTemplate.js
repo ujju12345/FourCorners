@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, Modal, IconButton, TextField } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, Menu,
+  MenuItem, TableContainer, TableRow, Paper, Button, Modal, IconButton, TextField } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
 import { Grid } from 'mdi-material-ui';
@@ -8,23 +9,11 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useCookies } from "react-cookie";
 import Swal from 'sweetalert2';
-
-const GlobalStyle = createGlobalStyle`
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-    .printableArea, .printableArea * {
-      visibility: visible;
-    }
-    .printableArea {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-    }
-  }
-`;
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import AddIcon from "@mui/icons-material/Add";
+import HistoryIcon from "@mui/icons-material/History";
+import EditIcon from "@mui/icons-material/Edit";
+import GetAppIcon from "@mui/icons-material/GetApp";
 
 const StyledTableCell = styled(TableCell)({
   border: '2px solid black',
@@ -40,6 +29,7 @@ const InvoiceBox = styled(Box)({
   border: '1px solid #eee',
   fontSize: '11px',
   lineHeight: '18px',
+ 
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
@@ -221,165 +211,29 @@ const InvoiceBox = styled(Box)({
     }
 
     return (
-      <>
-    
-    <Grid container>
-    <Grid item>
+      <>   
+
+      <Box sx={{ padding: 3 }}>
+    {/* Button Container */}
+    <Box sx={{ marginBottom: 2 }}> {/* Control spacing with marginBottom */}
       <Button
         variant="contained"
         startIcon={<PersonAddIcon />}
         onClick={handleAddPayment}
         sx={{
-          marginRight: 30,
           color: "#333333",
-          fontSize: "0.6rem",
+          fontSize: "0.875rem",
           backgroundColor: "#f0f0f0",
-          minWidth: "auto",
-          minHeight: 20,
           "&:hover": {
             backgroundColor: "#dcdcdc",
           },
         }}
       >
-        Next FollowUp
+        Next Follow-Up
       </Button>
-    </Grid>
-  </Grid>
-
-  <GlobalStyle />
-
-  <Modal
-    open={open}
-    onClose={handleClose}
-    aria-labelledby="modal-modal-title"
-    aria-describedby="modal-modal-description"
-  >
-    <Box
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        bgcolor: "background.paper",
-        boxShadow: 24,
-        p: 4,
-        minWidth: 500,
-        maxWidth: 700,
-        mt: 5,
-        mx: 2,
-        minHeight: 400,
-        height: "auto",
-      }}
-    >
-      <IconButton
-        aria-label="cancel"
-        onClick={handleClose}
-        sx={{ position: "absolute", top: 6, right: 10 }}
-      >
-        <CancelIcon sx={{ color: "red" }} />
-      </IconButton>
-      <Typography
-        id="modal-modal-title"
-        variant="h7"
-        component="h3"
-        gutterBottom
-      >
-        Select Next Follow-Up Date and Time
-      </Typography>
-
-      <Grid container spacing={2} mt={8}>
-        <Grid item xs={4}>
-          <TextField
-            select
-            label="Select Booking Remark"
-            value={selectedBookingRemark}
-            onChange={(e) => setSelectedBookingRemark(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            {bookingRemarks.map((option) => (
-              <MenuItem
-                key={option.BookingremarkID}
-                value={option.BookingremarkID}
-              >
-                {option.RemarkName}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        {selectedBookingRemark && (
-          <>
-            <Grid item xs={4}>
-              <TextField
-                label="Remark Amount"
-                value={bookingRemarkDetails.Remarkamount || ""}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                label="Remark Name"
-                value={bookingRemarkDetails.RemarkName || ""}
-                fullWidth
-                margin="normal"
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-          </>
-        )}
-
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            type="date"
-            name="NextFollowUpDate"
-            value={formData.NextFollowUpDate}
-            onChange={handleChange}
-            label="Next Follow Up Date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Note"
-            type="text"
-            name="Note"
-            value={formData.Note}
-            onChange={handleChange}
-            InputLabelProps={{ sx: { mb: 1 } }}
-          />
-        </Grid>
-      </Grid>
-
-      <Box sx={{ textAlign: "left" }}>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            sx={{
-              marginRight: 3.5,
-              marginTop: 15,
-              backgroundColor: "#9155FD",
-              color: "#FFFFFF",
-            }}
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
-        </Grid>
-      </Box>
     </Box>
-  </Modal>
-    <InvoiceBox className="printableArea" ref={printRef}>
+
+ <InvoiceBox className="printableArea" ref={printRef}>
       <TableContainer component={Paper}>
         <Table>
           <TableBody>
@@ -604,6 +458,7 @@ const InvoiceBox = styled(Box)({
 </TableContainer>
 
     </InvoiceBox>
+</Box>
   </>
   );
 };

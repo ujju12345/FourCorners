@@ -13,6 +13,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PhoneIcon from "@mui/icons-material/Phone";
+import ShareIcon from "@mui/icons-material/Share";
+import EmailIcon from "@mui/icons-material/Email";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import {
   Modal,
   TextField,
@@ -98,6 +102,9 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
   const handleCloseBooking = () => {
     setAnchorElOpportunity(null);
   };
+  const whatsappText = encodeURIComponent(
+    `Hello, I wanted to discuss the following details:\n\nSource Name: ${item?.SourceName}\nLocation: ${item?.Location}\nAttended By: ${item?.TelecallAttendedByName}`
+  );
   const handleMenuItemClick = async (event, userID) => {
     // console.log('press');
     event.preventDefault();
@@ -688,6 +695,102 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Typography>
             </div>
           </Box>
+          <Box sx={{ display: "flex", ml:45, mt: 7 }}>
+    <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+      <IconButton
+        aria-label="phone"
+        size="small"
+        sx={{
+          color: "green",
+          backgroundColor: "#e0f7fa",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#b2ebf2",
+          },
+        }}
+      >
+        <PhoneIcon />
+      </IconButton>
+    </a>
+    <a style={{ marginRight: 10 }}>
+      <IconButton
+        aria-label="share"
+        size="small"
+        sx={{
+          color: "blue",
+          backgroundColor: "#e3f2fd",
+          borderRadius: "50%",
+          padding: "10px",
+          marginRight: 15,
+          "&:hover": {
+            backgroundColor: "#bbdefb",
+          },
+        }}
+      >
+        <ShareIcon />
+      </IconButton>
+    </a>
+    <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 1,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
+    <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+      <IconButton
+        aria-label="email"
+        size="small"
+        sx={{
+          color: "red",
+          backgroundColor: "#ffebee",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#ffcdd2",
+          },
+        }}
+      >
+        <EmailIcon />
+      </IconButton>
+    </a>
+    <a
+      href={`https://wa.me/${item?.Mobile}?text=${encodeURIComponent(
+        whatsappText
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <IconButton
+        aria-label="whatsapp"
+        size="small"
+        sx={{
+          color: "green",
+          backgroundColor: "#e8f5e9",
+          borderRadius: "50%",
+          padding: "10px",
+          "&:hover": {
+            backgroundColor: "#c8e6c9",
+          },
+        }}
+      >
+        <WhatsAppIcon />
+      </IconButton>
+    </a>
+  </Box>
           <Box
             sx={{
               width: "auto",

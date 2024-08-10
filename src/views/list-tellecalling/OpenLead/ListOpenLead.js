@@ -799,14 +799,10 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
               mt: 15,
             }}
           >
-            {/* Email */}
-
-            {/* Unit Type */}
-
             <Grid container spacing={3}>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
+                  variant="outlined"
                   sx={{
                     borderRadius: 1,
 
@@ -826,7 +822,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
+                  variant="outlined"
                   sx={{
                     borderRadius: 1,
 
@@ -846,10 +842,9 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
+                  variant="outlined" 
                   sx={{
                     borderRadius: 1,
-
                     padding: "10px",
                   }}
                 >

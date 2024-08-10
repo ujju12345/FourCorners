@@ -18,10 +18,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useCookies } from "react-cookie";
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+import TrendingUp from 'mdi-material-ui/TrendingUp';
+import CellphoneLink from 'mdi-material-ui/CellphoneLink';
+import AccountOutline from 'mdi-material-ui/AccountOutline';
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 
 const BacklogOpportunity = () => {
   const [rows, setRows] = useState([]);
@@ -34,19 +34,28 @@ const BacklogOpportunity = () => {
   const [cookies, setCookie] = useCookies(["amr"]);
   const userid = cookies.amr?.UserID || 'Role';
 
-
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-graph-oppo.php?UserID=${userid}`);
-      setRows(response.data.data || []);
-      setCounts(response.data.counts || {});
+      
+      // Check if response.data.data or response.data.counts is undefined or null
+      const data = response.data.data || [];
+      const counts = response.data.counts || {
+        todayFollowup: 0,
+        backlogFollowup: 0,
+        transfertooppo: 0,
+        totalFollowup: 0,
+        nextFollowup: 0
+      };
+
+      setRows(data);
+      setCounts(counts);
     } catch (error) {
       setError(error);
     } finally {
@@ -55,33 +64,31 @@ const BacklogOpportunity = () => {
   };
 
   const renderStats = () => {
-    console.log(counts, 'dekh>>>>>>>>>>>>>>>>>>');
-    
     if (!counts) {
       return null;
     }
 
     const dynamicSalesData = [
       {
-        stats: counts?.todayFollowup,
+        stats: counts.todayFollowup || 0,
         title: 'Today Followups',
         color: 'primary',
         icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts?.backlogFollowup,
+        stats: counts.backlogFollowup || 0,
         title: 'Backlog Followups',
         color: 'success',
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.transfertooppo,
+        stats: counts.transfertooppo || 0,
         color: 'warning',
         title: 'Transfer to Opportunity',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.totalFollowup,
+        stats: counts.totalFollowup || 0,
         color: 'info',
         title: 'Total Followups',
         icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
@@ -119,13 +126,12 @@ const BacklogOpportunity = () => {
     }
 
     return [
-      { name: 'Today Followups', value: counts.todayFollowup, color: '#8884d8' },
-      { name: 'Backlog Followups', value: counts.backlogFollowup, color: '#82ca9d' },
-      { name: 'Next Followups', value: counts.nextFollowup, color: '#ffc658' },
-      { name: 'Total Followups', value: counts.totalFollowup, color: '#a4de6c' }
+      { name: 'Today Followups', value: counts.todayFollowup || 0, color: '#8884d8' },
+      { name: 'Backlog Followups', value: counts.backlogFollowup || 0, color: '#82ca9d' },
+      { name: 'Next Followups', value: counts.nextFollowup || 0, color: '#ffc658' },
+      { name: 'Total Followups', value: counts.totalFollowup || 0, color: '#a4de6c' }
     ];
   };
-
 
   const pieData = getPieData();
 
@@ -172,22 +178,21 @@ const BacklogOpportunity = () => {
     );
   };
 
-const WelcomeScreen = () => {
-  return (
-    <Card>
-      <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-        <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
-        <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-          Welcome to Opportunity Dashboard
-        </Typography>
-        <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
-          <StatisticsCard />
-        </Grid>
-      </Box>
-    </Card>
-  );
-};
-
+  const WelcomeScreen = () => {
+    return (
+      <Card>
+        <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
+          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
+            Welcome to Opportunity Dashboard
+          </Typography>
+          <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
+            <StatisticsCard />
+          </Grid>
+        </Box>
+      </Card>
+    );
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -261,20 +266,19 @@ const WelcomeScreen = () => {
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
-            onEdit={handleEdit}
+            onBack={handleBack}
           />
         )}
-        {currentView === "history" && !loading && !error && rowDataToUpdate && (
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: "center", textAlign: "center", fontSize: 20 }}>
-              User History
-            </Typography>
-            <HistoryOpportunitybacklog item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
+        {currentView === "addDetails" && !loading && !error && (
+          <ListOpportunitybacklog
+            item={editData}
+            onBack={handleBack}
+          />
         )}
-        {currentView === "addDetails" && (
-          // Add your AddTellecallingDetails component here if needed
-          <div>Add Telecalling Details</div>
+        {currentView === "history" && !loading && !error && (
+          <HistoryOpportunitybacklog
+            onBack={handleBack}
+          />
         )}
       </Grid>
     </Grid>
