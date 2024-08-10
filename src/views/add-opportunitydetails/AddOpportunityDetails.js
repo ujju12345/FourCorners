@@ -18,7 +18,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
-const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) => {
+const AddOpportunityDetails = ({
+  show,
+  leadData,
+  editData,
+  onDashboardClick,
+}) => {
   console.log(leadData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
@@ -37,6 +42,8 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
     ScheduleTime: "",
     KeywordID: "",
     SourceID: "",
+    ProjectID: "",
+    ProjectName: "",
     SourceNameID: "",
     OpportunityAttendedByID: cookies.amr?.UserID || 1,
     Description: "",
@@ -86,10 +93,13 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
       // Merge formData and leadData
       setFormData((prevFormData) => ({
         ...prevFormData,
-        Tid:leadData.Tid || prevFormData.Tid,
+        ProjectID: leadData.ProjectID || prevFormData.ProjectID,
+        ProjectName: leadData.ProjectName || prevFormData.ProjectName,
+        Tid: leadData.Tid || prevFormData.Tid,
         LookingForID: leadData.LookingForID || prevFormData.LookingForID,
         CName: leadData.CName || prevFormData.CName,
-        EstimatedbudgetID: leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
+        EstimatedbudgetID:
+          leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
         AreaFrom: leadData.AreaFrom || prevFormData.AreaFrom,
         AreaTo: leadData.AreaTo || prevFormData.AreaTo,
         ScaleID: leadData.ScaleID || prevFormData.ScaleID,
@@ -106,11 +116,9 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
         Cid: leadData.Cid || prevFormData.Cid,
         Status: 1,
         CreateUID: cookies.amr?.UserID || 1,
-
       }));
     }
   }, [leadData]);
-  
 
   useEffect(() => {
     if (editData) {
@@ -183,7 +191,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
   }, []);
 
   useEffect(() => {
-    const userid = cookies.amr?.UserID || 'Role';
+    const userid = cookies.amr?.UserID || "Role";
     const fetchData = async () => {
       try {
         const lookingForRes = await axios.get(
@@ -259,7 +267,7 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
   }, [rows]);
 
   const handleSourceChange = (event) => {
-  const selectedSourceId = event.target.value;
+    const selectedSourceId = event.target.value;
     setFormData({ ...formData, SourceID: selectedSourceId });
 
     axios
@@ -327,8 +335,6 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
     return Object.values(tempErrors).every((x) => x === "");
   };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -394,41 +400,43 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
               </Typography>
             </Grid>
             {contacts.length > 0 && (
-  <Grid item xs={4}>
-    <FormControl fullWidth error={!!errors.Cid}>
-      <InputLabel shrink>Contact</InputLabel>
-      <TextField
-        label="Contact"
-        value={formData.CName}
-        InputProps={{
-          readOnly: true,
-        }}
-      />
-      <input type="hidden" name="Cid" value={formData.Cid} />
-      {!!errors.Cid && (
-        <Typography variant="caption" color="error">
-          {errors.Cid}
-        </Typography>
-      )}
-    </FormControl>
-  </Grid>
-)}
- <Grid item xs={4}>
-    <FormControl fullWidth >
-      <InputLabel shrink>Project Name</InputLabel>
-      <TextField
-        label="Project Name"
-        value={formData.ProjectID }
-        InputProps={{
-          readOnly: true,
-        }}
-      />
-      {/* <input type="hidden" name="Cid" value={formData.Cid} /> */}
-     
-    </FormControl>
-  </Grid>
-          
-
+              <Grid item xs={4}>
+                <FormControl fullWidth error={!!errors.Cid}>
+                  <InputLabel shrink>Contact</InputLabel>
+                  <TextField
+                    label="Contact"
+                    value={formData.CName}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                  <input type="hidden" name="Cid" value={formData.Cid} />
+                  {!!errors.Cid && (
+                    <Typography variant="caption" color="error">
+                      {errors.Cid}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+            )}
+            <Grid item xs={4}>
+              <FormControl fullWidth>
+                <InputLabel shrink>Project Name</InputLabel>
+                <TextField
+                  label="Project Name"
+                  value={formData.ProjectName} // Display the ProjectName
+                  InputProps={{
+                    readOnly: true, // Make the field read-only
+                  }}
+                />
+                {/* Hidden input to send ProjectID when submitting the form */}
+                <input
+                  type="hidden"
+                  name="ProjectID"
+                  value={formData.ProjectID}
+                />
+              </FormControl>
+            </Grid>
 
             <Grid item xs={4}>
               <FormControl fullWidth error={!!errors.LookingForID}>
@@ -562,8 +570,6 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
               />
             </Grid> */}
 
-    
-
             <Grid item xs={12} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Locality</InputLabel>
@@ -655,9 +661,9 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
                 InputLabelProps={{
                   shrink: true,
                 }}
-              // inputProps={{
-              //   step: 300, // 5 minute intervals
-              // }}
+                // inputProps={{
+                //   step: 300, // 5 minute intervals
+                // }}
               />
             </Grid>
 

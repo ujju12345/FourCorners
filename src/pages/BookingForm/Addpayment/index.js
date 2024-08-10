@@ -25,6 +25,7 @@ import Listprojectbookng from 'src/views/BookingFormRosenagar/ListProjectBooking
 import SidebarBookingProject from 'src/views/BookingFormRosenagar/SidebarBookingProject/SidebarBookingProject';
 import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
 import Reciept from 'src/views/BookingFormRosenagar/Reciept/Reciept';
+import TemplatePayment from 'src/views/BookingFormRosenagar/TemplatePayment/TemplatePayment';
 const salesData = [
   {
     stats: '245k',
@@ -353,7 +354,7 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
           onCheque={handleCheque}
         />
       )}
-      {showTemplate && <TemplateRosenagar bookingID={bookingID} onGoBack={handleBack} />}
+      {showTemplate && <TemplatePayment bookingID={bookingID} onGoBack={handleBack} />}
       {showReceipt && <Reciept bookingID={bookingIDCheque} />}
       {!loading && !error && showHistory && (
         <Box

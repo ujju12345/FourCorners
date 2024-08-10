@@ -3,8 +3,9 @@ import { Grid, CircularProgress, Alert, Typography, Box } from "@mui/material";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import TodayPaymentTemplate from "src/views/payment-reminder/TodayPaymentTemplate/TodayPaymentTemplate";
+import TodayPayment from "src/views/payment-reminder/TodayPaymentSidebar/TodayPayment";
 
-const TodayPayment = ({ initialRows }) => {
+const TodaysFollowupPayment = ({ initialRows }) => {
   const [rows, setRows] = useState(initialRows);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,7 +15,7 @@ const TodayPayment = ({ initialRows }) => {
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
   const [cookies] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
+
 
   useEffect(() => {
     if (!initialRows) {
@@ -23,6 +24,8 @@ const TodayPayment = ({ initialRows }) => {
   }, []);
 
   const fetchData = async () => {
+  const userid = cookies.amr?.UserID || 'Role';
+
     setLoading(true);
     setError(null);
     try {
@@ -100,22 +103,6 @@ const TodayPayment = ({ initialRows }) => {
   );
 };
 
-export const getServerSideProps = async (context) => {
-  const { UserID } = context.query;
-  let initialRows = [];
 
-  try {
-    const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-todayereminder.php?UserID=${UserID}`);
-    initialRows = response.data.data || [];
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
 
-  return {
-    props: {
-      initialRows,
-    },
-  };
-};
-
-export default TodayPayment;
+export default TodaysFollowupPayment;
