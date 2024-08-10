@@ -11,6 +11,7 @@ import ListNotInterested from 'src/views/list-tellecalling/Notintrested/ListNotI
 import { useCookies } from "react-cookie";
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails'; // Uncomment if needed
+import HistoryNotinterested from 'src/views/history-telecalling/HistoryNotinterested/HistoryNotinterested';
 
 const NotIntrestedLead = () => {
   const [rows, setRows] = useState([]);
@@ -249,6 +250,19 @@ const NotIntrestedLead = () => {
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />
+        )}
+
+{!loading && !error && showHistory && (
+          <Box display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh">
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",textAlign:'center', fontSize: 20, }}>
+              User History
+            </Typography>
+            <HistoryNotinterested item={rowDataToUpdate} onBack={handleBack} />
+          </Box>
         )}
 
       </Grid>

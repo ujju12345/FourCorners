@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 import { useCookies } from "react-cookie";
 
 const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) => {
-  console.log(editData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
+  console.log(leadData, "AAGAYA lead dataaa<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>");
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [formData, setFormData] = useState({
@@ -88,7 +88,6 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
         ...prevFormData,
         LookingForID: leadData.LookingForID || prevFormData.LookingForID,
         CName: leadData.CName || prevFormData.CName,
-
         EstimatedbudgetID: leadData.EstimatedbudgetID || prevFormData.EstimatedbudgetID,
         AreaFrom: leadData.AreaFrom || prevFormData.AreaFrom,
         AreaTo: leadData.AreaTo || prevFormData.AreaTo,
@@ -448,8 +447,21 @@ const AddOpportunityDetails = ({ show,leadData, editData , onDashboardClick }) =
     </FormControl>
   </Grid>
 )}
-
-            {/* Add rest of the form fields similarly */}
+ <Grid item xs={4}>
+    <FormControl fullWidth >
+      <InputLabel shrink>Project Name</InputLabel>
+      <TextField
+        label="Project Name"
+        value={formData.ProjectName}
+        InputProps={{
+          readOnly: true,
+        }}
+      />
+      <input type="hidden" name="Cid" value={formData.Cid} />
+     
+    </FormControl>
+  </Grid>
+          
 
 
             <Grid item xs={4}>

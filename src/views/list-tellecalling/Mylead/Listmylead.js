@@ -32,7 +32,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
+const Listmylead = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
@@ -922,4 +922,4 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
   );
 };
 
-export default ListTellecalling;
+export default Listmylead;

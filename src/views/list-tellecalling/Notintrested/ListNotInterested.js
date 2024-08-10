@@ -149,12 +149,6 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setOpen(false);
   };
 
-  const handleHistoryClick = () => {
-    if (onHistoryClick) {
-      // toggleSidebar(false);
-      onHistoryClick(item); // Pass item to parent component for showing history
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -273,11 +267,13 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
     document.body.removeChild(a);
   };
 
-  const handleEdit = () => {
-    if (onEdit) {
-      onEdit(item); // Pass item to parent component for editing
+  const handleHistoryClick = () => {
+    if (onHistoryClick) {
+      // toggleSidebar(false);
+      onHistoryClick(item); // Pass item to parent component for showing history
     }
   };
+
 
   return (
     <>
@@ -307,7 +303,33 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
       >
         Convert to Lead
       </Button>
+
+     
     </Grid>
+
+    <Grid item>
+      <Button
+        variant="contained"
+        startIcon={<ArrowForwardIosIcon />}
+        sx={{
+       
+          color: "#333333",
+          backgroundColor: "#f0f0f0",
+          fontSize: "0.6rem",
+          minWidth: "auto",
+          minHeight: 20,
+          "&:hover": {
+            backgroundColor: "#dcdcdc",
+          },
+        }}
+        onClick={handleHistoryClick}
+      >
+       History
+      </Button>
+
+     
+    </Grid>
+
        
       </Grid>
       <Grid

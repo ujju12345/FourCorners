@@ -48,6 +48,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     BookingDate: null,
     BookedByID: "",
     Mobile: "",
+    BookingRef:"",
     Name: "",
     Address: "",
     Pancard: "",
@@ -58,6 +59,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Charges: "",
     Aadhar: "",
     ParkingFacility: "",
+    ParkingID:"",
     FlatCost: "",
     FlatCostInWords: "",
     Gst: "",
@@ -94,6 +96,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [errors, setErrors] = useState({});
   const [notification, setNotification] = useState(null);
   const [wingData, setWingData] = useState([]);
+  const [parking, setParking] = useState([]);
+
   const [bookedByOptions, setBookedByOptions] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -452,6 +456,27 @@ const numberToWordsIndian = (num) => {
         });
     }
   }, [formData.ProjectID]);
+
+  useEffect(() => {
+    if (formData.ProjectID) {
+      axios
+        .get(
+          `https://apiforcorners.cubisysit.com/api/api-fetch-parking.php?ProjectID=${formData.ProjectID}`
+        )
+        .then((response) => {
+          if (response.data.status === "Success") {
+            console.log(response.data.data , 'checkkk it<<<<<<<<');
+            setParking(response.data.data || []); // Ensure data is set as an array
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching parking data:", error);
+        });
+    }
+  }, [formData.ProjectID]);
+  
+
+
   useEffect(() => {
     if (formData.WingID && formData.ProjectID && formData.FloorNo) {
       axios
@@ -992,6 +1017,25 @@ const numberToWordsIndian = (num) => {
                 />
               </Grid>
 
+              <Grid item xs={12} md={4}>
+  <FormControl fullWidth>
+    <InputLabel>Parking</InputLabel>
+    <Select
+      value={formData.ParkingID}
+      onChange={handleChange}
+      name="ParkingID"
+      label="Parking"
+    >
+      {parking.map((flat) => (
+        <MenuItem key={flat.ParkingID} value={flat.ParkingID}>
+          {flat.ParkingAvilability}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
+
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
@@ -1098,6 +1142,18 @@ const numberToWordsIndian = (num) => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  type="text"
+                />
+              </Grid>
+
+              <Grid item xs={8} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Booking Ref"
+                  name="BookingRef"
+                  placeholder="Booking Ref"
+                  value={formData.BookingRef}
+                 onChange={handleChange}
                   type="text"
                 />
               </Grid>
