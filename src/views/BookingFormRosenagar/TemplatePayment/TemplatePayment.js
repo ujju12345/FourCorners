@@ -272,18 +272,37 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.AgreementCarpet}</StyledTableCell>
 </TableRow>
 
-      <TableRow sx={{ padding: 0 }}>
-  <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 500, padding: 0 }} colSpan={10}>REMARKS :</StyledTableCell>
-</TableRow>
 
-{/* Map over remarks array */}
-{data.remarks && data.remarks.map((remark, index) => (
-  <TableRow key={index} sx={{ padding: 0 }}>
-    <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
-    </StyledTableCell>
-  </TableRow>
-))}
+
+      <TableRow sx={{ padding: 0 }}>
+        <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bolder', padding: 0 }} colSpan={10}>ORIGINAL REMARKS:</StyledTableCell>
+      </TableRow>
+
+      {/* Map over remarksWithCreateDate array */}
+      {data.remarksWithCreateDate && data.remarksWithCreateDate.map((remark, index) => (
+        <TableRow key={`original-${index}`} sx={{ padding: 0 }}>
+          <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
+            {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+          </StyledTableCell>
+        </TableRow>
+      ))}
+
+      <TableRow sx={{ padding: 0 }}>
+        <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bolder', padding: 0 }} colSpan={10}>UPDATED REMARKS:</StyledTableCell>
+      </TableRow>
+
+      {/* Map over otherRemarks array */}
+      {data.otherRemarks && data.otherRemarks.map((remark, index) => (
+        <TableRow key={`updated-${index}`} sx={{ padding: 0 }}>
+          <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
+            {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+          </StyledTableCell>
+        </TableRow>
+      ))}
+
+
+
+
 
     </TableBody>
   </Table>

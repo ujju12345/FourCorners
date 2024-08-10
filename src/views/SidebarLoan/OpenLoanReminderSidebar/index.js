@@ -91,7 +91,7 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.BookingremarkID?.toString().includes(lowerCaseQuery) ||
+          item?.PartyName?.toString().includes(lowerCaseQuery) ||
           item?.Remarkamount?.toString().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
@@ -211,7 +211,7 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
   return (
     <Card
       sx={{
-        width: 330,
+        width: 390,
         padding: 5,
         height: 700,
         overflowY: "auto",

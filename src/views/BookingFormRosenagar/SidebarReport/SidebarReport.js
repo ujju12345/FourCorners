@@ -225,7 +225,7 @@ const SidebarReport = ({ handleListItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 330,
+        width: 390,
         padding: 5,
         height: 700,
         overflowY: "auto",

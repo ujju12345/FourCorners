@@ -180,7 +180,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 450,
+        width: 390,
         padding: 5,
         height: 700,
         overflowY: "auto",

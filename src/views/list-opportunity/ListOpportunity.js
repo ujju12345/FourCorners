@@ -613,7 +613,27 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     ml: 20,
   }}
 >
+  
   <Box sx={{ display: "flex", mb: 2 }}>
+  <Typography
+      variant="body2"
+      sx={{
+        color: "#333333",
+        fontSize: "0.7rem",
+        minWidth: "auto",
+        padding: "5px",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 2,
+        minHeight: 20,
+        marginLeft: 2,
+        "&:hover": {
+          backgroundColor: "#dcdcdc",
+        },
+      }}
+    >
+      Source Name: {item?.SourceName}
+    </Typography>
+    
     <Typography
       variant="body2"
       sx={{
@@ -651,24 +671,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     >
       Follow Up Date: {item?.NextFollowUpDate}
     </Typography>
-    <Typography
-      variant="body2"
-      sx={{
-        color: "#333333",
-        fontSize: "0.7rem",
-        minWidth: "auto",
-        padding: "5px",
-        backgroundColor: "#f0f0f0",
-        borderRadius: 2,
-        minHeight: 20,
-        marginLeft: 2,
-        "&:hover": {
-          backgroundColor: "#dcdcdc",
-        },
-      }}
-    >
-      Source Name: {item?.SourceName}
-    </Typography>
+   
   </Box>
   <Box sx={{ display: "flex", ml:45, mt: 7 }}>
     <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
