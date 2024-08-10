@@ -94,7 +94,7 @@ const TodaysFollowupPayment = ({ initialRows }) => {
       {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
         <TodayPaymentTemplate
           item={rowDataToUpdate}
-          onDelete={handleDelete}
+          // onDelete={handleDelete}
           onHistoryClick={handleShowHistory}
           onEdit={handleEdit}
         />

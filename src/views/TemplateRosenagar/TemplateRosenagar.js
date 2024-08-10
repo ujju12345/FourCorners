@@ -154,9 +154,15 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
-                  <Typography>EMAIL ID.</Typography>
+                  <Typography>Email Id.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Email}</StyledTableCell>
+              </TableRow>
+              <TableRow sx={{ padding: 0 }}>
+                <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                  <Typography>Source Name.</Typography>
+                </StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.SourceName}</StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -239,6 +245,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ParkingFacility}</StyledTableCell>
+        
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Total (A + B)</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.TotalCost}</StyledTableCell>
       </TableRow>
@@ -247,6 +254,8 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.FlatCost}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingRef}</StyledTableCell>
+        
+        
       </TableRow>
     </TableBody>
   </Table>

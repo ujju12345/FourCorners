@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
-
+import { useRouter } from 'next/router';
 const GlobalStyle = createGlobalStyle`
   @media print {
     body * {
@@ -23,27 +23,26 @@ const GlobalStyle = createGlobalStyle`
 
 const StyledTableCell = styled(TableCell)({
   border: '2px solid black',
-  padding: '4px', // Reduced padding
+  padding: '0px', // Removed padding
   textAlign: 'center',
 });
 
-
 const InvoiceBox = styled(Box)({
-  maxWidth: '1500px', // Increased width
+  maxWidth: '890px',
   margin: 'auto',
-  padding: '20px', // Increased padding to give more space
+  padding: '10px',
   border: '1px solid #eee',
   fontSize: '11px',
   lineHeight: '18px',
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
-
-const TodayPaymentTemplate = ({ item  }) => {
-  const printRef =TodayPaymentTemplate();
+const TodayPaymentTemplate = ({ item , onGoBack }) => {
+  const router = useRouter();
+  console.log(item , 'booking id aaya');
+  const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  
   const [error, setError] = useState(null);
 
   const handlePrint = () => {
@@ -57,29 +56,23 @@ const TodayPaymentTemplate = ({ item  }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!item) return; // Exit if no item is provided
-      try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${item?.BookingID}`;
-
-        // const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-backlogreminder.php?UserID=${item.BookingID}`;
-        const response = await axios.get(apiUrl);
-
-        if (response.data.status === "Success") {
-            console.log(response.data , 'data aaya deh');
-          setData(response.data.data);
-        } else {
-          setError('Failed to fetch data');
-        }
-      } catch (error) {
-        setError('Error fetching data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, [item]);
+  }, [item.bookingID]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${item?.BookingID}`);
+      console.log("data aaya dekh", response.data);
+      setData(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -88,27 +81,26 @@ const TodayPaymentTemplate = ({ item  }) => {
     return <Typography>Error loading data</Typography>;
   }
 
+
   return (
     <>
       <GlobalStyle />
-      {/* <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
-        Print
-      </Button> */}
+      
 
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
-            <TableRow sx={{ padding: 0 }}>
+              <TableRow sx={{ height: '10px', padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ height: '10px', padding: 0 }}>
                   <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}>QUOTATION</Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ padding: 0 }}>
-                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.</Typography>
+                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.  {data.reraregistration}</Typography>
                   <Typography style={{ float: 'left', fontSize: 15, fontWeight: 200 }}>Date: {data.BookingDate}</Typography>
-                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.BookedBy}</Typography>
+                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.UserName}</Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
@@ -131,7 +123,7 @@ const TodayPaymentTemplate = ({ item  }) => {
                   <Typography>Name Of Purchase</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
-                  {data.Name}
+                  {data.BookingName}
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
@@ -152,17 +144,23 @@ const TodayPaymentTemplate = ({ item  }) => {
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Pancard}</StyledTableCell>
               </TableRow>
-              {/* <TableRow sx={{ padding: 0 }}>
+              <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={2} style={{ textAlign: 'left', padding: 0 }}>
-                  <Typography>AADHAR No.</Typography>
+                  <Typography>Aadhar No.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Aadhar}</StyledTableCell>
-              </TableRow> */}
+              </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
                   <Typography>EMAIL ID.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Email}</StyledTableCell>
+              </TableRow>
+              <TableRow sx={{ padding: 0 }}>
+                <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                  <Typography>Source Name.</Typography>
+                </StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.SourceName}</StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -193,7 +191,7 @@ const TodayPaymentTemplate = ({ item  }) => {
                   {data.ProjectName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.WingID}
+                  {data.WingName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
                   {data.FloorNo}
@@ -202,7 +200,7 @@ const TodayPaymentTemplate = ({ item  }) => {
                   {data.FlatNo}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.UnittypeID}
+                  {data.UnittypeName}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -214,7 +212,7 @@ const TodayPaymentTemplate = ({ item  }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Type of Booking</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingType}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingTypeName}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>GST* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Gst}</StyledTableCell>
 </TableRow>
@@ -226,7 +224,7 @@ const TodayPaymentTemplate = ({ item  }) => {
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Rate Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.RatePerSqFt}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Ratesqft}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Registration* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Registration}</StyledTableCell>
 </TableRow>
@@ -237,10 +235,10 @@ const TodayPaymentTemplate = ({ item  }) => {
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Advocate}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
-        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Payment Schedule</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Development Charges</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Charges}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Extra Cost (B)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ExtraCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
@@ -250,9 +248,9 @@ const TodayPaymentTemplate = ({ item  }) => {
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Gross Flat Cost (A)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.FlatCost}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingRef}</StyledTableCell>
       </TableRow>
     </TableBody>
   </Table>
@@ -273,7 +271,7 @@ const TodayPaymentTemplate = ({ item  }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Usable Area in Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UnsableArea}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UsableArea}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Agreement Carpet (RERA) in Sq.Ft</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.AgreementCarpet}</StyledTableCell>
 </TableRow>
@@ -286,7 +284,7 @@ const TodayPaymentTemplate = ({ item  }) => {
 {data.remarks && data.remarks.map((remark, index) => (
   <TableRow key={index} sx={{ padding: 0 }}>
     <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.RemarkName} - {remark.RemarkDate}
+      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
     </StyledTableCell>
   </TableRow>
 ))}
@@ -319,3 +317,4 @@ const TodayPaymentTemplate = ({ item  }) => {
 };
 
 export default TodayPaymentTemplate;
+

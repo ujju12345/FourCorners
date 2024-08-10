@@ -178,7 +178,7 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 450,
+        width:390,
         padding: 5,
         height: 700,
         overflowY: "auto",
@@ -312,10 +312,10 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
       ) : (
         <List>
           {filteredRows.map((item) => (
-            <React.Fragment key={item.Tid}>
+            <React.Fragment key={item.BookingID}>
                   <Card sx={{ marginBottom: 2 }}>
             <ListItem
-              key={item.Tid}
+              key={item.BookingID}
               disablePadding   
               onClick={() => onItemClick(item)}
 
@@ -333,7 +333,7 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
                   style={{ fontWeight: "bold" }}
                 >
                   
-                 {item?.TitleName} {item.CName}
+                 {item?.TitleName} {item?.Name}
                   </Typography>
                 }
                 secondary={ <>
