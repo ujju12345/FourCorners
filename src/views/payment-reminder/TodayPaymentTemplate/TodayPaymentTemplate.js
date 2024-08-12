@@ -152,7 +152,7 @@ const TodayPaymentTemplate = ({ item , onGoBack }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
-                  <Typography>EMAIL ID.</Typography>
+                  <Typography>Email ID.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Email}</StyledTableCell>
               </TableRow>
