@@ -178,6 +178,8 @@ const InvoiceBox = styled(Box)({
             icon: "success",
             title: "Success!",
             text: "Follow-up details saved successfully.",
+          }).then(() => {
+            window.location.reload();
           });
         } else {
           // setSubmitSuccess(false);
@@ -232,6 +234,125 @@ const InvoiceBox = styled(Box)({
         Next Follow-Up
       </Button>
     </Box>
+    
+    <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            minWidth: 500,
+            maxWidth: 700,
+            minHeight: 400,
+          }}
+        >
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h7"
+            component="h3"
+            gutterBottom
+            mt={4}
+          >
+            Select Next Follow-Up Date and Time
+          </Typography>
+          <Box container spacing={4}>
+            <Box item xs={3}>
+              <TextField
+                select
+                label="Select Booking Remark"
+                value={selectedBookingRemark}
+                onChange={(e) => {
+                  setSelectedBookingRemark(e.target.value);
+                  // Assuming setBookingRemarkDetails is populated accordingly
+                }}
+                fullWidth
+              >
+                {bookingRemarks.map((option) => (
+                  <MenuItem
+                    key={option.BookingremarkID}
+                    value={option.BookingremarkID}
+                  >
+                    {option.RemarkName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+            {selectedBookingRemark && (
+              <>
+                <Box item xs={3}>
+                  <TextField
+                    label="Remark Amount"
+                    value={bookingRemarkDetails.Remarkamount || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Box>
+                <Box item xs={3}>
+                  <TextField
+                    label="Remark Name"
+                    value={bookingRemarkDetails.RemarkName || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Box>
+              </>
+            )}
+
+            <Box item xs={3}>
+              <TextField
+                fullWidth
+                type="date"
+                name="NextFollowUpDate"
+                value={formData.NextFollowUpDate}
+                onChange={handleChange}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Box>
+            <Box item xs={3}>
+              <TextField
+                fullWidth
+                label="Note"
+                type="text"
+                name="Note"
+                value={formData.Note}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Box>
+          </Box>
+
+          <Box sx={{ textAlign: "left", mt: 3 }}>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#9155FD", color: "#FFFFFF" }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
 
  <InvoiceBox className="printableArea" ref={printRef}>
       <TableContainer component={Paper}>

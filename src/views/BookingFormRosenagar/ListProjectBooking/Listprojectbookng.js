@@ -57,7 +57,7 @@ const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
   handleTemplateClick,
-
+  onEdit,
   onCheque
 }) => {
   const router = useRouter();
@@ -639,7 +639,7 @@ const handleSubmit = async () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleMenuClose}
                               >
-                                <MenuItem o  onClick={() =>
+                                <MenuItem onClick={() =>
                                     handleReportClick(row.BookingID)
                                   }>
                                   Report
@@ -657,6 +657,11 @@ const handleSubmit = async () => {
                                     onCheque(row.BookingID)
                                   }>
                                   Cheque Receipt
+                                </MenuItem>
+                                <MenuItem onClick={() =>
+                                    onEdit(row.BookingID)
+                                  }>
+                                 Edit details
                                 </MenuItem>
                                
                               </Menu>

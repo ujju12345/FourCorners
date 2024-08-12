@@ -26,6 +26,7 @@ import SidebarBookingProject from 'src/views/BookingFormRosenagar/SidebarBooking
 import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
 import Reciept from 'src/views/BookingFormRosenagar/Reciept/Reciept';
 import TemplatePayment from 'src/views/BookingFormRosenagar/TemplatePayment/TemplatePayment';
+import EditBookingform from 'src/views/BookingFormRosenagar/EditBookingform/EditBookingform';
 const salesData = [
   {
     stats: '245k',
@@ -316,6 +317,7 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
 
   return (
     <Grid container spacing={6}>
+      
     <Grid item xs={4}>
       <SidebarBookingProject
         rows={rows}
@@ -339,9 +341,11 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
           <pre>{JSON.stringify(leadData, null, 2)}</pre>
         </Box>
       )}
-      {showAddDetails && !showDashboard && (
-        <AddTellecallingDetails show={handleBack} editData={editData} />
-      )}
+
+      {editData && !showDashboard && (
+        <EditBookingform show={handleBack} editData={editData} />
+       )} 
+
       {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
         <Listprojectbookng
           item={rowDataToUpdate}
@@ -384,6 +388,8 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
       )}
     </Grid>
   </Grid>
+
+
 
   );
   

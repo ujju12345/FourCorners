@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
+import { Box, Typography, Table,MenuItem, TextField, Modal ,TableBody, TableCell, TableContainer, TableRow, Paper, Button, IconButton } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
-
+import Swal from 'sweetalert2';
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { useCookies } from "react-cookie";
 const GlobalStyle = createGlobalStyle`
   @media print {
     body * {
@@ -42,9 +45,15 @@ const InvoiceBox = styled(Box)({
 const BacklogPaymentTemplate = ({ item  }) => {
   const printRef = useRef();
   const [data, setData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState("");
+
   const [loading, setLoading] = useState(true);
-  
+  const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
+  const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
+  const [bookingRemarks, setBookingRemarks] = useState([]);
   const [error, setError] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
 
   const handlePrint = () => {
     const printContents = printRef.current.innerHTML;
@@ -55,6 +64,9 @@ const BacklogPaymentTemplate = ({ item  }) => {
     document.body.innerHTML = originalContents;
     window.location.reload(); // Reload the page to reset the original contents
   };
+
+  const handleClose = () => setOpen(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,6 +92,124 @@ const BacklogPaymentTemplate = ({ item  }) => {
 
     fetchData();
   }, [item]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+
+  const handleAddPayment = async () => {
+
+    setOpen(true);
+  
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${item?.BookingID}`
+      );
+      if (response.data.status === "Success") {
+        console.log(response.data.data , 'aagaya daata remakrs');
+        const bookingRemarksData = response.data.data;
+        setBookingRemarks(bookingRemarksData);
+
+        // Assuming you want to fetch the details for the first booking remark in the list
+        if (bookingRemarksData.length > 0) {
+          const firstBookingRemarkID = bookingRemarksData[0].BookingremarkID;
+          await fetchBookingRemarkDetails(firstBookingRemarkID);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching booking remarks:", error);
+    }
+  };
+  const fetchBookingRemarkDetails = async (bookingRemarkID) => {
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremarkdetails.php?BookingremarkID=${bookingRemarkID}`
+      );
+      if (response.data.status === "Success") {
+        setBookingRemarkDetails(response.data.data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching booking remark details:", error);
+    }
+  };
+
+  const handleBookingRemarkChange = async (e) => {
+    const bookingRemarkID = e.target.value;
+    setSelectedBookingRemark(bookingRemarkID);
+    await fetchBookingRemarkDetails(bookingRemarkID);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Ensure item and selected booking remark are available
+    if (!item || !selectedBookingRemark) {
+      console.error("No valid item or selected booking remark found.");
+      return;
+    }
+
+    // Prepare the data object to be sent to the API
+    const payload = {
+      BookingID: item.BookingID,
+      Remarkamount: bookingRemarkDetails.Remarkamount || 0,
+      RemarkName: bookingRemarkDetails.RemarkName || '',
+      RemarkDate: formData.NextFollowUpDate, // Use the NextFollowUpDate as RemarkDate
+      AmountTypeID: 1, // Assuming a static value, modify as needed
+      Loan: formData.Loan || 0, // Replace this with the actual Loan field if present
+      Note: formData.Note,
+      CreateUID: cookies?.amr?.UserID || 1,
+    };
+
+    console.log(payload, "Payload to be sent to the API<<<<<<>>>>>>>>>>");
+
+    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-paymentreminder.php";
+
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data.status === "Success") {
+        console.log('SUBMIITEDDD DATA ');
+        setFormData("");
+        setOpen(false);
+        // setSubmitSuccess(true);
+        // setSubmitError(false);
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Follow-up details saved successfully.",
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        // setSubmitSuccess(false);
+        // setSubmitError(true);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+      // setSubmitSuccess(false);
+      // setSubmitError(true);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+};
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -90,25 +220,159 @@ const BacklogPaymentTemplate = ({ item  }) => {
 
   return (
     <>
-      <GlobalStyle />
-      {/* <Button variant="contained" color="primary" onClick={handlePrint} style={{ marginBottom: '10px' }}>
-        Print
-      </Button> */}
 
+
+<Box sx={{ marginBottom: 2 }}> {/* Control spacing with marginBottom */}
+      <Button
+        variant="contained"
+        startIcon={<PersonAddIcon />}
+        onClick={handleAddPayment}
+        sx={{
+          color: "#333333",
+          fontSize: "0.875rem",
+          backgroundColor: "#f0f0f0",
+          "&:hover": {
+            backgroundColor: "#dcdcdc",
+          },
+        }}
+      >
+        Next Follow-Up
+      </Button>
+    </Box>
+    <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            minWidth: 500,
+            maxWidth: 700,
+            minHeight: 400,
+          }}
+        >
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h7"
+            component="h3"
+            gutterBottom
+            mt={4}
+          >
+            Select Next Follow-Up Date and Time
+          </Typography>
+          <Box container spacing={4}>
+            <Box item xs={3}>
+              <TextField
+                select
+                label="Select Booking Remark"
+                value={selectedBookingRemark}
+                onChange={(e) => {
+                  setSelectedBookingRemark(e.target.value);
+                  // Assuming setBookingRemarkDetails is populated accordingly
+                }}
+                fullWidth
+              >
+                {bookingRemarks.map((option) => (
+                  <MenuItem
+                    key={option.BookingremarkID}
+                    value={option.BookingremarkID}
+                  >
+                    {option.RemarkName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+            {selectedBookingRemark && (
+              <>
+                <Box item xs={3}>
+                  <TextField
+                    label="Remark Amount"
+                    value={bookingRemarkDetails.Remarkamount || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Box>
+                <Box item xs={3}>
+                  <TextField
+                    label="Remark Name"
+                    value={bookingRemarkDetails.RemarkName || ""}
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                </Box>
+              </>
+            )}
+
+            <Box item xs={3}>
+              <TextField
+                fullWidth
+                type="date"
+                name="NextFollowUpDate"
+                value={formData.NextFollowUpDate}
+                onChange={handleChange}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Box>
+            <Box item xs={3}>
+              <TextField
+                fullWidth
+                label="Note"
+                type="text"
+                name="Note"
+                value={formData.Note}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Box>
+          </Box>
+
+          <Box sx={{ textAlign: "left", mt: 3 }}>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#9155FD", color: "#FFFFFF" }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
-            <TableRow sx={{ padding: 0 }}>
+              <TableRow sx={{ height: '10px', padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ height: '10px', padding: 0 }}>
                   <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}>QUOTATION</Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ padding: 0 }}>
-                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.</Typography>
+                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.  {data.reraregistration}</Typography>
                   <Typography style={{ float: 'left', fontSize: 15, fontWeight: 200 }}>Date: {data.BookingDate}</Typography>
-                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.BookedBy}</Typography>
+                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.UserName}</Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
@@ -131,7 +395,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
                   <Typography>Name Of Purchase</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
-                  {data.Name}
+                  {data.BookingName}
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
@@ -152,15 +416,15 @@ const BacklogPaymentTemplate = ({ item  }) => {
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Pancard}</StyledTableCell>
               </TableRow>
-              {/* <TableRow sx={{ padding: 0 }}>
+              <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={2} style={{ textAlign: 'left', padding: 0 }}>
-                  <Typography>AADHAR No.</Typography>
+                  <Typography>Aadhar No.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Aadhar}</StyledTableCell>
-              </TableRow> */}
+              </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
-                  <Typography>Email ID.</Typography>
+                  <Typography>Email Id.</Typography>
                 </StyledTableCell>
                 <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Email}</StyledTableCell>
               </TableRow>
@@ -199,7 +463,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
                   {data.ProjectName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.WingID}
+                  {data.WingName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
                   {data.FloorNo}
@@ -208,7 +472,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
                   {data.FlatNo}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.UnittypeID}
+                  {data.UnittypeName}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -220,7 +484,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Type of Booking</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingType}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingTypeName}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>GST* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Gst}</StyledTableCell>
 </TableRow>
@@ -232,7 +496,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Rate Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.RatePerSqFt}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Ratesqft}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Registration* (As per Govt.Notification)</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Registration}</StyledTableCell>
 </TableRow>
@@ -243,22 +507,25 @@ const BacklogPaymentTemplate = ({ item  }) => {
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Advocate}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
-        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Payment Schedule</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Development Charges</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Charges}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Extra Cost (B)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ExtraCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ParkingFacility}</StyledTableCell>
+        
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Total (A + B)</StyledTableCell>
         <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.TotalCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Gross Flat Cost (A)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.FlatCost}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>&nbsp;</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingRef}</StyledTableCell>
+        
+        
       </TableRow>
     </TableBody>
   </Table>
@@ -279,7 +546,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Usable Area in Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UnsableArea}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UsableArea}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Agreement Carpet (RERA) in Sq.Ft</StyledTableCell>
   <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.AgreementCarpet}</StyledTableCell>
 </TableRow>
@@ -292,7 +559,7 @@ const BacklogPaymentTemplate = ({ item  }) => {
 {data.remarks && data.remarks.map((remark, index) => (
   <TableRow key={index} sx={{ padding: 0 }}>
     <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.RemarkName} - {remark.RemarkDate}
+      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
     </StyledTableCell>
   </TableRow>
 ))}

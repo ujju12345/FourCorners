@@ -19,6 +19,11 @@ const SalesManagerNavigation = () => {
       icon: AssignmentIcon,
       path: "/typography",
     },
+    {
+      title: "Project Details ",
+      icon: AssignmentIcon,
+      path: "/MainProjectDetails",
+    },
 
     {
       title: "Opportunity",

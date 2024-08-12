@@ -33,10 +33,8 @@ import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 
-const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
+const EditBookingform = ({ onFormSubmitSuccess, show, editData }) => {
   const router = useRouter();
-
-  console.log(editData, "Edit data aaya");
   const initialRemark = {
     RemarkName: "",
     RemarkDate: null, // or new Date() if you want a default date
@@ -47,14 +45,16 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   const initialFormData = {
     BookingDate: null,
-    BookedByID: "",
+    BookingID : editData,
     Mobile: "",
     BookingRef: "",
     Name: "",
     Address: "",
+    BookedByID:"",
     Pancard: "",
     Email: "",
     BookingType: "",
+    ParkingAvilability:"",
     area: "",
     TtlAmount: "",
     Charges: "",
@@ -80,8 +80,9 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     FlatNo: "",
     FloorNo: "",
     Status: 1,
-    CreateUID: 1,
+    // CreateUID: 1,
   };
+  
 
   const [remarks, setRemarks] = useState([initialRemark]);
   const [formData, setFormData] = useState(initialFormData);
@@ -98,6 +99,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [notification, setNotification] = useState(null);
   const [wingData, setWingData] = useState([]);
   const [parking, setParking] = useState([]);
+  const [error, setError] = useState(null);
 
   const [bookedByOptions, setBookedByOptions] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
@@ -106,52 +108,78 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [submitError, setSubmitError] = useState(false);
   const [cookies, setCookie] = useCookies(["amr"]);
 
+
   useEffect(() => {
-    const storedNotification = localStorage.getItem("selectedNotification");
-
-    if (storedNotification) {
-      const notificationData = JSON.parse(storedNotification);
-      console.log("Fetched Notification Data:", notificationData); // Log the data
-
+    if (editData) {
+      console.log(editData, "Edit data aaya dekhooooo<<<<<<<<>>>>>>>>>>>>>>>>>>");
+      fetchData();
+    } else {
+      console.error("editData is undefined");
+    }
+  }, [editData]);
+  
+  const fetchData = async () => {
+    if (!editData) {
+      console.error("editData is undefined when fetchData is called");
+      return;
+    }
+  
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-singel-bookingremark.php?BookingID=${editData}`
+      );
+      console.log("Data received:", response.data);
+      const res = response.data.data;
+  
       setFormData({
         ...formData,
-        Cid: notificationData.Cid || "",
-        Name: notificationData.CName || "",
-        SourceName: notificationData.SourceName || "",
-        Address: notificationData.Address || "",
-        Pancard: notificationData.Pancard || "",
-        Aadhar: notificationData.Aadhar || "",
-        Mobile: notificationData.Mobile || "",
-        Email: notificationData.Email || "",
-        BookingType: notificationData.BookingType || "",
-        ProjectID: notificationData.ProjectID || "",
-        WingID: notificationData.WingID || "",
-        FloorNo: notificationData.FloorNo || "",
-        FlatNo: notificationData.FlatNo || "",
-        UnittypeID: notificationData.UnittypeID || "",
-        Area: notificationData.Area || "",
-        Ratesqft: notificationData.Ratesqft || "",
-        TtlAmount: notificationData.TtlAmount || "",
-        Charges: notificationData.Charges || "",
-        ParkingFacility: notificationData.ParkingFacility || "",
-        Advocate: notificationData.Advocate || "",
-        FlatCost: notificationData.FlatCost || "",
-        Gst: notificationData.Gst || "",
-        StampDuty: notificationData.StampDuty || "",
-        Registration: notificationData.Registration || "",
-        ExtraCost: notificationData.ExtraCost || "",
-        TotalCost: notificationData.TotalCost || "",
-        FlatCostInWords: notificationData.FlatCostInWords || "",
-        BookingDate: notificationData.BookingDate || "",
-        BookedByID: notificationData.BookedByID || "",
-        UsableArea: notificationData.UsableArea || "",
-        AgreementCarpet: notificationData.AgreementCarpet || "",
-        remarks: notificationData.remarks || [],
+        BookingID:res.BookingID || "",
+        Name: res.BookingName || "",
+        SourceName: res.SourceName || "",
+        Address: res.Address || "",
+        Pancard: res.Pancard || "",
+        Aadhar: res.Aadhar || "",
+        Mobile: res.Mobile || "",
+        Email: res.Email || "",
+        BookingType: res.BookingType || "",
+        ProjectID: res.ProjectID || "",
+        WingID: res.WingID || "",
+        FloorNo: res.FloorNo || "",
+        FlatNo: res.FlatNo || "",
+        UnittypeID: res.UnittypeID || "",
+        ParkingAvilability:res.ParkingAvilability || "",
+        Area: res.Area || "",
+        Ratesqft: res.Ratesqft || "",
+        BookingRef:res.BookingRef || "",
+        TtlAmount: res.TtlAmount || "",
+        AmountTypeID:res.AmountTypeID || "",
+        Charges: res.Charges || "",
+        ParkingFacility: res.ParkingFacility || "",
+        Advocate: res.Advocate || "",
+        FlatCost: res.FlatCost || "",
+        Gst: res.Gst || "",
+        StampDuty: res.StampDuty || "",
+        Registration: res.Registration || "",
+        ExtraCost: res.ExtraCost || "",
+        TotalCost: res.TotalCost || "",
+        FlatCostInWords: res.FlatCostInWords || "",
+        BookingDate: res.BookingDate || "",
+        BookedByID : res.BookedByID || "",
+        UsableArea: res.UsableArea || "",
+        AgreementCarpet: res.AgreementCarpet || "",
+       
+        
       });
-
-      localStorage.removeItem("selectedNotification");
+      setRemarks(res.remarksWithCreateDate || []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
     }
-  }, []);
+  };
+  
+  
 
   const numberToWordsIndian = (num) => {
     const singleDigits = [
@@ -595,9 +623,9 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const url = editData
-      ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-telecalling.php"
-      : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectbooking.php";
+    const url = 
+      `https://ideacafe-backend.vercel.app/api/proxy/api-update-projectbooking.php?BookingID=${editData}`
+     
 
     const formattedRemarks = remarks.map((remark, index) => ({
       ...remark,
@@ -612,11 +640,11 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
     const dataToSend = {
       ...formData,
-
+      BookingID:editData,
       Remarks: formattedRemarks,
     };
 
-    console.log(dataToSend, "Data to Send");
+    console.log(dataToSend, "Edit Data to Send<<<<>>>>>>>>>>>>>");
 
     try {
       const response = await axios.post(url, dataToSend, {
@@ -627,8 +655,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
       if (response.data.status === "Success") {
         console.log(response.data.data, "Submission successful");
-        const { BookingID } = response.data;
-        onFormSubmitSuccess(BookingID);
+        // const { BookingID } = response.data;
+        // onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
         setRemarks([{ ...initialRemark }]);
 
@@ -724,7 +752,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
-                {editData ? "Edit Booking Details" : "Add Booking Details"}
+                {editData ? "Edit Booking Details" : "Edit Booking Details"}
               </Typography>
             </Box>
           </Grid>
@@ -1261,16 +1289,16 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   </Grid>
 
                   {/* Date Field */}
-                  <Grid item xs={4}>
-                    <DatePicker
-                      selected={remark.RemarkDate}
-                      onChange={(date) => handleDateRemarks(date, index)}
-                      dateFormat="dd-MM-yyyy"
-                      customInput={
-                        <TextField fullWidth label="Expected Date" />
-                      }
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+  <DatePicker
+    selected={remark.RemarkDate && remark.RemarkDate !== "0000-00-00" ? new Date(remark.RemarkDate) : null}
+    onChange={(date) => handleDateRemarks
+        
+        (index, "RemarkDate", date)}
+    dateFormat="yyyy-MM-dd"
+    customInput={<TextField label="Remark Date" fullWidth />}
+  />
+</Grid>
 
                   {/* Loan Process Checkbox */}
                   <Grid item xs={2}>
@@ -1365,4 +1393,4 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   );
 };
 
-export default FormRosenagar;
+export default EditBookingform;
