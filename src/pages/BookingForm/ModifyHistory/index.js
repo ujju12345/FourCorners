@@ -27,6 +27,9 @@ import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
 import Reciept from 'src/views/BookingFormRosenagar/Reciept/Reciept';
 import TemplatePayment from 'src/views/BookingFormRosenagar/TemplatePayment/TemplatePayment';
 import EditBookingform from 'src/views/BookingFormRosenagar/EditBookingform/EditBookingform';
+import ModifyHistorySidebar from 'src/views/BookingFormRosenagar/ModifyHistorySidebar';
+import ModifyHistoryList from 'src/views/BookingFormRosenagar/ModifyHistoryList';
+import ModifyHistoryTemplate from 'src/views/BookingFormRosenagar/ModifyHistoryTemplate/ModifyHistoryTemplate';
 const salesData = [
   {
     stats: '245k',
@@ -146,7 +149,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const Addpayment = () => {
+const ModifyHistory = () => {
   const router = useRouter();
   const { lead } = router.query;
   const leadData = lead ? JSON.parse(lead) : null;
@@ -250,8 +253,8 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
     setShowAddDetails(false);
     setShowHistory(false);
     setFirstVisit(false);
-    setShowDashboard(false); 
-    setShowReceipt(false); 
+    setShowDashboard(false); // Reset showDashboard when showing details
+    setShowReceipt(false); // Reset showReceipt when showing details
   };
 
   const handleAddTelecaller = () => {
@@ -319,7 +322,7 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
     <Grid container spacing={6}>
       
     <Grid item xs={4}>
-      <SidebarBookingProject
+      <ModifyHistorySidebar
         rows={rows}
         onItemClick={handleShow}
         onEdit={handleEdit}
@@ -342,24 +345,21 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
         </Box>
       )}
 
-      {editData && !showDashboard && (
-        <EditBookingform show={handleBack} editData={editData} goBack={handleBack}/>
-       )} 
+    
 
       {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && !showTemplate && !showReceipt && (
-        <Listprojectbookng
+        <ModifyHistoryList
           item={rowDataToUpdate}
           onDelete={handleDelete}
           onHistoryClick={handleShowHistory}
           onEdit={handleEdit}
           handleTemplateClick={handleFormSubmitSuccess}
-
           onChequeReceiptClick={handleChequeReciept}
           handleReportClick={handleReport}
           onCheque={handleCheque}
         />
       )}
-      {showTemplate && <TemplatePayment bookingID={bookingID} onGoBack={handleBack} />}
+      {showTemplate && <ModifyHistoryTemplate bookingID={bookingID} onGoBack={handleBack} />}
       {showReceipt && <Reciept bookingID={bookingIDCheque} />}
       {!loading && !error && showHistory && (
         <Box
@@ -396,4 +396,4 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
   
 };
 
-export default Addpayment;
+export default ModifyHistory;

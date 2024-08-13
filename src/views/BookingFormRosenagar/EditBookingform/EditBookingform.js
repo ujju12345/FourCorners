@@ -15,6 +15,7 @@ import axios from "axios";
 import Card from "@mui/material/Card";
 import Swal from "sweetalert2";
 import moment from "moment";
+
 import {
   Snackbar,
   FormControlLabel,
@@ -33,8 +34,9 @@ import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 
-const EditBookingform = ({ onFormSubmitSuccess, show, editData }) => {
+const EditBookingform = ({  show, editData , goBack}) => {
   const router = useRouter();
+
   const initialRemark = {
     RemarkName: "",
     RemarkDate: null, // or new Date() if you want a default date
@@ -126,7 +128,7 @@ const EditBookingform = ({ onFormSubmitSuccess, show, editData }) => {
   
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-singel-bookingremark.php?BookingID=${editData}`
+        `https://apiforcorners.cubisysit.com/api/api-edit-projectbooking.php?BookingID=${editData}`
       );
       console.log("Data received:", response.data);
       const res = response.data.data;
@@ -662,13 +664,11 @@ const EditBookingform = ({ onFormSubmitSuccess, show, editData }) => {
 
         Swal.fire({
           icon: "success",
-          title: "Data Added Successfully",
+          title: "Data Updated Successfully",
           showConfirmButton: false,
           timer: 1000,
         });
-
-        // Navigate to the desired page with BookingID
-        // window.location.href = `/TemplateRosenagar?BookingID=${BookingID}`;
+        goBack()
       } else {
         Swal.fire({
           icon: "error",

@@ -200,7 +200,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
         setOpen(false);
         setSubmitSuccess(true);
         setSubmitError(false);
-        // Show success message using SweetAlert
+     
         Swal.fire({
           icon: "success",
           title: "Success!",
@@ -781,18 +781,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                 </Card>
               </Grid>
-              <Grid item xs={4}>
-                <Card
-                  variant="outlined" // Use outlined variant for a border without shadow
-                  sx={{
-                    borderRadius: 1,
-
-                    padding: "10px",
-                  }}
-                >
-             
-                </Card>
-              </Grid>
+            
             </Grid>
           </Box>
         </Paper>

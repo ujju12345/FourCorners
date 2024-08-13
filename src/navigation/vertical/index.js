@@ -106,7 +106,14 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/BookingForm/Addpayment",
         },
-        
+
+
+        {
+          title: "Modify History",
+          icon: CubeOutlineIcon,
+          path: "/BookingForm/ModifyHistory",
+        },
+
         {
           title: "Report",
           icon: CubeOutlineIcon,
