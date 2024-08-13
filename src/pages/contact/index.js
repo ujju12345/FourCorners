@@ -16,9 +16,9 @@ import SidebarContactDetails from "src/views/sidebarContacts/SidebarContactDetai
 import ListContact from "src/views/list-contact/ListContact";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import TrendingUp from "@mui/icons-material/TrendingUp";
-import CurrencyExchange from "@mui/icons-material/CurrencyExchange";
-import PhoneOutlined from "@mui/icons-material/PhoneOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
+import CellphoneLink from 'mdi-material-ui/CellphoneLink';
+import AccountOutline from 'mdi-material-ui/AccountOutline';
 
 import {
   PieChart,
@@ -37,6 +37,8 @@ const Contact = () => {
   const [editData, setEditData] = useState(null);
   const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
   const [showAddDetails, setShowAddDetails] = useState(false);
+  const [counts, setCounts] = useState(null);
+
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false); // New state for showing dashboard
@@ -45,6 +47,164 @@ const Contact = () => {
   const userName = cookies.amr?.FullName || "User";
   const roleName = cookies.amr?.RoleName || "Admin";
   const userid = cookies.amr?.UserID || "Role";
+
+
+
+  useEffect(() => {
+    fetchDataContact();
+  }, []);
+
+  
+
+  const fetchDataContact = async () => {
+    const userid = cookies.amr?.UserID || 25;
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-graph-contact.php?UserID=${userid}`
+      );
+      console.log("API Response:", response.data.count);
+      setRows(response.data.data || []);
+      console.log(response.data.counts , 'counttt of contacttt<<<<<>>>>>>>>');
+      setCounts(response.data.counts || {});
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  const renderStats = () => {
+    if (!counts) {
+      return null;
+    }
+  
+    const dynamicSalesData = [
+      {
+        stats: counts.count_null,
+        title: 'Not transferred to lead',
+        color: 'primary',
+        icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      },
+      {
+        stats: counts.count_one,
+        title: 'Transferred to lead',
+        color: 'success',
+        icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      },
+      {
+        stats: counts.total_count,
+        title: 'Total contact',
+        color: 'info',
+        icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      },
+      
+    ];
+  
+    return dynamicSalesData.map((item, index) => (
+      <Grid item xs={12} sm={3} key={index}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant="rounded"
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: (theme) => theme.palette[item.color].main
+            }}
+          >
+            {item.icon}
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="caption">{item.title}</Typography>
+            <Typography variant="h6">{item.stats}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+    ));
+  };
+  
+  const getPieData = () => {
+    if (!counts) {
+      return [];
+    }
+  
+    return [
+      { name: 'Not Transferred to lead', value: parseInt(counts.count_null), color: '#8884d8' },
+      { name: 'Transferred to lead', value: parseInt(counts.count_one), color: '#82ca9d' },
+      { name: 'Total Contacts', value: parseInt(counts.total_count), color: '#ffc658' },
+      
+    ];
+  };
+  
+  const pieData = getPieData();
+  
+
+  const StatisticsCard = () => {
+    return (
+      <>
+        <CardHeader
+          title="Statistics Card"
+          subheader={
+            <Typography variant="body2">
+              <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
+                Total 48.5% growth
+              </Box>{' '}
+              😎 this month
+            </Typography>
+          }
+          titleTypographyProps={{
+            sx: {
+              mb: 2.5,
+              lineHeight: '2rem !important',
+              letterSpacing: '0.15px !important'
+            }
+          }}
+        />
+        <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
+          <Grid container spacing={[5, 0]}>
+            {renderStats()}
+            <Grid item xs={12}>
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart>
+                  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="#8884d8" label>
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </>
+    );
+  };
+  
+
+  const WelcomeScreen = () => {
+    return (
+      <Card>
+        <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
+          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
+            Welcome to Contact Dashboard
+          </Typography>
+
+
+
+
+          <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 40 }}>
+            <StatisticsCard />
+          </Grid>
+        </Box>
+      </Card>
+    );
+  };
 
   useEffect(() => {
     fetchData();
@@ -75,24 +235,7 @@ const Contact = () => {
     // }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.post(
-        "https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php",
-        {
-          Tid: id,
-          DeleteUID: 1,
-        }
-      );
-      if (response.data.status === "Success") {
-        setRows(rows.filter((row) => row.Tid !== id));
-        setRowDataToUpdate(null);
-        setShowAddDetails(false);
-      }
-    } catch (error) {
-      setError(error);
-    }
-  };
+
 
   const handleBack = () => {
     setEditData(null);
@@ -144,134 +287,6 @@ const Contact = () => {
     setShowAddDetails(false); // Ensure the AddContact form is hidden when navigating to the dashboard
   };
 
-  const salesData = [
-    {
-      stats: "200",
-      title: "Total Count",
-      color: "primary",
-      icon: <TrendingUp sx={{ fontSize: "1.75rem" }} />,
-    },
-    {
-      stats: "10",
-      title: "Past Count",
-      color: "success",
-      icon: <AccountCircleOutlinedIcon sx={{ fontSize: "1.75rem" }} />,
-    },
-    {
-      stats: "400",
-      color: "warning",
-      title: "Today Count",
-      icon: <PhoneOutlined sx={{ fontSize: "1.75rem" }} />,
-    },
-    {
-      stats: "30",
-      color: "info",
-      title: "Future Count",
-      icon: <CurrencyExchange sx={{ fontSize: "1.75rem" }} />,
-    },
-  ];
-
-  const pieData = [
-    { name: "Total Count", value: "400",  color: "#3f51b5" },
-    { name: "Past Count", value: "200", color: "#4caf50" },
-    { name: "Today Count", value: "200", color: "#ff9800" },
-    { name: "Future Count", value: "600", color: "#00acc1" },
-  ];
-
-  const renderStats = () => {
-    return salesData.map((item, index) => (
-      <Grid item xs={12} sm={3} key={index}>
-        <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              mr: 3,
-              width: 44,
-              height: 44,
-              boxShadow: 3,
-              color: "common.white",
-              backgroundColor: `${item.color}.main`,
-            }}
-          >
-            {item.icon}
-          </Avatar>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography variant="caption">{item.title}</Typography>
-            <Typography variant="h6">{item.stats}</Typography>
-          </Box>
-        </Box>
-      </Grid>
-    ));
-  };
-
-  const StatisticsCard = () => {
-    return (
-      <>
-        <CardHeader
-          title="Statistics Card"
-          subheader={
-            <Typography variant="body2">
-              <Box
-                component="span"
-                sx={{ fontWeight: 600, color: "text.primary" }}
-              >
-                Total 48.5% growth
-              </Box>{" "}
-              😎 this month
-            </Typography>
-          }
-          titleTypographyProps={{
-            sx: {
-              mb: 2.5,
-              lineHeight: "2rem !important",
-              letterSpacing: "0.15px !important",
-            },
-          }}
-        />
-        <CardContent sx={{ pt: (theme) => `${theme.spacing(3)} !important` }}>
-          <Grid container spacing={[5, 0]}>
-            {renderStats()}
-            <Grid item xs={12}>
-              <ResponsiveContainer width="100%" height={400}>
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
-                    fill="#8884d8"
-                    label
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </>
-    );
-  };
-
-  const WelcomeScreen = () => {
-    return (
-      <Card>
-        <Box sx={{ textAlign: "center", marginTop: "20px" }}>
-          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
-          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-            Welcome to Contact Dashboard, {userName}
-          </Typography>
-          <StatisticsCard />
-        </Box>
-      </Card>
-    );
-  };
 
   return (
     <Grid container spacing={6}>
@@ -313,7 +328,7 @@ const Contact = () => {
           !showDashboard && (
             <ListContact
               item={rowDataToUpdate}
-              onDelete={handleDelete}
+              // onDelete={handleDelete}
               onHistoryClick={handleShowHistory}
               onEdit={handleEdit}
             />

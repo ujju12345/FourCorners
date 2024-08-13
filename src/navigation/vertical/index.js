@@ -106,6 +106,7 @@ const navigation = () => {
           icon: CubeOutlineIcon,
           path: "/BookingForm/Addpayment",
         },
+        
         {
           title: "Report",
           icon: CubeOutlineIcon,
