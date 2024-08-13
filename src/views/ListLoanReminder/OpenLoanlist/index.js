@@ -121,7 +121,7 @@ const OpenLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
   
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${item?.BookingID}`
+        `https://apiforcorners.cubisysit.com/api/api-dropdown-loanbookingremark.php?BookingID=${item?.BookingID}`
       );
       if (response.data.status === "Success") {
         console.log(response.data.data, 'Received booking remarks data');
@@ -403,10 +403,7 @@ const OpenLoanlist = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 select
                 label="Select Booking Remark"
                 value={selectedBookingRemark}
-                onChange={(e) => {
-                  setSelectedBookingRemark(e.target.value);
-                  // Assuming setBookingRemarkDetails is populated accordingly
-                }}
+                onChange={handleBookingRemarkChange}
                 fullWidth
               >
                 {bookingRemarks.map((option) => (
