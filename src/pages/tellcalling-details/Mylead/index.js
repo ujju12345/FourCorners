@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Grid, CircularProgress, Alert, Typography, Box } from '@mui/material';
 import axios from 'axios';
 import AddTellecallingDetails from 'src/views/add-tellecallingDetails/AddTellecallingDetails';
@@ -84,7 +84,10 @@ const Tellecalling = () => {
       setError(error);
     }
   };
-
+  const AddTellecallingDetails = lazy(() =>
+    import('src/views/add-tellecallingDetails/AddTellecallingDetails')
+  );
+  
   const handleBack = () => {
     setEditData(null);
     setShowAddDetails(false);
@@ -97,13 +100,12 @@ const Tellecalling = () => {
 
   const handleEdit = (row) => {
     setEditData(row);
-    setRowDataToUpdate(null);
     setShowAddDetails(true);
     setShowHistory(false);
-    setFirstVisit(false);
     setShowDashboard(false);
+    setRowDataToUpdate(null);
   };
-
+  
   const handleShow = (item) => {
     setRowDataToUpdate(item);
     setShowAddDetails(false);
@@ -281,16 +283,10 @@ const Tellecalling = () => {
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
-        {/* {error &&  <Photo/>} */}
         {showDashboard && !loading && !error && <WelcomeScreen />}
-        {firstVisit && !loading && !error && (
-          <WelcomeScreen />
-
-        )}
-
-     
-
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails &&  !showDashboard &&(
+        {firstVisit && !loading && !error && <WelcomeScreen />}
+        
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <Listmylead
             item={rowDataToUpdate}
             onDelete={handleDelete}
@@ -298,23 +294,25 @@ const Tellecalling = () => {
             onEdit={handleEdit}
           />
         )}
-
-{!loading && !error && showHistory && (
-          <Box display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh">
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold",textAlign:'center', fontSize: 20, }}>
+        
+        {!loading && !error && showHistory && (
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
+            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", textAlign: 'center', fontSize: 20 }}>
               User History
             </Typography>
             <HistoryLead item={rowDataToUpdate} onBack={handleBack} />
           </Box>
         )}
-
+        
+        {!loading && !error && showAddDetails && (
+          <Suspense fallback={<CircularProgress />}>
+            <AddTellecallingDetails show={handleBack} editData={editData} />
+          </Suspense>
+        )}
       </Grid>
     </Grid>
   );
+  
 };
 
 export default Tellecalling;
