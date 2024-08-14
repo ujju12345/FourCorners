@@ -17,6 +17,7 @@ import AccountOutline from 'mdi-material-ui/AccountOutline';
 import BacklogLoanReminderSidebar from 'src/views/SidebarLoan/BacklogLoanReminderSidebar';
 import BacklogLoanList from 'src/views/ListLoanReminder/BacklogLoanList';
 import OpenpaymentTemplate from 'src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate';
+import BacklogLoanTemplate from 'src/views/ListLoanReminder/BacklogLoanTemplate/BacklogLoanTemplate';
 
 const BacklogReminder = () => {
   const router = useRouter();
@@ -305,7 +306,7 @@ const BacklogReminder = () => {
         )}
 
 {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <OpenpaymentTemplate
+          <BacklogLoanTemplate
             item={rowDataToUpdate}
             rows={rows}
             onDelete={handleDelete}
