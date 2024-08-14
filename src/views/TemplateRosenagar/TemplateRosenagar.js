@@ -71,6 +71,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
       setLoading(false);
     }
   };
+  
 
 
   if (loading) {
@@ -286,13 +287,13 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
 </TableRow>
 
 {/* Map over remarks array */}
-{data.remarks && data.remarks.map((remark, index) => (
-  <TableRow key={index} sx={{ padding: 0 }}>
-    <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
-    </StyledTableCell>
-  </TableRow>
-))}
+{data?.remarksWithCreateDate && data.remarksWithCreateDate.map((remark, index) => (
+      <TableRow key={remark.BookingRemarkID} sx={{ padding: 0 }}>
+        <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
+          {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+        </StyledTableCell>
+      </TableRow>
+    ))}
 
     </TableBody>
   </Table>
