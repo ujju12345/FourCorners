@@ -65,7 +65,7 @@ const OpenPaymentSidebar = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.Name?.toLowerCase().includes(lowerCaseQuery) ||
           item?.NextFollowUpDate?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);

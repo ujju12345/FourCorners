@@ -16,6 +16,7 @@ import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
 import OpenLoanReminderSidebar from 'src/views/SidebarLoan/OpenLoanReminderSidebar';
 import OpenLoanlist from 'src/views/ListLoanReminder/OpenLoanlist';
+import OpenpaymentTemplate from 'src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate';
 
 const TodaysLoanReminder = () => {
   const router = useRouter();
@@ -273,7 +274,7 @@ const TodaysLoanReminder = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <OpenLoanReminderSidebar 
+        <OpenLoanReminderSidebar
           rows={rows} 
           onItemClick={handleShow} 
           onEdit={handleEdit} 

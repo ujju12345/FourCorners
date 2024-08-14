@@ -76,7 +76,7 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item.CName.toLowerCase().includes(lowerCaseQuery) ||
+          item.Name.toLowerCase().includes(lowerCaseQuery) ||
           item.Mobile.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
@@ -144,10 +144,10 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.CName.localeCompare(b.CName));
+        sortedRows.sort((a, b) => a.Name.localeCompare(b.Name));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.CName.localeCompare(a.CName));
+        sortedRows.sort((a, b) => b.Name.localeCompare(a.Name));
         break;
       default:
         break;
@@ -322,7 +322,7 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
             >
               <ListItemAvatar>
                 <Avatar
-                  alt={item.CName}
+                  alt={item.Name}
                   sx={{ width: 40, height: 40, margin: 2 }}
                   src="/images/avatars/1.png"                />
               </ListItemAvatar>

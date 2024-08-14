@@ -82,7 +82,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.CName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.Name?.toLowerCase().includes(lowerCaseQuery) ||
           item?.Mobile?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
@@ -147,10 +147,10 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.CName.localeCompare(b.CName));
+        sortedRows.sort((a, b) => a.Name.localeCompare(b.Name));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.CName.localeCompare(a.CName));
+        sortedRows.sort((a, b) => b.Name.localeCompare(a.Name));
         break;
       default:
         break;

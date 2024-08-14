@@ -91,7 +91,7 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.PartyName?.toString().includes(lowerCaseQuery) ||
+          item?.Name?.toString().includes(lowerCaseQuery) ||
           item?.Remarkamount?.toString().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);
