@@ -30,7 +30,6 @@ import {
   InputAdornment,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-
 import PaymentIcon from "@mui/icons-material/Payment";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -394,7 +393,7 @@ const Listprojectbookng = ({
   };
 
   const handleOpenPayment = () => setOpen(true);
-  const handleClose = () => setModalOpen(false);
+  const handleClose = () => setOpen(false);
 
   const handleDateSearch = async () => {
     console.log("press");
@@ -1146,6 +1145,13 @@ const Listprojectbookng = ({
           }}
         >
           <CardContent>
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
             <Typography variant="h5" gutterBottom align="center">
               Payment Details
             </Typography>
