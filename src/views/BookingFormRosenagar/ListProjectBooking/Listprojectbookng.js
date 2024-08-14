@@ -29,6 +29,8 @@ import {
   Checkbox,
   InputAdornment,
 } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+
 import PaymentIcon from "@mui/icons-material/Payment";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -49,16 +51,12 @@ const NoDataIcon = () => (
   />
 );
 
-
-
-
-
 const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
   handleTemplateClick,
   onEdit,
-  onCheque
+  onCheque,
 }) => {
   const router = useRouter();
   const initialMergedData = {
@@ -66,8 +64,9 @@ const Listprojectbookng = ({
     proccess_one: [],
     totalCash: 0,
     totalCheque: 0,
-    totalCost: 0
+    totalCost: 0,
   };
+  
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [wings, setWings] = useState([]);
   const [selectedWing, setSelectedWing] = useState(null);
@@ -86,14 +85,29 @@ const Listprojectbookng = ({
   const [bankName, setBankName] = useState("");
   const [cheqNo, setCheqNo] = useState("");
   const [bookingRemarks, setBookingRemarks] = useState([]);
-  const [amountTypes, setAmountTypes] = useState([]);
+  const [amountTypes, setAmountTypes] = useState([
+    // Example amount types
+    { AmountTypeID: "1", AmountTypeName: "Type 1" },
+    { AmountTypeID: "2", AmountTypeName: "Type 2" },
+  ]);
   const [mergedData, setMergedData] = useState(initialMergedData);
   const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
   const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
+  const [showAmountType, setShowAmountType] = useState(false);
+
   const [selectedRow, setSelectedRow] = useState(null);
   const [cashPaid, setCashPaid] = useState("");
   const [chequePaid, setChequePaid] = useState("");
+  const [chequePayments, setChequePayments] = useState([
+    {
+      chequePaid: "",
+      bankName: "",
+      cheqNo: "",
+      chequeDate: null,
+      AmountTypeID: "",
+    },
+  ]);
   const [totalCost, setTotalCost] = useState("");
   const [formData, setFormData] = useState({ AmountGiven: new Date() });
   const [cashDate, setCashdate] = useState({ CashDate: new Date() });
@@ -183,6 +197,27 @@ const Listprojectbookng = ({
     }
   };
 
+  const handleAddChequePayment = () => {
+    setChequePayments([
+      ...chequePayments,
+      {
+        AmountTypeID: "", // Initialize with a default value or empty
+        chequePaid: "",
+        bankName: "",
+        cheqNo: "",
+        chequeDate: null, // Initialize with null or default date
+      },
+    ]);
+    setShowAmountType(true); // Show Amount Type dropdown when adding a new row
+  };
+
+  const handleChequePaymentChange = (index, field, value) => {
+    const updatedChequePayments = chequePayments.map((payment, i) =>
+      i === index ? { ...payment, [field]: value } : payment
+    );
+    setChequePayments(updatedChequePayments);
+  };
+
   useEffect(() => {
     // Update booking remark details based on the selected remark
     const selectedRemark = bookingRemarks.find(
@@ -202,7 +237,7 @@ const Listprojectbookng = ({
         `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremark.php?BookingID=${bookingID}`
       );
       if (response.data.status === "Success") {
-        console.log(response.data.data , 'aagaya daata remakrs');
+        console.log(response.data.data, "aagaya daata remakrs");
         const bookingRemarksData = response.data.data;
         setBookingRemarks(bookingRemarksData);
 
@@ -247,12 +282,11 @@ const Listprojectbookng = ({
   };
 
   const handleReportClick = (id) => {
-    setBookingID(id);  // Set the BookingID state
-    setMergedData(initialMergedData);  // Clear the mergedData state
-    handleOpenPayment(selectedRowMenu);  // Open the modal
+    setBookingID(id); // Set the BookingID state
+    setMergedData(initialMergedData); // Clear the mergedData state
+    handleOpenPayment(selectedRowMenu); // Open the modal
     handleMenuClose();
   };
-  
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -304,18 +338,21 @@ const Listprojectbookng = ({
     setSelectedRow(null);
   };
 
-
-
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, AmountGiven: date });
+  const handleRemoveChequePayment = (index) => {
+    setChequePayments((prevPayments) =>
+      prevPayments.filter((_, i) => i !== index)
+    );
   };
+  
 
   const handleDateChangeCash = (date) => {
-    setCashdate({ ...cashDate, CashDate: date });
+    setCashdate({ CashDate: date });
   };
 
+  const handleDateChange = (date, index) => {
+    handleChequePaymentChange(index, "chequeDate", date);
+  };
 
-  
   const handleDateChangePayment = (date, key) => {
     setFormData({ ...formData, [key]: date });
   };
@@ -357,202 +394,199 @@ const Listprojectbookng = ({
   };
 
   const handleOpenPayment = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setModalOpen(false);
 
+  const handleDateSearch = async () => {
+    console.log("press");
+    try {
+      const response = await axios.get(
+        `https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php`,
+        {
+          params: {
+            BookingID: bookingID,
+            fromdate: formData.fromdate
+              ? formData.fromdate.toISOString().split("T")[0]
+              : undefined,
+            todate: formData.todate
+              ? formData.todate.toISOString().split("T")[0]
+              : undefined,
+          },
+        }
+      );
 
- const handleDateSearch = async () => {
-  console.log('press');
-  try {
-    const response = await axios.get(`https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php`, {
-      params: {
-        BookingID: bookingID,
-        fromdate: formData.fromdate ? formData.fromdate.toISOString().split('T')[0] : undefined,
-        todate: formData.todate ? formData.todate.toISOString().split('T')[0] : undefined
+      if (response.data.status === "Success") {
+        const data = response.data.data;
+        console.log(data, "dekh bahi");
+
+        // Process data
+        const proccess_null = [
+          ...data.bookingremark.cash.filter((item) => item.Proccess === null),
+          ...data.bookingremark.cheque.filter((item) => item.Proccess === null),
+        ].map((item) => ({
+          Name: data.booking[0].Name,
+          FlatNo: data.booking[0].FlatNo,
+          Remarkamount: item.Remarkamount,
+          PaymentType: item.AmountTypeID === 1 ? "Cash" : "Cheque",
+          RemarkDate: item.RemarkDate,
+        }));
+
+        const proccess_one = [
+          ...data.payment.cash.filter((item) => item.PLoan === 1),
+          ...data.payment.cheque.filter((item) => item.PLoan === 1),
+        ].map((item) => ({
+          Name: data.booking[0].Name,
+          FlatNo: data.booking[0].FlatNo,
+          Cash: item.Cash,
+          ChequeAmount: item.ChequeAmount,
+          PaymentType: item.AmountTypeID === 1 ? "Cash" : "Cheque",
+        }));
+
+        const totalCash = data.payment.totalCash || 0;
+        const totalCheque = data.payment.totalCheque || 0;
+        const totalCost = data.payment.TotalCost || 0;
+
+        setMergedData({
+          proccess_null,
+          proccess_one,
+          totalCash,
+          totalCheque,
+          totalCost,
+        });
+      } else {
+        console.error("Failed to fetch data:", response.data.message);
+        setMergedData(initialMergedData); // Reset mergedData on failure
       }
-    });
-
-    if (response.data.status === "Success") {
-      const data = response.data.data;
-      console.log(data, 'dekh bahi');
-
-      // Process data
-      const proccess_null = [
-        ...data.bookingremark.cash.filter(item => item.Proccess === null),
-        ...data.bookingremark.cheque.filter(item => item.Proccess === null)
-      ].map(item => ({
-        Name: data.booking[0].Name,
-        FlatNo: data.booking[0].FlatNo,
-        Remarkamount: item.Remarkamount,
-        PaymentType: item.AmountTypeID === 1 ? 'Cash' : 'Cheque',
-        RemarkDate: item.RemarkDate
-      }));
-
-      const proccess_one = [
-        ...data.payment.cash.filter(item => item.PLoan === 1),
-        ...data.payment.cheque.filter(item => item.PLoan === 1)
-      ].map(item => ({
-        Name: data.booking[0].Name,
-        FlatNo: data.booking[0].FlatNo,
-        Cash: item.Cash,
-        ChequeAmount: item.ChequeAmount,
-        PaymentType: item.AmountTypeID === 1 ? 'Cash' : 'Cheque'
-      }));
-
-      const totalCash = data.payment.totalCash || 0;
-      const totalCheque = data.payment.totalCheque || 0;
-      const totalCost = data.payment.TotalCost || 0;
-
-      setMergedData({
-        proccess_null,
-        proccess_one,
-        totalCash,
-        totalCheque,
-        totalCost
-      });
-    } else {
-      console.error('Failed to fetch data:', response.data.message);
-      setMergedData(initialMergedData);  // Reset mergedData on failure
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setMergedData(initialMergedData); // Reset mergedData on error
     }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    setMergedData(initialMergedData);  // Reset mergedData on error
-  }
-};
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-const handleSubmit = async () => {
-  // Prepare the data for the API request
-  const payload = {
-    BookingID: selectedRow,
-    Payment: {
-      BookingremarkID: selectedBookingRemark,
-      PRemarkamount: remarks.reduce(
-        (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
-        0
-      ),
-      Cash: cashPaid || "0",
-      ChequeAmount: chequePaid || "0",
-      BankName: bankName || "",
-      AmountTypeID: amountType || "",
-      ChequeNumber: cheqNo || "",
-      ChequeDate: formData.AmountGiven.toISOString().split("T")[0],
-      Date: cashDate.CashDate.toISOString().split("T")[0],
-      PLoan: remarks.reduce(
-        (acc, remark) => acc + (parseInt(remark.Loan) || 0),
-        0
-      ),
-      paymenttypeID: 1,
-      CreateUID: 1,
-      CreateDate: new Date().toISOString().split("T")[0],
-    },
-    Remarks: remarks.map((remark) => ({
-      Remarkamount: parseFloat(remark.Remarkamount) || 0,
-      RemarkName: remark.RemarkName || "",
-      RemarkDate:
-        new Date(remark.RemarkDate).toISOString().split("T")[0] || "",
-      Loan: parseInt(remark.Loan) || 0,
-      Status: parseInt(remark.Status) || 1,
-    })),
-    Proccess: 1,
-    ModifyUID: 1,
   };
 
-  console.log(payload, "ye jaa raha");
-  try {
-    const response = await axios.post(
-      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
-      payload
-    );
-    console.log("ye gaya data", response.data);
-    if (response.data.status === "Success") {
-      console.log("Payment successfully submitted:", response.data);
-      setCashPaid("");
-      setChequePaid("");
-      setBankName("");
-      setCheqNo("");
-      setFormData({ AmountGiven: new Date() });
-      setSelectedPaymentType("");
-      setRemarks([
-        { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
-      ]);
-      setSelectedBookingRemark("");
-      setBookingRemarkDetails({});
-      setSelectedRow(null);
-
-      Swal.fire({
-        icon: "success",
-        title: "Data Submitted Successfully",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-
-      handleModalClose();
-    } else {
-      // Handle unsuccessful response
-      console.error("Failed to submit payment:", response.data.message);
-      // Show an error message to the user if needed
+  const handleSubmit = async () => {
+    // Prepare the data for the API request
+    const payload = {
+      BookingID: selectedRow,
+      Payments: chequePayments.map((payment, index) => ({
+        BookingremarkID: selectedBookingRemark,
+        PRemarkamount: remarks.reduce(
+          (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
+          0
+        ),
+        Cash: amountType === "1" ? parseFloat(cashPaid) || 0 : 0,
+        ChequeAmount: amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
+        BankName: payment.bankName || "",
+        AmountTypeID: payment.AmountTypeID || "",
+        ChequeNumber: payment.cheqNo || "",
+        ChequeDate: payment.chequeDate.toISOString().split("T")[0],
+        Date: cashDate.CashDate.toISOString().split("T")[0],
+        PLoan: remarks.reduce(
+          (acc, remark) => acc + (parseInt(remark.Loan) || 0),
+          0
+        ),
+        paymenttypeID: parseInt(selectedPaymentType) || "",
+        CreateUID: 1,
+        CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
+      })),
+      Remarks: remarks.map((remark) => ({
+        Remarkamount: parseFloat(remark.Remarkamount) || 0,
+        RemarkName: remark.RemarkName || "",
+        RemarkDate: remark.RemarkDate
+          ? new Date(remark.RemarkDate).toISOString().split("T")[0]
+          : "",
+        Loan: parseInt(remark.Loan) || 0,
+        Status: parseInt(remark.Status) || 1,
+        AmountTypeID: amountType || 1, // Add AmountTypeID for Remarks
+      })),
+      Proccess: 1,
+      ModifyUID: 1,
+    };
+  
+    console.log(payload, "ye jaa raha dataaaaaa<>>>>>>>>>>>>>");
+    try {
+      const response = await axios.post(
+        "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
+        payload
+      );
+      console.log("ye gaya data", response.data);
+      if (response.data.status === "Success") {
+        console.log("Payment successfully submitted", response.data);
+        setCashPaid("");
+        setChequePaid("");
+        setBankName("");
+        setCheqNo("");
+        setFormData({ AmountGiven: new Date() });
+        setSelectedPaymentType("");
+        setRemarks([
+          { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
+        ]);
+        setSelectedBookingRemark("");
+        setBookingRemarkDetails({});
+        setSelectedRow(null);
+  
+        Swal.fire({
+          icon: "success",
+          title: "Data Submitted Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+  
+        handleModalClose();
+      } else {
+        console.error("Failed to submit payment:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error submitting payment:", error);
     }
-  } catch (error) {
-    console.error("Error submitting payment:", error);
-    // Show an error message to the user if needed
-  }
-};
-
+  };
+  
 
   useEffect(() => {
     if (!paymentData) return;
-    
+
     const bookingInfo = paymentData.booking && paymentData.booking[0];
-  
-    if (!bookingInfo || !paymentData.bookingremark || !paymentData.payment) return;
-  
+
+    if (!bookingInfo || !paymentData.bookingremark || !paymentData.payment)
+      return;
+
     const processNull = paymentData.bookingremark
-      .filter(remark => remark.Proccess === null)
-      .map(remark => {
-        const cash = paymentData.payment.cash.find(cash => cash.BookingremarkID === remark.BookingremarkID);
-        const cheque = paymentData.payment.cheque.find(cheque => cheque.BookingremarkID === remark.BookingremarkID);
-  
+      .filter((remark) => remark.Proccess === null)
+      .map((remark) => {
+        const cash = paymentData.payment.cash.find(
+          (cash) => cash.BookingremarkID === remark.BookingremarkID
+        );
+        const cheque = paymentData.payment.cheque.find(
+          (cheque) => cheque.BookingremarkID === remark.BookingremarkID
+        );
+
         return {
           Name: bookingInfo.Name,
           FlatNo: bookingInfo.FlatNo,
           Cash: cash ? cash.Cash : 0,
-          ChequeAmount: cheque ? cheque.ChequeAmount : 0
+          ChequeAmount: cheque ? cheque.ChequeAmount : 0,
         };
       });
-  
+
     const processOne = paymentData.bookingremark
-      .filter(remark => remark.Proccess === 'one')
-      .map(remark => {
-        const cash = paymentData.payment.cash.find(cash => cash.BookingremarkID === remark.BookingremarkID);
-        const cheque = paymentData.payment.cheque.find(cheque => cheque.BookingremarkID === remark.BookingremarkID);
-  
+      .filter((remark) => remark.Proccess === "one")
+      .map((remark) => {
+        const cash = paymentData.payment.cash.find(
+          (cash) => cash.BookingremarkID === remark.BookingremarkID
+        );
+        const cheque = paymentData.payment.cheque.find(
+          (cheque) => cheque.BookingremarkID === remark.BookingremarkID
+        );
+
         return {
           Name: bookingInfo.Name,
           FlatNo: bookingInfo.FlatNo,
           Cash: cash ? cash.Cash : 0,
-          ChequeAmount: cheque ? cheque.ChequeAmount : 0
+          ChequeAmount: cheque ? cheque.ChequeAmount : 0,
         };
       });
-  
+
     setMergedData({ proccess_null: processNull, proccess_one: processOne });
   }, [paymentData]);
-  
-  
-  
-  
+
   return (
     <>
       <Grid
@@ -639,9 +673,11 @@ const handleSubmit = async () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleMenuClose}
                               >
-                                <MenuItem onClick={() =>
+                                <MenuItem
+                                  onClick={() =>
                                     handleReportClick(row.BookingID)
-                                  }>
+                                  }
+                                >
                                   Report
                                 </MenuItem>
                                 <MenuItem
@@ -652,18 +688,14 @@ const handleSubmit = async () => {
                                   Template
                                 </MenuItem>
 
-
-                                <MenuItem onClick={() =>
-                                    onCheque(row.BookingID)
-                                  }>
+                                <MenuItem
+                                  onClick={() => onCheque(row.BookingID)}
+                                >
                                   Cheque Receipt
                                 </MenuItem>
-                                <MenuItem onClick={() =>
-                                    onEdit(row.BookingID)
-                                  }>
-                                 Edit details
+                                <MenuItem onClick={() => onEdit(row.BookingID)}>
+                                  Edit details
                                 </MenuItem>
-                               
                               </Menu>
                             </TableCell>
                             <TableCell>
@@ -703,20 +735,46 @@ const handleSubmit = async () => {
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box
           sx={{
-            padding: 15,
-            backgroundColor: "white",
-            margin: "auto",
-            maxWidth: 900,
-            maxHeight: "80vh",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+        
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            width: 1300, 
+            mt: 5,
+            mx: 2,
+            maxHeight: "80vh", // Set maximum height relative to the viewport height
+    overflow: "auto",  
+           
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Typography variant="h6" gutterBottom>
-                Add Payment
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h7"
+            component="h3"
+            gutterBottom
+          >
+            Add Payment
+          </Typography>
+
+         
+            <Grid item xs={12}>
+              <Typography
+                variant="body2"
+                sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
+              >
+                Remarks
               </Typography>
             </Grid>
             <Grid container spacing={2}>
@@ -766,135 +824,199 @@ const handleSubmit = async () => {
                 </>
               )}
             </Grid>
+            <>
+              <Grid item xs={4} mt={3}>
+                <FormControl fullWidth>
+                  <InputLabel>Amount Type</InputLabel>
+                  <Select
+                    value={amountType}
+                    onChange={(e) => setAmountType(e.target.value)}
+                    label="Amount Type"
+                  >
+                    {amountTypes.map((type) => (
+                      <MenuItem
+                        key={type.AmountTypeID}
+                        value={type.AmountTypeID}
+                      >
+                        {type.AmountTypeName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={3} mt={3}>
-  <FormControl fullWidth>
-    <InputLabel>Amount Type</InputLabel>
-    <Select
-      value={amountType}
-      onChange={(e) => setAmountType(e.target.value)}
-      label="Amount Type"
-    >
-      {amountTypes.map((type) => (
-        <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
-          {type.AmountTypeName}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+              {amountType === "1" && (
+                <>
+                  <Grid item xs={4}>
+                    <TextField
+                      label="Cash Paid"
+                      type="number"
+                      value={cashPaid}
+                      onChange={(e) => setCashPaid(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">₹</InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={3} mt={3.5}>
+                    <DatePicker
+                      selected={cashDate.CashDate}
+                      onChange={handleDateChangeCash}
+                      dateFormat="yyyy-MM-dd"
+                      customInput={<TextField label="Cash date" fullWidth />}
+                    />
+                  </Grid>
+                </>
+              )}
 
-{amountType === '1' ? (
-  <>
-    <Grid item xs={4}>
-      <TextField
-        label="Cash Paid"
-        type="number"
-        value={cashPaid}
-        onChange={(e) => setCashPaid(e.target.value)}
-        fullWidth
-        margin="normal"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">₹</InputAdornment>
-          ),
-        }}
-      />
-    </Grid>
-    <Grid item xs={3} mt={3.5}>
-      <DatePicker
-        selected={cashDate.CashDate}
-        onChange={handleDateChangeCash}
-        dateFormat="yyyy-MM-dd"
-        customInput={<TextField label="Cash date" fullWidth />}
-      />
-    </Grid>
-    <Grid item xs={4}>
-      <TextField
-        select
-        label="Select Payment Type"
-        value={selectedPaymentType}
-        onChange={handleChangePayment}
-        fullWidth
-        margin="normal"
-      >
-        {paymentTypes.map((option) => (
-          <MenuItem
-            key={option.paymenttypeID}
-            value={option.paymenttypeName}
-          >
-            {option.paymenttypeName}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Grid>
-  </>
-) : (
-  <>
-    <Grid item xs={4}>
-      <TextField
-        label="Cheque Paid"
-        type="number"
-        value={chequePaid}
-        onChange={(e) => setChequePaid(e.target.value)}
-        fullWidth
-        margin="normal"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">₹</InputAdornment>
-          ),
-        }}
-      />
-    </Grid>
-    <Grid item xs={4}>
-      <TextField
-        label="Bank Name"
-        type="text"
-        value={bankName}
-        onChange={(e) => setBankName(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-    </Grid>
-    <Grid item xs={4}>
-      <TextField
-        label="Cheque Number"
-        type="number"
-        value={cheqNo}
-        onChange={(e) => setCheqNo(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-    </Grid>
-    <Grid item xs={3} mt={3.5}>
-      <DatePicker
-        selected={formData.AmountGiven}
-        onChange={handleDateChange}
-        dateFormat="yyyy-MM-dd"
-        customInput={<TextField label="Date" fullWidth />}
-      />
-    </Grid>
-    <Grid item xs={4}>
-      <TextField
-        select
-        label="Select Payment Type"
-        value={selectedPaymentType}
-        onChange={handleChangePayment}
-        fullWidth
-        margin="normal"
-      >
-        {paymentTypes.map((option) => (
-          <MenuItem
-            key={option.paymenttypeID}
-            value={option.paymenttypeName}
-          >
-            {option.paymenttypeName}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Grid>
-  </>
-)}
+              {amountType === "2" && (
+                <>
+                  {chequePayments.map((payment, index) => (
+                    <React.Fragment key={index}>
+                      {/* Display Payment Label */}
+                      <Grid item xs={12} mt={3}>
+                        <Typography variant="h6">
+                          Payment {index + 1}
+                        </Typography>
+                      </Grid>
+
+                      {showAmountType && (
+                        <Grid item xs={4} mt={3}>
+                          <FormControl fullWidth>
+                            <InputLabel>Amount Type</InputLabel>
+                            <Select
+                              value={payment.AmountTypeID || ""}
+                              onChange={(e) =>
+                                handleChequePaymentChange(
+                                  index,
+                                  "AmountTypeID",
+                                  e.target.value
+                                )
+                              }
+                              label="Amount Type"
+                            >
+                              {amountTypes.map((type) => (
+                                <MenuItem
+                                  key={type.AmountTypeID}
+                                  value={type.AmountTypeID}
+                                >
+                                  {type.AmountTypeName}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      )}
+
+                      <Grid item xs={4}>
+                        <TextField
+                          label="Cheque Paid"
+                          type="number"
+                          value={payment.chequePaid}
+                          onChange={(e) =>
+                            handleChequePaymentChange(
+                              index,
+                              "chequePaid",
+                              e.target.value
+                            )
+                          }
+                          fullWidth
+                          margin="normal"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                ₹
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
+                          label="Bank Name"
+                          type="text"
+                          value={payment.bankName}
+                          onChange={(e) =>
+                            handleChequePaymentChange(
+                              index,
+                              "bankName",
+                              e.target.value
+                            )
+                          }
+                          fullWidth
+                          margin="normal"
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
+                          label="Cheque Number"
+                          type="number"
+                          value={payment.cheqNo}
+                          onChange={(e) =>
+                            handleChequePaymentChange(
+                              index,
+                              "cheqNo",
+                              e.target.value
+                            )
+                          }
+                          fullWidth
+                          margin="normal"
+                        />
+                      </Grid>
+                      <Grid item xs={4} mt={3}>
+                        <DatePicker
+                          selected={payment.chequeDate}
+                          onChange={(date) => handleDateChange(date, index)}
+                          dateFormat="yyyy-MM-dd"
+                          customInput={<TextField label="Date" fullWidth />}
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
+                      {/* <Grid item xs={12} mt={2}> */}
+                    <IconButton
+                      onClick={handleAddChequePayment}
+                      color="primary"
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  {/* </Grid> */}
+            <IconButton
+              color="secondary"
+              onClick={() => handleRemoveChequePayment(index)}
+            >
+              <DeleteIcon sx={{ color: "red" }}/>
+            </IconButton>
+          </Grid>
+                    </React.Fragment>
+                    
+                  ))}
+   <Grid item xs={4}>
+              <TextField
+                select
+                label="Select Payment Type"
+                value={selectedPaymentType}
+                onChange={handleChangePayment}
+                fullWidth
+                margin="normal"
+              >
+                {paymentTypes.map((option) => (
+                  <MenuItem
+                    key={option.paymenttypeID}
+                    value={option.paymenttypeName}
+                  >
+                    {option.paymenttypeName}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+                 
+                </>
+              )}
+            </>
 
             {selectedPaymentType === "Partial payment" && (
               <>
@@ -995,15 +1117,7 @@ const handleSubmit = async () => {
                 </Grid>
               </>
             )}
-            <Grid item xs={12} container justifyContent="flex-end">
-              <Button
-                onClick={handleModalClose}
-                variant="contained"
-                color="primary"
-              >
-                Close
-              </Button>
-            </Grid>
+            
             <Grid item xs={12}>
               <Button
                 variant="contained"
@@ -1023,168 +1137,185 @@ const handleSubmit = async () => {
       </Modal>
 
       <Modal open={open} onClose={handleClose}>
-  <Card
-    style={{
-      maxWidth: "800px",
-      margin: "auto",
-      marginTop: "50px",
-      padding: "20px",
-    }}
-  >
-    <CardContent>
-      <Typography variant="h5" gutterBottom align="center">
-        Payment Details
-      </Typography>
-      <Grid container spacing={4} mb={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <DatePicker
-            selected={formData.fromdate}
-            onChange={(date) => handleDateChangePayment(date, "fromdate")}
-            dateFormat="dd-MM-yyyy"
-            className="form-control"
-            customInput={
-              <TextField
-                fullWidth
-                label="From When"
-                InputProps={{
-                  readOnly: true,
-                  sx: { width: "100%" },
-                }}
-              />
-            }
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <DatePicker
-            selected={formData.todate}
-            onChange={(date) => handleDateChangePayment(date, "todate")}
-            dateFormat="dd-MM-yyyy"
-            className="form-control"
-            customInput={
-              <TextField
-                fullWidth
-                label="Till When"
-                InputProps={{
-                  readOnly: true,
-                  sx: { width: "100%" },
-                }}
-              />
-            }
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={4}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
+        <Card
+          style={{
+            maxWidth: "800px",
+            margin: "auto",
+            marginTop: "50px",
+            padding: "20px",
+          }}
         >
-          <Button
-            variant="contained"
-            onClick={handleDateSearch}
-            style={{ width: "100%" }}
-          >
-            Search
-          </Button>
-        </Grid>
-      </Grid>
+          <CardContent>
+            <Typography variant="h5" gutterBottom align="center">
+              Payment Details
+            </Typography>
+            <Grid container spacing={4} mb={3}>
+              <Grid item xs={12} sm={6} md={4}>
+                <DatePicker
+                  selected={formData.fromdate}
+                  onChange={(date) => handleDateChangePayment(date, "fromdate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="From When"
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h6">Upcoming Payments</Typography>
-          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell>Flat Number</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Payment Type</TableCell>
-                  <TableCell>Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {mergedData.proccess_null?.length > 0 ? (
-                  mergedData.proccess_null.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.Name}</TableCell>
-                      <TableCell>{item.FlatNo}</TableCell>
-                      <TableCell>{item.Remarkamount}</TableCell>
-                      <TableCell>{item.PaymentType}</TableCell>
-                      <TableCell>{new Date(item.RemarkDate).toLocaleDateString()}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} align="center">
-                      No Upcoming Payments
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <DatePicker
+                  selected={formData.todate}
+                  onChange={(date) => handleDateChangePayment(date, "todate")}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  customInput={
+                    <TextField
+                      fullWidth
+                      label="Till When"
+                      InputProps={{
+                        readOnly: true,
+                        sx: { width: "100%" },
+                      }}
+                    />
+                  }
+                />
+              </Grid>
 
-        <Grid item xs={12}>
-          <Typography variant="h6">Received Payments</Typography>
-          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell>Flat Number</TableCell>
-                  <TableCell>Cash (A)</TableCell>
-                  <TableCell>Cheque (B)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {mergedData.proccess_one?.length > 0 ? (
-                  mergedData.proccess_one.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.Name}</TableCell>
-                      <TableCell>{item.FlatNo}</TableCell>
-                      <TableCell>{item.PaymentType === 'Cash' ? item.Cash : '-'}</TableCell>
-                      <TableCell>{item.PaymentType === 'Cheque' ? item.ChequeAmount : '-'}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} align="center">
-                      No Received Payments
-                    </TableCell>
-                  </TableRow>
-                )}
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={4}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Button
+                  variant="contained"
+                  onClick={handleDateSearch}
+                  style={{ width: "100%" }}
+                >
+                  Search
+                </Button>
+              </Grid>
+            </Grid>
 
-                {/* Totals Row */}
-                {mergedData.proccess_one?.length > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={2} align="right"><strong>Total</strong></TableCell>
-                    <TableCell><strong>{mergedData.totalCash}</strong></TableCell>
-                    <TableCell><strong>{mergedData.totalCheque}</strong></TableCell>
-                  </TableRow>
-                )}
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Upcoming Payments</Typography>
+                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Customer Name</TableCell>
+                        <TableCell>Flat Number</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Payment Type</TableCell>
+                        <TableCell>Date</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {mergedData.proccess_null?.length > 0 ? (
+                        mergedData.proccess_null.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.Name}</TableCell>
+                            <TableCell>{item.FlatNo}</TableCell>
+                            <TableCell>{item.Remarkamount}</TableCell>
+                            <TableCell>{item.PaymentType}</TableCell>
+                            <TableCell>
+                              {new Date(item.RemarkDate).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center">
+                            No Upcoming Payments
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
 
-                {/* Total Cost Row */}
-                {mergedData.proccess_one?.length > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={2} align="right"><strong>Total Cost</strong></TableCell>
-                    <TableCell colSpan={2}><strong>{mergedData.totalCost}</strong></TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-    </CardContent>
-  </Card>
-</Modal>
+              <Grid item xs={12}>
+                <Typography variant="h6">Received Payments</Typography>
+                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Customer Name</TableCell>
+                        <TableCell>Flat Number</TableCell>
+                        <TableCell>Cash (A)</TableCell>
+                        <TableCell>Cheque (B)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {mergedData.proccess_one?.length > 0 ? (
+                        mergedData.proccess_one.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.Name}</TableCell>
+                            <TableCell>{item.FlatNo}</TableCell>
+                            <TableCell>
+                              {item.PaymentType === "Cash" ? item.Cash : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.PaymentType === "Cheque"
+                                ? item.ChequeAmount
+                                : "-"}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} align="center">
+                            No Received Payments
+                          </TableCell>
+                        </TableRow>
+                      )}
 
+                      {/* Totals Row */}
+                      {mergedData.proccess_one?.length > 0 && (
+                        <TableRow>
+                          <TableCell colSpan={2} align="right">
+                            <strong>Total</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>{mergedData.totalCash}</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>{mergedData.totalCheque}</strong>
+                          </TableCell>
+                        </TableRow>
+                      )}
+
+                      {/* Total Cost Row */}
+                      {mergedData.proccess_one?.length > 0 && (
+                        <TableRow>
+                          <TableCell colSpan={2} align="right">
+                            <strong>Total Cost</strong>
+                          </TableCell>
+                          <TableCell colSpan={2}>
+                            <strong>{mergedData.totalCost}</strong>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Modal>
     </>
   );
 };

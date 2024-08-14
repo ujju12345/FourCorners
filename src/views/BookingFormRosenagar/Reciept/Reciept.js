@@ -12,9 +12,14 @@ import {
   Button,
   Grid,
   TableHead,
+  CardContent,
+  TextField,
 } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
+import { Card } from "mdi-material-ui";
+import { DatePicker } from "@mui/lab";
+import { Call } from "@mui/icons-material";
 
 const GlobalStyle = createGlobalStyle`
   @media print {
@@ -50,11 +55,16 @@ const InvoiceBox = styled(Box)({
 });
 
 const Reciept = ({ bookingID }) => {
-  console.log(bookingID, 'id bookinggg<<>>>> ayaa');
+  console.log(bookingID, 'id bookinggg<<>>>> ayaa UJJAWALLLLLL');
   const printRef = useRef();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    fromdate: new Date(), // Default to current date
+    toDate: new Date(), // Default to current date
+    Status: 1,
+  });
 
   const handlePrint = () => {
     const printContents = printRef.current.innerHTML;
@@ -72,12 +82,21 @@ const Reciept = ({ bookingID }) => {
     }
   }, [bookingID]);
 
-  const fetchData = async (id) => {
+  const fetchData = async (bookingID) => {
+    if (!formData.fromdate || !formData.toDate) {
+      console.error("From date or To date is undefined");
+      return;
+    }
+  
     try {
+      const formattedFromDate = formData.fromdate.toISOString().split('T')[0];
+      const formattedToDate = formData.toDate.toISOString().split('T')[0];
+  
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${id}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}&fromdate=${formattedFromDate}&toDate=${formattedToDate}`
       );
-      console.log("data aaya dekh", response.data);
+      
+      console.log("data fetched successfully", response.data);
       setData(response.data.data || []); // Ensure data is an array
       setLoading(false);
     } catch (error) {
@@ -85,6 +104,20 @@ const Reciept = ({ bookingID }) => {
       setError(error);
       setLoading(false);
     }
+  };
+  
+
+
+  const handleSearch = () => {
+    if (bookingID) {
+      fetchData(bookingID);
+    }
+  };
+  const handleDateChange = (date, field) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: date,
+    }));
   };
 
   if (loading) {
@@ -97,15 +130,73 @@ const Reciept = ({ bookingID }) => {
 
   return (
     <>
-      <GlobalStyle />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handlePrint}
-        style={{ marginBottom: "10px" }}
-      >
-        Print
-      </Button>
+       {/* <CardContent>
+              <Card>
+                <CardContent> */}
+
+                  <Grid container spacing={3}>
+                
+                    <Box item xs={12} sm={3}>
+                      <DatePicker
+                        selected={formData.fromdate}
+                        onChange={(date) => handleDateChange(date, "fromdate")}
+                        dateFormat="dd-MM-yyyy"
+                        className="form-control"
+                        customInput={
+                          <TextField
+                            fullWidth
+                            label="From When"
+                            InputProps={{
+                              readOnly: true,
+                              sx: { width: "100%" },
+                            }}
+                          />
+                        }
+                      />
+                    </Box>
+
+                    <Box item xs={12} sm={4}>
+                      <DatePicker
+                        selected={formData.todate}
+                        onChange={(date) => handleDateChange(date, "todate")}
+                        dateFormat="dd-MM-yyyy"
+                        className="form-control"
+                        customInput={
+                          <TextField
+                            fullWidth
+                            label="Till When"
+                            InputProps={{
+                              readOnly: true,
+                              sx: { width: "100%" },
+                            }}
+                          />
+                        }
+                      />
+                    </Box>
+
+                    <Box
+                      item
+                      xs={10}
+                      mb={5}
+                      sm={3}
+                      sx={{ display: "flex", alignItems: "flex-end" }}
+                    >
+                      <Button variant="contained" onClick={handleSearch}>
+                        Search
+                      </Button>
+                    </Box>
+                  </Grid>
+                {/* </CardContent>
+              </Card>
+
+            
+
+
+
+            </CardContent> */}
+   
+
+      
 
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
@@ -263,27 +354,27 @@ const Reciept = ({ bookingID }) => {
         </div>
 
         <TableContainer component={Paper}>
-  <Table style={{ border: "1px solid black" }}>
-    <TableHead>
-      <TableRow>
-        <TableCell>Cheque Date</TableCell>
-        <TableCell>Bank Name</TableCell>
-        <TableCell>Cheque Number</TableCell>
-        <TableCell>Cheque Amount</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {data.map(payment => (
-        <TableRow key={payment.paymentID}>
-          <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
-          <StyledTableCell>{payment.BankName}</StyledTableCell>
-          <StyledTableCell>{payment.ChequeNumber}</StyledTableCell>
-          <StyledTableCell>{payment.ChequeAmount}</StyledTableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-</TableContainer>
+        <Table style={{ border: "1px solid black" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Cheque Date</TableCell>
+              <TableCell>Bank Name</TableCell>
+              <TableCell>Cheque Number</TableCell>
+              <TableCell>Cheque Amount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((payment) => (
+              <TableRow key={payment.paymentID}>
+                <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
+                <StyledTableCell>{payment.BankName}</StyledTableCell>
+                <StyledTableCell>{payment.ChequeNumber}</StyledTableCell>
+                <StyledTableCell>{payment.ChequeAmount}</StyledTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
 
         <TableContainer component={Paper}>

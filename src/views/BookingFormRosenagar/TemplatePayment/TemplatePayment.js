@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
+import { Box, Typography, Table, TableBody,FormControl , InputLabel,Select, MenuItem,  TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
@@ -44,7 +44,8 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filterOption, setFilterOption] = useState('remarksWithCreateDate');
   const handlePrint = () => {
     const printContents = printRef.current.innerHTML;
     const originalContents = document.body.innerHTML;
@@ -59,10 +60,12 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
     fetchData();
   }, [bookingID]);
 
-  const fetchData = async () => {
+  
+
+  const fetchData = async (selectedFilter) => {
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-singel-bookingremark.php?BookingID=${bookingID}`);
-      console.log("data aaya dekh", response.data);
+      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${bookingID}&filter=${selectedFilter}`);
+      console.log("data aaya dekh<<<<<>>>>>>>>>>>>>", response.data);
       setData(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -71,6 +74,10 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
       setLoading(false);
     }
   };
+  const handleFilterChange = (event) => {
+    setFilterOption(event.target.value);
+  };
+  const filteredRemarks = filterOption === 'remarksWithCreateDate' ? data?.remarksWithCreateDate : data?.otherRemarks;
 
 
   if (loading) {
@@ -85,9 +92,36 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
   return (
     <>
       <GlobalStyle />
-      <Button variant="contained" color="primary"   onClick={onGoBack}  style={{ marginBottom: '10px' }}>
-        Go back 
-      </Button>
+      <Box display="flex" alignItems="center" justifyContent="space-between" marginBottom={2}>
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={onGoBack}
+    style={{ padding: '10px 20px', fontWeight: 'bold'}}
+  >
+    Go back
+  </Button>
+
+  <FormControl style={{ minWidth: 150 , marginRight:20 }}>
+    <InputLabel id="filter-label">Filter</InputLabel>
+    <Select
+      labelId="filter-label"
+      id="filter-select"
+      label="Filter"
+      value={filterOption}
+      onChange={handleFilterChange}
+    >
+      <MenuItem value="remarksWithCreateDate">Original Remark</MenuItem>
+      <MenuItem value="all">All</MenuItem>
+      <MenuItem value="otherRemarks">Updated Remark</MenuItem>
+    </Select>
+  </FormControl>
+</Box>
+
+    {/* )} */}
+
+   
+    
 
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
@@ -274,35 +308,41 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
 
 
 
-      <TableRow sx={{ padding: 0 }}>
-        <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bolder', padding: 0 }} colSpan={10}>ORIGINAL REMARKS:</StyledTableCell>
+<TableRow sx={{ padding: 0 }}>
+        <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bolder', padding: 0 }} colSpan={10}>
+          ORIGINAL REMARKS:
+        </StyledTableCell>
       </TableRow>
 
-      {/* Map over remarksWithCreateDate array */}
-      {data.remarksWithCreateDate && data.remarksWithCreateDate.map((remark, index) => (
-        <TableRow key={`original-${index}`} sx={{ padding: 0 }}>
+      {/* Render remarks based on the selected filter */}
+      {filterOption !== 'all' && filteredRemarks && filteredRemarks.map((remark, index) => (
+        <TableRow key={`${filterOption}-${index}`} sx={{ padding: 0 }}>
           <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
             {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
           </StyledTableCell>
         </TableRow>
       ))}
 
-      <TableRow sx={{ padding: 0 }}>
-        <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 'bolder', padding: 0 }} colSpan={10}>UPDATED REMARKS:</StyledTableCell>
-      </TableRow>
+      {/* Render all remarks when 'all' is selected */}
+      {filterOption === 'all' && (
+        <>
+          {data?.remarksWithCreateDate && data?.remarksWithCreateDate.map((remark, index) => (
+            <TableRow key={`remarksWithCreateDate-${index}`} sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
+                {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+              </StyledTableCell>
+            </TableRow>
+          ))}
 
-      {/* Map over otherRemarks array */}
-      {data.otherRemarks && data.otherRemarks.map((remark, index) => (
-        <TableRow key={`updated-${index}`} sx={{ padding: 0 }}>
-          <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-            {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
-          </StyledTableCell>
-        </TableRow>
-      ))}
-
-
-
-
+          {data?.otherRemarks && data?.otherRemarks.map((remark, index) => (
+            <TableRow key={`otherRemarks-${index}`} sx={{ padding: 0 }}>
+              <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
+                {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+              </StyledTableCell>
+            </TableRow>
+          ))}
+        </>
+      )}
 
     </TableBody>
   </Table>

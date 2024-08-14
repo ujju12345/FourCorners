@@ -353,7 +353,6 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
           onHistoryClick={handleShowHistory}
           onEdit={handleEdit}
           handleTemplateClick={handleFormSubmitSuccess}
-
           onChequeReceiptClick={handleChequeReciept}
           handleReportClick={handleReport}
           onCheque={handleCheque}
