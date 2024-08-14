@@ -38,11 +38,12 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   console.log(editData, "Edit data aaya");
   const initialRemark = {
+    Proccess:"",
     RemarkName: "",
     RemarkDate: null, // or new Date() if you want a default date
     AmountTypeID: "",
     Remarkamount: "",
-    Loan: 0,
+    Loan:"" ,
   };
 
   const initialFormData = {
@@ -241,7 +242,11 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       const newRemarks = [...remarks];
 
       if (type === "checkbox") {
-        newRemarks[index][field] = checked ? 1 : 0;
+        if (field === "Loan") {
+          newRemarks[index][field] = checked ? 1 : 0;
+        } else if (field === "Proccess") {
+          newRemarks[index][field] = checked ? 1 : 0;
+        }
       } else {
         newRemarks[index][field] = value;
       }
@@ -606,6 +611,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         : null,
       RemarkUpdateID: index + 1,
       Status: 1,
+
       CreateUID: 1,
     }));
     console.log(formattedRemarks, "Formatted Remarks");
@@ -1273,17 +1279,30 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   </Grid>
 
                   {/* Loan Process Checkbox */}
+
                   <Grid item xs={2}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={remark.Loan === 1}
-                          onChange={(e) => handleChange(e, index, "Loan")}
-                        />
-                      }
-                      label="Loan Process"
-                    />
-                  </Grid>
+  <FormControlLabel
+    control={
+      <Checkbox
+        checked={remark.Proccess === 1}
+        onChange={(e) => handleChange(e, index, "Proccess")}
+      />
+    }
+    label="Token"
+  />
+</Grid>
+<Grid item xs={2}>
+  <FormControlLabel
+    control={
+      <Checkbox
+        checked={remark.Loan === 1}
+        onChange={(e) => handleChange(e, index, "Loan")}
+      />
+    }
+    label="Loan Process"
+  />
+</Grid>
+
 
                   {/* Add and Delete Buttons */}
                   {index === remarks.length - 1 && (
