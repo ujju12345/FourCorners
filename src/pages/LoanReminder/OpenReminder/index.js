@@ -289,23 +289,16 @@ const TodaysLoanReminder = () => {
           <WelcomeScreen />
         )}
 
-        {leadData && (
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Converted Lead Details
-            </Typography>
-            {/* Render lead data details */}
-            <pre>{JSON.stringify(leadData, null, 2)}</pre>
-          </Box>
-        )}
+       
 
         {showAddDetails && !showDashboard && (
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
-          <OpenLoanlist
+{!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+          <OpenpaymentTemplate
             item={rowDataToUpdate}
+            rows={rows}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}

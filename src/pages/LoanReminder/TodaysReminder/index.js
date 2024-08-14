@@ -16,6 +16,7 @@ import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
 import TodaysLoanRemidnerSidebar from 'src/views/SidebarLoan/TodaysLoanRemidnerSidebar';
 import TodaysLoanlist from 'src/views/ListLoanReminder/TodaysLoanlist';
+import OpenpaymentTemplate from 'src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate';
 
 const TodaysLoanReminder = () => {
   const router = useRouter();
@@ -303,29 +304,17 @@ const TodaysLoanReminder = () => {
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
-          <TodaysLoanlist
+{!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+          <OpenpaymentTemplate
             item={rowDataToUpdate}
+            rows={rows}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />
         )}
 
-        {!loading && !error && showHistory && (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-          >
-            <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
-              User History
-            </Typography>
-            <HistoryTelecalling item={rowDataToUpdate} onBack={handleBack} />
-          </Box>
-        )}
+        
       </Grid>
     </Grid>
   );

@@ -646,7 +646,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
       Remarks: formattedRemarks,
     };
 
-    console.log(dataToSend, "Edit Data to Send<<<<>>>>>>>>>>>>>");
+    console.log(dataToSend, "Edit Data to Send<<<<>>>>>>>>>>>>><<<<<<<<");
 
     try {
       const response = await axios.post(url, dataToSend, {

@@ -16,6 +16,7 @@ import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
 import BacklogLoanReminderSidebar from 'src/views/SidebarLoan/BacklogLoanReminderSidebar';
 import BacklogLoanList from 'src/views/ListLoanReminder/BacklogLoanList';
+import OpenpaymentTemplate from 'src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate';
 
 const BacklogReminder = () => {
   const router = useRouter();
@@ -303,9 +304,10 @@ const BacklogReminder = () => {
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
-          <BacklogLoanList
+{!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+          <OpenpaymentTemplate
             item={rowDataToUpdate}
+            rows={rows}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}

@@ -283,7 +283,7 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
       ) : error ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <Typography variant="body1" color="error">
-            Error loading data. Please try again later.
+            No data found !
           </Typography>
         </Box>
       ) : filteredRows.length === 0 ? (
