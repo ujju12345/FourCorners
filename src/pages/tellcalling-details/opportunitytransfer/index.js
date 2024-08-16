@@ -29,6 +29,29 @@ const TransferOpportunityData  = () => {
   const [cookies, setCookie] = useCookies(["amr"]);
   const [counts, setCounts] = useState(null);
 
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 25;
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
+      );
+      console.log("API Response:", response.data);
+      setRows(response.data.data || []);
+      setCounts(response.data.counts || {});
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
   const renderStats = () => {
     console.log(counts, 'dekh>>>>>>>>>>>>>>>>>>');
     
@@ -156,8 +179,6 @@ const TransferOpportunityData  = () => {
           </Typography>
 
 
-
-
           <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
             <StatisticsCard />
           </Grid>
@@ -166,46 +187,28 @@ const TransferOpportunityData  = () => {
     );
   };
 
-  useEffect(() => {
-    fetchDataDashboard();
-  }, []);
+  // useEffect(() => {
+  //   fetchDataDashboard();
+  // }, []);
 
-  const fetchDataDashboard = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-sidebar-transfertooppo.php?UserID=${userid}`);
-      setRows(response.data.data || []);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchDataDashboard = async () => {
+  //   const userid = cookies.amr?.UserID || 'Role';
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-sidebar-transfertooppo.php?UserID=${userid}`);
+  //     setRows(response.data.data || []);
+  //   } catch (error) {
+  //     setError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   
 
-  const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 25;
-    try {
-      const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
-      );
-      console.log("API Response:", response.data);
-      setRows(response.data.data || []);
-      setCounts(response.data.counts || {});
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-      setLoading(false);
-    }
-  };
 
 
   const handleDelete = async (id) => {

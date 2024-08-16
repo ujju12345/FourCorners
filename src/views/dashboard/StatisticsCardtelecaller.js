@@ -17,11 +17,14 @@ import { useCookies } from "react-cookie";
 
 const StatisticsCardtelecaller = () => {
   const [loading, setLoading] = useState(false);
-  const [cookies] = useCookies(["amr"]);
-  const userid = cookies.amr?.UserID || 'Role';
+  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
+
+  
   const [apiData, setApiData] = useState(null);
 
   useEffect(() => {
+  const userid = cookies.amr?.UserID || 'Role';
+
     const fetchApiData = async () => {
       setLoading(true);
       try {
@@ -39,7 +42,7 @@ const StatisticsCardtelecaller = () => {
     };
 
     fetchApiData();
-  }, [userid]);
+  }, []);
 
   const renderStats = () => {
     if (loading) {
@@ -53,6 +56,7 @@ const StatisticsCardtelecaller = () => {
     }
 
     const counts = apiData?.counts || {};
+    console.log(counts , 'SEE THE COUNT OF TELE<<<<<<<>>>>>>>>>>>');
 
     return (
       <Grid container spacing={[5, 0]}>
@@ -198,7 +202,7 @@ const StatisticsCardtelecaller = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total {apiData ? apiData.counts.totalFollowup : '--'} follow ups
+              Total {apiData ? apiData?.counts.totalFollowup : '--'} follow ups
             </Box>{' '}
             😎 this month
           </Typography>
