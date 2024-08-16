@@ -669,7 +669,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         },
       }}
     >
-      Follow Up Date: {item?.NextFollowUpDate}
+      Location: {item?.CityName}/{item.Location}
     </Typography>
    
   </Box>

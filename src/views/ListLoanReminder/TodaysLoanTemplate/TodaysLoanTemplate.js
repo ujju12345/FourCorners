@@ -9,11 +9,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useCookies } from "react-cookie";
 import Swal from 'sweetalert2';
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AddIcon from "@mui/icons-material/Add";
-import HistoryIcon from "@mui/icons-material/History";
-import EditIcon from "@mui/icons-material/Edit";
-import GetAppIcon from "@mui/icons-material/GetApp";
+
 
 const StyledTableCell = styled(TableCell)({
   border: '2px solid black',
@@ -25,7 +21,7 @@ const StyledTableCell = styled(TableCell)({
 const InvoiceBox = styled(Box)({
   maxWidth: '1500px', // Increased width
   margin: 'auto',
-  padding: '20px', // Increased padding to give more space
+  padding: '20px', 
   border: '1px solid #eee',
   fontSize: '11px',
   lineHeight: '18px',
@@ -100,12 +96,11 @@ const InvoiceBox = styled(Box)({
           console.log(response.data.data, 'aagaya daata remakrs');
           const bookingRemarksData = response.data.data;
           setBookingRemarks(bookingRemarksData);
-  
-          // Assuming you want to fetch the details for the first booking remark in the list
+
           if (bookingRemarksData.length > 0) {
             const firstBookingRemarkID = bookingRemarksData[0].BookingremarkID;
             await fetchBookingRemarkDetails(firstBookingRemarkID);
-            setSelectedBookingRemark(firstBookingRemarkID); // Set the first one as default
+            setSelectedBookingRemark(firstBookingRemarkID); 
           }
         }
       } catch (error) {

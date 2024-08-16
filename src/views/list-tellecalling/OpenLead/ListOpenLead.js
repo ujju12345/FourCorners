@@ -34,7 +34,7 @@ import { useCookies } from "react-cookie";
 import CloseIcon from '@mui/icons-material/Close';
 
 const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
-
+console.log(item , 'dekh bhai ,open lead');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -689,7 +689,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                Location: {item.CityName}/{item?.Location}
               </Typography>
             </div>
           </Box>

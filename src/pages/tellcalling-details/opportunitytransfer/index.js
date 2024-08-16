@@ -14,6 +14,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp';
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
+import HistoryOpportunityTransfer from 'src/views/history-telecalling/HistoryOpportunityTransfer/HistoryOpportunityTransfer';
 
 
 const TransferOpportunityData  = () => {
@@ -290,6 +291,20 @@ const TransferOpportunityData  = () => {
             onEdit={handleEdit}
           />
         )}
+         {!loading && !error && showHistory && (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
+          User History
+        </Typography>
+        <HistoryOpportunityTransfer item={rowDataToUpdate} onBack={handleBack} />
+      </Box>
+    )}
 
       </Grid>
     </Grid>

@@ -656,7 +656,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   mr: 2, // Add margin-right to separate the items
                 }}
               >
-                Location: {item?.Location}
+                Location: {item?.CityName}/{item?.Location}
               </Typography>
               <Typography
                 variant="body2"
