@@ -307,7 +307,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
      
     </Grid>
 
-    <Grid item>
+    {/* <Grid item>
       <Button
         variant="contained"
         startIcon={<ArrowForwardIosIcon />}
@@ -330,7 +330,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
      
     </Grid>
 
-       
+        */}
       </Grid>
       <Grid
         container
@@ -611,7 +611,25 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <ShareIcon />
         </IconButton>
         </a>
-
+        <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
         <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
           <IconButton
             aria-label="email"
