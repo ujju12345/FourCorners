@@ -715,7 +715,7 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
                 </IconButton>
               </a>
 
-              <a style={{ marginRight:1 }}>
+              <a style={{ marginRight:30 }}>
                 <IconButton
                   aria-label="share"
                   size="small"

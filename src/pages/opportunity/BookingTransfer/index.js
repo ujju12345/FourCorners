@@ -25,11 +25,12 @@ import {
 import { useCookies } from "react-cookie";
 
 import BookingTransferSidebar from "src/views/bookingtransfer/BookingTransferSidebar";
-import BookingTransferTemplate from "src/views/bookingtransfer/BookingTransferTemplate";
 import TrendingUp from "mdi-material-ui/TrendingUp";
 import CurrencyUsd from "mdi-material-ui/CurrencyUsd";
 import CellphoneLink from "mdi-material-ui/CellphoneLink";
 import AccountOutline from "mdi-material-ui/AccountOutline";
+import BookingTransferList from "src/views/bookingtransfer/BookingTransferList";
+import HistoryTranferBooking from "src/views/history-apportunity/HistoryTranferBooking/HistoryTranferBooking";
 
 const BacklogPayment = () => {
   const [rows, setRows] = useState([]);
@@ -334,13 +335,28 @@ const BacklogPayment = () => {
           rowDataToUpdate &&
           !showHistory &&
           !showAddDetails && (
-            <BookingTransferTemplate
-              item={rowDataToUpdate}
+            <BookingTransferList
+                       item={rowDataToUpdate}
               onDelete={handleDelete}
               onHistoryClick={handleShowHistory}
               onEdit={handleEdit}
             />
           )}
+          {!loading && !error && showHistory && (
+          <Box 
+            display="flex"
+            flexDirection="row"
+            alignItems="flex-start"
+            minHeight="100vh"
+          >
+            <Box flex="1">
+              <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
+                User History
+              </Typography>
+              <HistoryTranferBooking item={rowDataToUpdate} onBack={handleBack} />
+            </Box>
+          </Box>
+        )}
       </Grid>
     </Grid>
   );

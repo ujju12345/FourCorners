@@ -75,7 +75,7 @@ const TransferOpportunityData  = () => {
       {
         stats: counts.transfertooppo,
         color: 'warning',
-        title: 'Transfer to Opportunity',
+        title: 'Transfer to Booking',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {

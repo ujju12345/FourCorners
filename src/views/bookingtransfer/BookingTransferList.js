@@ -32,7 +32,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 // import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-const BookingTransferTemplate = ({ item, onDelete, onEdit, onHistoryClick }) => {
+const BookingTransferList = ({ item, onDelete, onEdit, onHistoryClick }) => {
   console.log(item , 'CIDD MIL JAYEGAA<<<>>>>>>');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
@@ -537,6 +537,26 @@ const BookingTransferTemplate = ({ item, onDelete, onEdit, onHistoryClick }) => 
                   <ShareIcon />
                 </IconButton>
               </a>
+              <a style={{ marginRight:1 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
+
 
               <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
                 <IconButton
@@ -554,6 +574,7 @@ const BookingTransferTemplate = ({ item, onDelete, onEdit, onHistoryClick }) => 
                 >
                   <EmailIcon />
                 </IconButton>
+                
               </a>
               <a
                 href={`https://wa.me/${item?.Mobile}?text=${whatsappText}`}
@@ -839,4 +860,4 @@ const BookingTransferTemplate = ({ item, onDelete, onEdit, onHistoryClick }) => 
   );
 };
 
-export default BookingTransferTemplate;
+export default BookingTransferList;
