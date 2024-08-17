@@ -230,7 +230,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 3390,
+   
         padding: 5,
         height: 700,
         overflowY: "auto",
