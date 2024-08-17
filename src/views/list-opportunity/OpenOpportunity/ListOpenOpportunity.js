@@ -32,9 +32,7 @@ import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
 
-
 const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
-
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -116,11 +114,10 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     }
 
     const formData = {
-      UserID:userID,
-      Cid:item?.Cid,
-      Oid:item?.Oid,
+      UserID: userID,
+      Cid: item?.Cid,
+      Oid: item?.Oid,
       CreateUID: cookies?.amr?.UserID || 1,
-
     };
 
     console.log(formData, "COVERT TO Booking Data 1");
@@ -144,9 +141,8 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         // Show success message using SweetAlert
         Swal.fire({
           icon: "success",
-          title: 
-             "Lead Converted to Booking Successfully",
-            
+          title: "Lead Converted to Booking Successfully",
+
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -325,7 +321,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
 
   return (
     <>
-     <Grid
+      <Grid
         container
         justifyContent="center"
         spacing={2}
@@ -390,29 +386,32 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
           </Button>
         </Grid>
         <Menu
-            anchorEl={anchorElOpportunity}
-            open={Boolean(anchorElOpportunity)}
-            onClose={handleCloseBooking}
-            PaperProps={{
-              style: {
-                maxHeight: 300, // Set the desired height in pixels
-                overflowY: "auto", // Make the content scrollable if it exceeds the height
-              },
-            }}
-          >
-            <MenuItem disabled>
-              <Typography variant="subtitle1">Convert to Booking</Typography>
-            </MenuItem>
-            {userMaster.length > 0 ? (
-              userMaster.map((user, index) => (
-                <MenuItem key={user.UserID}  onClick={(event) => handleMenuItemClick(event, user.UserID)}>
+          anchorEl={anchorElOpportunity}
+          open={Boolean(anchorElOpportunity)}
+          onClose={handleCloseBooking}
+          PaperProps={{
+            style: {
+              maxHeight: 300, // Set the desired height in pixels
+              overflowY: "auto", // Make the content scrollable if it exceeds the height
+            },
+          }}
+        >
+          <MenuItem disabled>
+            <Typography variant="subtitle1">Convert to Booking</Typography>
+          </MenuItem>
+          {userMaster.length > 0 ? (
+            userMaster.map((user, index) => (
+              <MenuItem
+                key={user.UserID}
+                onClick={(event) => handleMenuItemClick(event, user.UserID)}
+              >
                 {index + 1}. {user.Name}
               </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>No data available</MenuItem>
-            )}
-          </Menu>
+            ))
+          ) : (
+            <MenuItem disabled>No data available</MenuItem>
+          )}
+        </Menu>
         <Grid item>
           <Button
             variant="contained"
@@ -455,9 +454,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         justifyContent="center"
         spacing={2}
         sx={{ marginBottom: 5 }}
-      >
-     
-      </Grid>
+      ></Grid>
       <Modal
         open={open}
         onClose={handleClose}
@@ -537,7 +534,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
               />
             </Grid>
             <Grid item xs={6}>
@@ -545,14 +541,13 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 fullWidth
                 // label="Next Follow-Up Time"
                 type="time"
-                name="NextFollowUpTime"                               
+                name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
                 label="Next Follow Up Time"
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
               />
             </Grid>
             <Grid item xs={6}>
@@ -633,7 +628,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               ml: 20,
             }}
           >
-              <div style={{ marginRight: 5 }}>
+            <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -670,10 +665,10 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-               Location: {item?.CityName}/{item.LocationName}
+                Location: {item?.CityName}/{item.LocationName}
               </Typography>
             </div>
-          
+
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
@@ -695,102 +690,102 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Typography>
             </div>
           </Box>
-          <Box sx={{ display: "flex", ml:45, mt: 7 }}>
-    <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
-      <IconButton
-        aria-label="phone"
-        size="small"
-        sx={{
-          color: "green",
-          backgroundColor: "#e0f7fa",
-          borderRadius: "50%",
-          padding: "10px",
-          "&:hover": {
-            backgroundColor: "#b2ebf2",
-          },
-        }}
-      >
-        <PhoneIcon />
-      </IconButton>
-    </a>
-    <a style={{ marginRight: 10 }}>
-      <IconButton
-        aria-label="share"
-        size="small"
-        sx={{
-          color: "blue",
-          backgroundColor: "#e3f2fd",
-          borderRadius: "50%",
-          padding: "10px",
-          marginRight: 15,
-          "&:hover": {
-            backgroundColor: "#bbdefb",
-          },
-        }}
-      >
-        <ShareIcon />
-      </IconButton>
-    </a>
-    <a style={{ marginRight:35 }}>
-                <IconButton
-                  aria-label="share"
-                  size="small"
-                  sx={{
-                    color: "#000",
-                    backgroundColor: "#e3f2fd",
-                    borderRadius: "50%",
-                    padding: "10px",
-                    marginRight: 1,
-                    "&:hover": {
-                      backgroundColor: "#bbdefb",
-                    },
-                  }}
-                  onClick={handleHistoryClick}
-                >
-                  <HistoryIcon />
-                </IconButton>
-              </a>
-    <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
-      <IconButton
-        aria-label="email"
-        size="small"
-        sx={{
-          color: "red",
-          backgroundColor: "#ffebee",
-          borderRadius: "50%",
-          padding: "10px",
-          "&:hover": {
-            backgroundColor: "#ffcdd2",
-          },
-        }}
-      >
-        <EmailIcon />
-      </IconButton>
-    </a>
-    <a
-      href={`https://wa.me/${item?.Mobile}?text=${encodeURIComponent(
-        whatsappText
-      )}`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <IconButton
-        aria-label="whatsapp"
-        size="small"
-        sx={{
-          color: "green",
-          backgroundColor: "#e8f5e9",
-          borderRadius: "50%",
-          padding: "10px",
-          "&:hover": {
-            backgroundColor: "#c8e6c9",
-          },
-        }}
-      >
-        <WhatsAppIcon />
-      </IconButton>
-    </a>
-  </Box>
+          <Box sx={{ display: "flex", ml: 45, mt: 7 }}>
+            <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+              <IconButton
+                aria-label="phone"
+                size="small"
+                sx={{
+                  color: "green",
+                  backgroundColor: "#e0f7fa",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#b2ebf2",
+                  },
+                }}
+              >
+                <PhoneIcon />
+              </IconButton>
+            </a>
+            <a style={{ marginRight: 10 }}>
+              <IconButton
+                aria-label="share"
+                size="small"
+                sx={{
+                  color: "blue",
+                  backgroundColor: "#e3f2fd",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  marginRight: 15,
+                  "&:hover": {
+                    backgroundColor: "#bbdefb",
+                  },
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </a>
+            <a style={{ marginRight: 35 }}>
+              <IconButton
+                aria-label="share"
+                size="small"
+                sx={{
+                  color: "#000",
+                  backgroundColor: "#e3f2fd",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  marginRight: 1,
+                  "&:hover": {
+                    backgroundColor: "#bbdefb",
+                  },
+                }}
+                onClick={handleHistoryClick}
+              >
+                <HistoryIcon />
+              </IconButton>
+            </a>
+            <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+              <IconButton
+                aria-label="email"
+                size="small"
+                sx={{
+                  color: "red",
+                  backgroundColor: "#ffebee",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#ffcdd2",
+                  },
+                }}
+              >
+                <EmailIcon />
+              </IconButton>
+            </a>
+            <a
+              href={`https://wa.me/${item?.Mobile}?text=${encodeURIComponent(
+                whatsappText
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconButton
+                aria-label="whatsapp"
+                size="small"
+                sx={{
+                  color: "green",
+                  backgroundColor: "#e8f5e9",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#c8e6c9",
+                  },
+                }}
+              >
+                <WhatsAppIcon />
+              </IconButton>
+            </a>
+          </Box>
           <Box
             sx={{
               width: "auto",
@@ -836,7 +831,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Purpose 
+                    Purpose
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.PurposeName}
@@ -877,7 +872,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             }}
           >
             <Grid container spacing={3}>
-           
               <Grid item xs={4}>
                 <Card
                   variant="outlined" // Use outlined variant for a border without shadow
@@ -931,7 +925,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Area to 
+                    Area to
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.AreaTo}
@@ -941,7 +935,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             </Grid>
           </Box>
 
-       
           <Box
             sx={{
               width: "auto",
@@ -952,7 +945,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
             }}
           >
             <Grid container spacing={3}>
-         
               <Grid item xs={4}>
                 <Card
                   variant="outlined" // Use outlined variant for a border without shadow
@@ -966,7 +958,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Scale 
+                    Scale
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.ScaleName}
@@ -1092,9 +1084,6 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </Grid>
             </Grid>
           </Box>
-
-        
-         
         </Paper>
       </Card>
     </>

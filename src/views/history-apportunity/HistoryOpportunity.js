@@ -206,6 +206,143 @@ export default function HistoryOpportunity({ item }) {
           Add New Follow Up
         </Button>
       </Box>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            minWidth: 500,
+            maxWidth: 700, // Adjust the maxWidth to accommodate two text fields in a row
+            mt: 5,
+            mx: 2,
+            minHeight: 400, // Adjust the minHeight to increase the height of the modal
+            height: "auto",
+          }}
+        >
+          <IconButton
+            aria-label="cancel"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h7"
+            component="h3"
+            gutterBottom
+          >
+            Select Next Follow-Up Date and Time
+          </Typography>
+
+          <Grid container spacing={2} mt={8}>
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel>Current Update</InputLabel>
+                <Select
+                  value={formData.CurrentUpdateID}
+                  onChange={handleCurrentUpdate}
+                  label="Current Update"
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 180, // Adjust as needed
+                      },
+                    },
+                  }}
+                >
+                  {currentUpdate.map((bhk) => (
+                    <MenuItem
+                      key={bhk.CurrentUpdateID}
+                      value={bhk.CurrentUpdateID}
+                    >
+                      {bhk.CurrentUpdateName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                // label="Next Follow-Up Date"
+                type="date"
+                name="NextFollowUpDate"
+                value={formData.NextFollowUpDate}
+                onChange={handleChange}
+                label="Next Follow Up Date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                // label="Next Follow-Up Time"
+                type="time"
+                name="NextFollowUpTime"
+                value={formData.NextFollowUpTime}
+                onChange={handleChange}
+                label="Next Follow Up Time"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Interest In"
+                type="text"
+                name="Interest"
+                value={formData.Interest}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Note"
+                type="text"
+                name="Note"
+                value={formData.Note}
+                onChange={handleChange}
+                InputLabelProps={{ sx: { mb: 1 } }}
+              />
+            </Grid>
+          </Grid>
+
+          <Box sx={{ textAlign: "left" }}>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  marginRight: 3.5,
+                  marginTop: 15,
+                  backgroundColor: "#9155FD",
+                  color: "#FFFFFF",
+                }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Box>
+        </Box>
+      </Modal>
       <Box
         component="img"
         sx={{
