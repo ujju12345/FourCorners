@@ -677,6 +677,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
+                
                 sx={{
                
                   color: "#333333",

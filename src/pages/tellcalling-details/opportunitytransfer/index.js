@@ -60,34 +60,34 @@ const TransferOpportunityData  = () => {
     }
 
     const dynamicSalesData = [
-      {
-        stats: counts?.todayFollowup,
-        title: 'Today Followups',
-        color: 'primary',
-        icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-      },
-      {
-        stats: counts?.backlogFollowup,
-        title: 'Backlog Followups',
-        color: 'success',
-        icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-      },
+      // {
+      //   stats: counts?.todayFollowup,
+      //   title: 'Today Followups',
+      //   color: 'primary',
+      //   icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      // },
+      // {
+      //   stats: counts?.backlogFollowup,
+      //   title: 'Backlog Followups',
+      //   color: 'success',
+      //   icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      // },
       {
         stats: counts.transfertooppo,
         color: 'warning',
         title: 'Transfer to Booking',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
-      {
-        stats: counts.totalFollowup,
-        color: 'info',
-        title: 'Total Followups',
-        icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
-      }
+      // {
+      //   stats: counts.totalFollowup,
+      //   color: 'info',
+      //   title: 'Total Followups',
+      //   icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+      // }
     ];
 
     return dynamicSalesData.map((item, index) => (
-      <Grid item xs={12} sm={3} key={index}>
+      <Grid item xs={12} ml={80} key={index}>
         <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
             variant='rounded'
@@ -117,10 +117,10 @@ const TransferOpportunityData  = () => {
     }
 
     return [
-      { name: 'Today Followups', value: counts.todayFollowup, color: '#8884d8' },
-      { name: 'Backlog Followups', value: counts.backlogFollowup, color: '#82ca9d' },
-      { name: 'Next Followups', value: counts.nextFollowup, color: '#ffc658' },
-      { name: 'Total Followups', value: counts.totalFollowup, color: '#a4de6c' }
+      { name: 'Tranfer to booking', value: counts.transfertooppo, color: '#8884d8' },
+      // { name: 'Backlog Followups', value: counts.backlogFollowup, color: '#82ca9d' },
+      // { name: 'Next Followups', value: counts.nextFollowup, color: '#ffc658' },
+      // { name: 'Total Followups', value: counts.totalFollowup, color: '#a4de6c' }
     ];
   };
 
