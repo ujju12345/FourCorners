@@ -394,6 +394,8 @@ const Listprojectbookng = ({
 
   const handleOpenPayment = () => setOpen(true);
   const handleClose = () => setModalOpen(false);
+  const handleCloseReport = () => setOpen(false);
+
 
   const handleDateSearch = async () => {
     console.log("press");
@@ -1147,8 +1149,8 @@ const Listprojectbookng = ({
           <CardContent>
           <IconButton
             aria-label="cancel"
-            onClick={handleClose}
-            sx={{ position: "absolute", top: 6, right: 10 }}
+            onClick={handleCloseReport}
+            // sx={{ position: "absolute", top: 6, right: 10 }}
           >
             <CancelIcon sx={{ color: "red" }} />
           </IconButton>

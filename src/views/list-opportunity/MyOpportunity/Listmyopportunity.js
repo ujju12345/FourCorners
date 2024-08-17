@@ -670,7 +670,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
                   },
                 }}
               >
-               Location {item?.CityName}/{item.Location}
+               Location {item?.CityName}/{item.LocationName}
               </Typography>
             </div>
           
@@ -732,7 +732,7 @@ const Listmyopportunity = ({ item, onDelete, onEdit , onHistoryClick }) => {
         <ShareIcon />
       </IconButton>
     </a>
-    <a style={{ marginRight:1 }}>
+    <a style={{ marginRight:50 }}>
                 <IconButton
                   aria-label="share"
                   size="small"

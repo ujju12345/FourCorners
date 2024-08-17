@@ -24,6 +24,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import HistoryIcon from "@mui/icons-material/History";
 
 const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
 console.log(item , 'dekh bhai not intert');
@@ -95,12 +96,7 @@ console.log(item , 'dekh bhai not intert');
     setOpen(false);
   };
 
-  const handleHistoryClick = () => {
-    if (onHistoryClick) {
-      // toggleSidebar(false);
-      onHistoryClick(item); // Pass item to parent component for showing history
-    }
-  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,6 +117,13 @@ console.log(item , 'dekh bhai not intert');
     };
     fetchData();
   }, [item]);
+
+  const handleHistoryClick = () => {
+    if (onHistoryClick) {
+      // toggleSidebar(false);
+      onHistoryClick(item); // Pass item to parent component for showing history
+    }
+  };
 
 
   const convertTooppo = async () => {
@@ -577,6 +580,25 @@ console.log(item , 'dekh bhai not intert');
         <ShareIcon />
       </IconButton>
     </a>
+    <a style={{ marginRight:30 }}>
+                <IconButton
+                  aria-label="share"
+                  size="small"
+                  sx={{
+                    color: "#000",
+                    backgroundColor: "#e3f2fd",
+                    borderRadius: "50%",
+                    padding: "10px",
+                    marginRight: 15,
+                    "&:hover": {
+                      backgroundColor: "#bbdefb",
+                    },
+                  }}
+                  onClick={handleHistoryClick}
+                >
+                  <HistoryIcon />
+                </IconButton>
+              </a>
     <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
       <IconButton
         aria-label="email"

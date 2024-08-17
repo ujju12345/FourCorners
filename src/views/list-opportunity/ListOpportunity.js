@@ -673,7 +673,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
     </Typography>
    
   </Box>
-  <Box sx={{ display: "flex", ml:45, mt: 7 }}>
+  <Box sx={{ display: "flex", ml:35, mt: 7 }}>
     <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
       <IconButton
         aria-label="phone"
@@ -709,7 +709,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
         <ShareIcon />
       </IconButton>
     </a>
-    <a style={{ marginRight:1 }}>
+    <a style={{ marginRight:30 }}>
                 <IconButton
                   aria-label="share"
                   size="small"

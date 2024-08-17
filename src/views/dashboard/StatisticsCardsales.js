@@ -165,7 +165,7 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={2}>
+        {/* <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
               variant='rounded'
@@ -182,7 +182,7 @@ const StatisticsCardsales = () => {
             </Avatar>
            
           </Box>
-        </Grid>
+        </Grid> */}
       </Grid>
     );
   };

@@ -19,6 +19,7 @@ import Avatar from '@mui/material/Avatar'
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts'
 import ListNotIntrested from 'src/views/list-opportunity/NotIntrested/ListNotIntrested';
 import OpportunityNotinterested from 'src/views/opportunitysidebar/NotInrested/OpportunityNotinterested';
+import HistoryNotIntereted from 'src/views/history-apportunity/HistoryNotIntereted/HistoryNotIntereted';
 
 const NotInterested = () => {
   const [rows, setRows] = useState([]);
@@ -259,6 +260,22 @@ const WelcomeScreen = () => {
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />
+        )}
+
+{!loading && !error && showHistory && (
+          <Box 
+            display="flex"
+            flexDirection="row"
+            alignItems="flex-start"
+            minHeight="100vh"
+          >
+            <Box flex="1">
+              <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}>
+                User History
+              </Typography>
+              <HistoryNotIntereted item={rowDataToUpdate} onBack={handleBack} />
+            </Box>
+          </Box>
         )}
 
       </Grid>
