@@ -670,7 +670,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                NextFollowUpDate: {item?.NextFollowUpDate}
+               Location: {item?.CityName}/{item.Location}
               </Typography>
             </div>
           

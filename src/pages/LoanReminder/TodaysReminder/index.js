@@ -17,6 +17,7 @@ import AccountOutline from 'mdi-material-ui/AccountOutline';
 import TodaysLoanRemidnerSidebar from 'src/views/SidebarLoan/TodaysLoanRemidnerSidebar';
 import TodaysLoanlist from 'src/views/ListLoanReminder/TodaysLoanlist';
 import OpenpaymentTemplate from 'src/views/payment-reminder/OpenpaymentTemplate/OpenpaymentTemplate';
+import TodaysLoanTemplate from 'src/views/ListLoanReminder/TodaysLoanTemplate/TodaysLoanTemplate';
 
 const TodaysLoanReminder = () => {
   const router = useRouter();
@@ -305,7 +306,7 @@ const TodaysLoanReminder = () => {
         )}
 
 {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
-          <OpenpaymentTemplate
+          <TodaysLoanTemplate
             item={rowDataToUpdate}
             rows={rows}
             onDelete={handleDelete}

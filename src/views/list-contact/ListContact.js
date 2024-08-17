@@ -26,6 +26,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const ListContact = ({ item, onDelete, onEdit , onHistoryClick }) => {
+  console.log(item , 'dekh bhaiiiiii<<<<<>>>>>>>>>');
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
@@ -757,6 +758,7 @@ Email
         </Typography>
       </Card>
     </Grid>
+   
   </Grid>
 </Box>
 
@@ -781,17 +783,17 @@ Email
         </Typography>
       </Card>
     </Grid> */}
+    
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
-        <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
-          Source
+        <Typography variant="body2" sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          Locality
         </Typography>
         <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-          {item?.SourceName}
+          {item?.Location}
         </Typography>
       </Card>
     </Grid>
-  
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ borderRadius: 1, padding: "10px" }}>
         <Typography variant="body2" sx={{ fontWeight: 500, fontSize: "0.9rem" }}>
@@ -800,6 +802,7 @@ Email
         <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>{item?.Name}</Typography>
       </Card>
     </Grid>
+
   </Grid>
 </Box>
 

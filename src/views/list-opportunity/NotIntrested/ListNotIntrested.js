@@ -26,7 +26,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
-
+console.log(item , 'dekh bhai not intert');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -536,7 +536,7 @@ const ListNotIntrested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                Location: {item?.CityName}/{item.Location}
               </Typography>
             </div>
           </Box>

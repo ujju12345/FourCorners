@@ -91,7 +91,7 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.BookingremarkID?.toString().includes(lowerCaseQuery) ||
+          item?.Name?.toString().includes(lowerCaseQuery) ||
           item?.Remarkamount?.toString().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);

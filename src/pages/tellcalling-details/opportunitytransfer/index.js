@@ -14,6 +14,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp';
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
+import HistoryOpportunityTransfer from 'src/views/history-telecalling/HistoryOpportunityTransfer/HistoryOpportunityTransfer';
 
 
 const TransferOpportunityData  = () => {
@@ -27,6 +28,29 @@ const TransferOpportunityData  = () => {
   const [firstVisit, setFirstVisit] = useState(true);
   const [cookies, setCookie] = useCookies(["amr"]);
   const [counts, setCounts] = useState(null);
+
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  const fetchData = async () => {
+    const userid = cookies.amr?.UserID || 25;
+    try {
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
+      );
+      console.log("API Response:", response.data);
+      setRows(response.data.data || []);
+      setCounts(response.data.counts || {});
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
 
   const renderStats = () => {
     console.log(counts, 'dekh>>>>>>>>>>>>>>>>>>');
@@ -155,8 +179,6 @@ const TransferOpportunityData  = () => {
           </Typography>
 
 
-
-
           <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
             <StatisticsCard />
           </Grid>
@@ -165,46 +187,28 @@ const TransferOpportunityData  = () => {
     );
   };
 
-  useEffect(() => {
-    fetchDataDashboard();
-  }, []);
+  // useEffect(() => {
+  //   fetchDataDashboard();
+  // }, []);
 
-  const fetchDataDashboard = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-sidebar-transfertooppo.php?UserID=${userid}`);
-      setRows(response.data.data || []);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchDataDashboard = async () => {
+  //   const userid = cookies.amr?.UserID || 'Role';
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-sidebar-transfertooppo.php?UserID=${userid}`);
+  //     setRows(response.data.data || []);
+  //   } catch (error) {
+  //     setError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   
 
-  const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 25;
-    try {
-      const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
-      );
-      console.log("API Response:", response.data);
-      setRows(response.data.data || []);
-      setCounts(response.data.counts || {});
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error);
-      setLoading(false);
-    }
-  };
 
 
   const handleDelete = async (id) => {
@@ -290,6 +294,20 @@ const TransferOpportunityData  = () => {
             onEdit={handleEdit}
           />
         )}
+         {!loading && !error && showHistory && (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <Typography variant="body2" sx={{ marginTop: 5, fontWeight: "bold", alignItems: 'center', textAlign: 'center', fontSize: 20 }}>
+          User History
+        </Typography>
+        <HistoryOpportunityTransfer item={rowDataToUpdate} onBack={handleBack} />
+      </Box>
+    )}
 
       </Grid>
     </Grid>
