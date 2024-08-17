@@ -97,19 +97,28 @@ const Contact = () => {
         title: 'Total contact',
         color: 'info',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-      },
-      
+      }
     ];
   
     return dynamicSalesData.map((item, index) => (
-      <Grid item xs={12} sm={3} key={index}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Grid item xs={12} sm={4} key={index}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: 3,
+            borderRadius: 2,
+            boxShadow: 2,
+            bgcolor: 'background.paper'
+          }}
+        >
           <Avatar
             variant="rounded"
             sx={{
-              mr: 3,
-              width: 44,
-              height: 44,
+              mr: 2,
+              width: 60,
+              height: 56,
               boxShadow: 3,
               color: 'common.white',
               backgroundColor: (theme) => theme.palette[item.color].main
@@ -117,31 +126,19 @@ const Contact = () => {
           >
             {item.icon}
           </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="caption">{item.title}</Typography>
-            <Typography variant="h6">{item.stats}</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+            <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+              {item.title}
+            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              {item.stats}
+            </Typography>
           </Box>
         </Box>
       </Grid>
     ));
   };
   
-  const getPieData = () => {
-    if (!counts) {
-      return [];
-    }
-  
-    return [
-      { name: 'Not Transferred to lead', value: parseInt(counts.count_null), color: '#8884d8' },
-      { name: 'Transferred to lead', value: parseInt(counts.count_one), color: '#82ca9d' },
-      { name: 'Total Contacts', value: parseInt(counts.total_count), color: '#ffc658' },
-      
-    ];
-  };
-  
-  const pieData = getPieData();
-  
-
   const StatisticsCard = () => {
     return (
       <>
@@ -149,7 +146,7 @@ const Contact = () => {
           title="Statistics Card"
           subheader={
             <Typography variant="body2">
-              <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
+              <Box component="span" sx={{ fontWeight: 600, color: 'text.primary' }}>
                 Total 48.5% growth
               </Box>{' '}
               😎 this month
@@ -164,12 +161,21 @@ const Contact = () => {
           }}
         />
         <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
-          <Grid container spacing={[5, 0]}>
+          <Grid container spacing={5} justifyContent="center">
             {renderStats()}
             <Grid item xs={12}>
               <ResponsiveContainer width="100%" height={400}>
                 <PieChart>
-                  <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="#8884d8" label>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                    fill="#8884d8"
+                    label
+                  >
                     {pieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
@@ -185,6 +191,21 @@ const Contact = () => {
     );
   };
   
+  
+  const getPieData = () => {
+    if (!counts) {
+      return [];
+    }
+  
+    return [
+      { name: 'Not Transferred to lead', value: parseInt(counts.count_null), color: '#8884d8' },
+      { name: 'Transferred to lead', value: parseInt(counts.count_one), color: '#82ca9d' },
+      { name: 'Total Contacts', value: parseInt(counts.total_count), color: '#ffc658' },
+      
+    ];
+  };
+  
+  const pieData = getPieData();
 
   const WelcomeScreen = () => {
     return (

@@ -234,7 +234,7 @@ const SidebarProjectDetails = ({ onEdit, onItemClick, onCreate  , onDashboardCli
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-           Project Details
+           Project Detail
           </Typography>
           <Box display="flex" alignItems="center">
           {/* <Button

@@ -22,125 +22,6 @@ import SidebarProjectMaster from 'src/views/SidebarProjectMaster/SidebarProjectM
 import ProjectManage from 'src/views/addProject/ProjectManage';
 import Listprojectmaster from 'src/views/ListProjectMaster/Listprojectmaster';
 
-const salesData = [
-  {
-    stats: '245k',
-    title: 'Sales',
-    color: 'primary',
-    icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '12.5k',
-    title: 'Customers',
-    color: 'success',
-    icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '1.54k',
-    color: 'warning',
-    title: 'Products',
-    icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
-    color: 'info',
-    title: 'Revenue',
-    icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
-  }
-];
-
-const pieData = [
-  { name: 'Sales', value: 2000, color: '#3f51b5' },
-  { name: 'Customers', value: 1200, color: '#4caf50' },
-  { name: 'Products', value: 1540, color: '#ff9800' },
-  { name: 'Revenue', value: 8000, color: '#00acc1' }
-];
-
-const renderStats = () => {
-  return salesData.map((item, index) => (
-    <Grid item xs={12} sm={3} key={index}>
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar
-          variant='rounded'
-          sx={{
-            mr: 3,
-            width: 44,
-            height: 44,
-            boxShadow: 3,
-            color: 'common.white',
-            backgroundColor: `${item.color}.main`
-          }}
-        >
-          {item.icon}
-        </Avatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant='caption'>{item.title}</Typography>
-          <Typography variant='h6'>{item.stats}</Typography>
-        </Box>
-      </Box>
-    </Grid>
-  ));
-};
-
-const StatisticsCard = () => {
-  return (
-    <>
-      <CardHeader
-        title='Statistics Card'
-        subheader={
-          <Typography variant='body2'>
-            <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 48.5% growth
-            </Box>{' '}
-            😎 this month
-          </Typography>
-        }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: '2rem !important',
-            letterSpacing: '0.15px !important'
-          }
-        }}
-      />
-      <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
-        <Grid container spacing={[5, 0]}>
-          {renderStats()}
-          <Grid item xs={12}>
-            <ResponsiveContainer width='100%' height={400}>
-              <PieChart>
-                <Pie data={pieData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={120} fill='#8884d8' label>
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </>
-  );
-};
-
-const WelcomeScreen = () => {
-  return (
-    <Card>
-      <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-        <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
-        <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
-          Welcome to Project Master Dashboard
-        </Typography>
-        <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
-          <StatisticsCard />
-        </Grid>
-      </Box>
-    </Card>
-  );
-};
-
 const ProjectMaster = () => {
   const router = useRouter();
   const { lead } = router.query;
@@ -153,6 +34,9 @@ const ProjectMaster = () => {
   const [showAddDetails, setShowAddDetails] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [firstVisit, setFirstVisit] = useState(true);
+  const [counts, setCounts] = useState(null);
+  const [totalProjects, setTotalProjects] = useState(0);
+
 
   useEffect(() => {
     fetchData();
@@ -168,30 +52,134 @@ const ProjectMaster = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projectmaster.php');
+      const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-projecttotal.php');
+      console.log(response.data); // Verify API response
       setRows(response.data.data || []);
+      setTotalProjects(response.data.totalProjects || 0); // Ensure totalProjects is set
+      setLoading(false);
     } catch (error) {
       setError(error);
     } finally {
       setLoading(false);
     }
   };
+  
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.post('https://ideacafe-backend.vercel.app/api/proxy/api-delete-telecalling.php', {
-        Tid: id,
-        DeleteUID: 1
-      });
-      if (response.data.status === 'Success') {
-        setRows(rows.filter(row => row.Tid !== id));
-        setRowDataToUpdate(null);
-        setShowAddDetails(false);
-      }
-    } catch (error) {
-      setError(error);
+
+
+  const renderStats = () => {
+    if (!counts && totalProjects === 0) { // Check if totalProjects is zero
+      return null;
     }
+  
+    const dynamicSalesData = [
+      {
+        stats: totalProjects, // This should reflect the correct count
+        title: 'Total Projects',
+        color: 'primary',
+        icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      }
+    ];
+    
+  
+    return dynamicSalesData.map((item, index) => (
+      <Grid item xs={12} ml={80} key={index}>
+        <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: `${item.color}.main`
+            }}
+          >
+            {item.icon}
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>{item.title}</Typography>
+            <Typography variant='h6'>{item.stats}</Typography> {/* Display totalProjects here */}
+          </Box>
+        </Box>
+      </Grid>
+    ));
   };
+  
+  const getPieData = () => {
+    if (counts) {
+      return [];
+    }
+
+    return [
+      { name: 'Total Projects', value: totalProjects, color: '#8884d8' },
+    
+    ];
+  };
+
+  const pieData = getPieData();
+
+  const StatisticsCard = () => {
+    return (
+      <>
+        <CardHeader
+          title='Statistics Card'
+          // subheader={
+          //   <Typography variant='body2'>
+          //     <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
+          //       Total 48.5% growth
+          //     </Box>{' '}
+          //     😎 this month
+          //   </Typography>
+          // }
+          titleTypographyProps={{
+            sx: {
+              mb: 2.5,
+              lineHeight: '2rem !important',
+              letterSpacing: '0.15px !important'
+            }
+          }}
+        />
+        <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
+          <Grid container spacing={[5, 0]}>
+            {renderStats()}
+            <Grid item xs={12}>
+              <ResponsiveContainer width='100%' height={400}>
+                <PieChart>
+                  <Pie data={pieData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={120} fill='#8884d8' label>
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </>
+    );
+  };
+
+  const WelcomeScreen = () => {
+    return (
+      <Card>
+        <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
+          <PieChartIcon sx={{ fontSize: 60, color: "#333" }} />
+          <Typography variant="h5" sx={{ marginTop: 2, fontWeight: "bold" }}>
+            Welcome to Project Dashboard
+          </Typography>
+  
+          <Grid variant="body1" sx={{ marginTop: 10, marginLeft: 20 }}>
+            <StatisticsCard />
+          </Grid>
+        </Box>
+      </Card>
+    );
+  };
+  
 
   const handleBack = () => {
     setEditData(null);
@@ -263,7 +251,7 @@ const ProjectMaster = () => {
         {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
           <Listprojectmaster
             item={rowDataToUpdate}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />

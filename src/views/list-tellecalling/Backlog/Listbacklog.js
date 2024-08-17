@@ -680,7 +680,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Location: {item?.CityName}/{item.Location}
+                Location: {item.CityName}/{item.Location}
               </Typography>
             </div>
           </Box>

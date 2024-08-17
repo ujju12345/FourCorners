@@ -548,7 +548,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                NextFollowUpDate: {item?.NextFollowUpDate}
+                Location: {item?.CityName}/{item.LocationName}
               </Typography>
             </div>
            

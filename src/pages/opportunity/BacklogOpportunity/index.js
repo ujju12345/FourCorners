@@ -49,7 +49,7 @@ const BacklogOpportunity = () => {
       const counts = response.data.counts || {
         todayFollowup: 0,
         backlogFollowup: 0,
-        transfertooppo: 0,
+        transfertobooking: 0,
         totalFollowup: 0,
         nextFollowup: 0
       };
@@ -82,9 +82,9 @@ const BacklogOpportunity = () => {
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.transfertooppo || 0,
+        stats: counts.transfertobooking || 0,
         color: 'warning',
-        title: 'Transfer to Opportunity',
+        title: 'Transfer to Booking',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {

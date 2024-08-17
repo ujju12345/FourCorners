@@ -184,7 +184,7 @@ const UploadExcel = ({ show, rowData }) => {
           
             </Box>
           </Grid>
-          <Grid item xs={12} md={2}>
+          {/* <Grid item xs={12} md={2}>
             <Box display="flex" alignItems="center">
             <input
                 type="file"
@@ -195,7 +195,7 @@ const UploadExcel = ({ show, rowData }) => {
               />
 
             </Box>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} md={4}>
             <Box display="flex" alignItems="center">
             <Button

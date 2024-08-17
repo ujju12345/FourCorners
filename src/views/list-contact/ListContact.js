@@ -578,7 +578,7 @@ const handleNavigation = () => {
                   },
                 }}
               >
-                City: {item?.CityName}
+                City: {item?.CityName}/{item.Location}
               </Typography>
             </div> 
             <div style={{ marginRight: 5 }}>

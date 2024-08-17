@@ -302,7 +302,8 @@ const OpportunityNotinterested = ({ onItemClick, onCreate ,onDashboardClick}) =>
                 <Avatar
                   alt={item.CName}
                   sx={{ width: 40, height: 40, margin: 2 }}
-                  src="/images/avatars/1.png"                />
+                  src="/images/avatars/1.png"
+                   />
               </ListItemAvatar>
               <ListItemText
                 primary={

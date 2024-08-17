@@ -536,7 +536,7 @@ console.log(item , 'dekh bhai not intert');
                   },
                 }}
               >
-                Location: {item?.CityName}/{item.Location}
+                Location: {item?.CityName}/{item.LocationName}
               </Typography>
             </div>
           </Box>

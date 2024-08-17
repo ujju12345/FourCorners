@@ -104,9 +104,7 @@ const TabAccount = ({ show }) => {
                 <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
                   Add Company Details
                 </Typography>
-                <Button variant="contained" onClick={handleNavigation}>
-                  List
-                </Button>
+             
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>

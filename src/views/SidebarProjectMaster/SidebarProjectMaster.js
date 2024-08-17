@@ -84,7 +84,7 @@ const SidebarProjectMaster = ({ onEdit, onItemClick, onCreate }) => {
     } else {
       const filteredData = rows.filter(
         (item) =>
-          item?.ProjectName?.toLowerCase().includes(lowerCaseQuery) ||
+          item?.CompanyName?.toLowerCase().includes(lowerCaseQuery) ||
           item?.CompanyName?.toLowerCase().includes(lowerCaseQuery)
       );
       setFilteredRows(filteredData);

@@ -139,8 +139,8 @@ const StatisticsCardsales = () => {
               <BookmarkIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Transfer To Opportunity</Typography>
-              <Typography variant='h6'>{counts.transfertooppo ?? '--'}</Typography>
+              <Typography variant='caption'>Transfer To Booking</Typography>
+              <Typography variant='h6'>{counts.transfertobooking ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>

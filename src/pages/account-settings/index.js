@@ -95,14 +95,7 @@ const AccountSettings = () => {
            <Grid item xs={12}>
         
 
-            <Button
-              variant="contained"
-              sx={{ marginRight: 3.5 }}
-              onClick={handleDownload}
-              style={{ marginBottom: "8px", float: "right" }}
-            >
-              Download
-            </Button>
+           
           </Grid>
      
 
