@@ -41,6 +41,7 @@ import { useCookies } from "react-cookie";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
+import TemplatePayment from "../TemplatePayment/TemplatePayment";
 
 const NoDataIcon = () => (
   <Avatar
@@ -53,7 +54,6 @@ const NoDataIcon = () => (
 const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
-  handleTemplateClick,
   onEdit,
   onCheque,
 }) => {
@@ -71,6 +71,8 @@ const Listprojectbookng = ({
   const [selectedWing, setSelectedWing] = useState(null);
   const [wingDetails, setWingDetails] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openTemplate, setOpenTemplate] = useState(false);
+
   const [amountType, setAmountType] = useState("");
   const [page, setPage] = useState(0);
   const [bookingID, setBookingID] = useState(null);
@@ -93,6 +95,8 @@ const Listprojectbookng = ({
   const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
   const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
+
+
   const [showAmountType, setShowAmountType] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState(null);
@@ -287,6 +291,12 @@ const Listprojectbookng = ({
     handleMenuClose();
   };
 
+  const handleTemplateClick = (id) =>{
+    setBookingID(id); // Set the BookingID state
+    handleOpenTemplate(selectedRowMenu); // Open the modal
+    handleMenuClose();
+  }
+
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
       sx={{ fontWeight: "bold", fontSize: "1rem", cursor: "pointer" }}
@@ -393,7 +403,11 @@ const Listprojectbookng = ({
   };
 
   const handleOpenPayment = () => setOpen(true);
+  const handleOpenTemplate = () => setOpenTemplate(true);
+
   const handleClose = () => setModalOpen(false);
+  const handleCloseTemplate = () => setOpenTemplate(false);
+
   const handleCloseReport = () => setOpen(false);
 
 
@@ -1139,6 +1153,21 @@ const Listprojectbookng = ({
         </Box>
       </Modal>
 
+      <Modal open={openTemplate} onClose={handleCloseTemplate}>
+  <Card
+    style={{
+      maxWidth: "800px",
+      margin: "auto",
+      marginTop: "50px",
+      height: "90vh", // Set height relative to the viewport
+      padding: "20px",
+      overflowY: "auto", // Enable vertical scrolling if content overflows
+    }}
+  >
+    <TemplatePayment bookingID={bookingID}  handleCloseTemplate={handleCloseTemplate}/>
+  </Card>
+</Modal>
+
       <Modal open={open} onClose={handleClose}>
         <Card
           style={{
@@ -1160,7 +1189,7 @@ const Listprojectbookng = ({
               Payment Details
             </Typography>
     
-    
+
             <Grid container spacing={4} mb={3}>
               <Grid item xs={12} sm={6} md={4}>
                 <DatePicker

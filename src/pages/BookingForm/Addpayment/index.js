@@ -352,13 +352,13 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
           onDelete={handleDelete}
           onHistoryClick={handleShowHistory}
           onEdit={handleEdit}
-          handleTemplateClick={handleFormSubmitSuccess}
+          // handleTemplateClick={handleFormSubmitSuccess}
           onChequeReceiptClick={handleChequeReciept}
           handleReportClick={handleReport}
           onCheque={handleCheque}
         />
       )}
-      {showTemplate && <TemplatePayment bookingID={bookingID} onGoBack={handleBack} />}
+      {showTemplate && <TemplatePayment  onGoBack={handleBack} />}
       {showReceipt && <Reciept bookingID={bookingIDCheque} />}
       {!loading && !error && showHistory && (
         <Box

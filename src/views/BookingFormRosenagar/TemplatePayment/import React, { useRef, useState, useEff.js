@@ -46,7 +46,15 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
   const [error, setError] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filterOption, setFilterOption] = useState('remarksWithCreateDate');
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const originalContents = document.body.innerHTML;
 
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload the page to reset the original contents
+  };
 
   useEffect(() => {
     fetchData();
@@ -56,7 +64,7 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
 
   const fetchData = async (selectedFilter) => {
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${bookingID}&filter=${selectedFilter}`);
+      const response = await axios.get(https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${bookingID}&filter=${selectedFilter});
       console.log("data aaya dekh<<<<<>>>>>>>>>>>>>", response.data);
       setData(response.data.data);
       setLoading(false);
@@ -109,7 +117,6 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
     </Select>
   </FormControl>
 </Box>
-    {/* )} */}
 
    
     
@@ -307,7 +314,7 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
 
       {/* Render remarks based on the selected filter */}
       {filterOption !== 'all' && filteredRemarks && filteredRemarks.map((remark, index) => (
-        <TableRow key={`${filterOption}-${index}`} sx={{ padding: 0 }}>
+        <TableRow key={${filterOption}-${index}} sx={{ padding: 0 }}>
           <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
             {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
           </StyledTableCell>
@@ -318,7 +325,7 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
       {filterOption === 'all' && (
         <>
           {data?.remarksWithCreateDate && data?.remarksWithCreateDate.map((remark, index) => (
-            <TableRow key={`remarksWithCreateDate-${index}`} sx={{ padding: 0 }}>
+            <TableRow key={remarksWithCreateDate-${index}} sx={{ padding: 0 }}>
               <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
                 {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
               </StyledTableCell>
@@ -326,7 +333,7 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
           ))}
 
           {data?.otherRemarks && data?.otherRemarks.map((remark, index) => (
-            <TableRow key={`otherRemarks-${index}`} sx={{ padding: 0 }}>
+            <TableRow key={otherRemarks-${index}} sx={{ padding: 0 }}>
               <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
                 {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
               </StyledTableCell>
@@ -363,4 +370,3 @@ const TemplatePayment = ({ bookingID , onGoBack }) => {
 };
 
 export default TemplatePayment;
-
