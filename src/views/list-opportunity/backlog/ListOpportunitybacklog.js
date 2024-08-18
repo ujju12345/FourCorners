@@ -687,7 +687,7 @@ const ListOpportunitybacklog = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                Alternate Number: {item?.OtherNumbers}
               </Typography>
             </div>
           </Box>

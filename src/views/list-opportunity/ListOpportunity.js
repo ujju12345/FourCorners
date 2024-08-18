@@ -637,7 +637,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Looking For: {item?.LookingTypeName}
+                AlternateMobileNo: {item?.OtherNumbers}
               </Typography>
               <Typography
                 variant="body2"
@@ -823,10 +823,10 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Time period
+                   Looking For
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.PropertyAgeName}
+                    {item?.LookingTypeName}
                   </Typography>
                 </Card>
               </Grid>

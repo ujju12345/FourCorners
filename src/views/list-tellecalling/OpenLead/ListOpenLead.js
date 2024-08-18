@@ -651,26 +651,7 @@ console.log(item , 'dekh bhai ,open lead');
                 Source: {item?.SourceName}
               </Typography>
             </div>
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                NextFollowUpDate: {item?.NextFollowUpDate}
-              </Typography>
-            </div>
+    
           
             <div style={{ marginRight: 5 }}>
               <Typography
@@ -690,6 +671,26 @@ console.log(item , 'dekh bhai ,open lead');
                 }}
               >
                 Location: {item.CityName}/{item?.Location}
+              </Typography>
+            </div>
+            <div style={{ mr: 5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#333333",
+                  fontSize: "0.7rem",
+                  minWidth: "auto",
+                  padding: "5px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: 2,
+                  minHeight: 20,
+                  marginLeft: 2,
+                  "&:hover": {
+                    backgroundColor: "#dcdcdc",
+                  },
+                }}
+              >
+                Alternate Mobile: {item?.OtherNumbers}
               </Typography>
             </div>
           </Box>

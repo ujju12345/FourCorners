@@ -518,7 +518,7 @@ console.log(item , 'dekh bhai not intert');
                   },
                 }}
               >
-                NextFollowUpDate: {item?.NextFollowUpDate}
+                Alternate Mobile Number: {item?.OtherNumbers}
               </Typography>
             </div>
           

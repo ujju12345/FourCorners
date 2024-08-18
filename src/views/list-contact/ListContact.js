@@ -599,7 +599,7 @@ const handleNavigation = () => {
                   },
                 }}
               >
-                Attended By: {item?.Name}
+                Alternate Mobile: {item?.OtherNumbers}
               </Typography>
             </div>
           </Box>

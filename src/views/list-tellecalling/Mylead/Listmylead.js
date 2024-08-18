@@ -33,6 +33,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 const Listmylead = ({ item, onDelete, onEdit, onHistoryClick }) => {
+  console.log(item , 'aagaya dekh data');
 
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {

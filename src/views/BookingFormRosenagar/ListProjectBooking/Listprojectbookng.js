@@ -529,6 +529,8 @@ const Listprojectbookng = ({
           title: "Data Submitted Successfully",
           showConfirmButton: false,
           timer: 1000,
+        }).then(() => {
+          window.location.reload();
         });
   
         handleModalClose();
@@ -1157,6 +1159,8 @@ const Listprojectbookng = ({
             <Typography variant="h5" gutterBottom align="center">
               Payment Details
             </Typography>
+    
+    
             <Grid container spacing={4} mb={3}>
               <Grid item xs={12} sm={6} md={4}>
                 <DatePicker
