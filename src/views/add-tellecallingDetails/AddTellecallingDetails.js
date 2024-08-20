@@ -47,7 +47,6 @@ const AddTellecallingDetails = ({
     Mobile: "",
     AlternateMobileNo: "",
     TelephoneNo: null,
-    AlternateTelephoneNo: null,
     Email: "",
     ProjectID: "",
     EstimatedbudgetID: "",

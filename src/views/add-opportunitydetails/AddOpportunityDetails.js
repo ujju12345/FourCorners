@@ -240,7 +240,7 @@ const AddOpportunityDetails = ({
   }, []);
 
   // useEffect(() => {
-  //   fetchDataOpportunity();
+  //   fetchDataOppor.tunity();
   // }, []);
 
   // const fetchDataOpportunity = async () => {

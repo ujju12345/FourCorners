@@ -44,7 +44,9 @@ const InvoiceBox = styled(Box)({
     const [selectedBookingRemark, setSelectedBookingRemark] = useState("");
     const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
     const [bookingRemarks, setBookingRemarks] = useState([]);
-    const [formData, setFormData] = useState("");
+    const [formData, setFormData] = useState({
+      Note:"",
+    });
   
     const [error, setError] = useState(null);
 
@@ -545,7 +547,7 @@ const InvoiceBox = styled(Box)({
       {data.otherRemarks && data.otherRemarks.map((remark, index) => (
         <TableRow key={`updated-${index}`} sx={{ padding: 0 }}>
           <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-            {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+            {index + 1}. {remark.Remarkamount} {remark.Note} {remark.RemarkDate}
           </StyledTableCell>
         </TableRow>
       ))}
