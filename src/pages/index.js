@@ -53,16 +53,17 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const Dashboard = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    fromdate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
-    todate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
+    FromDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
+    ToDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
     SourceName: "",
+    UserID:"",
     Status: 1,
   });
   const [cookies] = useCookies(["amr"]);
   const [telecallingData, setTelecallingData] = useState(null);
   const [source, setSource] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
@@ -106,9 +107,9 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        UserID: cookies?.amr?.UserID,
-        fromdate: formData?.fromdate?.toISOString(),
-        todate: formData?.todate?.toISOString(),
+        UserID: formData.UserID,
+        FromDate: formData?.FromDate?.toISOString(),
+        ToDate: formData?.ToDate?.toISOString(),
         SourceName: formData?.SourceName,
       });
 
@@ -142,6 +143,19 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
+    // Fetch the data from the API
+    axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telesales.php')
+      .then(response => {
+        if (response.data.status === 'Success') {
+          setUsers(response.data.data);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching the users:', error);
+      });
+  }, []);
+
+  useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
       .then((response) => {
@@ -169,17 +183,32 @@ const Dashboard = () => {
   };
   const handleSource = (event) => {
     const { value } = event.target;
-
+  
     setErrors((prevErrors) => ({
       ...prevErrors,
       SourceName: undefined,
     }));
-
-    setFormData({
-      ...formData,
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       SourceName: value,
-    });
+    }));
   };
+  
+  const handleUser = (event) => {
+    const { value } = event.target;
+  
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      SourceName: undefined,
+    }));
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      UserID: value,
+    }));
+  };
+  
   const fetchDataForModalContact = async (Cid) => {
     console.log("CID AAYA", Cid);
     console.log("press");
@@ -281,31 +310,49 @@ const Dashboard = () => {
               <Card>
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={6} sm={3}>
-                      <FormControl fullWidth>
-                        <InputLabel>Source</InputLabel>
-                        <Select
-                          value={formData.SourceName}
-                          onChange={handleSource}
-                          label="Source"
-                        >
-                          {source.map((bhk) => (
-                            <MenuItem key={bhk.SourceID} value={bhk.SourceName}>
-                              {bhk.SourceName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        {errors.SourceID && (
-                          <Typography variant="caption" color="error">
-                            {errors.SourceID}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Grid>
+                  <Grid item xs={6} sm={3}>
+  <FormControl fullWidth>
+    <InputLabel>User</InputLabel>
+    <Select
+      value={formData.UserID}
+      onChange={handleUser}
+      label="User"
+    >
+      {users.map((user) => (
+        <MenuItem key={user.UserID} value={user.UserID}>
+          {user.Name}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
+<Grid item xs={6} sm={3}>
+  <FormControl fullWidth>
+    <InputLabel>Source</InputLabel>
+    <Select
+      value={formData.SourceName}
+      onChange={handleSource}
+      label="Source"
+    >
+      {source.map((bhk) => (
+        <MenuItem key={bhk.SourceID} value={bhk.SourceName}>
+          {bhk.SourceName}
+        </MenuItem>
+      ))}
+    </Select>
+    {errors.SourceID && (
+      <Typography variant="caption" color="error">
+        {errors.SourceID}
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
                     <Grid item xs={12} sm={3}>
                       <DatePicker
-                        selected={formData.fromdate}
-                        onChange={(date) => handleDateChange(date, "fromdate")}
+                        selected={formData.FromDate}
+                        onChange={(date) => handleDateChange(date, "FromDate")}
                         dateFormat="dd-MM-yyyy"
                         className="form-control"
                         customInput={
@@ -323,8 +370,8 @@ const Dashboard = () => {
 
                     <Grid item xs={12} sm={3}>
                       <DatePicker
-                        selected={formData.todate}
-                        onChange={(date) => handleDateChange(date, "todate")}
+                        selected={formData.ToDate}
+                        onChange={(date) => handleDateChange(date, "ToDate")}
                         dateFormat="dd-MM-yyyy"
                         className="form-control"
                         customInput={
@@ -409,19 +456,7 @@ const Dashboard = () => {
                         </CardContent>
                       </Card>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Card>
-                        <CardContent sx={{ textAlign: "center" }}>
-                          <Contacts fontSize="large" color="primary" />
-                          <Typography variant="h6" gutterBottom>
-                            Booking
-                          </Typography>
-                          <Typography variant="body1" color="textSecondary">
-                            Total Counts: 0 {/* Adjust this key as needed */}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
+                  
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>

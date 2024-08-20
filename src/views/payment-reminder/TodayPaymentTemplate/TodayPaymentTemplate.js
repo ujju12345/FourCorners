@@ -844,7 +844,7 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
                       style={{ textAlign: "left", padding: 0 }}
                       colSpan={10}
                     >
-                      {index + 1}. {remark.Remarkamount} {remark.RemarkName}{" "}
+                      {index + 1}. Rs {remark.Remarkamount} {remark.RemarkName}{" "}
                       {remark.RemarkDate}
                     </StyledTableCell>
                   </TableRow>
@@ -872,7 +872,7 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
                       style={{ textAlign: "left", padding: 0 }}
                       colSpan={10}
                     >
-                      {index + 1}. {remark.Remarkamount} {remark.Note}{" "}
+                      {index + 1}. Rs {remark.Remarkamount} {remark.Note}{" "}
                       {remark.RemarkDate}
                     </StyledTableCell>
                   </TableRow>

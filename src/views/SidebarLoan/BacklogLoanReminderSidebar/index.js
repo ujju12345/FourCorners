@@ -301,9 +301,10 @@ const BacklogLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboard
                 onClick={() => handleListItemClick(row)}
               >
                 <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
+                  <Avatar alt="John Doe"
+                          sx={{ width: 40, height: 40, margin: 2 }}
+                          src="/images/avatars/1.png"/>
+                   
                 </ListItemAvatar>
                 <ListItemText
                   primary={row.PartyName}

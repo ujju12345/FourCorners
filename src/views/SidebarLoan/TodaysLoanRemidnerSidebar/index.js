@@ -39,7 +39,12 @@ import SortIcon from "@mui/icons-material/Sort";
 import { useCookies } from "react-cookie";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
-const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardClick }) => {
+const TodaysLoanRemidnerSidebar = ({
+  onEdit,
+  onItemClick,
+  onCreate,
+  onDashboardClick,
+}) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,7 +69,7 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
   }, []);
 
   const fetchData = async () => {
-    const userid = cookies.amr?.UserID || 'Role';
+    const userid = cookies.amr?.UserID || "Role";
 
     try {
       const response = await axios.get(
@@ -117,7 +122,6 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
     setPage(0);
   };
 
-
   const handleOpenConfirmDelete = (id) => {
     setDeleteId(id);
     setConfirmDelete(true);
@@ -126,8 +130,12 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
     const date = new Date(contactCreateDate);
     const now = new Date();
 
-    const isCurrentMonth = date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-    const isPreviousMonth = date.getMonth() === now.getMonth() - 1 && date.getFullYear() === now.getFullYear();
+    const isCurrentMonth =
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+    const isPreviousMonth =
+      date.getMonth() === now.getMonth() - 1 &&
+      date.getFullYear() === now.getFullYear();
 
     if (isCurrentMonth) {
       return "New";
@@ -173,10 +181,14 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
     const sortedRows = [...filteredRows];
     switch (option) {
       case "asc":
-        sortedRows.sort((a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate));
+        sortedRows.sort(
+          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+        );
         break;
       case "desc":
-        sortedRows.sort((a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate));
+        sortedRows.sort(
+          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+        );
         break;
       case "a-z":
         sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
@@ -223,13 +235,25 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
             All Loan Reminders
           </Typography>
           <Box display="flex" alignItems="center">
-            <IconButton aria-label="filter" sx={{ color: "grey" }} onClick={onDashboardClick}>
+            <IconButton
+              aria-label="filter"
+              sx={{ color: "grey" }}
+              onClick={onDashboardClick}
+            >
               <DashboardIcon />
             </IconButton>
-            <IconButton aria-label="filter" sx={{ color: "grey" }} onClick={onCreate}>
+            <IconButton
+              aria-label="filter"
+              sx={{ color: "grey" }}
+              onClick={onCreate}
+            >
               <AddIcon />
             </IconButton>
-            <IconButton aria-label="filter" sx={{ color: "grey" }} onClick={handleFilterMenuOpen}>
+            <IconButton
+              aria-label="filter"
+              sx={{ color: "grey" }}
+              onClick={handleFilterMenuOpen}
+            >
               <SortIcon />
             </IconButton>
             <Popover
@@ -246,10 +270,18 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
                 horizontal: "center",
               }}
             >
-              <MenuItem onClick={() => handleSortOptionChange("asc")}>Date Asc</MenuItem>
-              <MenuItem onClick={() => handleSortOptionChange("desc")}>Date Desc</MenuItem>
-              <MenuItem onClick={() => handleSortOptionChange("a-z")}>Name A-Z</MenuItem>
-              <MenuItem onClick={() => handleSortOptionChange("z-a")}>Name Z-A</MenuItem>
+              <MenuItem onClick={() => handleSortOptionChange("asc")}>
+                Date Asc
+              </MenuItem>
+              <MenuItem onClick={() => handleSortOptionChange("desc")}>
+                Date Desc
+              </MenuItem>
+              <MenuItem onClick={() => handleSortOptionChange("a-z")}>
+                Name A-Z
+              </MenuItem>
+              <MenuItem onClick={() => handleSortOptionChange("z-a")}>
+                Name Z-A
+              </MenuItem>
             </Popover>
           </Box>
         </Box>
@@ -279,87 +311,129 @@ const TodaysLoanRemidnerSidebar = ({ onEdit, onItemClick, onCreate, onDashboardC
       </Grid>
       <List>
         {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
             <Typography>Loading...</Typography>
           </Box>
         ) : error ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
             <Typography>Error loading data</Typography>
           </Box>
         ) : filteredRows.length > 0 ? (
-          filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-            <React.Fragment key={index}>
-              <ListItem button onClick={() => handleListItemClick(row)}>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: "secondary.main" }}>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={row.PartyName}
-                  secondary={
-                    <Box display="flex" flexDirection="column">
+          filteredRows
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row, index) => (
+              <React.Fragment key={index}>
+                <ListItem button onClick={() => handleListItemClick(row)}>
+                  <ListItemAvatar>
+                    <Avatar  alt="John Doe"
+                          sx={{ width: 40, height: 40, margin: 2 }}
+                          src="/images/avatars/1.png"/>
+                     
+                  
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={row.PartyName}
+                    secondary={
+                      <Box display="flex" flexDirection="column">
                         <Typography
-                              variant="subtitle1"
-                              style={{ fontWeight: 600, fontSize: 13 }}
-                            >
-                            {row.Name}
-                            </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                      Remark amount: {row.Remarkamount}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Mobile: {row.Mobile}
-                      </Typography>
-                      {/* <Typography variant="body2" color="textSecondary">
+                          variant="subtitle1"
+                          style={{ fontWeight: 600, fontSize: 13 }}
+                        >
+                          {row.Name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Remark amount: {row.Remarkamount}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Mobile: {row.Mobile}
+                        </Typography>
+                        {/* <Typography variant="body2" color="textSecondary">
                       Remark Name: {row.RemarkName}
                       </Typography> */}
-                    </Box>
-                  }
-                />
-                <Box display="flex" alignItems="center">
-                  {row.Status === "open" && (
-                    <Chip label="Open" color="warning" sx={{ marginRight: 1 }} />
-                  )}
-                  {row.Status === "closed" && (
-                    <Chip label="Closed" color="success" sx={{ marginRight: 1 }} />
-                  )}
-                  <IconButton edge="end" onClick={(e) => { e.stopPropagation(); handleDotsMenuOpen(e) }}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorElDots}
-                    open={Boolean(anchorElDots)}
-                    onClose={handleDotsMenuClose}
-                  >
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleDotsMenuClose(); onEdit(row) }}>
-                      <ListItemIcon>
-                        <EditIcon />
-                      </ListItemIcon>
-                      Edit
-                    </MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleDotsMenuClose(); handleOpenConfirmDelete(row.Tid) }}>
-                      <ListItemIcon>
-                        <DeleteIcon />
-                      </ListItemIcon>
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </Box>
-              </ListItem>
-              {index < filteredRows.length - 1 && <Divider variant="inset" />}
-            </React.Fragment>
-          ))
+                      </Box>
+                    }
+                  />
+                  <Box display="flex" alignItems="center">
+                    {row.Status === "open" && (
+                      <Chip
+                        label="Open"
+                        color="warning"
+                        sx={{ marginRight: 1 }}
+                      />
+                    )}
+                    {row.Status === "closed" && (
+                      <Chip
+                        label="Closed"
+                        color="success"
+                        sx={{ marginRight: 1 }}
+                      />
+                    )}
+                    <IconButton
+                      edge="end"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDotsMenuOpen(e);
+                      }}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorElDots}
+                      open={Boolean(anchorElDots)}
+                      onClose={handleDotsMenuClose}
+                    >
+                      <MenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDotsMenuClose();
+                          onEdit(row);
+                        }}
+                      >
+                        <ListItemIcon>
+                          <EditIcon />
+                        </ListItemIcon>
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDotsMenuClose();
+                          handleOpenConfirmDelete(row.Tid);
+                        }}
+                      >
+                        <ListItemIcon>
+                          <DeleteIcon />
+                        </ListItemIcon>
+                        Delete
+                      </MenuItem>
+                    </Menu>
+                  </Box>
+                </ListItem>
+                {index < filteredRows.length - 1 && <Divider variant="inset" />}
+              </React.Fragment>
+            ))
         ) : (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
             <Typography>No results found</Typography>
           </Box>
         )}
       </List>
-      <Dialog
-        open={confirmDelete}
-        onClose={handleCloseConfirmDelete}
-      >
+      <Dialog open={confirmDelete} onClose={handleCloseConfirmDelete}>
         <DialogTitle>Delete Confirmation</DialogTitle>
         <DialogContent>
           <DialogContentText>

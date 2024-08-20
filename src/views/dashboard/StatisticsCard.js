@@ -17,32 +17,29 @@ import { useCookies } from "react-cookie";
 
 const StatisticsCard = () => {
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["amr"]); // Define cookies and setCookie function
-
+  const [cookies] = useCookies(["amr"]);
   const userid = cookies.amr?.UserID || 'Role';
   const [apiData, setApiData] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchApiData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await fetch(`https://apiforcorners.cubisysit.com/api/api-graph-admin.php?UserID=${userid}`);
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       const data = await response.json();
+  useEffect(() => {
+    const fetchApiData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`https://apiforcorners.cubisysit.com/api/api-graph-admin.php?UserID=${userid}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setApiData(data.counts); // Store counts in state
+      } catch (error) {
+        console.error('Error fetching API data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //       console.log(data , "dekhh<<<<<<>>>>>");
-  //       setApiData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching API data:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchApiData();
-  // }, []);
+    fetchApiData();
+  }, [userid]);
 
   const renderStats = () => {
     if (loading) {
@@ -72,12 +69,10 @@ const StatisticsCard = () => {
             >
               <TrendingUp sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Today Follow Up</Typography>
-              <Typography variant='h6'>23</Typography>
+              <Typography variant='h6'>{apiData?.totalOpportunityFollowupCount || 0}</Typography>
             </Box>
-           
           </Box>
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -116,13 +111,10 @@ const StatisticsCard = () => {
             >
               <CellphoneLink sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Open Opportunity</Typography>
-              <Typography variant='h6'>2423</Typography>
+              <Typography variant='h6'>{apiData?.totalNextFollowupCount || 0}</Typography>
             </Box>
-
-         
           </Box>
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -144,7 +136,6 @@ const StatisticsCard = () => {
               <Typography variant='caption'>All Opportunity</Typography>
               <Typography variant='h6'>223</Typography>
             </Box>
-       
           </Box>
         </Grid>
       </Grid>

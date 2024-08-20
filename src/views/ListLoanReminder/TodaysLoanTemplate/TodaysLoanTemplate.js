@@ -527,7 +527,7 @@ const InvoiceBox = styled(Box)({
       {data.remarksWithCreateDate && data.remarksWithCreateDate.map((remark, index) => (
         <TableRow key={`original-${index}`} sx={{ padding: 0 }}>
           <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-            {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+            {index + 1}. Rs {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
           </StyledTableCell>
         </TableRow>
       ))}
@@ -540,7 +540,7 @@ const InvoiceBox = styled(Box)({
       {data.otherRemarks && data.otherRemarks.map((remark, index) => (
         <TableRow key={`updated-${index}`} sx={{ padding: 0 }}>
           <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-            {index + 1}. {remark.Remarkamount} {remark.Note} {remark.RemarkDate}
+            {index + 1}. Rs {remark.Remarkamount} {remark.Note} {remark.RemarkDate}
           </StyledTableCell>
         </TableRow>
       ))}
