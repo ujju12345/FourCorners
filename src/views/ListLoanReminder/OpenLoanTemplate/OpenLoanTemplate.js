@@ -35,6 +35,7 @@ const InvoiceBox = styled(Box)({
 
 
   const OpenLoanTemplate = ({ item  }) => {
+    console.log(item , 'bookmng id dataa<<>>');
     const printRef = useRef();
     const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   
@@ -145,7 +146,7 @@ const InvoiceBox = styled(Box)({
     
       const payload = {
         BookingID: item.BookingID,
-        
+        BookingremarkID:item.BookingremarkID,
         Remarkamount: bookingRemarkDetails.Remarkamount || 0,
         RemarkName: bookingRemarkDetails.RemarkName || '',
         RemarkDate: formData.NextFollowUpDate,

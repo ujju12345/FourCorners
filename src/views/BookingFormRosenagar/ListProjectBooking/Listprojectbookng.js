@@ -75,7 +75,8 @@ const Listprojectbookng = ({
   const [openTemplate, setOpenTemplate] = useState(false);
   const [openCheque, setOpenCheque] = useState(false);
 
-
+  const [upcomingPayments, setUpcomingPayments] = React.useState([]);
+  const [receivedPayments, setReceivedPayments] = React.useState([]);
   const [amountType, setAmountType] = useState("");
   const [page, setPage] = useState(0);
   const [bookingID, setBookingID] = useState(null);
@@ -381,10 +382,13 @@ const onCheque = (row) => {
   const handleDateChange = (date, index) => {
     handleChequePaymentChange(index, "chequeDate", date);
   };
-
-  const handleDateChangePayment = (date, key) => {
-    setFormData({ ...formData, [key]: date });
+  const handleDateChangePayment = (date, field) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: date,
+    }));
   };
+
 
   const handleAddRemark = () => {
     setRemarks([
@@ -440,7 +444,6 @@ const onCheque = (row) => {
   const handleCloseReport = () => setOpen(false);
 
   const handleDateSearch = async () => {
-    console.log("press");
     try {
       const response = await axios.get(
         `https://ideacafe-backend.vercel.app/api/proxy/api-fetch-paymentreceived.php`,
@@ -458,61 +461,24 @@ const onCheque = (row) => {
       );
 
       if (response.data.status === "Success") {
-        const data = response.data.data;
-        console.log(data, "dekh bahi");
+        const bookingRemarks = response.data.data.bookingremark;
+        const payments = response.data.data.payment;
 
-        // Process data
-        const proccess_null = [
-          ...data.bookingremark.cash.filter((item) => item.Proccess === null),
-          ...data.bookingremark.cheque.filter((item) => item.Proccess === null),
-        ].map((item) => ({
-          Name: data.booking[0].Name,
-          FlatNo: data.booking[0].FlatNo,
-          Remarkamount: item.Remarkamount,
-          PaymentType: item.AmountTypeID === 1 ? "Cash" : "Cheque",
-          RemarkDate: item.RemarkDate,
-        }));
-
-// Update the processing for received payments
-const proccess_one = [
-  ...data.payment.cash.map(item => ({
-    Name: data.booking[0].Name,
-    FlatNo: data.booking[0].FlatNo,
-    Cash: item.Cash,
-    ChequeAmount: null, // or use `-` if ChequeAmount is not applicable
-    PaymentType: "Cash",
-  })),
-  ...data.payment.cheque.map(item => ({
-    Name: data.booking[0].Name,
-    FlatNo: data.booking[0].FlatNo,
-    Cash: null, // or use `-` if Cash is not applicable
-    ChequeAmount: item.ChequeAmount,
-    PaymentType: "Cheque",
-  }))
-];
-
-// Ensure the total values are set correctly
-const totalCash = data.payment.totalCash || 0;
-const totalCheque = data.payment.totalCheque || 0;
-const totalCost = data.payment.TotalCost || 0;
-
-setMergedData({
-  proccess_null,
-  proccess_one,
-  totalCash,
-  totalCheque,
-  totalCost
-});
+        setUpcomingPayments([...bookingRemarks.cash, ...bookingRemarks.cheque]);
+        setReceivedPayments([...payments.cash, ...payments.cheque]);
 
       } else {
         console.error("Failed to fetch data:", response.data.message);
-        setMergedData(initialMergedData); // Reset mergedData on failure
+        setUpcomingPayments([]);
+        setReceivedPayments([]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setMergedData(initialMergedData); // Reset mergedData on error
+      setUpcomingPayments([]);
+      setReceivedPayments([]);
     }
   };
+
 
   const handleSubmit = async () => {
     // Prepare the data for the API request
@@ -1313,113 +1279,87 @@ setMergedData({
                 </Button>
               </Grid>
             </Grid>
+            <Grid container spacing={4} mb={3}>
+      
 
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h6">Upcoming Payments</Typography>
-                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Customer Name</TableCell>
-                        <TableCell>Flat Number</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Payment Type</TableCell>
-                        <TableCell>Date</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {mergedData.proccess_null?.length > 0 ? (
-                        mergedData.proccess_null.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item.Name}</TableCell>
-                            <TableCell>{item.FlatNo}</TableCell>
-                            <TableCell>{item.Remarkamount}</TableCell>
-                            <TableCell>{item.PaymentType}</TableCell>
-                            <TableCell>
-                              {new Date(item.RemarkDate).toLocaleDateString()}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={5} align="center">
-                            No Upcoming Payments
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
+  
+      </Grid>
 
-              <Grid item xs={12}>
-                <Typography variant="h6">Received Payments</Typography>
-                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Customer Name</TableCell>
-                        <TableCell>Flat Number</TableCell>
-                        <TableCell>Current (A)</TableCell>
-                        <TableCell>Post (B)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {mergedData.proccess_one?.length > 0 ? (
-                        mergedData.proccess_one.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item.Name}</TableCell>
-                            <TableCell>{item.FlatNo}</TableCell>
-                            <TableCell>
-                              {item.PaymentType === "Cash" ? item.Cash : "-"}
-                            </TableCell>
-                            <TableCell>
-                              {item.PaymentType === "Cheque"
-                                ? item.ChequeAmount
-                                : "-"}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={4} align="center">
-                            No Received Payments
-                          </TableCell>
-                        </TableRow>
-                      )}
+      <Grid container spacing={3}>
+        {/* Upcoming Payments */}
+        <Grid item xs={12}>
+          <Typography variant="h6">Upcoming Payments</Typography>
+          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Remark</TableCell>
+                
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Payment Type</TableCell>
+                  <TableCell>Date</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {upcomingPayments.length > 0 ? (
+                  upcomingPayments.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.RemarkName}</TableCell>
+                     
+                      <TableCell>{item.Remarkamount}</TableCell>
+                      <TableCell>{item.AmountTypeID === 1 ? "Cash" : "Cheque"}</TableCell>
+                      <TableCell>
+                        {new Date(item.RemarkDate).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      No Upcoming Payments
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
 
-                      {/* Totals Row */}
-                      {mergedData.proccess_one?.length > 0 && (
-                        <TableRow>
-                          <TableCell colSpan={2} align="right">
-                            <strong>Total</strong>
-                          </TableCell>
-                          <TableCell>
-                            <strong>{mergedData.totalCash}</strong>
-                          </TableCell>
-                          <TableCell>
-                            <strong>{mergedData.totalCheque}</strong>
-                          </TableCell>
-                        </TableRow>
-                      )}
-
-                      {/* Total Cost Row */}
-                      {mergedData.proccess_one?.length > 0 && (
-                        <TableRow>
-                          <TableCell colSpan={2} align="right">
-                            <strong>Total Cost</strong>
-                          </TableCell>
-                          <TableCell colSpan={2}>
-                            <strong>{mergedData.totalCost}</strong>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-            </Grid>
+        {/* Received Payments */}
+        <Grid item xs={12}>
+          <Typography variant="h6">Received Payments</Typography>
+          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Remark </TableCell>
+   
+                  <TableCell>Cash</TableCell>
+                  <TableCell>Cheque</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {receivedPayments.length > 0 ? (
+                  receivedPayments.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.RemarkName}</TableCell>
+                   
+                      <TableCell>{item.Cash}</TableCell>
+                      <TableCell>{item.ChequeAmount}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No Received Payments
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
           </CardContent>
         </Card>
       </Modal>
