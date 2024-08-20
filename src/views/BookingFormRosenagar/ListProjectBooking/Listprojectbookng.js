@@ -426,6 +426,8 @@ const onCheque = (row) => {
   const handleOpenTemplate = () => setOpenTemplate(true);
 
   const handleClose = () => setModalOpen(false);
+
+
   const handleCloseTemplate = () => {
     setOpenTemplate(false); // Close the modal
     setBookingID(null); // Reset the booking ID (optional)
@@ -471,28 +473,37 @@ const onCheque = (row) => {
           RemarkDate: item.RemarkDate,
         }));
 
-        const proccess_one = [
-          ...data.payment.cash.filter((item) => item.PLoan === 1),
-          ...data.payment.cheque.filter((item) => item.PLoan === 1),
-        ].map((item) => ({
-          Name: data.booking[0].Name,
-          FlatNo: data.booking[0].FlatNo,
-          Cash: item.Cash,
-          ChequeAmount: item.ChequeAmount,
-          PaymentType: item.AmountTypeID === 1 ? "Cash" : "Cheque",
-        }));
+// Update the processing for received payments
+const proccess_one = [
+  ...data.payment.cash.map(item => ({
+    Name: data.booking[0].Name,
+    FlatNo: data.booking[0].FlatNo,
+    Cash: item.Cash,
+    ChequeAmount: null, // or use `-` if ChequeAmount is not applicable
+    PaymentType: "Cash",
+  })),
+  ...data.payment.cheque.map(item => ({
+    Name: data.booking[0].Name,
+    FlatNo: data.booking[0].FlatNo,
+    Cash: null, // or use `-` if Cash is not applicable
+    ChequeAmount: item.ChequeAmount,
+    PaymentType: "Cheque",
+  }))
+];
 
-        const totalCash = data.payment.totalCash || 0;
-        const totalCheque = data.payment.totalCheque || 0;
-        const totalCost = data.payment.TotalCost || 0;
+// Ensure the total values are set correctly
+const totalCash = data.payment.totalCash || 0;
+const totalCheque = data.payment.totalCheque || 0;
+const totalCost = data.payment.TotalCost || 0;
 
-        setMergedData({
-          proccess_null,
-          proccess_one,
-          totalCash,
-          totalCheque,
-          totalCost,
-        });
+setMergedData({
+  proccess_null,
+  proccess_one,
+  totalCash,
+  totalCheque,
+  totalCost
+});
+
       } else {
         console.error("Failed to fetch data:", response.data.message);
         setMergedData(initialMergedData); // Reset mergedData on failure
@@ -1224,7 +1235,7 @@ const onCheque = (row) => {
           />
         </Card>
       </Modal>
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={open} onClose={handleCloseReport}>
         <Card
           style={{
             maxWidth: "800px",
@@ -1236,7 +1247,7 @@ const onCheque = (row) => {
           <CardContent>
             <IconButton
               aria-label="cancel"
-              onClick={handleCloseRecipt}
+              onClick={handleCloseReport}
               // sx={{ position: "absolute", top: 6, right: 10 }}
             >
               <CancelIcon sx={{ color: "red" }} />
