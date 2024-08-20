@@ -121,6 +121,7 @@ const InvoiceBox = styled(Box)({
           `https://apiforcorners.cubisysit.com/api/api-dropdown-bookingremarkdetails.php?BookingremarkID=${bookingRemarkID}`
         );
         if (response.data.status === "Success") {
+          console.log(response.data.data[0] , 'remarks dataaa<<<<<<>>>>>>>>');
           setBookingRemarkDetails(response.data.data[0]);
         }
       } catch (error) {
@@ -144,6 +145,7 @@ const InvoiceBox = styled(Box)({
     
       const payload = {
         BookingID: item.BookingID,
+        
         Remarkamount: bookingRemarkDetails.Remarkamount || 0,
         RemarkName: bookingRemarkDetails.RemarkName || '',
         RemarkDate: formData.NextFollowUpDate,
@@ -170,7 +172,7 @@ const InvoiceBox = styled(Box)({
           // Clear the form fields
           setFormData("");
           setSelectedBookingRemark("");
-          setBookingRemarkDetails({});
+          setBookingRemarkDetails("");
     
           setOpen(false);
           Swal.fire({
