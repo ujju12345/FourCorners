@@ -23,22 +23,7 @@ import { DatePicker } from "@mui/lab";
 import { Call } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const GlobalStyle = createGlobalStyle`
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-    .printableArea, .printableArea * {
-      visibility: visible;
-    }
-    .printableArea {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-    }
-  }
-`;
+
 
 const StyledTableCell = styled(TableCell)({
   border: "2px solid black",
@@ -139,13 +124,10 @@ const Reciept = ({ bookingID }) => {
 
   return (
     <>
-       {/* <CardContent>
-              <Card>
-                <CardContent> */}
-
-                  {/* <Grid container spacing={3}>
+    
+                <Box container spacing={3}>
                 
-                    <Box item xs={12} sm={3}>
+                    <Box item>
                       <DatePicker
                         selected={formData.fromdate}
                         onChange={(date) => handleDateChange(date, "fromdate")}
@@ -162,9 +144,7 @@ const Reciept = ({ bookingID }) => {
                           />
                         }
                       />
-                    </Box>
-
-                    <Box item xs={12} sm={4}>
+                 
                       <DatePicker
                         selected={formData.todate}
                         onChange={(date) => handleDateChange(date, "todate")}
@@ -181,28 +161,13 @@ const Reciept = ({ bookingID }) => {
                           />
                         }
                       />
-                    </Box>
-
-                    <Box
-                      item
-                      xs={10}
-                      mb={5}
-                      sm={3}
-                      sx={{ display: "flex", alignItems: "flex-end" }}
-                    >
+                  
                       <Button variant="contained" onClick={handleSearch}>
                         Search
                       </Button>
                     </Box>
-                  </Grid> */}
-                {/* </CardContent>
-              </Card>
-
+                  </Box> 
             
-
-
-
-            </CardContent> */}
    
   
 
@@ -370,8 +335,8 @@ const Reciept = ({ bookingID }) => {
             <TableRow>
               <TableCell>Cheque Date</TableCell>
               <TableCell>Bank Name</TableCell>
-              <TableCell>Cheque Number</TableCell>
-              <TableCell>Cheque Amount</TableCell>
+              <TableCell>Post Number</TableCell>
+              <TableCell>Post Amount</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

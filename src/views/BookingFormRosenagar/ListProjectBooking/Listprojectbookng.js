@@ -1361,8 +1361,8 @@ setMergedData({
                       <TableRow>
                         <TableCell>Customer Name</TableCell>
                         <TableCell>Flat Number</TableCell>
-                        <TableCell>Cash (A)</TableCell>
-                        <TableCell>Cheque (B)</TableCell>
+                        <TableCell>Current (A)</TableCell>
+                        <TableCell>Post (B)</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
