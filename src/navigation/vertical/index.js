@@ -43,21 +43,6 @@ const navigation = () => {
           path: "/user-management",
           icon: GroupIcon,
         },
-        {
-          title: "Admins",
-          path: "/user-management/admins",
-          icon: AccountCogOutline,
-        },
-        {
-          title: "Sales",
-          path: "",
-          icon: SalesIcon,
-        },
-        {
-          title: "Telecaller",
-          path: "",
-          icon: AccountPlusOutline,
-        },
       ],
     },
 
@@ -157,6 +142,12 @@ const navigation = () => {
    
      
       ],
+    },
+    {
+      title: "Availibilty List",
+      icon: TrendingUpIcon,
+      path: "/availableList",
+     
     },
     // {
     //   title: "Project Details",
