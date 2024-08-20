@@ -290,7 +290,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
 {data?.remarksWithCreateDate && data.remarksWithCreateDate.map((remark, index) => (
       <TableRow key={remark.BookingRemarkID} sx={{ padding: 0 }}>
         <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-          {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
+          {index + 1}. Rs. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
         </StyledTableCell>
       </TableRow>
     ))}

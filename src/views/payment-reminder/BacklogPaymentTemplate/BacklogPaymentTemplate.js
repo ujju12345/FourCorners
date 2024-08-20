@@ -166,6 +166,7 @@ const BacklogPaymentTemplate = ({ item }) => {
     // Prepare the data object to be sent to the API
     const payload = {
       BookingID: item.BookingID,
+      BookingremarkID:item.BookingremarkID,
       Remarkamount: bookingRemarkDetails.Remarkamount || 0,
       RemarkName: bookingRemarkDetails.RemarkName || "",
       RemarkDate: formData.NextFollowUpDate, // Use the NextFollowUpDate as RemarkDate

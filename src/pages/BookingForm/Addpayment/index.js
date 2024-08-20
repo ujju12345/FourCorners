@@ -358,7 +358,7 @@ const [bookingIDReport, setBookingIDReport] = useState(null);
           onCheque={handleCheque}
         />
       )}
-      {showTemplate && <TemplatePayment  onGoBack={handleBack} />}
+      {/* {showTemplate && <TemplatePayment  onGoBack={handleBack} />} */}
       {showReceipt && <Reciept bookingID={bookingIDCheque} />}
       {!loading && !error && showHistory && (
         <Box

@@ -58,7 +58,7 @@ const InvoiceBox = styled(Box)({
 
 const TodayPaymentTemplate = ({ item, onGoBack }) => {
   const router = useRouter();
-  console.log(item, "booking id aaya");
+  console.log(item, "DEKHHH BHAIIIII id aaya");
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
@@ -172,6 +172,7 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
     // Prepare the data object to be sent to the API
     const payload = {
       BookingID: item.BookingID,
+      BookingremarkID:item.BookingremarkID,
       Remarkamount: bookingRemarkDetails.Remarkamount || 0,
       RemarkName: bookingRemarkDetails.RemarkName || "",
       RemarkDate: formData.NextFollowUpDate, // Use the NextFollowUpDate as RemarkDate

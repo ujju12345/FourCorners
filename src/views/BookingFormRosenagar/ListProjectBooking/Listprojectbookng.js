@@ -65,7 +65,7 @@ const Listprojectbookng = ({
     totalCheque: 0,
     totalCost: 0,
   };
-  
+
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const [wings, setWings] = useState([]);
   const [selectedWing, setSelectedWing] = useState(null);
@@ -96,7 +96,6 @@ const Listprojectbookng = ({
   const [bookingRemarkDetails, setBookingRemarkDetails] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
 
-
   const [showAmountType, setShowAmountType] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState(null);
@@ -111,6 +110,7 @@ const Listprojectbookng = ({
       AmountTypeID: "",
     },
   ]);
+
   const [totalCost, setTotalCost] = useState("");
   const [formData, setFormData] = useState({ AmountGiven: new Date() });
   const [cashDate, setCashdate] = useState({ CashDate: new Date() });
@@ -186,6 +186,11 @@ const Listprojectbookng = ({
       const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-wing.php?WingID=${wing.WingID}&ProjectID=${item.ProjectID}`;
       const response = await axios.get(apiUrl);
       if (response.data.status === "Success") {
+        console.log(
+          response.data,
+          "wing dataaaaaaa,<<<<<<<<<<<<>>>>>>>>>>>>>..."
+        );
+
         setWingDetails(response.data.data);
         setSelectedWing(wing);
         setDataAvailable(response.data.data.length > 0);
@@ -291,11 +296,17 @@ const Listprojectbookng = ({
     handleMenuClose();
   };
 
-  const handleTemplateClick = (id) =>{
-    setBookingID(id); // Set the BookingID state
-    handleOpenTemplate(selectedRowMenu); // Open the modal
-    handleMenuClose();
-  }
+  const handleTemplateClick = (row) => {
+    console.log(row, "Selected row data"); // Log the selected row data
+
+    setBookingID(row.BookingID); // Set the selected BookingID
+    setOpenTemplate(true); // Open the modal
+    handleMenuClose(); // Close the menu if it's open
+
+    // Optionally, you can set other states with the selected row data
+    // setOtherState(row.someField);
+};
+
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -352,7 +363,6 @@ const Listprojectbookng = ({
       prevPayments.filter((_, i) => i !== index)
     );
   };
-  
 
   const handleDateChangeCash = (date) => {
     setCashdate({ CashDate: date });
@@ -406,10 +416,12 @@ const Listprojectbookng = ({
   const handleOpenTemplate = () => setOpenTemplate(true);
 
   const handleClose = () => setModalOpen(false);
-  const handleCloseTemplate = () => setOpenTemplate(false);
+  const handleCloseTemplate = () => {
+    setOpenTemplate(false); // Close the modal
+    setBookingID(null); // Reset the booking ID (optional)
+  };
 
   const handleCloseReport = () => setOpen(false);
-
 
   const handleDateSearch = async () => {
     console.log("press");
@@ -488,12 +500,18 @@ const Listprojectbookng = ({
           0
         ),
         Cash: amountType === "1" ? parseFloat(cashPaid) || 0 : 0,
-        ChequeAmount: amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
+        ChequeAmount:
+          amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
         BankName: payment.bankName || "",
         AmountTypeID: payment.AmountTypeID || "",
         ChequeNumber: payment.cheqNo || "",
-        ChequeDate: payment.chequeDate ? payment.chequeDate.toISOString().split("T")[0] : null,
-        Date: cashDate && cashDate.CashDate ? cashDate.CashDate.toISOString().split("T")[0] : null,
+        ChequeDate: payment.chequeDate
+          ? payment.chequeDate.toISOString().split("T")[0]
+          : null,
+        Date:
+          cashDate && cashDate.CashDate
+            ? cashDate.CashDate.toISOString().split("T")[0]
+            : null,
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
           0
@@ -515,7 +533,7 @@ const Listprojectbookng = ({
       Proccess: 1,
       ModifyUID: 1,
     };
-  
+
     console.log(payload, "ye jaa raha dataaaaaa<>>>>>>>>>>>>>");
     try {
       const response = await axios.post(
@@ -537,7 +555,7 @@ const Listprojectbookng = ({
         setSelectedBookingRemark("");
         setBookingRemarkDetails({});
         setSelectedRow(null);
-  
+
         Swal.fire({
           icon: "success",
           title: "Data Submitted Successfully",
@@ -546,7 +564,7 @@ const Listprojectbookng = ({
         }).then(() => {
           window.location.reload();
         });
-  
+
         handleModalClose();
       } else {
         console.error("Failed to submit payment:", response.data.message);
@@ -555,7 +573,6 @@ const Listprojectbookng = ({
       console.error("Error submitting payment:", error);
     }
   };
-  
 
   useEffect(() => {
     if (!paymentData) return;
@@ -678,7 +695,7 @@ const Listprojectbookng = ({
                             <TableCell>{row.Partyname}</TableCell>
                             <TableCell>{row.ProjectName}</TableCell>
                             <TableCell>{row.WingName}</TableCell>
-                            <TableCell>{row.FlatNo}</TableCell>
+                            <TableCell>{row.BookingID}</TableCell>
                             <TableCell>
                               <IconButton
                                 onClick={(event) => handleMenuOpen(event, row)}
@@ -699,7 +716,7 @@ const Listprojectbookng = ({
                                 </MenuItem>
                                 <MenuItem
                                   onClick={() =>
-                                    handleTemplateClick(row.BookingID)
+                                    handleTemplateClick(row)
                                   }
                                 >
                                   Template
@@ -755,37 +772,35 @@ const Listprojectbookng = ({
             position: "absolute",
             top: "50%",
             left: "50%",
-        
+
             transform: "translate(-50%, -50%)",
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            width: 1300, 
+            width: 1300,
             mt: 5,
             mx: 2,
             maxHeight: "80vh", // Set maximum height relative to the viewport height
-    overflow: "auto",  
-           
+            overflow: "auto",
           }}
         >
           <Grid container spacing={2}>
-          <IconButton
-            aria-label="cancel"
-            onClick={handleClose}
-            sx={{ position: "absolute", top: 6, right: 10 }}
-          >
-            <CancelIcon sx={{ color: "red" }} />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h7"
-            component="h3"
-            gutterBottom
-          >
-            Add Payment
-          </Typography>
+            <IconButton
+              aria-label="cancel"
+              onClick={handleClose}
+              sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton>
+            <Typography
+              id="modal-modal-title"
+              variant="h7"
+              component="h3"
+              gutterBottom
+            >
+              Add Payment
+            </Typography>
 
-         
             <Grid item xs={12}>
               <Typography
                 variant="body2"
@@ -993,44 +1008,42 @@ const Listprojectbookng = ({
                         />
                       </Grid>
                       <Grid item xs={1}>
-                      {/* <Grid item xs={12} mt={2}> */}
-                    <IconButton
-                      onClick={handleAddChequePayment}
-                      color="primary"
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  {/* </Grid> */}
-            <IconButton
-              color="secondary"
-              onClick={() => handleRemoveChequePayment(index)}
-            >
-              <DeleteIcon sx={{ color: "red" }}/>
-            </IconButton>
-          </Grid>
+                        {/* <Grid item xs={12} mt={2}> */}
+                        <IconButton
+                          onClick={handleAddChequePayment}
+                          color="primary"
+                        >
+                          <AddIcon />
+                        </IconButton>
+                        {/* </Grid> */}
+                        <IconButton
+                          color="secondary"
+                          onClick={() => handleRemoveChequePayment(index)}
+                        >
+                          <DeleteIcon sx={{ color: "red" }} />
+                        </IconButton>
+                      </Grid>
                     </React.Fragment>
-                    
                   ))}
-   <Grid item xs={4}>
-              <TextField
-                select
-                label="Select Payment Type"
-                value={selectedPaymentType}
-                onChange={handleChangePayment}
-                fullWidth
-                margin="normal"
-              >
-                {paymentTypes.map((option) => (
-                  <MenuItem
-                    key={option.paymenttypeID}
-                    value={option.paymenttypeName}
-                  >
-                    {option.paymenttypeName}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-                 
+                  <Grid item xs={4}>
+                    <TextField
+                      select
+                      label="Select Payment Type"
+                      value={selectedPaymentType}
+                      onChange={handleChangePayment}
+                      fullWidth
+                      margin="normal"
+                    >
+                      {paymentTypes.map((option) => (
+                        <MenuItem
+                          key={option.paymenttypeID}
+                          value={option.paymenttypeName}
+                        >
+                          {option.paymenttypeName}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
                 </>
               )}
             </>
@@ -1134,7 +1147,7 @@ const Listprojectbookng = ({
                 </Grid>
               </>
             )}
-            
+
             <Grid item xs={12}>
               <Button
                 variant="contained"
@@ -1154,19 +1167,22 @@ const Listprojectbookng = ({
       </Modal>
 
       <Modal open={openTemplate} onClose={handleCloseTemplate}>
-  <Card
-    style={{
-      maxWidth: "800px",
-      margin: "auto",
-      marginTop: "50px",
-      height: "90vh", // Set height relative to the viewport
-      padding: "20px",
-      overflowY: "auto", // Enable vertical scrolling if content overflows
-    }}
-  >
-    <TemplatePayment bookingID={bookingID}  handleCloseTemplate={handleCloseTemplate}/>
-  </Card>
-</Modal>
+        <Card
+          style={{
+            maxWidth: "800px",
+            margin: "auto",
+            marginTop: "50px",
+            height: "90vh", // Set height relative to the viewport
+            padding: "20px",
+            overflowY: "auto", // Enable vertical scrolling if content overflows
+          }}
+        >
+          <TemplatePayment
+            bookingID={bookingID}
+            handleCancel={handleCloseTemplate}
+          />
+        </Card>
+      </Modal>
 
       <Modal open={open} onClose={handleClose}>
         <Card
@@ -1178,17 +1194,16 @@ const Listprojectbookng = ({
           }}
         >
           <CardContent>
-          <IconButton
-            aria-label="cancel"
-            onClick={handleCloseReport}
-            // sx={{ position: "absolute", top: 6, right: 10 }}
-          >
-            <CancelIcon sx={{ color: "red" }} />
-          </IconButton>
+            <IconButton
+              aria-label="cancel"
+              onClick={handleCloseReport}
+              // sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton>
             <Typography variant="h5" gutterBottom align="center">
               Payment Details
             </Typography>
-    
 
             <Grid container spacing={4} mb={3}>
               <Grid item xs={12} sm={6} md={4}>
