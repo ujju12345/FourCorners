@@ -42,6 +42,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import TemplatePayment from "../TemplatePayment/TemplatePayment";
+import Reciept from "../Reciept/Reciept";
 
 const NoDataIcon = () => (
   <Avatar
@@ -55,7 +56,7 @@ const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
   onEdit,
-  onCheque,
+
 }) => {
   const router = useRouter();
   const initialMergedData = {
@@ -72,6 +73,8 @@ const Listprojectbookng = ({
   const [wingDetails, setWingDetails] = useState([]);
   const [open, setOpen] = useState(false);
   const [openTemplate, setOpenTemplate] = useState(false);
+  const [openCheque, setOpenCheque] = useState(false);
+
 
   const [amountType, setAmountType] = useState("");
   const [page, setPage] = useState(0);
@@ -307,6 +310,13 @@ const Listprojectbookng = ({
     // setOtherState(row.someField);
 };
 
+const onCheque = (row) => {
+  console.log(row, "Selected row data"); // Log the selected row data
+
+  setBookingID(row.BookingID); // Set the selected BookingID
+  setOpenCheque(true); // Open the modal
+  handleMenuClose(); // Close the menu if it's open
+};
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -418,6 +428,10 @@ const Listprojectbookng = ({
   const handleClose = () => setModalOpen(false);
   const handleCloseTemplate = () => {
     setOpenTemplate(false); // Close the modal
+    setBookingID(null); // Reset the booking ID (optional)
+  };
+  const handleCloseRecipt = () => {
+    setOpenCheque(false); // Close the modal
     setBookingID(null); // Reset the booking ID (optional)
   };
 
@@ -723,7 +737,7 @@ const Listprojectbookng = ({
                                 </MenuItem>
 
                                 <MenuItem
-                                  onClick={() => onCheque(row.BookingID)}
+                                  onClick={() => onCheque(row)}
                                 >
                                   Cheque Receipt
                                 </MenuItem>
@@ -1184,6 +1198,32 @@ const Listprojectbookng = ({
         </Card>
       </Modal>
 
+      <Modal open={openCheque} onClose={handleCloseTemplate}>
+     
+        <Card
+          style={{
+            maxWidth: "800px",
+            margin: "auto",
+            marginTop: "50px",
+            height: "90vh", // Set height relative to the viewport
+            padding: "20px",
+            overflowY: "auto", // Enable vertical scrolling if content overflows
+          }}
+        >
+           <IconButton
+              aria-label="cancel"
+              onClick={handleCloseRecipt}
+              sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton>
+           
+          <Reciept
+            bookingID={bookingID}
+          
+          />
+        </Card>
+      </Modal>
       <Modal open={open} onClose={handleClose}>
         <Card
           style={{
@@ -1196,7 +1236,7 @@ const Listprojectbookng = ({
           <CardContent>
             <IconButton
               aria-label="cancel"
-              onClick={handleCloseReport}
+              onClick={handleCloseRecipt}
               // sx={{ position: "absolute", top: 6, right: 10 }}
             >
               <CancelIcon sx={{ color: "red" }} />

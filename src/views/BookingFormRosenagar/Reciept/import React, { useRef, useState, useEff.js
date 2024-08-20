@@ -49,7 +49,7 @@ const InvoiceBox = styled(Box)({
 });
 
 const Reciept = ({ bookingID }) => {
-  console.log(bookingID, "booking id aaya");
+  console.log(bookingID, "recipettttttt id aaya");
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +72,7 @@ const Reciept = ({ bookingID }) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=108`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}`
       );
       console.log("data aaya dekh", response.data);
       setData(response.data.data[0]);

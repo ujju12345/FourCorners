@@ -33,6 +33,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
 
 const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
+  console.log(item , 'description check it');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -977,7 +978,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Interest
+                    Description
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Interest}

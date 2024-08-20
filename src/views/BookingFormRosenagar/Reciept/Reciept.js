@@ -14,12 +14,14 @@ import {
   TableHead,
   CardContent,
   TextField,
+  IconButton,
 } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
 import { Card } from "mdi-material-ui";
 import { DatePicker } from "@mui/lab";
 import { Call } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const GlobalStyle = createGlobalStyle`
   @media print {
@@ -58,6 +60,9 @@ const Reciept = ({ bookingID }) => {
   console.log(bookingID, 'id bookinggg<<>>>> ayaa UJJAWALLLLLL');
   const printRef = useRef();
   const [data, setData] = useState([]);
+  const [totalChequeAmount, setTotalChequeAmount] = useState(0);
+  const [totalamountinwords, setTotalamountinwords] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
@@ -83,21 +88,24 @@ const Reciept = ({ bookingID }) => {
   }, [bookingID]);
 
   const fetchData = async (bookingID) => {
-    if (!formData.fromdate || !formData.toDate) {
-      console.error("From date or To date is undefined");
-      return;
-    }
-  
     try {
-      const formattedFromDate = formData.fromdate.toISOString().split('T')[0];
-      const formattedToDate = formData.toDate.toISOString().split('T')[0];
-  
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}&fromdate=${formattedFromDate}&toDate=${formattedToDate}`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-chequereceipt.php?BookingID=${bookingID}`
       );
-      
-      console.log("data fetched successfully", response.data);
-      setData(response.data.data || []); // Ensure data is an array
+      console.log("Data fetched successfully", response.data);
+      const responseData = response.data.data;
+  
+      // Check if responseData is valid and contains expected properties
+      if (responseData && Array.isArray(responseData.records)) {
+        setData(responseData.records); // Set the records array to your state
+        setTotalChequeAmount(responseData.totalChequeAmount); // Set the totalChequeAmount to your state
+        setTotalamountinwords(responseData.totalChequeAmountWords)
+      } else {
+        console.error("Expected an array for records but received:", responseData);
+        setData([]); // Set an empty array if the records array is not available
+        setTotalChequeAmount(0); // Reset totalChequeAmount if not available
+      }
+  
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -105,6 +113,7 @@ const Reciept = ({ bookingID }) => {
       setLoading(false);
     }
   };
+  
   
 
 
@@ -134,7 +143,7 @@ const Reciept = ({ bookingID }) => {
               <Card>
                 <CardContent> */}
 
-                  <Grid container spacing={3}>
+                  {/* <Grid container spacing={3}>
                 
                     <Box item xs={12} sm={3}>
                       <DatePicker
@@ -185,7 +194,7 @@ const Reciept = ({ bookingID }) => {
                         Search
                       </Button>
                     </Box>
-                  </Grid>
+                  </Grid> */}
                 {/* </CardContent>
               </Card>
 
@@ -195,10 +204,12 @@ const Reciept = ({ bookingID }) => {
 
             </CardContent> */}
    
+  
 
       
 
       <InvoiceBox className="printableArea" ref={printRef}>
+   
         <TableContainer component={Paper}>
           <Table>
             <TableBody>
@@ -341,14 +352,14 @@ const Reciept = ({ bookingID }) => {
         >
           <div style={{ width: "20%" }}>
             <Typography>Part</Typography>
-            <Typography style={{ fontWeight: "bold" }}>TYPE : 1BHK</Typography>
+            <Typography style={{ fontWeight: "bold" }}>TYPE : {data[0]?.UnittypeName}</Typography>
           </div>
           <div
             style={{ marginLeft: 20, alignItems: "center", display: "flex" }}
           >
             <Typography style={{ fontSize: 17 }}>
               Payment Against Flat No. {data[0]?.FlatNo || ""} On {data[0]?.FloorNo || ""} Floor Of the Building Known as
-              "THE HEAVEN'S PALACE"
+              {data[0]?.ProjectName}
             </Typography>
           </div>
         </div>
@@ -364,7 +375,7 @@ const Reciept = ({ bookingID }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((payment) => (
+            {data?.map((payment) => (
               <TableRow key={payment.paymentID}>
                 <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
                 <StyledTableCell>{payment.BankName}</StyledTableCell>
@@ -377,28 +388,29 @@ const Reciept = ({ bookingID }) => {
       </TableContainer>
 
 
-        <TableContainer component={Paper}>
-          <Table style={{ border: "1px solid black" }}>
-            <TableBody>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell
-                  style={{ width: "75%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography style={{ textAlign: "left", marginLeft: 10 }}>
-                    Total
-                  </Typography>
-                </StyledTableCell>
-                <StyledTableCell
-                  style={{ width: "25%", padding: 0 }}
-                  colSpan={10}
-                >
-                  <Typography>{data[0]?.TotalCost}</Typography>
-                </StyledTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+      <TableContainer component={Paper}>
+  <Table style={{ border: "1px solid black" }}>
+    <TableBody>
+      <TableRow sx={{ padding: 0 }}>
+        <StyledTableCell
+          style={{ width: "75%", padding: 0 }}
+          colSpan={10}
+        >
+          <Typography style={{ textAlign: "left", marginLeft: 10 }}>
+            Total
+          </Typography>
+        </StyledTableCell>
+        <StyledTableCell
+          style={{ width: "25%", padding: 0 }}
+          colSpan={10}
+        >
+          <Typography> ₹ {totalChequeAmount}</Typography> {/* Use the state variable here */}
+        </StyledTableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</TableContainer>
+
 
         <TableContainer component={Paper}>
           <Table className="info-border">
@@ -413,7 +425,7 @@ const Reciept = ({ bookingID }) => {
                   }}
                   colSpan={10}
                 >
-                  In Words :{data[0]?.FlatCostInWords}
+                  In Words :{totalamountinwords}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -450,7 +462,7 @@ const Reciept = ({ bookingID }) => {
               }}
               colSpan={10}
             >
-              ₹ {data[0].TotalCost } /-
+              ₹ {totalChequeAmount} /-
             </StyledTableCell>
             <StyledTableCell
               style={{
