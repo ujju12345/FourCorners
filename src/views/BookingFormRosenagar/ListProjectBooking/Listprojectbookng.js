@@ -686,7 +686,7 @@ const onCheque = (row) => {
                             <TableCell>{row.Partyname}</TableCell>
                             <TableCell>{row.ProjectName}</TableCell>
                             <TableCell>{row.WingName}</TableCell>
-                            <TableCell>{row.BookingID}</TableCell>
+                            <TableCell>{row.FlatNo}</TableCell>
                             <TableCell>
                               <IconButton
                                 onClick={(event) => handleMenuOpen(event, row)}
