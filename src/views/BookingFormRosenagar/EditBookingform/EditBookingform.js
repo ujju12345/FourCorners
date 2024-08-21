@@ -147,7 +147,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
         ProjectID: res.ProjectID || "",
         WingID: res.WingID || "",
         FloorNo: res.FloorNo || "",
-        FlatNo: res.FlatNo || "", 
+        FlatNo: res.FlatNo || "",
         UnittypeID: res.UnittypeID || "",
         ParkingAvilability: res.ParkingAvilability || "",
         Area: res.Area || "",
@@ -704,6 +704,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
     updatedRemarks[index] = { ...updatedRemarks[index], RemarkDate: date };
     setRemarks(updatedRemarks);
   };
+  
 
   const handleSelectChange = async (event) => {
     const selectedCid = event.target.value;
@@ -925,25 +926,28 @@ const EditBookingform = ({  show, editData , goBack}) => {
               </Grid>
 
               <Grid item xs={12} md={4}>
-                <FormControl fullWidth>
-                  <InputLabel>Flat Number</InputLabel>
-                  <Select
-                    value={formData.FlatNo}
-                    onChange={handleChange}
-                    name="FlatNo"
-                    label="Flat Number"
-                  >
-                    {flatNoData.map((flat, index) => (
-                      <MenuItem
-                        key={`${flat.FlatNo}-${index}`}
-                        value={flat.FlatNo}
-                      >
-                        {flat.FlatNo}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+  <FormControl fullWidth>
+    <InputLabel>Flat Number</InputLabel>
+    <Select
+      value={formData.FlatNo || ""}  // Use formData.FlatNo for the value
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          FlatNo: e.target.value,  // Update formData with selected value
+        })
+      }
+      name="FlatNo"
+      label="Flat Number"
+    >
+      {flatNoData.map((flat, index) => (
+        <MenuItem key={`${flat.FlatNo}-${index}`} value={flat.FlatNo}>
+          {flat.FlatNo}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+
 
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
@@ -1241,7 +1245,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
               {remarks.map((remark, index) => (
                 <Grid container item spacing={2} key={index}>
                   {/* Amount Field */}
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <TextField
                       fullWidth
                       label={`Amount ${index + 1}`}
@@ -1258,7 +1262,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
                   </Grid>
 
                   {/* Amount Type Dropdown */}
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     <FormControl fullWidth>
                       <InputLabel>Amount Type</InputLabel>
                       <Select
@@ -1289,16 +1293,19 @@ const EditBookingform = ({  show, editData , goBack}) => {
                   </Grid>
 
                   {/* Date Field */}
-                <Grid item xs={12} sm={6}>
-  <DatePicker
-    selected={remark.RemarkDate && remark.RemarkDate !== "0000-00-00" ? new Date(remark.RemarkDate) : null}
-    onChange={(date) => handleDateRemarks
-        
-        (index, "RemarkDate", date)}
-    dateFormat="yyyy-MM-dd"
-    customInput={<TextField label="Remark Date" fullWidth />}
-  />
-</Grid>
+                  <Grid item xs={12} sm={6}>
+      <DatePicker
+        selected={
+          remark.RemarkDate && remark.RemarkDate !== "0000-00-00"
+            ? new Date(remark.RemarkDate)
+            : null
+        }
+        onChange={(date) => handleDateRemarks(date, index)}
+        dateFormat="yyyy-MM-dd"
+        customInput={<TextField label="Remark Date" fullWidth />}
+      />
+    </Grid>
+
 
                   {/* Loan Process Checkbox */}
                   <Grid item xs={2}>

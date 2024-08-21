@@ -264,6 +264,7 @@ const Listprojectbookng = ({
     }
   };
 
+
   const fetchBookingRemarkDetails = async (bookingRemarkID) => {
     try {
       const response = await axios.get(
@@ -355,6 +356,18 @@ const onCheque = (row) => {
       setFilteredRows(wingDetails);
     }
   }, [searchQuery, wingDetails]);
+
+  useEffect(() => {
+    if (!open) {
+      setFormData({
+        fromdate: null,
+        todate: null,
+      });
+      setUpcomingPayments([]);
+      setReceivedPayments([]);
+    }
+  }, [open]);
+  
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -466,7 +479,10 @@ const onCheque = (row) => {
 
         setUpcomingPayments([...bookingRemarks.cash, ...bookingRemarks.cheque]);
         setReceivedPayments([...payments.cash, ...payments.cheque]);
-
+        setFormData({
+          fromdate: null,
+          todate: null,
+        });
       } else {
         console.error("Failed to fetch data:", response.data.message);
         setUpcomingPayments([]);
@@ -1206,8 +1222,10 @@ const onCheque = (row) => {
           style={{
             maxWidth: "800px",
             margin: "auto",
+            height: "90vh",
             marginTop: "50px",
             padding: "20px",
+            overflowY: "auto",
           }}
         >
           <CardContent>
@@ -1285,81 +1303,83 @@ const onCheque = (row) => {
   
       </Grid>
 
-      <Grid container spacing={3}>
-        {/* Upcoming Payments */}
-        <Grid item xs={12}>
-          <Typography variant="h6">Upcoming Payments</Typography>
-          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Remark</TableCell>
-                
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Payment Type</TableCell>
-                  <TableCell>Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {upcomingPayments.length > 0 ? (
-                  upcomingPayments.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.RemarkName}</TableCell>
-                     
-                      <TableCell>{item.Remarkamount}</TableCell>
-                      <TableCell>{item.AmountTypeID === 1 ? "Cash" : "Cheque"}</TableCell>
-                      <TableCell>
-                        {new Date(item.RemarkDate).toLocaleDateString()}
+        <Grid container spacing={3}>
+          {/* Upcoming Payments */}
+          <Grid item xs={12}>
+            <Typography variant="h6">Upcoming Payments</Typography>
+            <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Remark</TableCell>
+                  
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Payment Type</TableCell>
+                    <TableCell>Date</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {upcomingPayments.length > 0 ? (
+                    upcomingPayments.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{item.RemarkName}</TableCell>
+                      
+                        <TableCell>{item.Remarkamount}</TableCell>
+                        <TableCell>{item.AmountTypeID === 1 ? "Cash" : "Cheque"}</TableCell>
+                        <TableCell>
+                          {new Date(item.RemarkDate).toLocaleDateString()}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center">
+                        No Upcoming Payments
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} align="center">
-                      No Upcoming Payments
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
 
-        {/* Received Payments */}
-        <Grid item xs={12}>
-          <Typography variant="h6">Received Payments</Typography>
-          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Remark </TableCell>
-   
-                  <TableCell>Cash</TableCell>
-                  <TableCell>Cheque</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {receivedPayments.length > 0 ? (
-                  receivedPayments.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.RemarkName}</TableCell>
-                   
-                      <TableCell>{item.Cash}</TableCell>
-                      <TableCell>{item.ChequeAmount}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
+          {/* Received Payments */}
+          <Grid item xs={12}>
+            <Typography variant="h6">Received Payments</Typography>
+            <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+              <Table stickyHeader>
+                <TableHead>
                   <TableRow>
-                    <TableCell colSpan={4} align="center">
-                      No Received Payments
-                    </TableCell>
+              
+                    <TableCell>Cuurent </TableCell>
+                    <TableCell>Post</TableCell>
+                    <TableCell>Date</TableCell>
+
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {receivedPayments.length > 0 ? (
+                    receivedPayments.map((item, index) => (
+                      <TableRow key={index}>
+                    
+                        <TableCell>{item.Cash}</TableCell>
+                        <TableCell>{item.ChequeAmount}</TableCell>
+                    <TableCell>{item.Date}</TableCell>
+
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        No Received Payments
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
         </Grid>
-      </Grid>
           </CardContent>
         </Card>
       </Modal>
