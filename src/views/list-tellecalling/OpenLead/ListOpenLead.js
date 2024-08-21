@@ -31,10 +31,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
-console.log(item , 'dekh bhai ,open lead');
+  console.log(item, "dekh bhai ,open lead");
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -80,7 +80,6 @@ console.log(item , 'dekh bhai ,open lead');
     } catch (error) {
       console.error("Error fetching Bhk data:", error);
     }
-    
   };
   const fetchUserMasterData = async () => {
     try {
@@ -130,7 +129,6 @@ console.log(item , 'dekh bhai ,open lead');
       onHistoryClick(item); // Pass item to parent component for showing history
     }
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -162,12 +160,11 @@ console.log(item , 'dekh bhai ,open lead');
 
     // Add Tid to formData
     const formData = {
-      UserID:userID,
-      Cid:item?.Cid,
+      UserID: userID,
+      Cid: item?.Cid,
       Tid: item.Tid,
-      Status:1,
+      Status: 1,
       CreateUID: cookies?.amr?.UserID || 1,
-
     };
 
     console.log(formData, "COVERT TO OPPORTUNITY Data 1");
@@ -191,9 +188,8 @@ console.log(item , 'dekh bhai ,open lead');
         // Show success message using SweetAlert
         Swal.fire({
           icon: "success",
-          title: 
-             "Lead Converted to opportunity Successfully",
-            
+          title: "Lead Converted to opportunity Successfully",
+
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -327,7 +323,7 @@ console.log(item , 'dekh bhai ,open lead');
 
   return (
     <>
-     <Grid
+      <Grid
         container
         justifyContent="center"
         spacing={2}
@@ -391,32 +387,37 @@ console.log(item , 'dekh bhai ,open lead');
             Opportunity
           </Button>
           <Menu
-      anchorEl={anchorElOpportunity}
-      open={Boolean(anchorElOpportunity)}
-      onClose={handleCloseConvert}
-      PaperProps={{
-        style: {
-          maxHeight: 300, // Set the desired height in pixels
-          overflowY: "auto", // Make the content scrollable if it exceeds the height
-        },
-      }}
-    >
-      <MenuItem disabled>
-        <Typography variant="subtitle1" style={{ display: 'flex', alignItems: 'center' }}>
-          Convert Lead to
-         
-        </Typography>
-      </MenuItem>
-      {userMaster.length > 0 ? (
-        userMaster.map((user, index) => (
-          <MenuItem key={user.UserID} onClick={(event) => handleMenuItemClick(event, user.UserID)}>
-            {index + 1}. {user.Name}
-          </MenuItem>
-        ))
-      ) : (
-        <MenuItem disabled>No data available</MenuItem>
-      )}
-    </Menu>
+            anchorEl={anchorElOpportunity}
+            open={Boolean(anchorElOpportunity)}
+            onClose={handleCloseConvert}
+            PaperProps={{
+              style: {
+                maxHeight: 300, // Set the desired height in pixels
+                overflowY: "auto", // Make the content scrollable if it exceeds the height
+              },
+            }}
+          >
+            <MenuItem disabled>
+              <Typography
+                variant="subtitle1"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                Convert Lead to
+              </Typography>
+            </MenuItem>
+            {userMaster.length > 0 ? (
+              userMaster.map((user, index) => (
+                <MenuItem
+                  key={user.UserID}
+                  onClick={(event) => handleMenuItemClick(event, user.UserID)}
+                >
+                  {index + 1}. {user.Name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Menu>
         </Grid>
         <Grid item>
           <Button
@@ -533,7 +534,6 @@ console.log(item , 'dekh bhai ,open lead');
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
               />
             </Grid>
             <Grid item xs={6}>
@@ -541,14 +541,13 @@ console.log(item , 'dekh bhai ,open lead');
                 fullWidth
                 // label="Next Follow-Up Time"
                 type="time"
-                name="NextFollowUpTime"                               
+                name="NextFollowUpTime"
                 value={formData.NextFollowUpTime}
                 onChange={handleChange}
                 label="Next Follow Up Time"
                 InputLabelProps={{
                   shrink: true,
                 }}
-          
               />
             </Grid>
             <Grid item xs={6}>
@@ -629,7 +628,7 @@ console.log(item , 'dekh bhai ,open lead');
               ml: 20,
             }}
           >
-              <div style={{ marginRight: 5 }}>
+            <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -649,8 +648,7 @@ console.log(item , 'dekh bhai ,open lead');
                 Source: {item?.SourceName}
               </Typography>
             </div>
-    
-          
+
             <div style={{ marginRight: 5 }}>
               <Typography
                 variant="body2"
@@ -693,100 +691,100 @@ console.log(item , 'dekh bhai ,open lead');
             </div>
           </Box>
 
-          <Box sx={{ display: "flex",  mt: 10 , ml:50}}>
-        <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
-          <IconButton
-            aria-label="phone"
-            size="small"
-            sx={{
-              color: "green",
-              backgroundColor: "#e0f7fa",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#b2ebf2",
-              },
-            }}
-          >
-            <PhoneIcon />
-          </IconButton>
-        </a>
-        <a style={{ marginRight: 1 }}>
-                <IconButton
-                  aria-label="share"
-                  size="small"
-                  sx={{
-                    color: "blue",
-                    backgroundColor: "#e3f2fd",
-                    borderRadius: "50%",
-                    padding: "10px",
-                    marginRight: 15,
-                    "&:hover": {
-                      backgroundColor: "#bbdefb",
-                    },
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
-              </a>
-              <a style={{ marginRight:1 }}>
-                <IconButton
-                  aria-label="share"
-                  size="small"
-                  sx={{
-                    color: "#000",
-                    backgroundColor: "#e3f2fd",
-                    borderRadius: "50%",
-                    padding: "10px",
-                    marginRight: 1,
-                    "&:hover": {
-                      backgroundColor: "#bbdefb",
-                    },
-                  }}
-                  onClick={handleHistoryClick}
-                >
-                  <HistoryIcon />
-                </IconButton>
-              </a>
-              <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
-                <IconButton
-                  aria-label="email"
-                  size="small"
-                  sx={{
-                    color: "red",
-                    backgroundColor: "#ffebee",
-                    borderRadius: "50%",
-                    padding: "10px",
-                    "&:hover": {
-                      backgroundColor: "#ffcdd2",
-                    },
-                  }}
-                >
-                  <EmailIcon />
-                </IconButton>
-              </a>
-        <a
-          href={`https://wa.me/${item?.Mobile}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <IconButton
-            aria-label="whatsapp"
-            size="small"
-            sx={{
-              color: "green",
-              backgroundColor: "#e8f5e9",
-              borderRadius: "50%",
-              padding: "10px",
-              "&:hover": {
-                backgroundColor: "#c8e6c9",
-              },
-            }}
-          >
-            <WhatsAppIcon />
-          </IconButton>
-        </a>
-      </Box>
+          <Box sx={{ display: "flex", mt: 10, ml: 50 }}>
+            <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+              <IconButton
+                aria-label="phone"
+                size="small"
+                sx={{
+                  color: "green",
+                  backgroundColor: "#e0f7fa",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#b2ebf2",
+                  },
+                }}
+              >
+                <PhoneIcon />
+              </IconButton>
+            </a>
+            <a style={{ marginRight: 1 }}>
+              <IconButton
+                aria-label="share"
+                size="small"
+                sx={{
+                  color: "blue",
+                  backgroundColor: "#e3f2fd",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  marginRight: 15,
+                  "&:hover": {
+                    backgroundColor: "#bbdefb",
+                  },
+                }}
+              >
+                <ShareIcon />
+              </IconButton>
+            </a>
+            <a style={{ marginRight: 1 }}>
+              <IconButton
+                aria-label="share"
+                size="small"
+                sx={{
+                  color: "#000",
+                  backgroundColor: "#e3f2fd",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  marginRight: 1,
+                  "&:hover": {
+                    backgroundColor: "#bbdefb",
+                  },
+                }}
+                onClick={handleHistoryClick}
+              >
+                <HistoryIcon />
+              </IconButton>
+            </a>
+            <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+              <IconButton
+                aria-label="email"
+                size="small"
+                sx={{
+                  color: "red",
+                  backgroundColor: "#ffebee",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#ffcdd2",
+                  },
+                }}
+              >
+                <EmailIcon />
+              </IconButton>
+            </a>
+            <a
+              href={`https://wa.me/${item?.Mobile}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconButton
+                aria-label="whatsapp"
+                size="small"
+                sx={{
+                  color: "green",
+                  backgroundColor: "#e8f5e9",
+                  borderRadius: "50%",
+                  padding: "10px",
+                  "&:hover": {
+                    backgroundColor: "#c8e6c9",
+                  },
+                }}
+              >
+                <WhatsAppIcon />
+              </IconButton>
+            </a>
+          </Box>
 
           <Box
             sx={{
@@ -841,7 +839,7 @@ console.log(item , 'dekh bhai ,open lead');
               </Grid>
               <Grid item xs={4}>
                 <Card
-                  variant="outlined" 
+                  variant="outlined"
                   sx={{
                     borderRadius: 1,
                     padding: "10px",
@@ -905,7 +903,7 @@ console.log(item , 'dekh bhai ,open lead');
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                  Follow Up Note
+                    Follow Up Note
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}
