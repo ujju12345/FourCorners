@@ -283,7 +283,7 @@ const ModifyHistoryList = ({
             row.FlatNo.toString()
               .toLowerCase()
               .includes(searchQuery.toLowerCase()) ||
-            row.Partyname.toLowerCase().includes(searchQuery.toLowerCase())
+            row?.Partyname?.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {

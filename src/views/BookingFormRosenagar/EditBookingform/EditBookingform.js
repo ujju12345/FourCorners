@@ -135,7 +135,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
   
       setFormData({
         ...formData,
-        BookingID:res.BookingID || "",
+        BookingID: res.BookingID || "",
         Name: res.BookingName || "",
         SourceName: res.SourceName || "",
         Address: res.Address || "",
@@ -147,14 +147,14 @@ const EditBookingform = ({  show, editData , goBack}) => {
         ProjectID: res.ProjectID || "",
         WingID: res.WingID || "",
         FloorNo: res.FloorNo || "",
-        FlatNo: res.FlatNo || "",
+        FlatNo: res.FlatNo || "", 
         UnittypeID: res.UnittypeID || "",
-        ParkingAvilability:res.ParkingAvilability || "",
+        ParkingAvilability: res.ParkingAvilability || "",
         Area: res.Area || "",
         Ratesqft: res.Ratesqft || "",
-        BookingRef:res.BookingRef || "",
+        BookingRef: res.BookingRef || "",
         TtlAmount: res.TtlAmount || "",
-        AmountTypeID:res.AmountTypeID || "",
+        AmountTypeID: res.AmountTypeID || "",
         Charges: res.Charges || "",
         ParkingFacility: res.ParkingFacility || "",
         Advocate: res.Advocate || "",
@@ -166,12 +166,11 @@ const EditBookingform = ({  show, editData , goBack}) => {
         TotalCost: res.TotalCost || "",
         FlatCostInWords: res.FlatCostInWords || "",
         BookingDate: res.BookingDate || "",
-        BookedByID : res.BookedByID || "",
+        BookedByID: res.BookedByID || "",
         UsableArea: res.UsableArea || "",
         AgreementCarpet: res.AgreementCarpet || "",
-       
-        
       });
+  
       setRemarks(res.remarksWithCreateDate || []);
       setLoading(false);
     } catch (error) {
@@ -180,6 +179,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
       setLoading(false);
     }
   };
+  
   
   
 

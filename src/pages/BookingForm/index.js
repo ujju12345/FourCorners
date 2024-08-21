@@ -4,7 +4,7 @@ import axios from 'axios';
 import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
 import FormRosenagar from 'src/views/BookingFormRosenagar/FormRosenagar';
 
-const ProjectFinance = () => {
+const BookingForm = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,4 +58,4 @@ const ProjectFinance = () => {
   );
 };
 
-export default ProjectFinance;
+export default BookingForm;
