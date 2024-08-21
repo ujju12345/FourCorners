@@ -47,7 +47,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
 
   const initialFormData = {
     BookingDate: null,
-    BookingID : editData,
+    BookingID : "",
     Mobile: "",
     BookingRef: "",
     Name: "",
@@ -656,7 +656,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
       });
 
       if (response.data.status === "Success") {
-        console.log(response.data.data, "Submission successful");
+        console.log(response.data.data, "Submission successful<>>>>>>>>>>>>>>>");
         // const { BookingID } = response.data;
         // onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
@@ -668,7 +668,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
           showConfirmButton: false,
           timer: 1000,
         });
-        goBack()
+        // goBack()
       } else {
         Swal.fire({
           icon: "error",

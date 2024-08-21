@@ -293,8 +293,8 @@ const Listprojectbookng = ({
     setSelectedRowMenu(null);
   };
 
-  const handleReportClick = (id) => {
-    setBookingID(id); // Set the BookingID state
+  const handleReportClick = (row) => {
+    setBookingID(row.BookingID); // Set the BookingID state
     setMergedData(initialMergedData); // Clear the mergedData state
     handleOpenPayment(selectedRowMenu); // Open the modal
     handleMenuClose();
@@ -700,7 +700,7 @@ const onCheque = (row) => {
                               >
                                 <MenuItem
                                   onClick={() =>
-                                    handleReportClick(row.BookingID)
+                                    handleReportClick(row)
                                   }
                                 >
                                   Report
