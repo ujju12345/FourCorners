@@ -26,17 +26,14 @@ const AddProjectDetails = ({ show, editData }) => {
     CompanyID: "",
     ProjectCode: "",
     ProjectManager: "",
-    PlotAreaInSqft: "",
+    ReraRegistrationNumber: "",
     ProjectTypeID: "",
     ApprovedBy: "",
     Specification: "",
-    AmenitiesIDs: [],
     Video: "",
     VirtualVideo: "",
-    Keyword: "",
     ProjectAddress: "",
     Pincode: "",
-    AssignedByID: cookies?.amr?.UserID || 1,
     Location: "",
     Landmark: "",
     CityID: "",
@@ -44,13 +41,12 @@ const AddProjectDetails = ({ show, editData }) => {
     ProjectStartDate: null,
     CompletionDate: null,
     PossessionDate: null,
-    CreateUID: 1,
+    AmenitiesIDs: [],
+    image: null, // Add image field
   });
 
   const [userMaster, setUserMaster] = useState([]);
   const [errors, setErrors] = useState({});
-  
-
   const [loading, setLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
@@ -85,40 +81,45 @@ const AddProjectDetails = ({ show, editData }) => {
   }, []);
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "https://apiforcorners.cubisysit.com/api/api-dropdown-projectmaster.php"
-      );
-      setProjectTypes(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  fetchData()
-}, []);
-
-useEffect(() => {
-  // Fetch amenities data from the API
-  axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-amenities.php')
-    .then(response => {
-      if (response.data.status === 'Success') {
-        setAmenities(response.data.data);
-      } else {
-        // Handle API error
-        console.error('Failed to fetch amenities');
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://apiforcorners.cubisysit.com/api/api-dropdown-projectmaster.php"
+        );
+        setProjectTypes(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    })
-    .catch(error => {
-      console.error('Error fetching amenities:', error);
-    });
-}, []);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-amenities.php')
+      .then(response => {
+        if (response.data.status === 'Success') {
+          setAmenities(response.data.data);
+        } else {
+          console.error('Failed to fetch amenities');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching amenities:', error);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0],
     });
   };
 
@@ -140,42 +141,70 @@ useEffect(() => {
     event.stopPropagation();
     setFormData((prev) => ({
       ...prev,
-      amenitiesIDs: prev.amenitiesIDs.filter((id) => id !== value),
+      AmenitiesIDs: prev.AmenitiesIDs.filter((id) => id !== value),
     }));
   };
 
   const validateFields = (data) => {
     const newErrors = {};
-    if (!data.ProjectName) newErrors.ProjectName = "Project Name is required";
-    if (!data.CompanyID) newErrors.CompanyID = "Company Name is required";
     if (!data.ProjectCode) newErrors.ProjectCode = "Project Code is required";
-    if (!data.ProjectAddress)
-      newErrors.ProjectAddress = "Project Address is required";
+    if (!data.ProjectAddress) newErrors.ProjectAddress = "Project Address is required";
     if (!data.Pincode) newErrors.Pincode = "Pincode is required";
-    if (!data.cityID) newErrors.cityID = "City is required";
+    if (!data.CityID) newErrors.CityID = "City is required";
     return newErrors;
   };
 
   const handleSubmitData = (event) => {
-    console.log('presss');
     event.preventDefault();
 
+    const newErrors = validateFields(formData);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-    const body = {
-      ...formData,
-   
-    };
+    const formDataToSubmit = new FormData();
+    for (const key in formData) {
+      if (formData.hasOwnProperty(key)) {
+        formDataToSubmit.append(key, formData[key]);
+      }
+    }
 
     const url = editData
       ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectmaster.php"
       : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-projectdetails.php";
 
     axios
-      .post(url, body)
+      .post(url, formDataToSubmit, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
       .then((response) => {
         if (response.data.status === "Success") {
-          console.log('HOGAYAAA SUBMITTTTTTTTTT');
-          setFormData({}); // Reset form data after successful submission
+          setFormData({
+            ProjectID: "",
+            CompanyID: "",
+            ProjectCode: "",
+            ProjectManager: "",
+            ReraRegistrationNumber: "",
+            ProjectTypeID: "",
+            ApprovedBy: "",
+            Specification: "",
+            Video: "",
+            VirtualVideo: "",
+            ProjectAddress: "",
+            Pincode: "",
+            Location: "",
+            Landmark: "",
+            CityID: "",
+            WelcomeMessage: "",
+            ProjectStartDate: null,
+            CompletionDate: null,
+            PossessionDate: null,
+            AmenitiesIDs: [],
+            image: null,
+          }); // Reset form data after successful submission
           setErrors({});
           setSubmitSuccess(true);
           setSubmitError(false);
@@ -213,6 +242,7 @@ useEffect(() => {
       });
   };
 
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -223,7 +253,7 @@ useEffect(() => {
             variant="body2"
             sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
           >
-            {editData ? "Edit Project Master" : "Add Project Master"}
+            {editData ? "Edit Project Master" : "Add Project Details"}
           </Typography>
         </Box>
         <Box>
@@ -252,18 +282,15 @@ useEffect(() => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={8} sm={4}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    Project Name 
-                  </InputLabel>
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth error={!!errors.ProjectTypeID}>
+                  <InputLabel>Project Type</InputLabel>
                   <Select
-                    value={formData.ProjectID}
-                    name="ProjectID"
+                    value={formData.ProjectTypeID || ""}
                     onChange={handleInputChange}
-                    label={<>Project Name</>}
+                    name="ProjectTypeID"
+                    label="Project Type"
                   >
-                 
                     {projectTypes.map((project) => (
                       <MenuItem
                         key={project.ProjectID}
@@ -273,20 +300,23 @@ useEffect(() => {
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.ProjectID && (
-                    <Typography variant="caption" color="error">
-                      {errors.ProjectID}
-                    </Typography>
+                  {errors.ProjectTypeID && (
+                    <Alert severity="error">{errors.ProjectTypeID}</Alert>
                   )}
                 </FormControl>
               </Grid>
-
-           
-
-           
-
-     
-
+              <Grid item xs={12} md={4}>
+                <FormControl fullWidth>
+                  <InputLabel>Image</InputLabel>
+                  <input
+                    type="file"
+                    accept=".jpg,.png,.jpeg"
+                    name="image"
+                    onChange={handleFileChange}
+                    style={{ marginRight: "10px" }}
+                  />
+                </FormControl>
+              </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -298,7 +328,6 @@ useEffect(() => {
                   helperText={errors.ProjectCode}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -308,41 +337,34 @@ useEffect(() => {
                   onChange={handleInputChange}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="RERA Registration Number"
+                  label="Rera Registration Number"
                   name="ReraRegistrationNumber"
                   value={formData.ReraRegistrationNumber}
                   onChange={handleInputChange}
                 />
               </Grid>
-
-              
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
                   label="Approved By"
-                  name="approvedby"
-                  value={formData.approvedby}
+                  name="ApprovedBy"
+                  value={formData.ApprovedBy}
                   onChange={handleInputChange}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                  label="Specification"
+                  label="                  Specification"
                   name="Specification"
                   value={formData.Specification}
                   onChange={handleInputChange}
                   multiline
-                  // rows={4}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -354,7 +376,6 @@ useEffect(() => {
                   helperText={errors.ProjectAddress}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -366,29 +387,6 @@ useEffect(() => {
                   helperText={errors.Pincode}
                 />
               </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="City "
-                  name="CityID"
-                  value={formData.CityID}
-                  onChange={handleInputChange}
-                  error={!!errors.CityID}
-                  helperText={errors.CityID}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Assignee By "
-                  name="AssignedByID"
-                  value={formData.AssignedByID}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -398,7 +396,6 @@ useEffect(() => {
                   onChange={handleInputChange}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -408,7 +405,17 @@ useEffect(() => {
                   onChange={handleInputChange}
                 />
               </Grid>
-
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="City"
+                  name="CityID"
+                  value={formData.CityID}
+                  onChange={handleInputChange}
+                  error={!!errors.CityID}
+                  helperText={errors.CityID}
+                />
+              </Grid>
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -418,7 +425,6 @@ useEffect(() => {
                   onChange={handleInputChange}
                 />
               </Grid>
-
               <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
@@ -428,28 +434,16 @@ useEffect(() => {
                   onChange={handleInputChange}
                 />
               </Grid>
-
-              <Grid item xs={12} md={4}>
-                <TextField
-                  fullWidth
-                  label="Keyword"
-                  name="Keyword"
-                  value={formData.Keyword}
-                  onChange={handleInputChange}
-                />
-              </Grid>
               <Grid item xs={12} md={4}>
                 <DatePicker
                   selected={formData.ProjectStartDate}
-                  onChange={(date) =>
-                    handleDateChange(date, "ProjectStartDate")
-                  }
+                  onChange={(date) => handleDateChange(date, "ProjectStartDate")}
                   dateFormat="dd-MM-yyyy"
                   className="form-control"
                   customInput={
                     <TextField
                       fullWidth
-                      label="Launch date"
+                      label="Launch Date"
                       InputProps={{ readOnly: true, sx: { width: "100%" } }}
                     />
                   }
@@ -464,7 +458,7 @@ useEffect(() => {
                   customInput={
                     <TextField
                       fullWidth
-                      label="Completion date"
+                      label="Completion Date"
                       InputProps={{ readOnly: true, sx: { width: "100%" } }}
                     />
                   }
@@ -479,43 +473,42 @@ useEffect(() => {
                   customInput={
                     <TextField
                       fullWidth
-                      label="Possession date"
+                      label="Possession Date"
                       InputProps={{ readOnly: true, sx: { width: "100%" } }}
                     />
                   }
                 />
               </Grid>
-              <Grid item xs={12} >
-      <FormControl fullWidth error={!!errors.AmenitiesIDs}>
-        <InputLabel>Amenities</InputLabel>
-        <Select
-          multiple
-          value={formData.AmenitiesIDs || []}
-          onChange={handleAmenitiesChange}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip
-                  key={value}
-                  label={amenities.find((amenity) => amenity.amenitiesID === value)?.amenitiesName || value}
-                  onDelete={(e) => handleDelete(e, value)}
-                />
-              ))}
-            </Box>
-          )}
-          name="AmenitiesIDs"
-          label="Amenities"
-        >
-          {amenities.map((amenity) => (
-            <MenuItem key={amenity.amenitiesID} value={amenity.amenitiesID}>
-              {amenity.amenitiesName}
-            </MenuItem>
-          ))}
-        </Select>
-        {errors.AmenitiesIDs && <Alert severity="error">{errors.AmenitiesIDs}</Alert>}
-      </FormControl>
-    </Grid>
-
+              <Grid item xs={12}>
+                <FormControl fullWidth error={!!errors.AmenitiesIDs}>
+                  <InputLabel>Amenities</InputLabel>
+                  <Select
+                    multiple
+                    value={formData.AmenitiesIDs || []}
+                    onChange={handleAmenitiesChange}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip
+                            key={value}
+                            label={amenities.find((amenity) => amenity.amenitiesID === value)?.amenitiesName || value}
+                            onDelete={(e) => handleDelete(e, value)}
+                          />
+                        ))}
+                      </Box>
+                    )}
+                    name="AmenitiesIDs"
+                    label="Amenities"
+                  >
+                    {amenities.map((amenity) => (
+                      <MenuItem key={amenity.amenitiesID} value={amenity.amenitiesID}>
+                        {amenity.amenitiesName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.AmenitiesIDs && <Alert severity="error">{errors.AmenitiesIDs}</Alert>}
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -541,3 +534,4 @@ useEffect(() => {
 };
 
 export default AddProjectDetails;
+

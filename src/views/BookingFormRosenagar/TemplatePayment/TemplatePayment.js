@@ -384,6 +384,31 @@ const TemplatePayment = ({ bookingID , handleCancel }) => {
 </TableContainer>
 
       </InvoiceBox>
+      <InvoiceBox >
+        <TableContainer component={Paper}>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <StyledTableCell colSpan={5} style={{ textAlign: 'center', borderBottom: 'none' }}>
+                  <Typography style={{ fontSize: 20, fontWeight: 700 }}>PROJECT</Typography>
+                </StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>WING</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>FLOOR</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>FLAT NO.</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>TYPE</StyledTableCell>
+              </TableRow>
+              <TableRow>
+                <StyledTableCell style={{ textAlign: 'center' }}>DATE</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>A</StyledTableCell>
+                <StyledTableCell colSpan={4} style={{ textAlign: 'center' }}>B</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>A + B</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>Balance</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>Sign.</StyledTableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </InvoiceBox>  
     </>
   );
 };
