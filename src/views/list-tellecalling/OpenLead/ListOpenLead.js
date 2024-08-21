@@ -110,6 +110,10 @@ console.log(item , 'dekh bhai ,open lead');
     setOpen(false);
   };
 
+  const handleCloseConvert = () => {
+    setAnchorElOpportunity(false);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -389,7 +393,7 @@ console.log(item , 'dekh bhai ,open lead');
           <Menu
       anchorEl={anchorElOpportunity}
       open={Boolean(anchorElOpportunity)}
-      onClose={handleClose}
+      onClose={handleCloseConvert}
       PaperProps={{
         style: {
           maxHeight: 300, // Set the desired height in pixels
@@ -400,13 +404,7 @@ console.log(item , 'dekh bhai ,open lead');
       <MenuItem disabled>
         <Typography variant="subtitle1" style={{ display: 'flex', alignItems: 'center' }}>
           Convert Lead to
-          <IconButton
-            size="small"
-            onClick={handleClose}
-            style={{ marginLeft: 'auto' }} // Push the icon to the right
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
+         
         </Typography>
       </MenuItem>
       {userMaster.length > 0 ? (
