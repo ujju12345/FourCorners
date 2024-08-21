@@ -71,9 +71,13 @@ const SaleDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenContact, setModalOpenContact] = useState(false);
   const [modalOpenOpportunity, setModalOpenOpportunity] = useState(false);
+  const [modalOpenBooking, setModalOpenBooking] = useState(false);
+
 
   const [selectedContact, setSelectedContact] = useState(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+
 
   const [selectedTelecaller, setSelectedTelecaller] = useState(null);
 
@@ -136,6 +140,10 @@ const SaleDashboard = () => {
     } else if (type === "opportunity") {
       setSelectedData(telecallingData?.data?.opportunityRecords);
       setSelectedType("opportunity");
+    }
+    else if (type === "booking") {
+      setSelectedData(telecallingData?.data?.oproccessCount);
+      setSelectedType("booking");
     }
   };
   useEffect(() => {
@@ -217,6 +225,27 @@ const SaleDashboard = () => {
     }
   };
 
+
+  const fetchDataForBooking = async (BookingID) => {
+    console.log("Oid AAYA", BookingID);
+    console.log("press");
+    try {
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-singel-bookingremark.php?BookingID=${BookingID}`;
+      const response = await axios.get(apiUrl);
+
+      if (response.data.status === "Success") {
+        console.log(
+          response.data,
+          "Single booking data fetched for booking"
+        );
+        setSelectedBooking(response.data.data);
+        setModalOpenBooking(true);
+      }
+    } catch (error) {
+      console.error("Error fetching single telecalling data:", error);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -234,6 +263,8 @@ const SaleDashboard = () => {
           telecallingData?.data?.telecallingCount || 0,
           telecallingData?.data?.contactsCount || 0,
           telecallingData?.data?.opportunityCount || 0,
+          telecallingData?.data?.oproccessCount || 0,
+
 
           0, // Adjust this value as needed for "Not Interested"
         ],
@@ -362,14 +393,14 @@ const SaleDashboard = () => {
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card>
+                      <Card onClick={() => handleCardClick("booking")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Booking
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: 0 {/* Adjust this key as needed */}
+                            Total Counts: {telecallingData?.data.oproccessCount} {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -437,74 +468,83 @@ const SaleDashboard = () => {
                         ? `${userName} Telecalling Data`
                         : selectedType === "contacts"
                         ? ` ${userName} Contact Data`
-                        : `${userName} Opportunity Data`}
+                        : `${userName} Opportunity Data`
+                        ?`${userName} Booking Data`
+                        : selectedType === "booking"}
                     </Typography>
                   </Box>
                 </Grid>
                 {selectedData && (
-                  <Grid item xs={12} sx={{ mt: 3 }}>
-                    <TableContainer component={Box} sx={{ maxHeight: 400 }}>
-                      <Table stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Mobile</TableCell>
-                            {selectedType === "telecalling" ? (
-                              <TableCell>Next Follow Up</TableCell>
-                            ) : (
-                              <TableCell>Created Date</TableCell>
-                            )}
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {selectedData.map((row, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{row.CName}</TableCell>
-                              <TableCell>{row.Mobile}</TableCell>
-                              <TableCell>
-                                {selectedType === "telecalling"
-                                  ? row.NextFollowUpDate
-                                  : row.CreateDate}
-                              </TableCell>
-                              <TableCell>
-                                {selectedType === "telecalling" ? (
-                                  <Button
-                                    onClick={() => fetchDataForModal(row.Tid)}
-                                  >
-                                    View Telecaller Profile
-                                  </Button>
-                                ) : selectedType === "contacts" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalContact(row.Cid)
-                                    }
-                                  >
-                                    View Contact Profile
-                                  </Button>
-                                ) : selectedType === "opportunity" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalOpportunity(row.Oid)
-                                    }
-                                  >
-                                    View Opportunity Profile
-                                  </Button>
-                                ) : null}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
+               <Grid item xs={12} sx={{ mt: 3 }}>
+               <TableContainer component={Box} sx={{ maxHeight: 400 }}>
+                 <Table stickyHeader>
+                   <TableHead>
+                     <TableRow>
+                       <TableCell>Name</TableCell>
+                       <TableCell>Mobile</TableCell>
+                       {selectedType === "telecalling" ? (
+                         <TableCell>Next Follow Up</TableCell>
+                       ) : (
+                         <TableCell>Created Date</TableCell>
+                       )}
+                       <TableCell>Action</TableCell>
+                     </TableRow>
+                   </TableHead>
+                   <TableBody>
+                     {(selectedData || [])?.map((row, index) => (
+                       <TableRow key={index}>
+                         <TableCell>{row.CName}</TableCell>
+                         <TableCell>{row.Mobile}</TableCell>
+                         <TableCell>
+                           {selectedType === "telecalling"
+                             ? row.NextFollowUpDate
+                             : row.CreateDate}
+                         </TableCell>
+                         <TableCell>
+                           {selectedType === "telecalling" ? (
+                             <Button
+                               onClick={() => fetchDataForModal(row.Tid)}
+                             >
+                               View Telecaller Profile
+                             </Button>
+                           ) : selectedType === "contacts" ? (
+                             <Button
+                               onClick={() => fetchDataForModalContact(row.Cid)}
+                             >
+                               View Contact Profile
+                             </Button>
+                           ) : selectedType === "opportunity" ? (
+                             <Button
+                               onClick={() => fetchDataForModalOpportunity(row.Oid)}
+                             >
+                               View Opportunity Profile
+                             </Button>
+                           ) : selectedType === "booking" ? (
+                             <Button
+                               onClick={() => fetchDataForBooking(row.BookingID)}
+                             >
+                               View Booking Profile
+                             </Button>
+                           ) : null}
+                         </TableCell>
+                       </TableRow>
+                     ))}
+                   </TableBody>
+                 </Table>
+               </TableContainer>
+             </Grid>
+             
                 )}
               </CardContent>
             </Card>
           </Grid>
         )}
 
-        <Dialog
+
+
+
+
+<Dialog
           open={modalOpenOpportunity}
           onClose={() => setModalOpenOpportunity(false)}
           sx={{ maxWidth: "90vw", width: "auto" }}
@@ -951,6 +991,140 @@ const SaleDashboard = () => {
             </DialogContent>
           )}
         </Dialog>
+
+
+        <Dialog open={modalOpenBooking} onClose={() => setModalOpenBooking(false)} maxWidth="md" fullWidth>
+      {selectedBooking ? (
+        <>
+          <DialogTitle>Booking Details</DialogTitle>
+          <DialogContent>
+            <Paper elevation={3} sx={{ p: 3 }}>
+              <Box sx={{ mb: 2 }}>
+                <Grid container spacing={2}>
+                  {/* City */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        City
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.CityName}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  {/* Wing */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        Wing Name
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.WingName}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  {/* Project Name */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        Project Name
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.ProjectName}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  {/* Flat No */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        Flat No
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.FlatNo}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  {/* Floor No */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        Floor No
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.FloorNo}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  {/* Unit Type */}
+                  <Grid item xs={4}>
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        Unit Type
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        {selectedBooking?.UnittypeName}
+                      </Typography>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              {/* Remark Section */}
+              <Box
+                sx={{
+                  width: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  ml: 12,
+                  mt: 12,
+                }}
+              >
+                <Typography variant="h6" sx={{ mb: 3 }}>
+                  Remarks
+                </Typography>
+                {selectedBooking?.remarksWithCreateDate.map((remark, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: 2,
+                    }}
+                  >
+                    <Card variant="outlined" sx={{ borderRadius: 1, padding: '10px', width: '100%' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        {remark.RemarkName}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        Amount: {remark.Remarkamount}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontSize: '0.7rem' }}>
+                        Date: {remark.RemarkDate}
+                      </Typography>
+                    </Card>
+                  </Box>
+                ))}
+              </Box>
+            </Paper>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setModalOpenBooking(false)}>Close</Button>
+          </DialogActions>
+        </>
+      ) : (
+        <DialogContent>
+          <Typography>Loading...</Typography>
+        </DialogContent>
+      )}
+    </Dialog>
 
    
 

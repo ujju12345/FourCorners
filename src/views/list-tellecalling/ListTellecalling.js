@@ -99,6 +99,10 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
     setOpen(false);
   };
 
+  const handleCloseConvert = () => {
+    setAnchorElOpportunity(false);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -396,7 +400,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
           <Menu
             anchorEl={anchorElOpportunity}
             open={Boolean(anchorElOpportunity)}
-            onClose={handleClose}
+            onClose={handleCloseConvert}
             PaperProps={{
               style: {
                 maxHeight: 300, // Set the desired height in pixels

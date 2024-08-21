@@ -138,12 +138,11 @@ const InvoiceBox = styled(Box)({
       const payload = {
         BookingID: item.BookingID,
         BookingremarkID:item.BookingremarkID,
-
         Remarkamount: bookingRemarkDetails.Remarkamount || 0,
         RemarkName: bookingRemarkDetails.RemarkName || '',
         RemarkDate: formData.NextFollowUpDate,
         AmountTypeID: 1,
-        Loan: formData.Loan || 0,
+        Loan:1 ,
         Note: formData.Note,
         CreateUID: cookies?.amr?.UserID || 1,
       };

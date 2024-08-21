@@ -27,6 +27,8 @@ import {
   IconButton,
   Checkbox,
 } from "@mui/material";
+import CancelIcon from '@mui/icons-material/Cancel';
+
 import MuiAlert from "@mui/material/Alert";
 import { useCookies } from "react-cookie";
 import { toWords } from "number-to-words";
@@ -34,7 +36,7 @@ import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 
-const EditBookingform = ({  show, editData , goBack}) => {
+const EditBookingform = ({  show, bookingID , goBack}) => {
   const router = useRouter();
 
   const initialRemark = {
@@ -112,25 +114,25 @@ const EditBookingform = ({  show, editData , goBack}) => {
 
 
   useEffect(() => {
-    if (editData) {
-      console.log(editData, "Edit data aaya dekhooooo<<<<<<<<>>>>>>>>>>>>>>>>>>");
+    if (bookingID) {
+      console.log(bookingID, "Edit data aaya dekhooooo<<<<<<<<>>>>>>>>>>>>>>>>>>");
       fetchData();
     } else {
-      console.error("editData is undefined");
+      console.error("bookingID is undefined");
     }
-  }, [editData]);
+  }, [bookingID]);
   
   const fetchData = async () => {
-    if (!editData) {
-      console.error("editData is undefined when fetchData is called");
+    if (!bookingID) {
+      console.error("bookingID is undefined when fetchData is called");
       return;
     }
   
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-edit-projectbooking.php?BookingID=${editData}`
+        `https://apiforcorners.cubisysit.com/api/api-edit-projectbooking.php?BookingID=${bookingID}`
       );
-      console.log("Data received:", response.data);
+      console.log("Data received:<<<<<>>>>>>>>", response.data);
       const res = response.data.data;
   
       setFormData({
@@ -513,7 +515,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
         )
         .then((response) => {
           if (response.data.status === "Success") {
-            console.log("Flat No Data:", response.data.data); // Log the fetched data
+            console.log("Flat No Data:<<<<<<<<<<<<<<<<1", response.data.data); // Log the fetched data
             setFlatNoData(response.data.data);
           }
         })
@@ -626,7 +628,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
     event.preventDefault();
 
     const url = 
-      `https://ideacafe-backend.vercel.app/api/proxy/api-update-projectbooking.php?BookingID=${editData}`
+      `https://ideacafe-backend.vercel.app/api/proxy/api-update-projectbooking.php?BookingID=${bookingID}`
      
 
     const formattedRemarks = remarks.map((remark, index) => ({
@@ -642,7 +644,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
 
     const dataToSend = {
       ...formData,
-      BookingID:editData,
+      BookingID:bookingID,
       Remarks: formattedRemarks,
     };
 
@@ -656,7 +658,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
       });
 
       if (response.data.status === "Success") {
-        console.log(response.data.data, "Submission successful<>>>>>>>>>>>>>>>");
+        console.log(response.data, "Submission successful<>>>>>>>>>>>>>>>");
         // const { BookingID } = response.data;
         // onFormSubmitSuccess(BookingID);
         setFormData(initialFormData);
@@ -745,6 +747,13 @@ const EditBookingform = ({  show, editData , goBack}) => {
 
   return (
     <>
+      {/* <IconButton
+              aria-label="cancel"
+              // onClick={handleClose}
+              sx={{ position: "absolute", top: 6, right: 10 }}
+            >
+              <CancelIcon sx={{ color: "red" }} />
+            </IconButton> */}
       <Card sx={{ height: "auto" }}>
         <CardContent>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
@@ -753,8 +762,9 @@ const EditBookingform = ({  show, editData , goBack}) => {
                 variant="body2"
                 sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 }}
               >
-                {editData ? "Edit Booking Details" : "Edit Booking Details"}
+                {bookingID ? "Edit Booking Details" : "Edit Booking Details"}
               </Typography>
+            
             </Box>
           </Grid>
           <form style={{ marginTop: "50px" }}>
@@ -926,27 +936,25 @@ const EditBookingform = ({  show, editData , goBack}) => {
               </Grid>
 
               <Grid item xs={12} md={4}>
-  <FormControl fullWidth>
-    <InputLabel>Flat Number</InputLabel>
-    <Select
-      value={formData.FlatNo || ""}  // Use formData.FlatNo for the value
-      onChange={(e) =>
-        setFormData({
-          ...formData,
-          FlatNo: e.target.value,  // Update formData with selected value
-        })
-      }
-      name="FlatNo"
-      label="Flat Number"
-    >
-      {flatNoData.map((flat, index) => (
-        <MenuItem key={`${flat.FlatNo}-${index}`} value={flat.FlatNo}>
-          {flat.FlatNo}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+                <FormControl fullWidth>
+                  <InputLabel>Flat Number</InputLabel>
+                  <Select
+                    value={formData.FlatNo}
+                    onChange={handleChange}
+                    name="FlatNo"
+                    label="FlatNo"
+                  >
+                    {flatNoData.map((wing, index) => (
+                      <MenuItem
+                        key={`${wing.FlatNo}-${index}`}
+                        value={wing.FlatNo}
+                      >
+                        {wing.FlatNo}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
 
               <Grid item xs={12} md={4}>
@@ -1373,7 +1381,7 @@ const EditBookingform = ({  show, editData , goBack}) => {
                 color: "#ffffff",
               }}
             >
-              {editData
+              {bookingID
                 ? "Data Updated Successfully"
                 : submitSuccess
                 ? "Data Added Successfully"

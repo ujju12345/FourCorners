@@ -163,9 +163,10 @@ const StatisticsCardsales = () => {
               <Typography variant='caption'>Not Interested</Typography>
               <Typography variant='h6'>{counts.notInterested ?? '--'}</Typography>
             </Box>
+
           </Box>
         </Grid>
-        {/* <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
               variant='rounded'
@@ -180,9 +181,12 @@ const StatisticsCardsales = () => {
             >
               <DashboardIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
-           
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Total Follow Up</Typography>
+              <Typography variant='h6'>{counts.totalFollowup ?? '--'}</Typography>
+            </Box>
           </Box>
-        </Grid> */}
+        </Grid>
       </Grid>
     );
   };

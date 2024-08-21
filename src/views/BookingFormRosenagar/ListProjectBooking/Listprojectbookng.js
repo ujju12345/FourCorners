@@ -43,6 +43,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import TemplatePayment from "../TemplatePayment/TemplatePayment";
 import Reciept from "../Reciept/Reciept";
+import EditBookingform from "../EditBookingform/EditBookingform";
 
 const NoDataIcon = () => (
   <Avatar
@@ -55,7 +56,7 @@ const NoDataIcon = () => (
 const Listprojectbookng = ({
   onChequeReceiptClick,
   item,
-  onEdit,
+
 
 }) => {
   const router = useRouter();
@@ -73,6 +74,8 @@ const Listprojectbookng = ({
   const [wingDetails, setWingDetails] = useState([]);
   const [open, setOpen] = useState(false);
   const [openTemplate, setOpenTemplate] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
   const [openCheque, setOpenCheque] = useState(false);
 
   const [upcomingPayments, setUpcomingPayments] = React.useState([]);
@@ -319,6 +322,13 @@ const onCheque = (row) => {
   setOpenCheque(true); // Open the modal
   handleMenuClose(); // Close the menu if it's open
 };
+const onEdit = (row) => {
+  console.log(row, "Selected row data EDit"); // Log the selected row data
+
+  setBookingID(row.BookingID); // Set the selected BookingID
+  setOpenEdit(true); // Open the modal
+  handleMenuClose(); // Close the menu if it's open
+};
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -447,6 +457,11 @@ const onCheque = (row) => {
 
   const handleCloseTemplate = () => {
     setOpenTemplate(false); // Close the modal
+    setBookingID(null); // Reset the booking ID (optional)
+  };
+  
+  const handleCloseEditForm = () => {
+    setOpenEdit(false); // Close the modal
     setBookingID(null); // Reset the booking ID (optional)
   };
   const handleCloseRecipt = () => {
@@ -734,7 +749,7 @@ const onCheque = (row) => {
                                 >
                                   Cheque Receipt
                                 </MenuItem>
-                                <MenuItem onClick={() => onEdit(row.BookingID)}>
+                                <MenuItem onClick={() => onEdit(row)}>
                                   Edit details
                                 </MenuItem>
                               </Menu>
@@ -1171,6 +1186,25 @@ const onCheque = (row) => {
             </Grid>
           </Grid>
         </Box>
+      </Modal>
+
+
+      <Modal open={openEdit} onClose={handleCloseEditForm}>
+        <Card
+          style={{
+            maxWidth: "1400px",
+            margin: "auto",
+            marginTop: "50px",
+            height: "90vh", // Set height relative to the viewport
+            padding: "20px",
+            overflowY: "auto", // Enable vertical scrolling if content overflows
+          }}
+        >
+          <EditBookingform
+            bookingID={bookingID}
+            // handleCancel={handleCloseTemplate}
+          />
+        </Card>
       </Modal>
 
       <Modal open={openTemplate} onClose={handleCloseTemplate}>
