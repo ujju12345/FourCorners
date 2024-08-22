@@ -132,9 +132,19 @@ const ListReport = ({ item }) => {
   };
 
   const SortableTableCell = ({ label }) => (
-    <TableCell sx={{ fontWeight: "bold", fontSize: "1rem", cursor: "pointer" }}>
-      {label}
-    </TableCell>
+    <TableCell
+    sx={{
+      fontWeight: "bold",
+      fontSize: "1rem",
+      cursor: "pointer",
+      position: "sticky",
+      top: 0,
+      zIndex: 1,
+      backgroundColor: "#ffffff", // Background color for the sticky header
+    }}
+  >
+    {label}
+  </TableCell>
   );
 
   return (
@@ -236,7 +246,7 @@ const ListReport = ({ item }) => {
           </Grid>
         </Grid>
 
-        <Card sx={{margin: "auto", padding: 2 }}>
+        <Card sx={{margin: "auto", padding: 2 ,height:400 , overflow:'auto' , mt:5}}>
           <CardContent>
             {loading ? (
               <CircularProgress />
@@ -244,7 +254,7 @@ const ListReport = ({ item }) => {
               <>
                 <TableContainer component={Paper}>
                   <Table
-                    sx={{ minWidth: 800 }}
+                    sx={{ minWidth: 800 ,  }}
                     aria-label="payment received table"
                   >
                     <TableHead>
@@ -262,10 +272,7 @@ const ListReport = ({ item }) => {
                     </TableHead>
                     <TableBody>
                       {paymentReceivedData
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
+                      
                         .map((row) => (
                           <TableRow key={row.paymentID}>
                             <TableCell>{row.Name}</TableCell>
@@ -281,15 +288,7 @@ const ListReport = ({ item }) => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={paymentReceivedData.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+               
               </>
             ) : (
               <Box
@@ -319,83 +318,84 @@ const ListReport = ({ item }) => {
           </Grid>
         </Grid>
 
-        <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
-          <CardContent>
-            {loading ? (
-              <CircularProgress />
-            ) : dataAvailable ? (
-              <>
-                <TableContainer component={Paper}>
-                  <Table
-                    sx={{ minWidth: 800 }}
-                    aria-label="upcoming payment table"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <SortableTableCell label="Purchaser Name" />
-                        <SortableTableCell label="Project Name" />
-                        <SortableTableCell label="Wing Name" />
+        <Card
+  sx={{
+    maxWidth: 1200,
+    margin: "auto",
+    padding: 2,
+    height: 400,
+    overflow: "auto",
+    mt: 5,
+  }}
+>
+  <CardContent>
+    {loading ? (
+      <CircularProgress />
+    ) : dataAvailable ? (
+      <>
+        <TableContainer component={Paper}>
+          <Table
+            sx={{
+              minWidth: 800,
+              position: "relative",
+              "& thead th": {
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+                backgroundColor: "#ffffff", // You can change this to match your design
+              },
+            }}
+            aria-label="upcoming payment table"
+          >
+            <TableHead>
+              <TableRow>
+                <SortableTableCell label="Purchaser Name" />
+                <SortableTableCell label="Project Name" />
+                <SortableTableCell label="Wing Name" />
+                <SortableTableCell label="Flat No" />
+                <SortableTableCell label="RemarkAmount" />
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {upcomingPaymentData.map((row) => (
+                <TableRow key={row.paymentID}>
+                  <TableCell>{row.Name}</TableCell>
+                  <TableCell>{row.ProjectName}</TableCell>
+                  <TableCell>{row.WingName}</TableCell>
+                  <TableCell>{row.FlatNo}</TableCell>
+                  <TableCell>{row.Remarkamount}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleAddPayment(row)}
+                    >
+                      <PaymentIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    ) : (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+        minHeight={200}
+      >
+        <NoDataIcon />
+        <Typography variant="h6" color="textSecondary" align="center">
+          No data available for this booking.
+        </Typography>
+      </Box>
+    )}
+  </CardContent>
+</Card>
 
-                        <SortableTableCell label="Flat No" />
-
-                        <SortableTableCell label="RemarkAmount" />
-                       
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {upcomingPaymentData
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row) => (
-                          <TableRow key={row.paymentID}>
-                            <TableCell>{row.Name}</TableCell>
-                            <TableCell>{row.ProjectName}</TableCell>
-                            <TableCell>{row.WingName}</TableCell>
-
-                            <TableCell>{row.FlatNo}</TableCell>
-                            <TableCell>{row.Remarkamount}</TableCell>
-                            <TableCell>
-                              <IconButton
-                                color="primary"
-                                onClick={() => handleAddPayment(row)}
-                              >
-                                <PaymentIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={upcomingPaymentData.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </>
-            ) : (
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
-                minHeight={200}
-              >
-                <NoDataIcon />
-                <Typography variant="h6" color="textSecondary" align="center">
-                  No data available for this booking.
-                </Typography>
-              </Box>
-            )}
-          </CardContent>
-        </Card>
       </Grid>
     </Grid>
   );

@@ -33,8 +33,8 @@ const CustomTimeline = styled(Timeline)({
 
 const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
 
-export default function HistoryOpportunity({ Oid }) {
-console.log(Oid , 'aagaya dataa oid ');
+export default function HistoryDashboard({ item }) {
+
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const initialName = {
     Oid: "",

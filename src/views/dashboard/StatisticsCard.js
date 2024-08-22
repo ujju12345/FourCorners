@@ -12,12 +12,12 @@ import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 import DotsVertical from 'mdi-material-ui/DotsVertical';
 import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
-import { CircularProgress } from '@mui/material';
-import { useCookies } from "react-cookie";
-
+import CircularProgress from '@mui/material/CircularProgress';
+import { useCookies } from 'react-cookie';
+import { CalendarToday, History, Payment, DateRange, EventNote, AttachMoney } from '@mui/icons-material';
 const StatisticsCard = () => {
   const [loading, setLoading] = useState(false);
-  const [cookies] = useCookies(["amr"]);
+  const [cookies] = useCookies(['amr']);
   const userid = cookies.amr?.UserID || 'Role';
   const [apiData, setApiData] = useState(null);
 
@@ -30,7 +30,7 @@ const StatisticsCard = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setApiData(data.counts); // Store counts in state
+        setApiData(data); // Store full API response
       } catch (error) {
         console.error('Error fetching API data:', error);
       } finally {
@@ -44,8 +44,8 @@ const StatisticsCard = () => {
   const renderStats = () => {
     if (loading) {
       return (
-        <Grid item xs={12} sm={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={12} sm={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <CircularProgress />
           </Box>
         </Grid>
@@ -53,121 +53,492 @@ const StatisticsCard = () => {
     }
 
     return (
-      <Grid container spacing={[5, 0]}>
-        <Grid item xs={12} sm={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'primary.main',
-              }}
-            >
-              <TrendingUp sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Today Follow Up</Typography>
-              <Typography variant='h6'>{apiData?.totalOpportunityFollowupCount || 0}</Typography>
-            </Box>
+      <>
+        {/* Opportunity Data Section */}
+ 
+
+        {/* Telecalling Data Section */}
+        <Box>
+                <Typography
+                  variant="body2"
+                  sx={{ marginTop: 4, fontWeight: "bold", fontSize: 20 }}
+                >
+                  Telecalling Stats
+                </Typography>
+              </Box>
+        <Grid container spacing={2} sx={{ flexWrap: 'nowrap', overflowX: 'auto' , mt:5}}>
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'primary.main',
+        }}
+      >
+        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Today's Follow Up</Typography>
+        <Typography variant='h6'>
+          {apiData?.data?.nextFollowupCounts?.todayFollowupCount || 0}
+        </Typography>
+      </Box>
+    </Box>
+  </Grid>
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'success.main',
+        }}
+      >
+        <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Backlog Follow Up</Typography>
+        <Typography variant='h6'>
+          {apiData?.data?.nextFollowupCounts?.backlogFollowupCount || 0}
+        </Typography>
+      </Box>
+    </Box>
+  </Grid>
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'warning.main',
+        }}
+      >
+        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Next Follow Up</Typography>
+        <Typography variant='h6'>
+          {apiData?.data?.nextFollowupCounts?.nextFollowupCount || 0}
+        </Typography>
+      </Box>
+    </Box>
+  </Grid>
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'info.main',
+        }}
+      >
+        <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Transferred to Booking</Typography>
+        <Typography variant='h6'>
+          {apiData?.data?.nextFollowupCounts?.transfertoBookingCount || 0}
+        </Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'secondary.main',
+        }}
+      >
+        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Not Interested</Typography>
+        <Typography variant='h6'>{apiData?.data?.nextFollowupCounts?.notInterestedCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'warning.main',
+        }}
+      >
+        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Total Lead</Typography>
+        <Typography variant='h6'>
+          {apiData?.counts?.totalNextFollowupCount || 0}
+        </Typography>
+      </Box>
+    </Box>
+  </Grid>
+</Grid>
+
+
+
+
+<Box>
+                <Typography
+                  variant="body2"
+                  sx={{ marginTop: 9, fontWeight: "bold", fontSize: 20 }}
+                >
+                  Opportunity Stats
+                </Typography>
+              </Box>
+        <Grid container spacing={3} direction="row" wrap="nowrap" sx={{ flexWrap: 'nowrap', overflowX: 'auto' , mt:5}}>
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'primary.main',
+        }}
+      >
+        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Today's Follow Up</Typography>
+        <Typography variant='h6'>{apiData?.data?.opportunityFollowupCounts?.todayFollowupCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'success.main',
+        }}
+      >
+        <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Backlog Follow Up</Typography>
+        <Typography variant='h6'>{apiData?.data?.opportunityFollowupCounts?.backlogFollowupCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'warning.main',
+        }}
+      >
+        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Next Follow Up</Typography>
+        <Typography variant='h6'>{apiData?.data?.opportunityFollowupCounts?.nextFollowupCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'info.main',
+        }}
+      >
+        <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Transferred to Booking</Typography>
+        <Typography variant='h6'>{apiData?.data?.opportunityFollowupCounts?.transfertoBookingCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'secondary.main',
+        }}
+      >
+        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Not Interested</Typography>
+        <Typography variant='h6'>{apiData?.data?.opportunityFollowupCounts?.notInterestedCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+
+  <Grid item xs={12} sm={6} md={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar
+        variant='rounded'
+        sx={{
+          mr: 3,
+          width: 44,
+          height: 44,
+          boxShadow: 3,
+          color: 'common.white',
+          backgroundColor: 'warning.main',
+        }}
+      >
+        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      </Avatar>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='caption'>Total Opportunity </Typography>
+        <Typography variant='h6'>{apiData?.counts?.totalOpportunityFollowupCount || 0}</Typography>
+      </Box>
+    </Box>
+  </Grid>
+</Grid>
+
+
+{/* Container for Payment and Loan Reminders */}
+<Grid container spacing={3} sx={{ mt: 5 }}>
+  {/* Payment Reminder Section */}
+  <Grid item xs={12} md={6}>
+    <Box>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: "bold", fontSize: 20 }}
+      >
+        Payment Reminder
+      </Typography>
+    </Box>
+
+    {/* Payment Reminder Data */}
+    <Grid container spacing={3} direction="row" wrap="nowrap" sx={{ flexWrap: 'nowrap', overflowX: 'auto', mt: 2 }}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'primary.main',
+            }}
+          >
+            <CalendarToday sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Today's Follow Up</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanNullOrZeroCounts?.todayFollowupCount || 0}</Typography>
           </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'success.main',
-              }}
-            >
-              <AccountOutline sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Backlog Pending</Typography>
-              <Typography variant='h6'>42</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'warning.main',
-              }}
-            >
-              <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Open Opportunity</Typography>
-              <Typography variant='h6'>{apiData?.totalNextFollowupCount || 0}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'info.main',
-              }}
-            >
-              <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>All Opportunity</Typography>
-              <Typography variant='h6'>223</Typography>
-            </Box>
-          </Box>
-        </Grid>
+        </Box>
       </Grid>
+
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'success.main',
+            }}
+          >
+            <History sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Backlog Follow Up</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanNullOrZeroCounts?.backlogFollowupCount || 0}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'warning.main',
+            }}
+          >
+            <Payment sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Upcoming payment</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanNullOrZeroCounts?.nextFollowupCount || 0}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+    </Grid>
+  </Grid>
+
+  {/* Loan Reminder Section */}
+  <Grid item xs={12} md={6}>
+    <Box>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: "bold", fontSize: 20 }}
+      >
+        Loan Reminder
+      </Typography>
+    </Box>
+
+    {/* Loan Reminder Data */}
+    <Grid container spacing={3} direction="row" wrap="nowrap" sx={{ flexWrap: 'nowrap', overflowX: 'auto', mt: 2 }}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'info.main',
+            }}
+          >
+            <DateRange sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Today's Loan Follow Up</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanOneCounts?.todayFollowupCount || 0}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'error.main',
+            }}
+          >
+            <EventNote sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Backlog Loan Follow Up</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanOneCounts?.backlogFollowupCount || 0}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12} sm={6} md={4}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar
+            variant='rounded'
+            sx={{
+              mr: 3,
+              width: 44,
+              height: 44,
+              boxShadow: 3,
+              color: 'common.white',
+              backgroundColor: 'warning.main',
+            }}
+          >
+            <AttachMoney sx={{ fontSize: '1.75rem' }} />
+          </Avatar>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant='caption'>Upcoming Loan Payment</Typography>
+            <Typography variant='h6'>{apiData?.data?.bookingRemarkLoanOneCounts?.nextFollowupCount || 0}</Typography>
+          </Box>
+        </Box>
+      </Grid>
+    </Grid>
+  </Grid>
+</Grid>
+
+
+
+        
+
+      
+      </>
     );
   };
 
   return (
     <Card>
-      <CardHeader
-        title='Statistics Card'
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
-        }
-        subheader={
-          <Typography variant='body2'>
-            <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 234 % growth
-            </Box>{' '}
-            😎 this month
-          </Typography>
-        }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: '2rem !important',
-            letterSpacing: '0.15px !important',
-          },
-        }}
-      />
-      <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
+     <Box>
+                <Typography
+                  variant="body2"
+                  sx={{ marginTop: 5, fontWeight: "bold", fontSize: 20 , marginLeft:5}}
+                >
+                  Statistics Card
+                </Typography>
+              </Box>
+      <CardContent>
         {renderStats()}
       </CardContent>
     </Card>
@@ -175,3 +546,5 @@ const StatisticsCard = () => {
 };
 
 export default StatisticsCard;
+
+

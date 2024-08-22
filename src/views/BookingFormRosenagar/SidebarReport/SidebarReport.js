@@ -46,7 +46,7 @@ const SidebarReport = ({ handleListItemClick, onCreate }) => {
   const [filteredRows, setFilteredRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [anchorElFilter, setAnchorElFilter] = useState(null);
@@ -225,10 +225,23 @@ const SidebarReport = ({ handleListItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 390,
+        width: 410,
         padding: 5,
-        height: 700,
+        height: 1300,
         overflowY: "auto",
+        "&::-webkit-scrollbar": {
+          width: "2px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#cccccc", // Change the color as needed
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#cccccc", // Change the color on hover
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
       }}
     >
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
@@ -370,7 +383,6 @@ const SidebarReport = ({ handleListItemClick, onCreate }) => {
         <>
           <List>
             {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
                 <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>

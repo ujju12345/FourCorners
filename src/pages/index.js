@@ -23,6 +23,9 @@ import {
 import { useRouter } from "next/router";
 import MenuItem from "@mui/material/MenuItem";
 
+
+import HistoryIcon from "@mui/icons-material/History";
+
 import { useCookies } from "react-cookie";
 import Select from "@mui/material/Select";
 
@@ -41,7 +44,7 @@ import TotalEarning from "src/views/dashboard/TotalEarning";
 import CardStatisticsVerticalComponent from "src/@core/components/card-statistics/card-stats-vertical";
 import SalesByCountries from "src/views/dashboard/SalesByCountries";
 import DepositWithdraw from "src/views/dashboard/DepositWithdraw";
-import { HelpCircleOutline, BriefcaseVariantOutline } from "mdi-material-ui";
+import { HelpCircleOutline, BriefcaseVariantOutline, Timeline } from "mdi-material-ui";
 import { Call, Contacts } from "@mui/icons-material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
@@ -49,18 +52,25 @@ import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+
+import { Modal } from "@mui/base";
+import {TimelineDot ,  TimelineItem, TimelineOppositeContent , TimelineContent , TimelineSeparator  ,CustomPaper, CheckCircleIcon , TimelineConnector} from "@mui/lab";
 ChartJS.register(ArcElement, Tooltip, Legend);
-const Dashboard = () => {
+
+
+const Dashboard = ({onHistoryClick}) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     FromDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
     ToDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
     SourceName: "",
-    UserID:"",
+    UserID: "",
     Status: 1,
   });
   const [cookies] = useCookies(["amr"]);
+  
   const [telecallingData, setTelecallingData] = useState(null);
+  const [rowData, setRowData] = useState([]);
   const [source, setSource] = useState([]);
   const [errors, setErrors] = useState({});
   const [users, setUsers] = useState([]);
@@ -130,6 +140,9 @@ const Dashboard = () => {
     }
   };
 
+
+
+
   const handleCardClick = (type) => {
     if (type === "telecalling") {
       setSelectedData(telecallingData?.data?.telecallingRecords);
@@ -142,16 +155,18 @@ const Dashboard = () => {
       setSelectedType("opportunity");
     }
   };
+
   useEffect(() => {
     // Fetch the data from the API
-    axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-telesales.php')
-      .then(response => {
-        if (response.data.status === 'Success') {
+    axios
+      .get("https://apiforcorners.cubisysit.com/api/api-fetch-telesales.php")
+      .then((response) => {
+        if (response.data.status === "Success") {
           setUsers(response.data.data);
         }
       })
-      .catch(error => {
-        console.error('Error fetching the users:', error);
+      .catch((error) => {
+        console.error("Error fetching the users:", error);
       });
   }, []);
 
@@ -183,32 +198,32 @@ const Dashboard = () => {
   };
   const handleSource = (event) => {
     const { value } = event.target;
-  
+
     setErrors((prevErrors) => ({
       ...prevErrors,
       SourceName: undefined,
     }));
-  
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       SourceName: value,
     }));
   };
-  
+
   const handleUser = (event) => {
     const { value } = event.target;
-  
+
     setErrors((prevErrors) => ({
       ...prevErrors,
       SourceName: undefined,
     }));
-  
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       UserID: value,
     }));
   };
-  
+
   const fetchDataForModalContact = async (Cid) => {
     console.log("CID AAYA", Cid);
     console.log("press");
@@ -253,6 +268,28 @@ const Dashboard = () => {
     setPage(newPage);
   };
 
+
+
+  const handleHistoryClick = async () => {
+    // Fetch data when the history icon is clicked
+    const fetchData = async () => {
+      try {
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity.Oid}`;
+        const response = await axios.get(apiUrl);
+        if (response.data.status === 'Success') {
+          console.log(response.data , 'aagaayaa dataaaa<<<<<>>>>>>>>>>>');
+          setRowData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching single opportunity data:', error);
+      }
+    };
+
+    await fetchData();
+  };
+
+
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -283,10 +320,7 @@ const Dashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item xs={12} md={4}>
-          <Trophy />
-        </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12}>
           <StatisticsCard />
         </Grid>
 
@@ -310,44 +344,44 @@ const Dashboard = () => {
               <Card>
                 <CardContent>
                   <Grid container spacing={3}>
-                  <Grid item xs={6} sm={3}>
-  <FormControl fullWidth>
-    <InputLabel>User</InputLabel>
-    <Select
-      value={formData.UserID}
-      onChange={handleUser}
-      label="User"
-    >
-      {users.map((user) => (
-        <MenuItem key={user.UserID} value={user.UserID}>
-          {user.Name}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
+                    <Grid item xs={6} sm={3}>
+                      <FormControl fullWidth>
+                        <InputLabel>User</InputLabel>
+                        <Select
+                          value={formData.UserID}
+                          onChange={handleUser}
+                          label="User"
+                        >
+                          {users.map((user) => (
+                            <MenuItem key={user.UserID} value={user.UserID}>
+                              {user.Name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
 
-<Grid item xs={6} sm={3}>
-  <FormControl fullWidth>
-    <InputLabel>Source</InputLabel>
-    <Select
-      value={formData.SourceName}
-      onChange={handleSource}
-      label="Source"
-    >
-      {source.map((bhk) => (
-        <MenuItem key={bhk.SourceID} value={bhk.SourceName}>
-          {bhk.SourceName}
-        </MenuItem>
-      ))}
-    </Select>
-    {errors.SourceID && (
-      <Typography variant="caption" color="error">
-        {errors.SourceID}
-      </Typography>
-    )}
-  </FormControl>
-</Grid>
+                    <Grid item xs={6} sm={3}>
+                      <FormControl fullWidth>
+                        <InputLabel>Source</InputLabel>
+                        <Select
+                          value={formData.SourceName}
+                          onChange={handleSource}
+                          label="Source"
+                        >
+                          {source.map((bhk) => (
+                            <MenuItem key={bhk.SourceID} value={bhk.SourceName}>
+                              {bhk.SourceName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.SourceID && (
+                          <Typography variant="caption" color="error">
+                            {errors.SourceID}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Grid>
 
                     <Grid item xs={12} sm={3}>
                       <DatePicker
@@ -456,7 +490,21 @@ const Dashboard = () => {
                         </CardContent>
                       </Card>
                     </Grid>
-                  
+                    <Grid item xs={12} sm={4}>
+                      <Card onClick={() => handleCardClick("opportunity")}>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Booking
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts:{" "}
+                            {telecallingData?.data?.bookingCount}{" "}
+                            {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
@@ -562,9 +610,10 @@ const Dashboard = () => {
         )}
 
         <Dialog
+
           open={modalOpenOpportunity}
           onClose={() => setModalOpenOpportunity(false)}
-          sx={{ maxWidth: "90vw", width: "auto" }}
+          sx={{ height: "80%", width: "100%" }}
         >
           {selectedOpportunity ? (
             <>
@@ -699,9 +748,71 @@ const Dashboard = () => {
                             },
                           }}
                         >
-                          <ShareIcon />
+                          <ShareIcon/>
                         </IconButton>
                       </a>
+
+                       <Box flex="1">
+      <IconButton
+        aria-label="history"
+        size="small"
+        sx={{
+          color: "#000",
+          backgroundColor: "#e3f2fd",
+          borderRadius: "50%",
+          padding: "10px",
+          marginRight: 1,
+          "&:hover": {
+            backgroundColor: "#bbdefb",
+          },
+        }}
+        onClick={handleHistoryClick}
+      >
+        <HistoryIcon />
+      </IconButton>
+      <Box>
+        <Timeline align="alternate" display="flex" justifyContent="right">
+          {rowData.length > 0 ? rowData.map((data, index) => (
+            <TimelineItem key={index}>
+              <TimelineOppositeContent>
+                <Typography variant="body2" color="textSecondary">
+                  {data.NextFollowUpDate}
+                </Typography>
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineDot style={{ backgroundColor: 'green' }}>
+                  <CheckCircleIcon style={{ color: 'white' }} />
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent>
+                <CustomPaper elevation={3}>
+                  <Typography variant="h6" component="h1" style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <PersonIcon style={{ marginRight: 8 }} />
+                      <span style={{ fontWeight: 'bold' }}>
+                        {data.UserRole}
+                      </span>
+                    </span>
+                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
+                      Time: {data.NextFollowUpTime}
+                    </Typography>
+                  </Typography>
+                  <Typography>Note: {data.Note}</Typography>
+                </CustomPaper>
+              </TimelineContent>
+            </TimelineItem>
+          )) : (
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
+              <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
+                No data available
+              </Typography>
+            </Box>
+          )}
+        </Timeline>
+      
+      </Box>
+    </Box>
                       <a
                         href={`mailto:${selectedOpportunity?.Email}`}
                         style={{ marginRight: 35 }}
@@ -2346,7 +2457,7 @@ const Dashboard = () => {
             </>
           )}
         </Dialog>
-{/* 
+        {/* 
         <Grid item xs={12} md={6}>
           <WeeklyOverview />
         </Grid>

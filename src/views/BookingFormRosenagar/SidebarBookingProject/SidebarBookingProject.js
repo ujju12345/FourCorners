@@ -229,10 +229,23 @@ const SidebarBookingProject = ({ onEdit, onItemClick, onCreate }) => {
   return (
     <Card
       sx={{
-        width: 390,
+        width: 410,
         padding: 5,
-        height: 700,
+        height: 800,
         overflowY: "auto",
+        "&::-webkit-scrollbar": {
+          width: "2px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#cccccc", // Change the color as needed
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#cccccc", // Change the color on hover
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
       }}
     >
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
@@ -374,7 +387,7 @@ const SidebarBookingProject = ({ onEdit, onItemClick, onCreate }) => {
         <>
           <List>
             {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+             
               .map((item) => (
                 <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>

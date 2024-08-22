@@ -129,13 +129,18 @@ const TeleDashboard = () => {
 
   const handleCardClick = (type) => {
     if (type === "telecalling") {
-      setSelectedData(telecallingData?.data?.telecallingRecords);
+      setSelectedData(Array.isArray(telecallingData?.data?.telecallingRecords) ? telecallingData.data.telecallingRecords : []);
       setSelectedType("telecalling");
     } else if (type === "contacts") {
-      setSelectedData(telecallingData?.data?.contactsRecords);
+      setSelectedData(Array.isArray(telecallingData?.data?.contactsRecords) ? telecallingData.data.contactsRecords : []);
       setSelectedType("contacts");
-    }
+    } else if (type === "opportunity") {
+      setSelectedData(Array.isArray(telecallingData?.data?.convertopportunityRecords) ? telecallingData.data.convertopportunityRecords : []);
+      setSelectedType("opportunity");
+    } 
   };
+  
+  
   useEffect(() => {
     axios
       .get("https://apiforcorners.cubisysit.com/api/api-fetch-source.php")
@@ -205,13 +210,14 @@ const TeleDashboard = () => {
   };
 
   const pieData = {
-    labels: ["Telecalling", "Contacts", "Not Interested"],
+    labels: ["Telecalling", "Contacts", "Transfer to opportunity"],
     datasets: [
       {
         data: [
           telecallingData?.data?.telecallingCount || 0,
           telecallingData?.data?.contactsCount || 0,
-          0, // Adjust this value as needed for "Not Interested"
+          telecallingData?.data?.convertopportunityCount || 0,
+           // Adjust this value as needed for "Not Interested"
         ],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
         hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
@@ -349,18 +355,19 @@ const TeleDashboard = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Card>
-            <CardContent sx={{ textAlign: "center" }}>
-              <Contacts fontSize="large" color="primary" />
-              <Typography variant="h6" gutterBottom>
-                Transfer to Opportunity
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                Total Counts: {telecallingData?.data?.convertOpportunityCount} {/* Adjust this key as needed */}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+  <Card onClick={() => handleCardClick("opportunity")}>
+    <CardContent sx={{ textAlign: "center" }}>
+      <Contacts fontSize="large" color="primary" />
+      <Typography variant="h6" gutterBottom>
+        Transfer to Opportunity
+      </Typography>
+      <Typography variant="body1" color="textSecondary">
+        Total Counts: {telecallingData?.data?.convertopportunityCount}
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
         {/* <Grid item xs={12} sm={4}>
           <Card>
             <CardContent sx={{ textAlign: "center" }}>
@@ -413,7 +420,7 @@ const TeleDashboard = () => {
                         ? `${userName} Telecalling Data`
                         : selectedType === "contacts"
                         ? ` ${userName} Contact Data`
-                        : "Not Interested Data"}
+                        : `${userName} Tranfersed to opportunity Data`}
                     </Typography>
                   </Box>
                 </Grid>

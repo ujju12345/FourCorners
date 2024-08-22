@@ -684,7 +684,19 @@ const onEdit = (row) => {
       </Box>
 
       {selectedWing && (
-        <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
+        <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 , height:700 , overflow:'auto' ,  "&::-webkit-scrollbar": {
+          width: "2px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#cccccc", // Change the color as needed
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#cccccc", // Change the color on hover
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        }, }}>
           <CardHeader title={`${selectedWing.WingName} Details`} />
           <CardContent>
             {loading ? (
@@ -708,10 +720,7 @@ const onEdit = (row) => {
                     </TableHead>
                     <TableBody>
                       {(searchQuery ? filteredRows : wingDetails)
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
+                       
                         .map((row) => (
                           <TableRow key={row.RoomID}>
                             <TableCell>{row.Partyname}</TableCell>
@@ -768,15 +777,7 @@ const onEdit = (row) => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={wingDetails.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+               
               </>
             ) : (
               <Box textAlign="center">
