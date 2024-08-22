@@ -23,7 +23,6 @@ import {
 import { useRouter } from "next/router";
 import MenuItem from "@mui/material/MenuItem";
 
-
 import HistoryIcon from "@mui/icons-material/History";
 
 import { useCookies } from "react-cookie";
@@ -44,7 +43,11 @@ import TotalEarning from "src/views/dashboard/TotalEarning";
 import CardStatisticsVerticalComponent from "src/@core/components/card-statistics/card-stats-vertical";
 import SalesByCountries from "src/views/dashboard/SalesByCountries";
 import DepositWithdraw from "src/views/dashboard/DepositWithdraw";
-import { HelpCircleOutline, BriefcaseVariantOutline, Timeline } from "mdi-material-ui";
+import {
+  HelpCircleOutline,
+  BriefcaseVariantOutline,
+  Timeline,
+} from "mdi-material-ui";
 import { Call, Contacts } from "@mui/icons-material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import ShareIcon from "@mui/icons-material/Share";
@@ -54,11 +57,19 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 
 import { Modal } from "@mui/base";
-import {TimelineDot ,  TimelineItem, TimelineOppositeContent , TimelineContent , TimelineSeparator  ,CustomPaper, CheckCircleIcon , TimelineConnector} from "@mui/lab";
+import {
+  TimelineDot,
+  TimelineItem,
+  TimelineOppositeContent,
+  TimelineContent,
+  TimelineSeparator,
+  CustomPaper,
+  CheckCircleIcon,
+  TimelineConnector,
+} from "@mui/lab";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-
-const Dashboard = ({onHistoryClick}) => {
+const Dashboard = ({ onHistoryClick }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     FromDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
@@ -68,7 +79,7 @@ const Dashboard = ({onHistoryClick}) => {
     Status: 1,
   });
   const [cookies] = useCookies(["amr"]);
-  
+
   const [telecallingData, setTelecallingData] = useState(null);
   const [rowData, setRowData] = useState([]);
   const [source, setSource] = useState([]);
@@ -139,9 +150,6 @@ const Dashboard = ({onHistoryClick}) => {
       setLoading(false);
     }
   };
-
-
-
 
   const handleCardClick = (type) => {
     if (type === "telecalling") {
@@ -268,27 +276,23 @@ const Dashboard = ({onHistoryClick}) => {
     setPage(newPage);
   };
 
-
-
   const handleHistoryClick = async () => {
     // Fetch data when the history icon is clicked
     const fetchData = async () => {
       try {
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity.Oid}`;
         const response = await axios.get(apiUrl);
-        if (response.data.status === 'Success') {
-          console.log(response.data , 'aagaayaa dataaaa<<<<<>>>>>>>>>>>');
+        if (response.data.status === "Success") {
+          console.log(response.data, "aagaayaa dataaaa<<<<<>>>>>>>>>>>");
           setRowData(response.data.data);
         }
       } catch (error) {
-        console.error('Error fetching single opportunity data:', error);
+        console.error("Error fetching single opportunity data:", error);
       }
     };
 
     await fetchData();
   };
-
-
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -498,8 +502,7 @@ const Dashboard = ({onHistoryClick}) => {
                             Booking
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts:{" "}
-                            {telecallingData?.data?.bookingCount}{" "}
+                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
@@ -610,7 +613,6 @@ const Dashboard = ({onHistoryClick}) => {
         )}
 
         <Dialog
-
           open={modalOpenOpportunity}
           onClose={() => setModalOpenOpportunity(false)}
           sx={{ height: "80%", width: "100%" }}
@@ -748,71 +750,111 @@ const Dashboard = ({onHistoryClick}) => {
                             },
                           }}
                         >
-                          <ShareIcon/>
+                          <ShareIcon />
                         </IconButton>
                       </a>
 
-                       <Box flex="1">
-      <IconButton
-        aria-label="history"
-        size="small"
-        sx={{
-          color: "#000",
-          backgroundColor: "#e3f2fd",
-          borderRadius: "50%",
-          padding: "10px",
-          marginRight: 1,
-          "&:hover": {
-            backgroundColor: "#bbdefb",
-          },
-        }}
-        onClick={handleHistoryClick}
-      >
-        <HistoryIcon />
-      </IconButton>
-      <Box>
-        <Timeline align="alternate" display="flex" justifyContent="right">
-          {rowData.length > 0 ? rowData.map((data, index) => (
-            <TimelineItem key={index}>
-              <TimelineOppositeContent>
-                <Typography variant="body2" color="textSecondary">
-                  {data.NextFollowUpDate}
-                </Typography>
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot style={{ backgroundColor: 'green' }}>
-                  <CheckCircleIcon style={{ color: 'white' }} />
-                </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <CustomPaper elevation={3}>
-                  <Typography variant="h6" component="h1" style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                      <PersonIcon style={{ marginRight: 8 }} />
-                      <span style={{ fontWeight: 'bold' }}>
-                        {data.UserRole}
-                      </span>
-                    </span>
-                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
-                      Time: {data.NextFollowUpTime}
-                    </Typography>
-                  </Typography>
-                  <Typography>Note: {data.Note}</Typography>
-                </CustomPaper>
-              </TimelineContent>
-            </TimelineItem>
-          )) : (
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
-              <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
-                No data available
-              </Typography>
-            </Box>
-          )}
-        </Timeline>
-      
-      </Box>
-    </Box>
+                      <Box flex="1">
+                        <IconButton
+                          aria-label="history"
+                          size="small"
+                          sx={{
+                            color: "#000",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+                            marginRight: 1,
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                          onClick={handleHistoryClick}
+                        >
+                          <HistoryIcon />
+                        </IconButton>
+                        <Box>
+                          <Timeline
+                            align="alternate"
+                            display="flex"
+                            justifyContent="right"
+                          >
+                            {rowData.length > 0 ? (
+                              rowData.map((data, index) => (
+                                <TimelineItem key={index}>
+                                  <TimelineOppositeContent>
+                                    <Typography
+                                      variant="body2"
+                                      color="textSecondary"
+                                    >
+                                      {data.NextFollowUpDate}
+                                    </Typography>
+                                  </TimelineOppositeContent>
+                                  <TimelineSeparator>
+                                    <TimelineDot
+                                      style={{ backgroundColor: "green" }}
+                                    >
+                                      <CheckCircleIcon
+                                        style={{ color: "white" }}
+                                      />
+                                    </TimelineDot>
+                                    <TimelineConnector />
+                                  </TimelineSeparator>
+                                  <TimelineContent>
+                                    <CustomPaper elevation={3}>
+                                      <Typography
+                                        variant="h6"
+                                        component="h1"
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <span
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <PersonIcon
+                                            style={{ marginRight: 8 }}
+                                          />
+                                          <span style={{ fontWeight: "bold" }}>
+                                            {data.UserRole}
+                                          </span>
+                                        </span>
+                                        <Typography
+                                          variant="body2"
+                                          color="textSecondary"
+                                          style={{ marginLeft: "16px" }}
+                                        >
+                                          Time: {data.NextFollowUpTime}
+                                        </Typography>
+                                      </Typography>
+                                      <Typography>Note: {data.Note}</Typography>
+                                    </CustomPaper>
+                                  </TimelineContent>
+                                </TimelineItem>
+                              ))
+                            ) : (
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                justifyContent="center"
+                                height="50vh"
+                              >
+                                <Typography
+                                  variant="h6"
+                                  color="textSecondary"
+                                  style={{ marginTop: "16px" }}
+                                >
+                                  No data available
+                                </Typography>
+                              </Box>
+                            )}
+                          </Timeline>
+                        </Box>
+                      </Box>
                       <a
                         href={`mailto:${selectedOpportunity?.Email}`}
                         style={{ marginRight: 35 }}

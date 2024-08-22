@@ -7,14 +7,15 @@ import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import TrendingUp from 'mdi-material-ui/TrendingUp';
+// import TrendingUp from 'mdi-material-ui/TrendingUp';
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 import DotsVertical from 'mdi-material-ui/DotsVertical';
 import CellphoneLink from 'mdi-material-ui/CellphoneLink';
 import AccountOutline from 'mdi-material-ui/AccountOutline';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCookies } from 'react-cookie';
-import { CalendarToday, History, Payment, DateRange, EventNote, AttachMoney } from '@mui/icons-material';
+import { CalendarToday, TrendingUp, History,AccountCircle, Payment,PhoneInTalk, DateRange,CurrencyExchange,  EventNote, AttachMoney , List , Cancel} from '@mui/icons-material';
+// import { TrendingUp, AccountCircle, PhoneInTalk, CurrencyExchange, Cancel, List } fro
 const StatisticsCard = () => {
   const [loading, setLoading] = useState(false);
   const [cookies] = useCookies(['amr']);
@@ -103,7 +104,8 @@ const StatisticsCard = () => {
           backgroundColor: 'success.main',
         }}
       >
-        <AccountOutline sx={{ fontSize: '1.75rem' }} />
+                    <History sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Backlog Follow Up</Typography>
@@ -126,7 +128,8 @@ const StatisticsCard = () => {
           backgroundColor: 'warning.main',
         }}
       >
-        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+             <PhoneInTalk sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Next Follow Up</Typography>
@@ -149,10 +152,11 @@ const StatisticsCard = () => {
           backgroundColor: 'info.main',
         }}
       >
-        <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+        <CurrencyExchange sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant='caption'>Transferred to Booking</Typography>
+        <Typography variant='caption'>Transferred to Opportunity</Typography>
         <Typography variant='h6'>
           {apiData?.data?.nextFollowupCounts?.transfertoBookingCount || 0}
         </Typography>
@@ -173,7 +177,8 @@ const StatisticsCard = () => {
           backgroundColor: 'secondary.main',
         }}
       >
-        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+           <Cancel sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Not Interested</Typography>
@@ -196,7 +201,8 @@ const StatisticsCard = () => {
           backgroundColor: 'warning.main',
         }}
       >
-        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+               <List sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Total Lead</Typography>
@@ -219,7 +225,7 @@ const StatisticsCard = () => {
                   Opportunity Stats
                 </Typography>
               </Box>
-        <Grid container spacing={3} direction="row" wrap="nowrap" sx={{ flexWrap: 'nowrap', overflowX: 'auto' , mt:5}}>
+              <Grid container spacing={3} direction="row" wrap="nowrap" sx={{ flexWrap: 'nowrap', overflowX: 'auto', mt: 5 }}>
   <Grid item xs={12} sm={6} md={3}>
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Avatar
@@ -255,7 +261,8 @@ const StatisticsCard = () => {
           backgroundColor: 'success.main',
         }}
       >
-        <AccountOutline sx={{ fontSize: '1.75rem' }} />
+            <History sx={{ fontSize: '1.75rem' }} />
+
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Backlog Follow Up</Typography>
@@ -277,7 +284,7 @@ const StatisticsCard = () => {
           backgroundColor: 'warning.main',
         }}
       >
-        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+        <PhoneInTalk sx={{ fontSize: '1.75rem' }} />
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Next Follow Up</Typography>
@@ -299,7 +306,7 @@ const StatisticsCard = () => {
           backgroundColor: 'info.main',
         }}
       >
-        <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+        <CurrencyExchange sx={{ fontSize: '1.75rem' }} />
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Transferred to Booking</Typography>
@@ -321,7 +328,7 @@ const StatisticsCard = () => {
           backgroundColor: 'secondary.main',
         }}
       >
-        <TrendingUp sx={{ fontSize: '1.75rem' }} />
+        <Cancel sx={{ fontSize: '1.75rem' }} />
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Typography variant='caption'>Not Interested</Typography>
@@ -343,10 +350,10 @@ const StatisticsCard = () => {
           backgroundColor: 'warning.main',
         }}
       >
-        <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+        <List sx={{ fontSize: '1.75rem' }} />
       </Avatar>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant='caption'>Total Opportunity </Typography>
+        <Typography variant='caption'>Total Opportunity</Typography>
         <Typography variant='h6'>{apiData?.counts?.totalOpportunityFollowupCount || 0}</Typography>
       </Box>
     </Box>
@@ -355,7 +362,7 @@ const StatisticsCard = () => {
 
 
 {/* Container for Payment and Loan Reminders */}
-<Grid container spacing={3} sx={{ mt: 5 }}>
+<Grid container spacing={3} sx={{ mt: 9 }}>
   {/* Payment Reminder Section */}
   <Grid item xs={12} md={6}>
     <Box>
