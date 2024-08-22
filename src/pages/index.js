@@ -143,6 +143,7 @@ const Dashboard = ({ onHistoryClick }) => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+      console.log(data , 'dashboard data<<>>>>>>>>>>>');
       setTelecallingData(data);
     } catch (error) {
       console.error("Error fetching telecalling data:", error);
@@ -152,18 +153,41 @@ const Dashboard = ({ onHistoryClick }) => {
   };
 
   const handleCardClick = (type) => {
-    if (type === "telecalling") {
-      setSelectedData(telecallingData?.data?.telecallingRecords);
-      setSelectedType("telecalling");
-    } else if (type === "contacts") {
-      setSelectedData(telecallingData?.data?.contactsRecords);
-      setSelectedType("contacts");
-    } else if (type === "opportunity") {
-      setSelectedData(telecallingData?.data?.opportunityRecords);
-      setSelectedType("opportunity");
-    }
-  };
+    if (type === "todayLeads") {
+      setSelectedData(telecallingData?.data?.nextFollowup?.records || []);
+      setSelectedType("todayLeads");
+    } else if (type == "Salesopportunity"){
+      setSelectedData(telecallingData?.data?.opportunityRecords?.records || [])
+      setSelectedType("Salesopportunity")
+    } 
+    else if (type == "contacts"){
+      setSelectedData(telecallingData?.data?.contactsRecords?.records || [])
+      setSelectedType("contacts")
+    }  else if (type == "telecalling"){
+      setSelectedData(telecallingData?.data?.telecallingRecords?.records || [])
+      setSelectedType("telecalling")
+    } else if (type == "todaysLoan"){
+      setSelectedData(telecallingData?.data?.bookingRemarkWithLoan?.records || [])
+      setSelectedType("todaysLoan")
+    
+    // Handle other cases if needed
+  }else if (type == "todaysOppo"){
+    setSelectedData(telecallingData?.data?.
+      opportunityFollowup
+      ?.records || [])
+    setSelectedType("todaysOppo")
+  
+  // Handle other cases if needed
+}else if (type == "todaysPayment"){
+  setSelectedData(telecallingData?.data?.
+    bookingRemarkWithoutLoan
+    ?.records || [])
+  setSelectedType("todaysPayment")
 
+// Handle other cases if needed
+}
+}
+  
   useEffect(() => {
     // Fetch the data from the API
     axios
@@ -459,8 +483,8 @@ const Dashboard = ({ onHistoryClick }) => {
                             Lead
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Calls:{" "}
-                            {telecallingData?.data?.telecallingCount}
+                            Total Counts:{" "}
+                            {telecallingData?.data?.telecallingRecords.count}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -474,13 +498,13 @@ const Dashboard = ({ onHistoryClick }) => {
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Contacts:{" "}
-                            {telecallingData?.data?.contactsCount}
+                            {telecallingData?.data?.contactsRecords.count}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("opportunity")}>
+                      <Card onClick={() => handleCardClick("Salesopportunity")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
@@ -488,7 +512,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Counts:{" "}
-                            {telecallingData?.data?.opportunityCount}{" "}
+                            {telecallingData?.data?.opportunityRecords.count}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
@@ -503,35 +527,35 @@ const Dashboard = ({ onHistoryClick }) => {
                             Booking
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            Total Counts: {telecallingData?.data?.bookingRecords?.count}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("opportunity")}>
+                      <Card onClick={() => handleCardClick("todaysLoan")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Todays Loan Reminder
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            Total Counts: {telecallingData?.data.bookingRemarkWithLoan.count}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("opportunity")}>
+                      <Card onClick={() => handleCardClick("todayLeads")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Todays Lead FollowUp
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            Total Counts: {telecallingData?.data?.nextFollowup?.count}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
@@ -539,20 +563,34 @@ const Dashboard = ({ onHistoryClick }) => {
                     </Grid>
                   
                     <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("opportunity")}>
+                      <Card onClick={() => handleCardClick("todaysOppo")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Todays Opportunity
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            Total Counts: {telecallingData?.data?.opportunityFollowup.count}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
-                    
+                    <Grid item xs={12} sm={4}>
+                      <Card onClick={() => handleCardClick("todaysPayment")}>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Payment
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: {telecallingData?.data?.bookingRemarkWithoutLoan?.count || 0}
+                            {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                
                   </Grid>
                 
                 </Grid>
@@ -596,63 +634,58 @@ const Dashboard = ({ onHistoryClick }) => {
                   </Box>
                 </Grid>
                 {selectedData && (
-                  <Grid item xs={12} sx={{ mt: 3 }}>
-                    <TableContainer component={Box} sx={{ maxHeight: 400 }}>
-                      <Table stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Mobile</TableCell>
-                            {selectedType === "telecalling" ? (
-                              <TableCell>Next Follow Up</TableCell>
-                            ) : (
-                              <TableCell>Created Date</TableCell>
-                            )}
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {selectedData.map((row, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{row.CName}</TableCell>
-                              <TableCell>{row.Mobile}</TableCell>
-                              <TableCell>
-                                {selectedType === "telecalling"
-                                  ? row.NextFollowUpDate
-                                  : row.CreateDate}
-                              </TableCell>
-                              <TableCell>
-                                {selectedType === "telecalling" ? (
-                                  <Button
-                                    onClick={() => fetchDataForModal(row.Tid)}
-                                  >
-                                    View Telecaller Profile
-                                  </Button>
-                                ) : selectedType === "contacts" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalContact(row.Cid)
-                                    }
-                                  >
-                                    View Contact Profile
-                                  </Button>
-                                ) : selectedType === "opportunity" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalOpportunity(row.Oid)
-                                    }
-                                  >
-                                    View Opportunity Profile
-                                  </Button>
-                                ) : null}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
-                )}
+  <Grid item xs={12} sx={{ mt: 3 }}>
+    <TableContainer component={Box} sx={{ maxHeight: 400 }}>
+      <Table stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Mobile</TableCell>
+            {selectedType === "telecalling" ? (
+              <TableCell>Next Follow Up</TableCell>
+            ) : (
+              <TableCell>Created Date</TableCell>
+            )}
+            <TableCell>Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {selectedData?.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.CName}</TableCell>
+              <TableCell>{row.Mobile}</TableCell>
+              <TableCell>
+                {selectedType === "telecalling"
+                  ? row.NextFollowUpDate
+                  : row.CreateDate}
+              </TableCell>
+              <TableCell>
+                {selectedType === "telecalling" ? (
+                  <Button onClick={() => fetchDataForModal(row.Tid)}>
+                    View Lead Profile
+                  </Button>
+                ) : selectedType === "contacts" ? (
+                  <Button onClick={() => fetchDataForModalContact(row.Cid)}>
+                    View Contact Profile
+                  </Button>
+                ) : selectedType === "Salesopportunity" ? (
+                  <Button onClick={() => fetchDataForModalOpportunity(row.Oid)}>
+                    View Opportunity Profile
+                  </Button>
+                ) : selectedType === "todayLeads" ? (
+                  <Button onClick={() => fetchDataForModal(row.Tid)}>
+                    View Opportunity Profile
+                  </Button>
+                ) : null}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Grid>
+)}
+
               </CardContent>
             </Card>
           </Grid>
