@@ -494,6 +494,7 @@ const Dashboard = ({ onHistoryClick }) => {
                         </CardContent>
                       </Card>
                     </Grid>
+
                     <Grid item xs={12} sm={4}>
                       <Card onClick={() => handleCardClick("opportunity")}>
                         <CardContent sx={{ textAlign: "center" }}>
@@ -508,7 +509,52 @@ const Dashboard = ({ onHistoryClick }) => {
                         </CardContent>
                       </Card>
                     </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Card onClick={() => handleCardClick("opportunity")}>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Loan Reminder
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Card onClick={() => handleCardClick("opportunity")}>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Lead FollowUp
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  
+                    <Grid item xs={12} sm={4}>
+                      <Card onClick={() => handleCardClick("opportunity")}>
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Contacts fontSize="large" color="primary" />
+                          <Typography variant="h6" gutterBottom>
+                            Todays Opportunity
+                          </Typography>
+                          <Typography variant="body1" color="textSecondary">
+                            Total Counts: {telecallingData?.data?.bookingCount}{" "}
+                            {/* Adjust this key as needed */}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    
                   </Grid>
+                
                 </Grid>
                 <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
                   <Card>

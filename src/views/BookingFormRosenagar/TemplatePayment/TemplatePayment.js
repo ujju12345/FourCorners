@@ -47,19 +47,18 @@ const TemplatePayment = ({ bookingID , handleCancel }) => {
   const [error, setError] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filterOption, setFilterOption] = useState('remarksWithCreateDate');
-
+  const [payments, setPayments] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, [bookingID]);
-
   
-
   const fetchData = async (selectedFilter) => {
     try {
       const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectbooking.php?BookingID=${bookingID}&filter=${selectedFilter}`);
       console.log("data aaya dekh<<<<<>>>>>>>>>>>>>", response.data);
       setData(response.data.data);
+      setPayments(response.data.data.payments); // Assuming you need to set payments here
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -67,6 +66,7 @@ const TemplatePayment = ({ bookingID , handleCancel }) => {
       setLoading(false);
     }
   };
+  
   const handleFilterChange = (event) => {
     setFilterOption(event.target.value);
   };
@@ -74,6 +74,44 @@ const TemplatePayment = ({ bookingID , handleCancel }) => {
   const filteredRemarks = filterOption === 'remarksWithCreateDate' 
   ? data?.remarksWithCreateDate 
   : data?.otherRemarks;
+
+  const totalCash = payments.reduce((sum, payment) => sum + (payment.Cash || 0), 0);
+  const totalCheque = payments.reduce((sum, payment) => sum + (payment.ChequeAmount || 0), 0);
+  const totalAPlusB = totalCash + totalCheque;
+  const balance = data?.TotalCost - totalAPlusB;
+  
+  const rows = payments.map(payment => ({
+    Date: payment.Date,
+    Cash: payment.Cash || 0,
+    ChequeAmount: payment.ChequeAmount || 0,
+    TotalAPlusB: (payment.Cash || 0) + (payment.ChequeAmount || 0),
+    Balance: (data?.TotalCost || 0) - ((payment.Cash || 0) + (payment.ChequeAmount || 0)),
+    Wing: data?.WingName || '', 
+    Floor: data?.FloorNo || '', 
+    FlatNo: data?.FlatNumber || '', 
+    Type: data?.Type || ''
+  }));
+
+  // Ensure there are always 15 rows displayed
+  const totalRows = 25;
+  const defaultRowsCount = Math.max(totalRows - rows.length, 0);
+  const defaultRows = new Array(defaultRowsCount).fill({
+    Date: '',
+    Cash: '',
+    ChequeAmount: '',
+    TotalAPlusB: '',
+    Balance: '',
+    Wing: '',
+    Floor: '',
+    FlatNo: '',
+    Type: ''
+  });
+
+  // Combine actual and default rows
+  const finalRows = [...rows, ...defaultRows];
+
+
+
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
@@ -384,31 +422,51 @@ const TemplatePayment = ({ bookingID , handleCancel }) => {
 </TableContainer>
 
       </InvoiceBox>
-      <InvoiceBox >
-        <TableContainer component={Paper}>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <StyledTableCell colSpan={5} style={{ textAlign: 'center', borderBottom: 'none' }}>
-                  <Typography style={{ fontSize: 20, fontWeight: 700 }}>PROJECT</Typography>
-                </StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>WING</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>FLOOR</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>FLAT NO.</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>TYPE</StyledTableCell>
+      <InvoiceBox>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {/* Payment Summary Row */}
+           
+
+            {/* Table Headers */}
+            <TableRow>
+              <StyledTableCell colSpan={5} style={{ textAlign: 'center', borderBottom: 'none' }}>
+                <Typography style={{ fontSize: 20, fontWeight: 700 }}>PROJECT</Typography>
+                <Typography style={{ fontSize: 20, fontWeight: 700 }}>{data.ProjectName}</Typography>
+
+              </StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>WING</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>FLOOR</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>FLAT NO.</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>TYPE</StyledTableCell>
+            </TableRow>
+            
+            <TableRow>
+              <StyledTableCell style={{ textAlign: 'center' }}>DATE</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>A</StyledTableCell>
+              <StyledTableCell colSpan={4} style={{ textAlign: 'center' }}>B</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>A + B</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>Balance</StyledTableCell>
+              <StyledTableCell style={{ textAlign: 'center' }}>Sign.</StyledTableCell>
+            </TableRow>
+
+            {/* Render Rows */}
+            {finalRows.map((row, index) => (
+              <TableRow key={index}>
+                <StyledTableCell style={{ textAlign: 'center' }}>{row.Date}</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>{row.Cash}</StyledTableCell>
+                <StyledTableCell colSpan={4} style={{ textAlign: 'center' }}>{row.ChequeAmount}</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>{row.TotalAPlusB}</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}>{row.Balance}</StyledTableCell>
+                <StyledTableCell style={{ textAlign: 'center' }}> {/* Signature here */} </StyledTableCell>
               </TableRow>
-              <TableRow>
-                <StyledTableCell style={{ textAlign: 'center' }}>DATE</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>A</StyledTableCell>
-                <StyledTableCell colSpan={4} style={{ textAlign: 'center' }}>B</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>A + B</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>Balance</StyledTableCell>
-                <StyledTableCell style={{ textAlign: 'center' }}>Sign.</StyledTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </InvoiceBox>  
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </InvoiceBox>
+
     </>
   );
 };
