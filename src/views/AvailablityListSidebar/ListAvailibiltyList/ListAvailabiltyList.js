@@ -7,6 +7,9 @@ import {
   MenuItem,
   Select,
   FormControl,
+  Card,
+  CardContent,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -28,8 +31,8 @@ const ListAvailabiltyList = ({ item }) => {
   const [loading, setLoading] = useState(false);
   const [dataAvailable, setDataAvailable] = useState(true);
   const [maxFlats, setMaxFlats] = useState(0);
-  const [editingCell, setEditingCell] = useState(null); // New state for tracking which cell is being edited
-  const [skuOptions, setSkuOptions] = useState([]); // New state for dropdown options
+  const [editingCell, setEditingCell] = useState(null);
+  const [skuOptions, setSkuOptions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,18 +118,16 @@ const ListAvailabiltyList = ({ item }) => {
 
   const handleCellClick = (floorNo, flatNo) => {
     setEditingCell({ floorNo, flatNo });
-    fetchSkuOptions(); // Fetch SKU options when a cell is clicked
+    fetchSkuOptions();
   };
 
   const handleSkuChange = async (event) => {
     const newSkuID = event.target.value;
     const { floorNo, flatNo } = editingCell;
 
-    // Determine the skuID to be sent based on the current cell status
     const currentFlat = wingDetails[floorNo] && wingDetails[floorNo][flatNo - 1];
     const statusSkuID = currentFlat.skuID === 1 ? 2 : 1;
 
-    // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to update?`,
@@ -143,7 +144,7 @@ const ListAvailabiltyList = ({ item }) => {
           "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectsku.php",
           {
             skuID: statusSkuID,
-            ModifyUID: 1, // Assuming the ModifyUID is 5, replace with actual value
+            ModifyUID: 1,
             ProjectID: item.ProjectID,
             WingID: selectedWing.WingID,
             FloorNo: floorNo,
@@ -152,7 +153,6 @@ const ListAvailabiltyList = ({ item }) => {
         );
 
         if (response.data.status === "Success") {
-          // Update the local state with the new SKU ID
           setWingDetails((prevDetails) => ({
             ...prevDetails,
             [floorNo]: prevDetails[floorNo].map((flat, index) =>
@@ -164,7 +164,7 @@ const ListAvailabiltyList = ({ item }) => {
             'The Availiblity List has been updated successfully.',
             'success'
           );
-          setEditingCell(null); // Exit editing mode after a successful update
+          setEditingCell(null);
         } else {
           Swal.fire(
             'Failed!',
@@ -181,6 +181,21 @@ const ListAvailabiltyList = ({ item }) => {
         );
       }
     }
+  };
+
+  const countStatuses = () => {
+    const counts = { Avl: 0, HLD: 0, RFG: 0, SLD: 0 };
+
+    Object.values(wingDetails).forEach(flats => {
+      flats.forEach(flat => {
+        const status = getStatusText(flat.skuID);
+        if (status in counts) {
+          counts[status]++;
+        }
+      });
+    });
+
+    return counts;
   };
 
   const ProjectRoomTable = ({ data, maxFlats }) => {
@@ -226,7 +241,7 @@ const ListAvailabiltyList = ({ item }) => {
                           >
                             {skuOptions.map((option) => (
                               <MenuItem key={option.skuID} value={option.skuID}>
-                                {option.skuName}
+                                {option.skuName}                          
                               </MenuItem>
                             ))}
                           </Select>
@@ -247,6 +262,8 @@ const ListAvailabiltyList = ({ item }) => {
       </table>
     );
   };
+
+  const statusCounts = countStatuses();
 
   return (
     <>
@@ -279,7 +296,54 @@ const ListAvailabiltyList = ({ item }) => {
         <div>
           <h2>Details for {selectedWing.WingName}</h2>
           {dataAvailable ? (
-            <ProjectRoomTable data={wingDetails} maxFlats={maxFlats} />
+            <>
+              <ProjectRoomTable data={wingDetails} maxFlats={maxFlats} />
+
+              {/* Status Counts Card */}
+              <Grid container spacing={2} justifyContent="center" style={{ marginTop: '20px' }}>
+          
+       
+                <Grid>
+                  <Card sx={{ marginTop: 4, padding: 2 }}>
+                    <CardContent>
+                    <Typography variant="body2">Sold : {statusCounts.SLD}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid>
+                  <Card sx={{ marginTop: 4, padding: 2 }}>
+                    <CardContent>
+                    <Typography variant="body2">Available : {statusCounts.Avl}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid>
+                  <Card sx={{ marginTop: 4, padding: 2 }}>
+                    <CardContent>
+                   
+                  <Typography variant="body2">Hold : {statusCounts.HLD}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid>
+                  <Card sx={{ marginTop: 4, padding: 2 }}>
+                    <CardContent>
+                    <Typography variant="body2">REFUGE (RFG): {statusCounts.RFG}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+             
+          
+
+              </Grid>
+              
+             
+              
+                 
+
+
+
+            </>
           ) : (
             <NoDataIcon />
           )}
@@ -290,3 +354,4 @@ const ListAvailabiltyList = ({ item }) => {
 };
 
 export default ListAvailabiltyList;
+
