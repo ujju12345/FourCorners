@@ -637,7 +637,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                AlternateMobileNo: {item?.OtherNumbers}
+                AlternateMobileNo: {item?.AlternateMobileNo}
               </Typography>
               <Typography
                 variant="body2"
@@ -851,7 +851,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     padding: "10px",
                   }}
                 >
-                 
+                 Email
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                   {item?.Email}
                   </Typography>

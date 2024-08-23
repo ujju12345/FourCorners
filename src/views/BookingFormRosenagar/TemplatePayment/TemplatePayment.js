@@ -105,7 +105,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
 
   let balance = data?.TotalCost; // Start with the total cost as the initial balance
 
-  finalRows = finalRows.map((row, index) => {
+  finalRows = finalRows?.map((row, index) => {
     const currentAPlusB = row.Cash + row.ChequeAmount;
     const currentBalance = balance - currentAPlusB; // Calculate the current balance
 
@@ -882,7 +882,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
 
               {/* Render Rows */}
-              {finalRows.map((row, index) => (
+              {finalRows?.map((row, index) => (
                 <TableRow key={index}>
                   <StyledTableCell style={{ textAlign: "center" }}>
                     {row.Date}

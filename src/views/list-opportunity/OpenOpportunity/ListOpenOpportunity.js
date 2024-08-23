@@ -687,7 +687,7 @@ const ListOpenOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                AlternateMobileNo: {item?.AlternateMobileNo}
               </Typography>
             </div>
           </Box>
