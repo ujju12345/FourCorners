@@ -32,7 +32,7 @@ import Swal from "sweetalert2";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useCookies } from "react-cookie";
 const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
-
+console.log(item, "seet<<<<<<<>>>>>>>></>");
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -642,26 +642,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 Source Name: {item?.SourceName}
               </Typography>
             </div>
-            <div style={{ mr: 5 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#333333",
-                  fontSize: "0.7rem",
-                  minWidth: "auto",
-                  padding: "5px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: 2,
-                  minHeight: 20,
-                  marginLeft: 2,
-                  "&:hover": {
-                    backgroundColor: "#dcdcdc",
-                  },
-                }}
-              >
-                NextFollowUpDate: {item?.NextFollowUpDate}
-              </Typography>
-            </div>
+          
           
             <div style={{ marginRight: 5 }}>
               <Typography
@@ -681,6 +662,26 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 }}
               >
                 Location: {item.CityName}/{item.Location}
+              </Typography>
+            </div>
+            <div style={{ marginRight: 5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#333333",
+                  fontSize: "0.7rem",
+                  minWidth: "auto",
+                  padding: "5px",
+                  borderRadius: 2,
+                  minHeight: 20,
+                  marginLeft: 2,
+                  backgroundColor: "#f0f0f0",
+                  "&:hover": {
+                    backgroundColor: "#dcdcdc",
+                  },
+                }}
+              >
+                Alternate Mobile Number: {item.AlternateMobileNo}
               </Typography>
             </div>
           </Box>
@@ -908,6 +909,26 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Email
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Email}
                   </Typography>
                 </Card>
               </Grid>

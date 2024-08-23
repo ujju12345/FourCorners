@@ -323,8 +323,9 @@ const LeadNotintrestedSidebar = ({ onItemClick, onCreate }) => {
                     variant="body2"
                     style={{ fontSize: 10 }}
                   >
-                   Date: {item.NextFollowUpDate}
+                    Source Name: {item.SourceName}
                   </Typography>
+                 
                 </>}
               />
             </ListItem>

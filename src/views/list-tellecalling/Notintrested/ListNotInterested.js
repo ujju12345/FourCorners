@@ -33,7 +33,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
-
+console.log(item , "not interestedddd dataa<<<<<<<<<<<<a");
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -569,7 +569,7 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Phone: {item?.Mobile}
+                Alternate Mobile Number: {item?.AlternateMobileNo}
               </Typography>
             </div>
           </Box>
@@ -799,7 +799,26 @@ const ListNotInterested = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                 </Card>
               </Grid>
-            
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Email
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Email}
+                  </Typography>
+                </Card>
+              </Grid>
             </Grid>
           </Box>
         </Paper>

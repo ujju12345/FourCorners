@@ -817,6 +817,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                 </Card>
               </Grid>
+            
               <Grid item xs={4}>
                 <Card
                   variant="outlined"
@@ -907,6 +908,26 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                     {item?.Note}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 1,
+
+                    padding: "10px",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
+                  >
+                    Email
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
+                    {item?.Email}
                   </Typography>
                 </Card>
               </Grid>

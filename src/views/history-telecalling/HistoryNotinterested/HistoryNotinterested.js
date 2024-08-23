@@ -1,42 +1,51 @@
-import { styled } from '@mui/system';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PersonIcon from '@mui/icons-material/Person';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Modal, TextField, IconButton, Grid, Menu, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { styled } from "@mui/system";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PersonIcon from "@mui/icons-material/Person";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  Modal,
+  TextField,
+  IconButton,
+  Grid,
+  Menu,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Swal from 'sweetalert2';
-import { useCookies } from 'react-cookie';
+import Swal from "sweetalert2";
+import { useCookies } from "react-cookie";
 
 // Styled component for Paper
 const CustomPaper = styled(Paper)({
-  padding: '6px 16px',
-  maxWidth: '600px',  
-  margin: '0 auto',   // Center the cards
+  padding: "6px 16px",
+  maxWidth: "600px",
+  margin: "0 auto", // Center the cards
 });
 
 // Custom styling for the Timeline
 const CustomTimeline = styled(Timeline)({
-  width: '100%',
-  margin: '0 auto',
+  width: "100%",
+  margin: "0 auto",
 });
 
 // SVG Image URL or import
-const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
+const NoDataSVG = "https://path-to-your-svg-image.svg"; // Replace with your SVG URL or import
 
 export default function HistoryNotinterested({ item }) {
-
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -46,7 +55,7 @@ export default function HistoryNotinterested({ item }) {
     Interest: "",
     Note: "",
     CreateUID: cookies.amr?.UserID || 1,
-  }
+  };
 
   const [rowData, setRowDataToUpdate] = useState([]);
   const [open, setOpen] = useState(false);
@@ -84,12 +93,15 @@ export default function HistoryNotinterested({ item }) {
       try {
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${item.Tid}`;
         const response = await axios.get(apiUrl);
-        if (response.data.status === 'Success') {
-          console.log(response.data.data, 'Single telecalling data fetched Lol');
+        if (response.data.status === "Success") {
+          console.log(
+            response.data.data,
+            "Single telecalling data fetched Lol"
+          );
           setRowDataToUpdate(response.data.data);
         }
       } catch (error) {
-        console.error('Error fetching single telecalling data:', error);
+        console.error("Error fetching single telecalling data:", error);
       }
     };
     fetchData();
@@ -110,14 +122,15 @@ export default function HistoryNotinterested({ item }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!item || !item.Tid) {
-      console.error('No valid item or Tid found.');
+      console.error("No valid item or Tid found.");
       return;
     }
     const formDataWithTid = {
       ...formData,
-      Tid: item.Tid
+      Tid: item.Tid,
     };
-    const url = "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
+    const url =
+      "https://ideacafe-backend.vercel.app/api/proxy/api-insert-nextfollowup.php";
     try {
       const response = await axios.post(url, formDataWithTid, {
         headers: {
@@ -130,17 +143,17 @@ export default function HistoryNotinterested({ item }) {
         setSubmitSuccess(true);
         setSubmitError(false);
         Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Follow-up details saved successfully.',
+          icon: "success",
+          title: "Success!",
+          text: "Follow-up details saved successfully.",
         });
       } else {
         setSubmitSuccess(false);
         setSubmitError(true);
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong! Please try again later.',
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong! Please try again later.",
         });
       }
     } catch (error) {
@@ -148,9 +161,9 @@ export default function HistoryNotinterested({ item }) {
       setSubmitSuccess(false);
       setSubmitError(true);
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong! Please try again later.',
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong! Please try again later.",
       });
     }
   };
@@ -159,53 +172,65 @@ export default function HistoryNotinterested({ item }) {
     <Box>
       <Box width="100%">
         <CustomTimeline align="alternate">
-          {rowData.length > 0 ? rowData.map((data, index) => (
-            <TimelineItem key={index}>
-              <TimelineOppositeContent>
-                <Typography variant="body2" color="textSecondary">
-                  {data.NextFollowUpDate}
-                </Typography>
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot style={{ backgroundColor: 'green' }}>
-                  <CheckCircleIcon style={{ color: 'white' }} />
-                </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <CustomPaper elevation={3}>
-                  <Typography variant="h6" component="h1" style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                      <PersonIcon style={{ marginRight: 8 }} />
-                      <span style={{ fontWeight: 'bold' }}>
-                        {data.UserRole}
-                      </span>
-                    </span>
-                    <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
-                      Time: {data.NextFollowUpTime}
-                    </Typography>
+          {rowData.length > 0 ? (
+            rowData.map((data, index) => (
+              <TimelineItem key={index}>
+                <TimelineOppositeContent>
+                  <Typography variant="body2" color="textSecondary">
+                    {data.NextFollowUpDate}
                   </Typography>
-                  <Typography>Note: {data.Note}</Typography>
-                </CustomPaper>
-              </TimelineContent>
-            </TimelineItem>
-          )) : (
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
-              <Typography variant="h6" color="textSecondary" style={{ marginTop: '16px' }}>
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot style={{ backgroundColor: "green" }}>
+                    <CheckCircleIcon style={{ color: "white" }} />
+                  </TimelineDot>
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <CustomPaper elevation={3}>
+                    <Typography
+                      variant="h6"
+                      component="h1"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center" }}>
+                        <PersonIcon style={{ marginRight: 8 }} />
+                        <span style={{ fontWeight: "bold" }}>
+                          {data.UserRole}
+                        </span>
+                      </span>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        style={{ marginLeft: "16px" }}
+                      >
+                        Time: {data.NextFollowUpTime}
+                      </Typography>
+                    </Typography>
+                    <Typography>Note: {data.Note}</Typography>
+                  </CustomPaper>
+                </TimelineContent>
+              </TimelineItem>
+            ))
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              height="50vh"
+            >
+              <Typography
+                variant="h6"
+                color="textSecondary"
+                style={{ marginTop: "16px" }}
+              >
                 No data available
               </Typography>
             </Box>
           )}
         </CustomTimeline>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          fullWidth 
-          style={{ marginTop: '16px' }}
-          onClick={handleAddFollowUpClick}
-        >
-          Add New Follow Up
-        </Button>
+
         <Modal
           open={open}
           onClose={handleClose}
@@ -226,7 +251,7 @@ export default function HistoryNotinterested({ item }) {
               mt: 5,
               mx: 2,
               minHeight: 400,
-              height: 'auto', 
+              height: "auto",
             }}
           >
             <IconButton
@@ -261,7 +286,10 @@ export default function HistoryNotinterested({ item }) {
                     }}
                   >
                     {currentUpdate.map((bhk) => (
-                      <MenuItem  key={bhk.CurrentUpdateID} value={bhk.CurrentUpdateID}>
+                      <MenuItem
+                        key={bhk.CurrentUpdateID}
+                        value={bhk.CurrentUpdateID}
+                      >
                         {bhk.CurrentUpdateName}
                       </MenuItem>
                     ))}
