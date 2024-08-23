@@ -718,7 +718,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <ShareIcon />
                 </IconButton>
               </a>
-              <a style={{ marginRight:1 }}>
+              <a style={{ marginRight:10 }}>
                 <IconButton
                   aria-label="share"
                   size="small"
@@ -727,7 +727,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     backgroundColor: "#e3f2fd",
                     borderRadius: "50%",
                     padding: "10px",
-                    marginRight: 15,
+                    marginRight: 10,
                     "&:hover": {
                       backgroundColor: "#bbdefb",
                     },
@@ -737,7 +737,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   <HistoryIcon />
                 </IconButton>
               </a>
-              <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+              <a href={`mailto:${item?.Email}`} style={{ marginRight: 15 }}>
                 <IconButton
                   aria-label="email"
                   size="small"

@@ -129,7 +129,7 @@ const ListAvailabiltyList = ({ item }) => {
     // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: `Do you want to update the SKU ID to ${newSkuID}?`,
+      text: `Do you want to update?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -161,7 +161,7 @@ const ListAvailabiltyList = ({ item }) => {
           }));
           Swal.fire(
             'Updated!',
-            'The SKU ID has been updated successfully.',
+            'The Availiblity List has been updated successfully.',
             'success'
           );
           setEditingCell(null); // Exit editing mode after a successful update

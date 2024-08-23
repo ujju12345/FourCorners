@@ -374,7 +374,7 @@ const AvailablitySidebar = ({ onEdit, onItemClick, onCreate }) => {
         <>
           <List>
             {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              
               .map((item) => (
                 <React.Fragment key={item.ProjectID}>
                   <Card sx={{marginBottom:2}}>

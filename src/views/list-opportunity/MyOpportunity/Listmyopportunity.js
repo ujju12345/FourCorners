@@ -861,10 +861,10 @@ console.log(item , 'dekh bhai ');
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Source Name
+                    Email
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.SourceName}
+                    {item?.Email}
                   </Typography>
                 </Card>
               </Grid>

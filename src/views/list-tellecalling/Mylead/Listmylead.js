@@ -663,7 +663,7 @@ const Listmylead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                NextFollowUpDate: {item?.NextFollowUpDate}
+                Alternate Number: {item?.AlternateMobileNo}
               </Typography>
             </div>
           

@@ -38,12 +38,13 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   console.log(editData, "Edit data aaya");
   const initialRemark = {
-    Proccess:"",
+    Proccess: "",
     RemarkName: "",
     RemarkDate: null, // or new Date() if you want a default date
     AmountTypeID: "",
     Remarkamount: "",
-    Loan:"" ,
+    Loan: "",
+    Registraion: "",
   };
 
   const initialFormData = {
@@ -70,6 +71,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Ratesqft: "",
     UnittypeID: "",
     Advocate: "",
+
     ExtraCost: "",
     TotalCost: "",
     UsableArea: "",
@@ -245,6 +247,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
         if (field === "Loan") {
           newRemarks[index][field] = checked ? 1 : 0;
         } else if (field === "Proccess") {
+          newRemarks[index][field] = checked ? 1 : 0;
+        } else if (field === "Registraion") {
           newRemarks[index][field] = checked ? 1 : 0;
         }
       } else {
@@ -1279,30 +1283,41 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   </Grid>
 
                   {/* Loan Process Checkbox */}
-
                   <Grid item xs={2}>
-  <FormControlLabel
-    control={
-      <Checkbox
-        checked={remark.Proccess === 1}
-        onChange={(e) => handleChange(e, index, "Proccess")}
-      />
-    }
-    label="Token"
-  />
-</Grid>
-<Grid item xs={2}>
-  <FormControlLabel
-    control={
-      <Checkbox
-        checked={remark.Loan === 1}
-        onChange={(e) => handleChange(e, index, "Loan")}
-      />
-    }
-    label="Loan Process"
-  />
-</Grid>
-
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={remark.Registraion === 1}
+                          onChange={(e) =>
+                            handleChange(e, index, "Registraion")
+                          }
+                        />
+                      }
+                      label="Registraion"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={remark.Proccess === 1}
+                          onChange={(e) => handleChange(e, index, "Proccess")}
+                        />
+                      }
+                      label="Token"
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={remark.Loan === 1}
+                          onChange={(e) => handleChange(e, index, "Loan")}
+                        />
+                      }
+                      label="Loan Process"
+                    />
+                  </Grid>
 
                   {/* Add and Delete Buttons */}
                   {index === remarks.length - 1 && (

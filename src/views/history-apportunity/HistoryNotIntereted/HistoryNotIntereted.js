@@ -197,15 +197,7 @@ export default function HistoryNotIntereted({ item }) {
             </Box>
           )}
         </CustomTimeline>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          fullWidth 
-          style={{ marginTop: '16px' }}
-          onClick={handleAddFollowUpClick}
-        >
-          Add New Follow Up
-        </Button>
+      
         <Modal
           open={open}
           onClose={handleClose}
