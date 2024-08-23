@@ -227,6 +227,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
     );
     setChequePayments(updatedChequePayments);
   };
+  
 
   useEffect(() => {
     // Update booking remark details based on the selected remark
@@ -396,8 +397,10 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleDateChange = (date, index) => {
-    handleChequePaymentChange(index, "chequeDate", date);
+    const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    handleChequePaymentChange(index, "chequeDate", adjustedDate);
   };
+  
   const handleDateChangePayment = (date, field) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -502,10 +505,9 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleSubmit = async () => {
-    // Prepare the data for the API request
     const payload = {
       BookingID: selectedRow,
-      Payments: chequePayments.map((payment, index) => ({
+      Payments: chequePayments.map((payment) => ({
         BookingremarkID: selectedBookingRemark,
         PRemarkamount: remarks.reduce(
           (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
@@ -518,10 +520,10 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         AmountTypeID: payment.AmountTypeID || "",
         ChequeNumber: payment.cheqNo || "",
         ChequeDate: payment.chequeDate
-          ? formatDateForAPI(payment.chequeDate)
+          ? payment.chequeDate.toISOString().split("T")[0]
           : null,
         Date: cashDate && cashDate.CashDate
-          ? formatDateForAPI(cashDate.CashDate)
+          ? cashDate.CashDate.toISOString().split("T")[0]
           : null,
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
@@ -539,35 +541,19 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           : "",
         Loan: parseInt(remark.Loan) || 0,
         Status: parseInt(remark.Status) || 1,
-        AmountTypeID: amountType || 1, // Add AmountTypeID for Remarks
+        AmountTypeID: amountType || 1,
       })),
       Proccess: 1,
       ModifyUID: 1,
     };
   
-    console.log(payload, "Sending payload to API");
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
-      console.log("API Response:", response.data);
       if (response.data.status === "Success") {
-        console.log("Payment successfully submitted", response.data);
-        // Reset form and states after successful submission
-        setCashPaid("");
-        setChequePaid("");
-        setBankName("");
-        setCheqNo("");
-        setFormData({ AmountGiven: new Date() });
-        setSelectedPaymentType("");
-        setRemarks([
-          { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
-        ]);
-        setSelectedBookingRemark("");
-        setBookingRemarkDetails({});
-        setSelectedRow(null);
-  
+        
         Swal.fire({
           icon: "success",
           title: "Data Submitted Successfully",
@@ -576,8 +562,6 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         }).then(() => {
           window.location.reload();
         });
-  
-        handleModalClose();
       } else {
         console.error("Failed to submit payment:", response.data.message);
       }
@@ -589,9 +573,10 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   // Helper function to format date correctly for the API
   const formatDateForAPI = (date) => {
     const offset = date.getTimezoneOffset();
-    date = new Date(date.getTime() - offset * 60 * 1000);
-    return date.toISOString().split("T")[0];
+    const adjustedDate = new Date(date.getTime() - offset * 60000);
+    return adjustedDate.toISOString().split("T")[0];
   };
+  
   
   useEffect(() => {
     if (!paymentData) return;
