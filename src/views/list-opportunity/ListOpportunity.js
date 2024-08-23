@@ -851,12 +851,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     padding: "10px",
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 600, fontSize: "0.8rem" }}
-                  >
-                      Email : {item?.Email}
-                  </Typography>
+                 
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
                   {item?.Email}
                   </Typography>

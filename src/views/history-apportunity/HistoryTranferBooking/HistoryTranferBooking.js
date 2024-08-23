@@ -200,7 +200,7 @@ export default function HistoryTranferBooking({ item }) {
             </Box>
           )}
         </CustomTimeline>
-        <Button 
+        {/* <Button 
           variant="contained" 
           color="primary" 
           fullWidth 
@@ -208,7 +208,7 @@ export default function HistoryTranferBooking({ item }) {
           onClick={handleAddFollowUpClick}
         >
           Add New Follow Up
-        </Button>
+        </Button> */}
         <Modal
           open={open}
           onClose={handleClose}
