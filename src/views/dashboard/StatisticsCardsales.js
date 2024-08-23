@@ -16,6 +16,8 @@ import {
   Bookmark as BookmarkIcon,
   Block as BlockIcon,
   Dashboard as DashboardIcon,
+  Money as MoneyIcon,
+  CreditCard as CreditCardIcon
 } from '@mui/icons-material';
 import DotsVertical from 'mdi-material-ui/DotsVertical';
 
@@ -81,6 +83,7 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Backlog Pending */}
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -102,6 +105,7 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Open Lead */}
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -123,6 +127,7 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Transfer To Booking */}
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -144,6 +149,7 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
+        {/* Not Interested */}
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -163,9 +169,9 @@ const StatisticsCardsales = () => {
               <Typography variant='caption'>Not Interested</Typography>
               <Typography variant='h6'>{counts.notInterested ?? '--'}</Typography>
             </Box>
-
           </Box>
         </Grid>
+        {/* Total Follow Up */}
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -183,45 +189,163 @@ const StatisticsCardsales = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Total Follow Up</Typography>
-              <Typography variant='h6'>{counts.totalFollowup ?? '--'}</Typography>
+              <Typography variant='h6'>{counts?.totalFollowup ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
-      </Grid>
+        {/* Payment Reminder - Transfer to Opportunity */}
+     
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'primary.main',
+              }}
+            >
+              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Payment Reminder Transfer</Typography>
+              <Typography variant='h6'>{counts.paymentremindertransfertoOppCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        {/* Payment Reminder - Today Follow Up */}
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'success.main',
+              }}
+            >
+              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Payment Reminder Today</Typography>
+              <Typography variant='h6'>{counts.paymentremindertodayFollowupCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        {/* Payment Reminder - Backlog */}
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'warning.main',
+              }}
+            >
+              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Payment Reminder Backlog</Typography>
+              <Typography variant='h6'>{counts.paymentreminderbacklogFollowupCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        {/* Loan Reminder - Transfer to Opportunity */}
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'primary.main',
+              }}
+            >
+              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Loan Reminder Transfer</Typography>
+              <Typography variant='h6'>{counts.loanremindertransfertoOppCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        {/* Loan Reminder - Today Follow Up */}
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'success.main',
+              }}
+            >
+              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Loan Reminder Today</Typography>
+              <Typography variant='h6'>{counts.loanremindertodayFollowupCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        {/* Loan Reminder - Backlog */}
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+              variant='rounded'
+              sx={{
+                mr: 3,
+                width: 44,
+                height: 44,
+                boxShadow: 3,
+                color: 'common.white',
+                backgroundColor: 'warning.main',
+              }}
+            >
+              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant='caption'>Loan Reminder Backlog</Typography>
+              <Typography variant='h6'>{counts.loanreminderbacklogFollowupCount ?? '--'}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        </Grid>
+
     );
   };
 
   return (
     <Card>
       <CardHeader
-        title='Statistics Card'
+        title="Statistics Card"
         action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
+          <IconButton aria-label="settings">
             <DotsVertical />
           </IconButton>
         }
-        subheader={
-          <Typography variant='body2'>
-            <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total {apiData ? apiData.counts.totalFollowup : '--'} follow ups
-            </Box>{' '}
-            😎 this month
-          </Typography>
-        }
-        titleTypographyProps={{
-          sx: {
-            mb: 2.5,
-            lineHeight: '2rem !important',
-            letterSpacing: '0.15px !important',
-          },
-        }}
       />
-      <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
-        {renderStats()}
+      <CardContent>
+        <Box>{renderStats()}</Box>
       </CardContent>
     </Card>
   );
 };
-
 
 export default StatisticsCardsales;
