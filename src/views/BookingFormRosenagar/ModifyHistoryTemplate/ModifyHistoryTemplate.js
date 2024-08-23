@@ -37,7 +37,7 @@ const InvoiceBox = styled(Box)({
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
-const TemplateRosenagar = ({ bookingID , onGoBack }) => {
+const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
   const router = useRouter();
   console.log(bookingID , 'booking id aaya');
   const printRef = useRef();
@@ -72,6 +72,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
     }
   };
 
+  
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -321,5 +322,5 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
   );
 };
 
-export default TemplateRosenagar;
+export default ModifyHistoryTemplate;
 
