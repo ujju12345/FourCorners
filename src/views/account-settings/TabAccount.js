@@ -10,7 +10,8 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 
-const TabAccount = ({ show, companyData = {}, editData }) => { 
+const TabAccount = ({ show, editData }) => { 
+  console.log(editData , 'edit data of companyyyyyyy');
   const [formValues, setFormValues] = useState({
     companyName: "",
     gst: "",
@@ -23,10 +24,10 @@ const TabAccount = ({ show, companyData = {}, editData }) => {
   useEffect(() => {
     if (editData) {
       setFormValues({
-        companyName: companyData.CompanyName || "",
-        gst: companyData.Gst || "",
-        website: companyData.Website || "",
-        email: companyData.Email || ""
+        companyName: editData.CompanyName || "",
+        gst: editData.Gst || "",
+        website: editData.Website || "",
+        email: editData.Email || ""
       });
     } else {
 
@@ -37,11 +38,12 @@ const TabAccount = ({ show, companyData = {}, editData }) => {
         email: ""
       });
     }
-  }, [editData, companyData]); 
+  }, [editData]); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const newErrors = validateFields();
+    
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
@@ -54,13 +56,13 @@ const TabAccount = ({ show, companyData = {}, editData }) => {
         Email: formValues.email,
         Status: 1,
       };
-
+  
       const apiUrl = editData
         ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php"
         : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-companymaster.php";
-
+  
       axios
-        .post(apiUrl, { ...formData, CompanyID: companyData?.CompanyID }, {
+        .post(apiUrl, { ...formData, CompanyID: editData?.CompanyID }, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -71,8 +73,10 @@ const TabAccount = ({ show, companyData = {}, editData }) => {
               icon: "success",
               title: "Success!",
               text: editData ? "Company details updated successfully" : "Company details added successfully",
+            }).then(() => {
+              window.location.reload();
             });
-            setFormValues({ companyName: "", gst: "", website: "", email: "" }); // Clear input fields after successful submission
+            setFormValues({ companyName: "", gst: "", website: "", email: "" });
             show(); // Assuming this function handles hiding the form or navigating away
           } else {
             Swal.fire({
@@ -116,9 +120,7 @@ const TabAccount = ({ show, companyData = {}, editData }) => {
       ...prevValues,
       [name]: value,
     }));
-    if (value) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-    }
+  
   };
 
   return (

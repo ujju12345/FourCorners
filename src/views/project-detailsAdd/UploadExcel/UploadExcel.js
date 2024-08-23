@@ -37,7 +37,9 @@ const UploadExcel = ({ show, rowData }) => {
 
   useEffect(() => {
     axios
-      .get("https://apiforcorners.cubisysit.com/api/api-dropdown-projectinfo.php")
+      .get(
+        "https://apiforcorners.cubisysit.com/api/api-dropdown-projectinfo.php"
+      )
       .then((response) => {
         if (response.data.status === "Success") {
           setProjectMaster(response.data.data);
@@ -51,7 +53,9 @@ const UploadExcel = ({ show, rowData }) => {
   useEffect(() => {
     if (formData.ProjectID) {
       axios
-        .get(`https://apiforcorners.cubisysit.com/api/api-fetch-projectwings.php?ProjectID=${formData.ProjectID}`)
+        .get(
+          `https://apiforcorners.cubisysit.com/api/api-fetch-projectwings.php?ProjectID=${formData.ProjectID}`
+        )
         .then((response) => {
           if (response.data.status === "Success") {
             setWingData(response.data.data);
@@ -79,7 +83,7 @@ const UploadExcel = ({ show, rowData }) => {
 
   const handleSubmitFile = async (event) => {
     event.preventDefault();
-  
+
     if (!file) {
       setError("Please select a file.");
       return;
@@ -105,7 +109,7 @@ const UploadExcel = ({ show, rowData }) => {
           },
         }
       );
-  
+
       if (response.data.status === "Success") {
         Swal.fire({
           icon: "success",
@@ -160,7 +164,7 @@ const UploadExcel = ({ show, rowData }) => {
           },
         }
       );
-  
+
       if (response.data.status === "Success") {
         Swal.fire({
           icon: "success",
@@ -189,105 +193,102 @@ const UploadExcel = ({ show, rowData }) => {
   };
 
   return (
-<Card>
-  <CardContent>
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-          Add Project Details
-        </Typography>
-      </Grid>
+    <Card>
+      <CardContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "bold", fontSize: 20 }}
+            >
+              Add Project Details
+            </Typography>
+          </Grid>
 
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth>
-          <InputLabel>Project Name</InputLabel>
-          <Select
-            value={formData.ProjectID}
-            onChange={handleInputChange}
-            name="ProjectID"
-            label="Project Name"
-          >
-            {projectMaster.map((project) => (
-              <MenuItem key={project.ProjectID} value={project.ProjectID}>
-                {project.ProjectName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
+          <Grid item xs={12} md={3}>
+            <FormControl fullWidth>
+              <InputLabel>Project Name</InputLabel>
+              <Select
+                value={formData.ProjectID}
+                onChange={handleInputChange}
+                name="ProjectID"
+                label="Project Name"
+              >
+                {projectMaster.map((project) => (
+                  <MenuItem key={project.ProjectID} value={project.ProjectID}>
+                    {project.ProjectName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth>
-          <InputLabel>Wings</InputLabel>
-          <Select
-            value={formData.WingID}
-            onChange={handleInputChange}
-            name="WingID"
-            label="Wings"
-          >
-            {wingData.map((wing) => (
-              <MenuItem key={wing.WingID} value={wing.WingID}>
-                {wing.WingName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
+          <Grid item xs={12} md={3}>
+            <FormControl fullWidth>
+              <InputLabel>Wings</InputLabel>
+              <Select
+                value={formData.WingID}
+                onChange={handleInputChange}
+                name="WingID"
+                label="Wings"
+              >
+                {wingData.map((wing) => (
+                  <MenuItem key={wing.WingID} value={wing.WingID}>
+                    {wing.WingName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-      <Grid item xs={12} md={3} mt={4}>
-      <Box display="flex" gap={2}>
-          <input
-            type="file"
-            accept=".xls,.xlsx"
-            name="Project File"
-            onChange={handleFileChange}
-            style={{ marginRight: "10px" }}
-          />
-      
- 
+          <Grid item xs={12} md={3} mt={4}>
+            <Box display="flex" gap={2}>
+              <input
+                type="file"
+                accept=".xls,.xlsx"
+                name="Project File"
+                onChange={handleFileChange}
+                style={{ marginRight: "10px" }}
+              />
 
-     
-          <input
-            type="file"
-            name="Parking File"
-            accept=".xls,.xlsx"
-            onChange={handleParkingFileChange}
-            style={{ marginRight: "1px" }}
-          />
-        </Box>
-      </Grid>
+              <input
+                type="file"
+                name="Parking File"
+                accept=".xls,.xlsx"
+                onChange={handleParkingFileChange}
+                style={{ marginRight: "1px" }}
+              />
+            </Box>
+          </Grid>
 
-      <Grid item xs={12} md={6} mt={3}>
-  <Box display="flex" gap={2}>
-    <Button
-      variant="contained"
-      onClick={handleSubmitFile}
-      disabled={loading}
-      sx={{ marginRight: 1 }} // Adjust this value as needed
-    >
-      {loading ? "Uploading..." : "Upload File"}
-    </Button>
-    <Button
-      variant="contained"
-      onClick={handleEdit}
-      disabled={loading}
-    >
-      {loading ? "Uploading..." : "Edit File"}
-    </Button>
-  </Box>
-</Grid>
+          <Grid item xs={12} md={6} mt={3}>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                onClick={handleSubmitFile}
+                disabled={loading}
+                sx={{ marginRight: 1 }} // Adjust this value as needed
+              >
+                {loading ? "Uploading..." : "Upload File"}
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleEdit}
+                disabled={loading}
+              >
+                {loading ? "Uploading..." : "Edit File"}
+              </Button>
+            </Box>
+          </Grid>
 
-
-
-      {error && (
-        <Grid item xs={12}>
-          <Typography color="error">{error}</Typography>
+          {error && (
+            <Grid item xs={12}>
+              <Typography color="error">{error}</Typography>
+            </Grid>
+          )}
         </Grid>
-      )}
-    </Grid>
-  </CardContent>
-</Card>
-
+      </CardContent>
+    </Card>
   );
 };
 
