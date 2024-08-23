@@ -102,40 +102,31 @@ const Contact = () => {
   
     return dynamicSalesData.map((item, index) => (
       <Grid item xs={12} sm={4} key={index}>
-        <Box
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant="rounded"
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            p: 3,
-            borderRadius: 2,
-            boxShadow: 2,
-            bgcolor: 'background.paper'
+            mr: 2,
+            width: 60,
+            height: 56,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: (theme) => theme.palette[item.color].main
           }}
         >
-          <Avatar
-            variant="rounded"
-            sx={{
-              mr: 2,
-              width: 60,
-              height: 56,
-              boxShadow: 3,
-              color: 'common.white',
-              backgroundColor: (theme) => theme.palette[item.color].main
-            }}
-          >
-            {item.icon}
-          </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-            <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
-              {item.title}
-            </Typography>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
-              {item.stats}
-            </Typography>
-          </Box>
+          {item.icon}
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+            {item.title}
+          </Typography>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            {item.stats}
+          </Typography>
         </Box>
-      </Grid>
+      </Box>
+    </Grid>
+    
     ));
   };
   
