@@ -10,7 +10,7 @@ const AccountSettings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(); // 'list', 'account', 'update'
-  const [rowDataToUpdate, setRowDataToUpdate] = useState(null);
+  const [editData, setEditData] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -43,11 +43,10 @@ const AccountSettings = () => {
     setActiveTab('account'); // Show TabAccount component
   };
 
-  const handleEdit = (rowData) => {
-    setActiveTab('update'); // Show UpdateCompanyMaster component
-    setRowDataToUpdate(rowData); // Pass the selected row data
+  const handleEdit = (row) => {
+    setEditData(row);
+   
   };
-
   const handleSubmissionSuccess = () => {
     setActiveTab('list'); // Show TabInfo component after successful submission
     fetchData(); // Fetch updated data to display in TabInfo
@@ -90,6 +89,7 @@ const AccountSettings = () => {
         <TabAccount
           show={handleBack}
           onSubmitSuccess={handleSubmissionSuccess}
+          editData={editData}
         />
 
            <Grid item xs={12}>
@@ -101,21 +101,16 @@ const AccountSettings = () => {
 
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <TabInfo setShowTabAccount={handleEdit} />
+           
+              <TabInfo   onEdit={handleEdit} />
             </Grid>
           </Grid>
         </>
-      {/* )} */}
+     
 
      
 
-      {activeTab === "update" && (
-        <UpdateCompanyMaster
-          show={setActiveTab}
-          rowData={rowDataToUpdate}
-          onSubmitSuccess={handleSubmissionSuccess}
-        />
-      )}
+      
     </>
   );
 };

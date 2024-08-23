@@ -1,7 +1,4 @@
-// ** React Imports
-import React, { useState } from "react";
-
-// ** MUI Imports
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -9,15 +6,38 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 
-const TabAccount = ({ show }) => {
-  const [companyName, setCompanyName] = useState("");
+const TabAccount = ({ show, companyData = {}, editData }) => { 
+  const [formValues, setFormValues] = useState({
+    companyName: "",
+    gst: "",
+    website: "",
+    email: ""
+  });
   const [errors, setErrors] = useState({});
   const [cookies] = useCookies(["amr"]);
+
+  useEffect(() => {
+    if (editData) {
+      setFormValues({
+        companyName: companyData.CompanyName || "",
+        gst: companyData.Gst || "",
+        website: companyData.Website || "",
+        email: companyData.Email || ""
+      });
+    } else {
+
+      setFormValues({
+        companyName: "",
+        gst: "",
+        website: "",
+        email: ""
+      });
+    }
+  }, [editData, companyData]); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,37 +46,39 @@ const TabAccount = ({ show }) => {
       setErrors(newErrors);
     } else {
       setErrors({});
-
       const formData = {
         CreateUID: cookies.amr?.UserID || 1,
-        CompanyName: companyName,
+        CompanyName: formValues.companyName,
+        Gst: formValues.gst,
+        Website: formValues.website,
+        Email: formValues.email,
         Status: 1,
       };
 
+      const apiUrl = editData
+        ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php"
+        : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-companymaster.php";
+
       axios
-        .post(
-          "https://ideacafe-backend.vercel.app/api/proxy/api-insert-companymaster.php",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(apiUrl, { ...formData, CompanyID: companyData?.CompanyID }, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           if (response.data.status === "Success") {
             Swal.fire({
               icon: "success",
               title: "Success!",
-              text: "Company details added successfully",
+              text: editData ? "Company details updated successfully" : "Company details added successfully",
             });
-            setCompanyName(""); // Clear input after successful submission
+            setFormValues({ companyName: "", gst: "", website: "", email: "" }); // Clear input fields after successful submission
             show(); // Assuming this function handles hiding the form or navigating away
           } else {
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "Failed to add company details",
+              text: editData ? "Failed to update company details" : "Failed to add company details",
             });
           }
         })
@@ -73,21 +95,30 @@ const TabAccount = ({ show }) => {
 
   const validateFields = () => {
     const newErrors = {};
-    if (!companyName) {
+    if (!formValues.companyName) {
       newErrors.companyName = "Company Name is required";
+    }
+    if (!formValues.gst) {
+      newErrors.gst = "GST is required";
+    }
+    if (!formValues.website) {
+      newErrors.website = "Website is required";
+    }
+    if (!formValues.email) {
+      newErrors.email = "Email is required";
     }
     return newErrors;
   };
 
-  const handleCompanyNameChange = (event) => {
-    setCompanyName(event.target.value);
-    if (event.target.value) {
-      setErrors((prevErrors) => ({ ...prevErrors, companyName: "" }));
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+    if (value) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
-  };
-
-  const handleNavigation = () => {
-    show("list"); // Assuming this function handles navigating to a different view
   };
 
   return (
@@ -102,9 +133,8 @@ const TabAccount = ({ show }) => {
                 alignItems="center"
               >
                 <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-                  Add Company Details
+                  {editData ? "Update Company Details" : "Add Company Details"}
                 </Typography>
-             
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -112,16 +142,52 @@ const TabAccount = ({ show }) => {
                 fullWidth
                 label="Company Name"
                 placeholder="Company Name"
-                value={companyName}
-                onChange={handleCompanyNameChange}
+                value={formValues.companyName}
+                onChange={handleInputChange}
                 name="companyName"
                 error={!!errors.companyName}
                 helperText={errors.companyName}
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="GST"
+                placeholder="GST"
+                value={formValues.gst}
+                onChange={handleInputChange}
+                name="gst"
+                error={!!errors.gst}
+                helperText={errors.gst}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Website"
+                placeholder="Website"
+                value={formValues.website}
+                onChange={handleInputChange}
+                name="website"
+                error={!!errors.website}
+                helperText={errors.website}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Email"
+                placeholder="Email"
+                value={formValues.email}
+                onChange={handleInputChange}
+                name="email"
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+            </Grid>
             <Grid item xs={12}>
               <Button variant="contained" type="submit">
-                Submit
+                {editData ? "Update" : "Submit"}
               </Button>
             </Grid>
           </Grid>

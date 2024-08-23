@@ -246,14 +246,6 @@ const Contact = () => {
       setLoading(false);
     }
 
-    // try {
-    //   const summaryResponse = await axios.get(
-    //     `https://apiforcorners.cubisysit.com/api/api-graph-lead.php?UserID=${userid}`
-    //   );
-    //   setSummary(summaryResponse.data.summary);
-    // } catch (error) {
-    //   setError(error);
-    // }
   };
 
 
@@ -263,7 +255,7 @@ const Contact = () => {
     setShowAddDetails(false);
     setShowHistory(false);
     setRowDataToUpdate(null);
-    setShowDashboard(false); // Reset showDashboard when going back
+    setShowDashboard(false); 
     fetchData();
   };
 
@@ -273,7 +265,7 @@ const Contact = () => {
     setShowAddDetails(true);
     setShowHistory(false);
     setFirstVisit(false);
-    setShowDashboard(false); // Reset showDashboard when editing
+    setShowDashboard(false); 
   };
 
   const handleShow = (item) => {

@@ -22,8 +22,9 @@ import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const TabInfo = ({ setShowTabAccount }) => {
+const TabInfo = ({ setShowTabAccount , onEdit }) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,18 +42,18 @@ const TabInfo = ({ setShowTabAccount }) => {
   }, []);
 
   useEffect(() => {
-    const filteredData = rows.filter((row) => {
-      return (
-        String(row.CompanyName).toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    setFilteredRows(filteredData);
+    const debouncedFilter = setTimeout(() => {
+      filterData();
+    }, 300);
+
+    return () => {
+      clearTimeout(debouncedFilter);
+    };
   }, [searchQuery, rows]);
 
   const fetchData = async () => {
     try {
       const response = await axios.get('https://apiforcorners.cubisysit.com/api/api-fetch-companymaster.php');
-      console.log('API Response:', response.data);
       setRows(response.data.data || []);
       setLoading(false);
     } catch (error) {
@@ -62,13 +63,14 @@ const TabInfo = ({ setShowTabAccount }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    try {
-      return format(parseISO(dateString), 'yyyy-MM-dd');
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return dateString;
-    }
+  const filterData = () => {
+    const filteredData = rows.filter((row) =>
+      String(row.CompanyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.Gst).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.Website).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(row.Email).toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRows(filteredData);
   };
 
   const handleClose = () => {
@@ -94,6 +96,7 @@ const TabInfo = ({ setShowTabAccount }) => {
       );
       if (response.data.status === "Success") {
         setRows(rows.filter(row => row.CompanyID !== deleteId));
+        setFilteredRows(filteredRows.filter(row => row.CompanyID !== deleteId));
       } else {
         console.error("Failed to delete:", response.data);
       }
@@ -123,26 +126,24 @@ const TabInfo = ({ setShowTabAccount }) => {
     setPage(0);
   };
 
-  const getComparator = (order, sortBy) => {
-    return (a, b) => {
-      if (a[sortBy] < b[sortBy]) return order === 'asc' ? -1 : 1;
-      if (a[sortBy] > b[sortBy]) return order === 'asc' ? 1 : -1;
-      return 0;
-    };
-  };
-
   const handleSort = (sortBy) => {
     const isAsc = orderBy === sortBy && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const newOrder = isAsc ? 'desc' : 'asc';
+    setOrder(newOrder);
     setOrderBy(sortBy);
-    const sortedData = filteredRows.slice().sort(getComparator(order, sortBy));
+
+    const sortedData = filteredRows.slice().sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) return newOrder === 'asc' ? -1 : 1;
+      if (a[sortBy] > b[sortBy]) return newOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
     setFilteredRows(sortedData);
   };
 
   const SortableTableCell = ({ label, onClick }) => (
-    <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={onClick}>
-        <TableCell sx={{ fontWeight: 'bold' }}>{label}</TableCell>
+    <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem', cursor: 'pointer' }} onClick={onClick}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {label}
         <span>&#8597;</span>
       </Box>
     </TableCell>
@@ -152,6 +153,24 @@ const TabInfo = ({ setShowTabAccount }) => {
     setDeleteId(CompanyID);
     setOpen(true);
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography variant="h6" color="error">
+          Error fetching data. Please try again later.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Card>
@@ -182,7 +201,11 @@ const TabInfo = ({ setShowTabAccount }) => {
           <TableHead>
             <TableRow>
               <SortableTableCell label="Company Name" onClick={() => handleSort('CompanyName')} />
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Action</TableCell>
+              <SortableTableCell label="GST" onClick={() => handleSort('Gst')} />
+              <SortableTableCell label="Website" onClick={() => handleSort('Website')} />
+              <SortableTableCell label="Email" onClick={() => handleSort('Email')} />
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Edit</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', fontSize: '2rem' }}>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -190,28 +213,33 @@ const TabInfo = ({ setShowTabAccount }) => {
               filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.CompanyName}</Typography>
-                    </Box>
+                    <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.CompanyName}</Typography>
                   </TableCell>
-                  <TableCell sx={{ padding: '15px', display: 'flex', justifyContent: 'space-around' }}>
-                    <IconButton onClick={() => handleEdit(row)} aria-label="edit" sx={{ color: 'blue' }}>
-                      <EditIcon />
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
+                    <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.Gst}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
+                    <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.Website}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
+                    <Typography sx={{ padding: '8px', fontSize: '0.75rem' }}>{row.Email}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
+                    <IconButton onClick={() => onEdit(row)}>
+                      <EditIcon sx={{ color: 'blue', fontSize: '2rem' }} />
                     </IconButton>
-                    <IconButton onClick={() => handleOpen(row.CompanyID)} aria-label="delete" sx={{ color: 'red' }}>
-                      <DeleteIcon />
+                  </TableCell>
+                  <TableCell sx={{ padding: '8px', fontSize: '0.75rem' }}>
+                    <IconButton onClick={() => handleOpen(row.CompanyID)}>
+                      <DeleteIcon sx={{ color: 'red', fontSize: '2rem' }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={2} align="center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100" height="100">
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                    <path fill="#757575" d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 17V7h16v10H4zm12-6h2v2h-2v-2zm-4 0h2v2h-2v-2zm-4 0h2v2H8v-2z"/>
-                  </svg>
-                  <Typography variant="body1">Data not found</Typography>
+                <TableCell colSpan={6} align="center">
+                  No data available
                 </TableCell>
               </TableRow>
             )}
@@ -219,18 +247,14 @@ const TabInfo = ({ setShowTabAccount }) => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={filteredRows.length}
-        rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -238,10 +262,8 @@ const TabInfo = ({ setShowTabAccount }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleDelete} autoFocus>
             Delete
           </Button>
         </DialogActions>
