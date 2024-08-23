@@ -93,30 +93,58 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
       ? data?.remarksWithCreateDate
       : data?.otherRemarks;
 
-  const totalCash = payments.reduce(
-    (sum, payment) => sum + (payment.Cash || 0),
-    0
-  );
-  const totalCheque = payments.reduce(
-    (sum, payment) => sum + (payment.ChequeAmount || 0),
-    0
-  );
-  const totalAPlusB = totalCash + totalCheque;
-  const balance = data?.TotalCost - totalAPlusB;
+      const totalCash = payments.reduce((sum, payment) => sum + (payment.Cash || 0), 0);
+      const totalCheque = payments.reduce((sum, payment) => sum + (payment.ChequeAmount || 0), 0);
+      const totalAPlusB = totalCash + totalCheque;
+      
+      let balance = data?.TotalCost; // Start with the total cost as the initial balance
+      
+      finalRows = finalRows.map((row, index) => {
+        const currentAPlusB = row.Cash + row.ChequeAmount;
+        const currentBalance = balance - currentAPlusB; // Calculate the current balance
+      
+        // Update the balance in the row and for the next iteration
+        const updatedRow = {
+          ...row,
+          TotalAPlusB: currentAPlusB,
+          Balance: currentBalance,
+        };
+      
+        // Update balance for the next row
+        balance = currentBalance;
+      
+        return updatedRow;
+      });
+ // Start with the total cost as the initial running balance
+let runningBalance = data?.TotalCost || 0;
 
-  const rows = payments.map((payment) => ({
+const rows = payments.map((payment) => {
+  const cash = payment.Cash || 0;
+  const chequeAmount = payment.ChequeAmount || 0;
+  const totalAPlusB = cash + chequeAmount;
+
+  // Calculate the current balance by subtracting the current TotalAPlusB from the running balance
+  const currentBalance = runningBalance - totalAPlusB;
+
+  // Prepare the row data with the current balance
+  const row = {
     Date: payment.Date,
-    Cash: payment.Cash || 0,
-    ChequeAmount: payment.ChequeAmount || 0,
-    TotalAPlusB: (payment.Cash || 0) + (payment.ChequeAmount || 0),
-    Balance:
-      (data?.TotalCost || 0) -
-      ((payment.Cash || 0) + (payment.ChequeAmount || 0)),
+    Cash: cash,
+    ChequeAmount: chequeAmount,
+    TotalAPlusB: totalAPlusB,
+    Balance: currentBalance,
     Wing: data?.WingName || "",
     Floor: data?.FloorNo || "",
     FlatNo: data?.FlatNumber || "",
     Type: data?.Type || "",
-  }));
+  };
+
+  // Update the running balance to the current balance for the next iteration
+  runningBalance = currentBalance;
+
+  return row;
+});
+
 
   // Ensure there are always 15 rows displayed
   const totalRows = 25;
