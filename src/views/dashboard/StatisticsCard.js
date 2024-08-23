@@ -46,6 +46,7 @@ const StatisticsCard = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        
         setApiData(data); // Store full API response
       } catch (error) {
         console.error("Error fetching API data:", error);

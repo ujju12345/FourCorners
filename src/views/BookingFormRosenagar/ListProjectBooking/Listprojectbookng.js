@@ -53,12 +53,7 @@ const NoDataIcon = () => (
   />
 );
 
-const Listprojectbookng = ({
-  onChequeReceiptClick,
-  item,
-
-
-}) => {
+const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   const router = useRouter();
   const initialMergedData = {
     proccess_null: [],
@@ -232,6 +227,7 @@ const Listprojectbookng = ({
     );
     setChequePayments(updatedChequePayments);
   };
+  
 
   useEffect(() => {
     // Update booking remark details based on the selected remark
@@ -266,7 +262,6 @@ const Listprojectbookng = ({
       console.error("Error fetching booking remarks:", error);
     }
   };
-
 
   const fetchBookingRemarkDetails = async (bookingRemarkID) => {
     try {
@@ -313,22 +308,22 @@ const Listprojectbookng = ({
 
     // Optionally, you can set other states with the selected row data
     // setOtherState(row.someField);
-};
+  };
 
-const onCheque = (row) => {
-  console.log(row, "Selected row data"); // Log the selected row data
+  const onCheque = (row) => {
+    console.log(row, "Selected row data"); // Log the selected row data
 
-  setBookingID(row.BookingID); // Set the selected BookingID
-  setOpenCheque(true); // Open the modal
-  handleMenuClose(); // Close the menu if it's open
-};
-const onEdit = (row) => {
-  console.log(row, "Selected row data EDit"); // Log the selected row data
+    setBookingID(row.BookingID); // Set the selected BookingID
+    setOpenCheque(true); // Open the modal
+    handleMenuClose(); // Close the menu if it's open
+  };
+  const onEdit = (row) => {
+    console.log(row, "Selected row data EDit"); // Log the selected row data
 
-  setBookingID(row.BookingID); // Set the selected BookingID
-  setOpenEdit(true); // Open the modal
-  handleMenuClose(); // Close the menu if it's open
-};
+    setBookingID(row.BookingID); // Set the selected BookingID
+    setOpenEdit(true); // Open the modal
+    handleMenuClose(); // Close the menu if it's open
+  };
 
   const SortableTableCell = ({ label, onClick }) => (
     <TableCell
@@ -377,7 +372,6 @@ const onEdit = (row) => {
       setReceivedPayments([]);
     }
   }, [open]);
-  
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -403,15 +397,16 @@ const onEdit = (row) => {
   };
 
   const handleDateChange = (date, index) => {
-    handleChequePaymentChange(index, "chequeDate", date);
+    const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    handleChequePaymentChange(index, "chequeDate", adjustedDate);
   };
+  
   const handleDateChangePayment = (date, field) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [field]: date,
     }));
   };
-
 
   const handleAddRemark = () => {
     setRemarks([
@@ -454,12 +449,11 @@ const onEdit = (row) => {
 
   const handleClose = () => setModalOpen(false);
 
-
   const handleCloseTemplate = () => {
     setOpenTemplate(false); // Close the modal
     setBookingID(null); // Reset the booking ID (optional)
   };
-  
+
   const handleCloseEditForm = () => {
     setOpenEdit(false); // Close the modal
     setBookingID(null); // Reset the booking ID (optional)
@@ -510,12 +504,10 @@ const onEdit = (row) => {
     }
   };
 
-
   const handleSubmit = async () => {
-    // Prepare the data for the API request
     const payload = {
       BookingID: selectedRow,
-      Payments: chequePayments.map((payment, index) => ({
+      Payments: chequePayments.map((payment) => ({
         BookingremarkID: selectedBookingRemark,
         PRemarkamount: remarks.reduce(
           (acc, remark) => acc + parseFloat(remark.Remarkamount || 0),
@@ -530,10 +522,9 @@ const onEdit = (row) => {
         ChequeDate: payment.chequeDate
           ? payment.chequeDate.toISOString().split("T")[0]
           : null,
-        Date:
-          cashDate && cashDate.CashDate
-            ? cashDate.CashDate.toISOString().split("T")[0]
-            : null,
+        Date: cashDate && cashDate.CashDate
+          ? cashDate.CashDate.toISOString().split("T")[0]
+          : null,
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
           0
@@ -546,38 +537,23 @@ const onEdit = (row) => {
         Remarkamount: parseFloat(remark.Remarkamount) || 0,
         RemarkName: remark.RemarkName || "",
         RemarkDate: remark.RemarkDate
-          ? new Date(remark.RemarkDate).toISOString().split("T")[0]
+          ? formatDateForAPI(remark.RemarkDate)
           : "",
         Loan: parseInt(remark.Loan) || 0,
         Status: parseInt(remark.Status) || 1,
-        AmountTypeID: amountType || 1, // Add AmountTypeID for Remarks
+        AmountTypeID: amountType || 1,
       })),
       Proccess: 1,
       ModifyUID: 1,
     };
-
-    console.log(payload, "ye jaa raha dataaaaaa<>>>>>>>>>>>>>");
+  
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
-      console.log("ye gaya data", response.data);
       if (response.data.status === "Success") {
-        console.log("Payment successfully submitted", response.data);
-        setCashPaid("");
-        setChequePaid("");
-        setBankName("");
-        setCheqNo("");
-        setFormData({ AmountGiven: new Date() });
-        setSelectedPaymentType("");
-        setRemarks([
-          { Remarkamount: "", RemarkName: "", RemarkDate: new Date(), Loan: 0 },
-        ]);
-        setSelectedBookingRemark("");
-        setBookingRemarkDetails({});
-        setSelectedRow(null);
-
+        
         Swal.fire({
           icon: "success",
           title: "Data Submitted Successfully",
@@ -586,8 +562,6 @@ const onEdit = (row) => {
         }).then(() => {
           window.location.reload();
         });
-
-        handleModalClose();
       } else {
         console.error("Failed to submit payment:", response.data.message);
       }
@@ -595,7 +569,15 @@ const onEdit = (row) => {
       console.error("Error submitting payment:", error);
     }
   };
-
+  
+  // Helper function to format date correctly for the API
+  const formatDateForAPI = (date) => {
+    const offset = date.getTimezoneOffset();
+    const adjustedDate = new Date(date.getTime() - offset * 60000);
+    return adjustedDate.toISOString().split("T")[0];
+  };
+  
+  
   useEffect(() => {
     if (!paymentData) return;
 
@@ -684,19 +666,28 @@ const onEdit = (row) => {
       </Box>
 
       {selectedWing && (
-        <Card sx={{ maxWidth: 1200, margin: "auto", padding: 2 , height:700 , overflow:'auto' ,  "&::-webkit-scrollbar": {
-          width: "2px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#cccccc", // Change the color as needed
-          borderRadius: "10px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#cccccc", // Change the color on hover
-        },
-        "&::-webkit-scrollbar-track": {
-          backgroundColor: "transparent",
-        }, }}>
+        <Card
+          sx={{
+            maxWidth: 1200,
+            margin: "auto",
+            padding: 2,
+            height: 700,
+            overflow: "auto",
+            "&::-webkit-scrollbar": {
+              width: "2px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#cccccc", // Change the color as needed
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#cccccc", // Change the color on hover
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
+            },
+          }}
+        >
           <CardHeader title={`${selectedWing.WingName} Details`} />
           <CardContent>
             {loading ? (
@@ -719,65 +710,54 @@ const onEdit = (row) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(searchQuery ? filteredRows : wingDetails)
-                       
-                        .map((row) => (
-                          <TableRow key={row.RoomID}>
-                            <TableCell>{row.Partyname}</TableCell>
-                            <TableCell>{row.ProjectName}</TableCell>
-                            <TableCell>{row.WingName}</TableCell>
-                            <TableCell>{row.FlatNo}</TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={(event) => handleMenuOpen(event, row)}
+                      {(searchQuery ? filteredRows : wingDetails).map((row) => (
+                        <TableRow key={row.RoomID}>
+                          <TableCell>{row.Partyname}</TableCell>
+                          <TableCell>{row.ProjectName}</TableCell>
+                          <TableCell>{row.WingName}</TableCell>
+                          <TableCell>{row.FlatNo}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={(event) => handleMenuOpen(event, row)}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                              anchorEl={anchorEl}
+                              open={Boolean(anchorEl)}
+                              onClose={handleMenuClose}
+                            >
+                              <MenuItem onClick={() => handleReportClick(row)}>
+                                Report
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => handleTemplateClick(row)}
                               >
-                                <MoreVertIcon />
-                              </IconButton>
-                              <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
-                                onClose={handleMenuClose}
-                              >
-                                <MenuItem
-                                  onClick={() =>
-                                    handleReportClick(row)
-                                  }
-                                >
-                                  Report
-                                </MenuItem>
-                                <MenuItem
-                                  onClick={() =>
-                                    handleTemplateClick(row)
-                                  }
-                                >
-                                  Template
-                                </MenuItem>
+                                Template
+                              </MenuItem>
 
-                                <MenuItem
-                                  onClick={() => onCheque(row)}
-                                >
-                                  Cheque Receipt
-                                </MenuItem>
-                                <MenuItem onClick={() => onEdit(row)}>
-                                  Edit details
-                                </MenuItem>
-                              </Menu>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={() => handleAddPayment(row.BookingID)}
-                                variant="outlined"
-                                color="primary"
-                              >
-                                <PaymentIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                              <MenuItem onClick={() => onCheque(row)}>
+                                Cheque Receipt
+                              </MenuItem>
+                              <MenuItem onClick={() => onEdit(row)}>
+                                Edit details
+                              </MenuItem>
+                            </Menu>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => handleAddPayment(row.BookingID)}
+                              variant="outlined"
+                              color="primary"
+                            >
+                              <PaymentIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-               
               </>
             ) : (
               <Box textAlign="center">
@@ -898,6 +878,25 @@ const onEdit = (row) => {
                     ))}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  select
+                  label="Select Payment Type"
+                  value={selectedPaymentType}
+                  onChange={handleChangePayment}
+                  fullWidth
+                  margin="normal"
+                >
+                  {paymentTypes.map((option) => (
+                    <MenuItem
+                      key={option.paymenttypeID}
+                      value={option.paymenttypeName}
+                    >
+                      {option.paymenttypeName}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
 
               {amountType === "1" && (
@@ -1048,25 +1047,6 @@ const onEdit = (row) => {
                       </Grid>
                     </React.Fragment>
                   ))}
-                  <Grid item xs={4}>
-                    <TextField
-                      select
-                      label="Select Payment Type"
-                      value={selectedPaymentType}
-                      onChange={handleChangePayment}
-                      fullWidth
-                      margin="normal"
-                    >
-                      {paymentTypes.map((option) => (
-                        <MenuItem
-                          key={option.paymenttypeID}
-                          value={option.paymenttypeName}
-                        >
-                          {option.paymenttypeName}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
                 </>
               )}
             </>
@@ -1189,7 +1169,6 @@ const onEdit = (row) => {
         </Box>
       </Modal>
 
-
       <Modal open={openEdit} onClose={handleCloseEditForm}>
         <Card
           style={{
@@ -1227,7 +1206,6 @@ const onEdit = (row) => {
       </Modal>
 
       <Modal open={openCheque} onClose={handleCloseTemplate}>
-     
         <Card
           style={{
             maxWidth: "800px",
@@ -1238,18 +1216,15 @@ const onEdit = (row) => {
             overflowY: "auto", // Enable vertical scrolling if content overflows
           }}
         >
-           <IconButton
-              aria-label="cancel"
-              onClick={handleCloseRecipt}
-              sx={{ position: "absolute", top: 6, right: 10 }}
-            >
-              <CancelIcon sx={{ color: "red" }} />
-            </IconButton>
-           
-          <Reciept
-            bookingID={bookingID}
-          
-          />
+          <IconButton
+            aria-label="cancel"
+            onClick={handleCloseRecipt}
+            sx={{ position: "absolute", top: 6, right: 10 }}
+          >
+            <CancelIcon sx={{ color: "red" }} />
+          </IconButton>
+
+          <Reciept bookingID={bookingID} />
         </Card>
       </Modal>
       <Modal open={open} onClose={handleCloseReport}>
@@ -1332,89 +1307,83 @@ const onEdit = (row) => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container spacing={4} mb={3}>
-      
+            <Grid container spacing={4} mb={3}></Grid>
 
-  
-      </Grid>
+            <Grid container spacing={3}>
+              {/* Upcoming Payments */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Upcoming Payments</Typography>
+                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Remark</TableCell>
 
-        <Grid container spacing={3}>
-          {/* Upcoming Payments */}
-          <Grid item xs={12}>
-            <Typography variant="h6">Upcoming Payments</Typography>
-            <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Remark</TableCell>
-                  
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Payment Type</TableCell>
-                    <TableCell>Date</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {upcomingPayments.length > 0 ? (
-                    upcomingPayments.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{item.RemarkName}</TableCell>
-                      
-                        <TableCell>{item.Remarkamount}</TableCell>
-                        <TableCell>{item.AmountTypeID === 1 ? "Cash" : "Cheque"}</TableCell>
-                        <TableCell>
-                          {new Date(item.RemarkDate).toLocaleDateString()}
-                        </TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Payment Type</TableCell>
+                        <TableCell>Date</TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} align="center">
-                        No Upcoming Payments
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
+                    </TableHead>
+                    <TableBody>
+                      {upcomingPayments.length > 0 ? (
+                        upcomingPayments.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.RemarkName}</TableCell>
 
-          {/* Received Payments */}
-          <Grid item xs={12}>
-            <Typography variant="h6">Received Payments</Typography>
-            <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-              
-                    <TableCell>Cuurent </TableCell>
-                    <TableCell>Post</TableCell>
-                    <TableCell>Date</TableCell>
+                            <TableCell>{item.Remarkamount}</TableCell>
+                            <TableCell>
+                              {item.AmountTypeID === 1 ? "Cash" : "Cheque"}
+                            </TableCell>
+                            <TableCell>
+                              {new Date(item.RemarkDate).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center">
+                            No Upcoming Payments
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
 
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {receivedPayments.length > 0 ? (
-                    receivedPayments.map((item, index) => (
-                      <TableRow key={index}>
-                    
-                        <TableCell>{item.Cash}</TableCell>
-                        <TableCell>{item.ChequeAmount}</TableCell>
-                    <TableCell>{item.Date}</TableCell>
-
+              {/* Received Payments */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Received Payments</Typography>
+                <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+                  <Table stickyHeader>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Cuurent </TableCell>
+                        <TableCell>Post</TableCell>
+                        <TableCell>Date</TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={4} align="center">
-                        No Received Payments
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        </Grid>
+                    </TableHead>
+                    <TableBody>
+                      {receivedPayments.length > 0 ? (
+                        receivedPayments.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.Cash}</TableCell>
+                            <TableCell>{item.ChequeAmount}</TableCell>
+                            <TableCell>{item.Date}</TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} align="center">
+                            No Received Payments
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Modal>
