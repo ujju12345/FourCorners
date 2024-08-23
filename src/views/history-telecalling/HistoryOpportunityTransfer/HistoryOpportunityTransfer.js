@@ -197,7 +197,7 @@ export default function HistoryOpportunityTransfer({ item }) {
             </Box>
           )}
         </CustomTimeline>
-        <Button 
+        {/* <Button 
           variant="contained" 
           color="primary" 
           fullWidth 
@@ -205,7 +205,7 @@ export default function HistoryOpportunityTransfer({ item }) {
           onClick={handleAddFollowUpClick}
         >
           Add New Follow Up
-        </Button>
+        </Button> */}
         <Modal
           open={open}
           onClose={handleClose}
