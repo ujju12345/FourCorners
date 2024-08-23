@@ -143,7 +143,7 @@ const ListAvailabiltyList = ({ item }) => {
           "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectsku.php",
           {
             skuID: statusSkuID,
-            ModifyUID: 5, // Assuming the ModifyUID is 5, replace with actual value
+            ModifyUID: 1, // Assuming the ModifyUID is 5, replace with actual value
             ProjectID: item.ProjectID,
             WingID: selectedWing.WingID,
             FloorNo: floorNo,

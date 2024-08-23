@@ -10,14 +10,17 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 
-const TabAccount = ({ show, editData }) => { 
-  console.log(editData , 'edit data of companyyyyyyy');
+const TabAccount = ({ show, editData }) => {
+  console.log(editData, "edit data of companyyyyyyy");
+  
   const [formValues, setFormValues] = useState({
     companyName: "",
     gst: "",
     website: "",
-    email: ""
+    email: "",
+    address: "" // Add Address field here
   });
+
   const [errors, setErrors] = useState({});
   const [cookies] = useCookies(["amr"]);
 
@@ -27,23 +30,24 @@ const TabAccount = ({ show, editData }) => {
         companyName: editData.CompanyName || "",
         gst: editData.Gst || "",
         website: editData.Website || "",
-        email: editData.Email || ""
+        email: editData.Email || "",
+        address: editData.Address || "" // Set Address field when editing
       });
     } else {
-
       setFormValues({
         companyName: "",
         gst: "",
         website: "",
-        email: ""
+        email: "",
+        address: "" // Reset Address field for new entry
       });
     }
-  }, [editData]); 
+  }, [editData]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const newErrors = validateFields();
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
@@ -54,13 +58,14 @@ const TabAccount = ({ show, editData }) => {
         Gst: formValues.gst,
         Website: formValues.website,
         Email: formValues.email,
+        Address: formValues.address, // Include Address field in the form data
         Status: 1,
       };
-  
+
       const apiUrl = editData
         ? "https://ideacafe-backend.vercel.app/api/proxy/api-update-companymaster.php"
         : "https://ideacafe-backend.vercel.app/api/proxy/api-insert-companymaster.php";
-  
+
       axios
         .post(apiUrl, { ...formData, CompanyID: editData?.CompanyID }, {
           headers: {
@@ -76,7 +81,7 @@ const TabAccount = ({ show, editData }) => {
             }).then(() => {
               window.location.reload();
             });
-            setFormValues({ companyName: "", gst: "", website: "", email: "" });
+            setFormValues({ companyName: "", gst: "", website: "", email: "", address: "" });
             show(); // Assuming this function handles hiding the form or navigating away
           } else {
             Swal.fire({
@@ -111,6 +116,9 @@ const TabAccount = ({ show, editData }) => {
     if (!formValues.email) {
       newErrors.email = "Email is required";
     }
+    if (!formValues.address) {
+      newErrors.address = "Address is required"; // Validate Address field
+    }
     return newErrors;
   };
 
@@ -120,7 +128,6 @@ const TabAccount = ({ show, editData }) => {
       ...prevValues,
       [name]: value,
     }));
-  
   };
 
   return (
@@ -185,6 +192,18 @@ const TabAccount = ({ show, editData }) => {
                 name="email"
                 error={!!errors.email}
                 helperText={errors.email}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Address"
+                placeholder="Address"
+                value={formValues.address}
+                onChange={handleInputChange}
+                name="address"
+                error={!!errors.address}
+                helperText={errors.address}
               />
             </Grid>
             <Grid item xs={12}>
