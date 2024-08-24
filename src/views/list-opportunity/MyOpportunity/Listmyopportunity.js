@@ -693,7 +693,7 @@ console.log(item , 'dekh bhai ');
                   },
                 }}
               >
-                Phone:  {item?.Mobile}
+                Alternate Mobile Number:  {item?.OtherNumbers}
               </Typography>
             </div>
           </Box>

@@ -637,7 +637,7 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                AlternateMobileNo: {item?.AlternateMobileNo}
+                AlternateMobileNo: {item?.OtherNumbers}
               </Typography>
               <Typography
                 variant="body2"

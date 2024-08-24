@@ -497,7 +497,7 @@ const BookingTransferList = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Attended By: {item?.UserName}
+                Alternate Mobile Number: {item?.OtherNumbers}
               </Typography>
             </Box>
 

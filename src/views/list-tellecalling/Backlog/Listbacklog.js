@@ -681,7 +681,7 @@ console.log(item, "seet<<<<<<<>>>>>>>></>");
                   },
                 }}
               >
-                Alternate Mobile Number: {item.AlternateMobileNo}
+                Alternate Mobile Number: {item.OtherNumbers}
               </Typography>
             </div>
           </Box>

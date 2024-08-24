@@ -994,7 +994,7 @@ const ListTellecalling = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     Alternate Mobile Number
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.AlternateMobileNo}
+                    {item?.OtherNumbers}
                   </Typography>
                 </Card>
               </Grid>

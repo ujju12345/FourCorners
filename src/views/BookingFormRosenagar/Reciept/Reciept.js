@@ -341,7 +341,7 @@ const Reciept = ({ bookingID }) => {
             <TableBody>
               {data?.map((payment) => (
                 <TableRow key={payment.paymentID}>
-                  <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
+                  <StyledTableCell>{payment.Date}</StyledTableCell>
                   <StyledTableCell>{payment.BankName}</StyledTableCell>
                   <StyledTableCell>{payment.ChequeNumber}</StyledTableCell>
                   <StyledTableCell>{payment.ChequeAmount}</StyledTableCell>

@@ -663,7 +663,7 @@ const Listmylead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   },
                 }}
               >
-                Alternate Number: {item?.AlternateMobileNo}
+                Alternate Number: {item?.OtherNumbers}
               </Typography>
             </div>
           

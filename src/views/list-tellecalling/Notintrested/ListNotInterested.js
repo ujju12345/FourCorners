@@ -569,7 +569,7 @@ console.log(item , "not interestedddd dataa<<<<<<<<<<<<a");
                   },
                 }}
               >
-                Alternate Mobile Number: {item?.AlternateMobileNo}
+                Alternate Mobile Number: {item?.OtherNumbers}
               </Typography>
             </div>
           </Box>
