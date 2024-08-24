@@ -330,7 +330,7 @@ const TodaysLoanRemidnerSidebar = ({
           </Box>
         ) : filteredRows.length > 0 ? (
           filteredRows
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            
             .map((row, index) => (
               <React.Fragment key={index}>
                 <ListItem button onClick={() => handleListItemClick(row)}>

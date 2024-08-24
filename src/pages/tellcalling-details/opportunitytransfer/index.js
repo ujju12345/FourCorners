@@ -117,7 +117,7 @@ const TransferOpportunityData  = () => {
     }
 
     return [
-      { name: 'Tranfer to booking', value: counts.transfertooppo, color: '#8884d8' },
+      { name: 'Tranfer to Opportunity', value: counts.transfertooppo, color: '#8884d8' },
       // { name: 'Backlog Followups', value: counts.backlogFollowup, color: '#82ca9d' },
       // { name: 'Next Followups', value: counts.nextFollowup, color: '#ffc658' },
       // { name: 'Total Followups', value: counts.totalFollowup, color: '#a4de6c' }

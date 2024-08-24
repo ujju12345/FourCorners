@@ -384,7 +384,7 @@ const Sidebar = ({ onEdit, onItemClick, onCreate , onDashboardClick}) => {
         <>
           <List>
             {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              
               .map((item) => (
                  <React.Fragment key={item.Oid}>
                   <Card sx={{marginBottom:2}}>

@@ -658,7 +658,7 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
               >
                 Location: {item.CityName}/{item?.Location}
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body2"
                 sx={{
                   color: "#333333",
@@ -675,7 +675,7 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
                 }}
               >
                 Attended By: {item?.TelecallAttendedByName}
-              </Typography>
+              </Typography> */}
             </Box>
 
             <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
