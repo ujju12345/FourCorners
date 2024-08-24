@@ -33,8 +33,8 @@ const CustomTimeline = styled(Timeline)({
 
 const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
 
-export default function HistoryOpportunity({ Oid }) {
-console.log(Oid , 'aagaya dataa oid ');
+export default function HistoryOpportunity({ item }) {
+console.log(item  , 'aagaya dataa oid ');
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const initialName = {
     Oid: "",
@@ -83,6 +83,7 @@ console.log(Oid , 'aagaya dataa oid ');
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${item.Oid}`;
         const response = await axios.get(apiUrl);
         if (response.data.status === 'Success') {
+          console.log(response.data , 'history checkkk karrr<<<<<<>>>>>>');
           setRowDataToUpdate(response.data.data);
         }
       } catch (error) {
