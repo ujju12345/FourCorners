@@ -86,9 +86,9 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
   return (
     <>
       <GlobalStyle />
-      <Button variant="contained" color="primary"   onClick={onGoBack}  style={{ marginBottom: '10px' }}>
+      {/* <Button variant="contained" color="primary"   onClick={onGoBack}  style={{ marginBottom: '10px' }}>
         Go back 
-      </Button>
+      </Button> */}
 
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
