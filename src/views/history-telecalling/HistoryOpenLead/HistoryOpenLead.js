@@ -204,7 +204,7 @@ export default function HistoryOpenLead({ item }) {
           style={{ marginTop: '16px' }}
           onClick={handleAddFollowUpClick}
         >
-          Add New Follow Up
+          Add New Follow up
         </Button>
         <Modal
           open={open}

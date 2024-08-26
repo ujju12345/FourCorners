@@ -22,6 +22,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import { useCookies } from "react-cookie";
+import { Dashboard } from "@mui/icons-material";
 
 const TransferOpportunitySIdebar = ({ onItemClick, onCreate , onDashboardClick }) => {
   const [rows, setRows] = useState([]);
@@ -171,7 +172,7 @@ const TransferOpportunitySIdebar = ({ onItemClick, onCreate , onDashboardClick }
               sx={{ color: "grey" }}
               onClick={onDashboardClick}
             >
-              <AddIcon />
+              <Dashboard />
             </IconButton>
             <IconButton
               aria-label="filter"

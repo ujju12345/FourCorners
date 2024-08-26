@@ -29,6 +29,7 @@ const TransferOpportunityData  = () => {
   const [cookies, setCookie] = useCookies(["amr"]);
   const [counts, setCounts] = useState(null);
 
+  const [showDashboard, setShowDashboard] = useState(false); 
 
   useEffect(() => {
     fetchData();
@@ -266,12 +267,19 @@ const TransferOpportunityData  = () => {
     setShowAddDetails(false);
     setFirstVisit(false);
   };
-
+  const handleNavigation = () => {
+    setShowDashboard(true);
+    setShowAddDetails(false); // Ensure the AddOpportunityDetails form is hidden when navigating to the dashboard
+  };
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <TransferOpportunitySIdebar rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller} />
+        <TransferOpportunitySIdebar
+          onDashboardClick={handleNavigation} 
+        
+        
+        rows={rows} onItemClick={handleShow} onEdit={handleEdit} onCreate={handleAddTelecaller}  />
       </Grid>
       <Grid item xs={8}>
         {loading && <CircularProgress />}
@@ -286,13 +294,16 @@ const TransferOpportunityData  = () => {
           <AddTellecallingDetails show={handleBack} editData={editData} />
         )} */}
 
-        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && (
+        {!loading && !error && rowDataToUpdate && !showHistory && !showAddDetails && !showDashboard && (
           <ListTransferOpportunity
             item={rowDataToUpdate}
             onDelete={handleDelete}
             onHistoryClick={handleShowHistory}
             onEdit={handleEdit}
           />
+        )}
+         {showDashboard && !loading && !error && (
+         <WelcomeScreen/>
         )}
          {!loading && !error && showHistory && (
       <Box
