@@ -727,7 +727,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 <ShareIcon />
               </IconButton>
             </a>
-            <a style={{ marginRight: 1 }}>
+            <a style={{ marginRight: 10 }}>
               <IconButton
                 aria-label="share"
                 size="small"
@@ -746,7 +746,7 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
                 <HistoryIcon />
               </IconButton>
             </a>
-            <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+            <a href={`mailto:${item?.Email}`} style={{ marginLeft: 35 }}>
               <IconButton
                 aria-label="email"
                 size="small"
@@ -764,9 +764,10 @@ const ListOpenLead = ({ item, onDelete, onEdit, onHistoryClick }) => {
               </IconButton>
             </a>
             <a
-              href={`https://wa.me/${item?.Mobile}`}
+              href={`https://wa.me/${item?.Mobile}`  }
               target="_blank"
               rel="noopener noreferrer"
+              style={{ marginLeft: 35 }}
             >
               <IconButton
                 aria-label="whatsapp"
