@@ -128,13 +128,16 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
     const cash = payment.Cash || 0;
     const chequeAmount = payment.ChequeAmount || 0;
     const totalAPlusB = cash + chequeAmount;
-
+  
+    // Conditionally set the Date value based on the presence of ChequeAmount
+    const displayDate = chequeAmount > 0 ? payment.ChequeDate : payment.Date;
+  
     // Calculate the current balance by subtracting the current TotalAPlusB from the running balance
     const currentBalance = runningBalance - totalAPlusB;
-
+  
     // Prepare the row data with the current balance
     const row = {
-      Date: payment.Date,
+      Date: displayDate,  // Use displayDate instead of payment.Date
       Cash: cash,
       ChequeAmount: chequeAmount,
       TotalAPlusB: totalAPlusB,
@@ -144,12 +147,13 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
       FlatNo: data?.FlatNumber || "",
       Type: data?.Type || "",
     };
-
+  
     // Update the running balance to the current balance for the next iteration
     runningBalance = currentBalance;
-
+  
     return row;
   });
+  
 
   // Ensure there are always 15 rows displayed
   const totalRows = 25;

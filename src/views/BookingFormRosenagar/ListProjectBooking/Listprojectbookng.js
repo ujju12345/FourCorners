@@ -514,21 +514,22 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           0
         ),
         Cash: amountType === "1" ? parseFloat(cashPaid) || 0 : 0,
-        ChequeAmount:
-          amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
+        ChequeAmount: amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
         BankName: payment.bankName || "",
         AmountTypeID: payment.AmountTypeID || "",
         ChequeNumber: payment.cheqNo || "",
-
-        
+  
+        // Use chequeDate or fallback to cashDate if not available
         ChequeDate: payment.chequeDate
           ? payment.chequeDate.toISOString().split("T")[0]
-          : null,
+          : (cashDate && cashDate.CashDate
+              ? cashDate.CashDate.toISOString().split("T")[0]
+              : null),
+  
         Date: cashDate && cashDate.CashDate
           ? cashDate.CashDate.toISOString().split("T")[0]
           : null,
-
-
+  
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
           0
@@ -551,13 +552,14 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       ModifyUID: 1,
     };
   
+    console.log(payload, 'DATEEE CHECKKK KARRR<<<<<<<<<>>>>>>>>>>>');
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
       if (response.data.status === "Success") {
-        
+        console.log(response.data, 'checkkk the ad payemnt ');
         Swal.fire({
           icon: "success",
           title: "Data Submitted Successfully",
@@ -573,6 +575,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       console.error("Error submitting payment:", error);
     }
   };
+  
   
   // Helper function to format date correctly for the API
   const formatDateForAPI = (date) => {
