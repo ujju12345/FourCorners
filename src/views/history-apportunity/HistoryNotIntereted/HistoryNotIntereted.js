@@ -23,7 +23,7 @@ import { useCookies } from 'react-cookie';
 const CustomPaper = styled(Paper)({
   padding: '6px 16px',
   maxWidth: '600px',  
-  margin: '0 auto',   // Center the cards
+  margin: '0 auto',   
 });
 
 // Custom styling for the Timeline
