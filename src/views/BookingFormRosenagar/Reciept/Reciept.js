@@ -226,7 +226,7 @@ const Reciept = ({ bookingID }) => {
                     Email: info@almantasharealty.com Site Address: Survey No.
                     121/1B/1, 121/1B/2, 121/1/E, 121/1/F, 123/1, 86/G &
                     123/3/1/B, Opp. Khan Compound, Shil, Thane 400612. MahaRera
-                    No. P51700020942
+                    No. {data[0]?.reraregistration || ""}
                   </Typography>
                 </StyledTableCell>
               </Grid>
