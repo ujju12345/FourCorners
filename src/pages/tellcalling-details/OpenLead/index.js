@@ -307,7 +307,7 @@ const OpenLead = () => {
             >
               <HistoryOpenLead item={rowDataToUpdate} onBack={handleBack} />
             </Box>
-            s
+            
           </Box>
         );
       default:
