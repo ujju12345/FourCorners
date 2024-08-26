@@ -519,12 +519,16 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         BankName: payment.bankName || "",
         AmountTypeID: payment.AmountTypeID || "",
         ChequeNumber: payment.cheqNo || "",
+
+        
         ChequeDate: payment.chequeDate
           ? payment.chequeDate.toISOString().split("T")[0]
           : null,
         Date: cashDate && cashDate.CashDate
           ? cashDate.CashDate.toISOString().split("T")[0]
           : null,
+
+
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
           0
