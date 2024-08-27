@@ -331,10 +331,10 @@ const Reciept = ({ bookingID }) => {
           <Table style={{ border: "1px solid black" }}>
             <TableHead>
               <TableRow>
-                <TableCell>Cheque Date</TableCell>
+                <TableCell> Date</TableCell>
                 <TableCell>Bank Name</TableCell>
-                <TableCell>Cheque Number</TableCell>
-                <TableCell>Cheque Amount</TableCell>
+                <TableCell> Number</TableCell>
+                <TableCell> Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
