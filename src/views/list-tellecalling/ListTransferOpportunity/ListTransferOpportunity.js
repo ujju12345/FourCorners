@@ -32,8 +32,13 @@ import ShareIcon from "@mui/icons-material/Share";
 import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 // import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
-  console.log(item , 'CIDD MIL JAYEGAA<<<>>>>>>');
+const ListTransferOpportunity = ({
+  item,
+  onDelete,
+  onEdit,
+  onHistoryClick,
+}) => {
+  console.log(item, "CIDD MIL JAYEGAA<<<>>>>>>");
   const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
   const intialName = {
     Tid: "",
@@ -159,12 +164,11 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
 
     // Add Tid to formData
     const formData = {
-      UserID:userID,
-      Cid:item?.Cid,
+      UserID: userID,
+      Cid: item?.Cid,
       Tid: item.Tid,
-      Status:1,
+      Status: 1,
       CreateUID: cookies?.amr?.UserID || 1,
-
     };
 
     console.log(formData, "COVERT TO OPPORTUNITY Data 1");
@@ -188,9 +192,8 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
         // Show success message using SweetAlert
         Swal.fire({
           icon: "success",
-          title: 
-             "Lead Converted to opportunity Successfully",
-            
+          title: "Lead Converted to opportunity Successfully",
+
           showConfirmButton: false,
           timer: 1000,
         }).then(() => {
@@ -715,7 +718,7 @@ const ListTransferOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => 
                 </IconButton>
               </a>
 
-              <a style={{ marginRight:30 }}>
+              <a style={{ marginRight: 30 }}>
                 <IconButton
                   aria-label="share"
                   size="small"

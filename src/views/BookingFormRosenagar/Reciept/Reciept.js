@@ -158,9 +158,9 @@ const Reciept = ({ bookingID }) => {
             }
           />
 
-          <Button variant="contained" onClick={handleSearch}>
+          {/* <Button variant="contained" onClick={handleSearch}>
             Search
-          </Button>
+          </Button> */}
         </Box>
       </Box>
 
@@ -196,7 +196,7 @@ const Reciept = ({ bookingID }) => {
                           color: "#ffbf15",
                         }}
                       >
-                        ALMANTASHA REALTY
+                       {data[0]?.CompanyName || ""}
                       </Typography>
                       <Typography
                         style={{
@@ -205,7 +205,7 @@ const Reciept = ({ bookingID }) => {
                           fontWeight: "bold",
                         }}
                       >
-                     {data[0]?.CompanyName || ""}
+                    Builders & Developer
                       </Typography>
                     </Grid>
                   </Grid>
@@ -222,12 +222,13 @@ const Reciept = ({ bookingID }) => {
                   sx={{ textAlign: "center", padding: 0, border: 0 }}
                 >
                   <Typography style={{ fontSize: 14, padding: 5 }}>
-                    Head Office: Website: www.almantasharealty.com,
-                    Email: info@almantasharealty.com Site Address: Survey No.
+                    Head Office: {data[0]?.CompanyAddress || "N/A"} Website: www.almantasharealty.com,
+                    Email:  Email: {data[0]?.CompanyEmail || "N/A"}  Site Address: Survey No.
                     121/1B/1, 121/1B/2, 121/1/E, 121/1/F, 123/1, 86/G &
                     123/3/1/B, Opp. Khan Compound, Shil, Thane 400612. MahaRera
-                    No. P51700020942
+                    No. {data[0]?.reraregistration || "N/A"}
                   </Typography>
+                  
                 </StyledTableCell>
               </Grid>
               <Grid item xs={3}>

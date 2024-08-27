@@ -479,7 +479,7 @@ const BookingTransferList = ({ item, onDelete, onEdit, onHistoryClick }) => {
                   mr: 2, // Add margin-right to separate the items
                 }}
               >
-                Location: {item?.LocationName}
+                Location: {item?.CityName}/{item.LocationName}
               </Typography>
               <Typography
                 variant="body2"
