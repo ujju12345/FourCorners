@@ -834,7 +834,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                       key={option.BookingremarkID}
                       value={option.BookingremarkID}
                     >
-                      {option.RemarkName}
+                      {option.RemarkName}   Date: {option.RemarkDate}/{option.AmountTypeName}
                     </MenuItem>
                   ))}
                 </TextField>
