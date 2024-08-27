@@ -22,7 +22,7 @@ import { Card } from "mdi-material-ui";
 import { DatePicker } from "@mui/lab";
 import { Call } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
-
+import { format } from 'date-fns';
 const StyledTableCell = styled(TableCell)({
   border: "2px solid black",
   padding: "0px", // Removed padding
@@ -69,7 +69,10 @@ const Reciept = ({ bookingID }) => {
       fetchData(bookingID);
     }
   }, [bookingID]);
-
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Formats to YYYY-MM-DD
+  };
   const fetchData = async (bookingID) => {
     try {
       const response = await axios.get(
@@ -338,7 +341,7 @@ const Reciept = ({ bookingID }) => {
             <TableBody>
               {data?.map((payment) => (
                 <TableRow key={payment.paymentID}>
-                  <StyledTableCell>{payment.ChequeDate}</StyledTableCell>
+                  <StyledTableCell>{format(new Date(payment.Date), 'yyyy-MM-dd')}</StyledTableCell>
                   <StyledTableCell>{payment.BankName}</StyledTableCell>
                   <StyledTableCell>{payment.ChequeNumber}</StyledTableCell>
                   <StyledTableCell>{payment.ChequeAmount}</StyledTableCell>
