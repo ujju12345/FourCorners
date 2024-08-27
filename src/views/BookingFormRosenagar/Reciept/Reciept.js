@@ -222,10 +222,8 @@ const Reciept = ({ bookingID }) => {
                   sx={{ textAlign: "center", padding: 0, border: 0 }}
                 >
                   <Typography style={{ fontSize: 14, padding: 5 }}>
-                    Head Office: {data[0]?.CompanyAddress || "N/A"} Website: www.almantasharealty.com,
-                    Email:  Email: {data[0]?.CompanyEmail || "N/A"}  Site Address: Survey No.
-                    121/1B/1, 121/1B/2, 121/1/E, 121/1/F, 123/1, 86/G &
-                    123/3/1/B, Opp. Khan Compound, Shil, Thane 400612. MahaRera
+                    Head Office: {data[0]?.CompanyAddress || "N/A"}  GST : {data[0]?.CompanyGst || "N/A"}   Website: {data[0]?.CompanyWebsite || "N/A"}
+                    Email: {data[0]?.CompanyEmail || "N/A"}   Site Address: {data[0]?.ProjectAddress || "N/A"} MahaRera
                     No. {data[0]?.reraregistration || "N/A"}
                   </Typography>
                   
