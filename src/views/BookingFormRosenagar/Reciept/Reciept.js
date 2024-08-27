@@ -158,9 +158,9 @@ const Reciept = ({ bookingID }) => {
             }
           />
 
-          {/* <Button variant="contained" onClick={handleSearch}>
+          <Button variant="contained" onClick={handleSearch}>
             Search
-          </Button> */}
+          </Button>
         </Box>
       </Box>
 
@@ -222,11 +222,11 @@ const Reciept = ({ bookingID }) => {
                   sx={{ textAlign: "center", padding: 0, border: 0 }}
                 >
                   <Typography style={{ fontSize: 14, padding: 5 }}>
-                    Head Office: {data[0]?.CompanyAddress || ""} Website: www.almantasharealty.com,
+                    Head Office: Website: www.almantasharealty.com,
                     Email: info@almantasharealty.com Site Address: Survey No.
                     121/1B/1, 121/1B/2, 121/1/E, 121/1/F, 123/1, 86/G &
                     123/3/1/B, Opp. Khan Compound, Shil, Thane 400612. MahaRera
-                    No. {data[0]?.reraregistration || ""}
+                    No. P51700020942
                   </Typography>
                 </StyledTableCell>
               </Grid>
