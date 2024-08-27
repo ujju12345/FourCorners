@@ -535,6 +535,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           0
         ),
         paymenttypeID: parseInt(selectedPaymentType) || "",
+
         CreateUID: 1,
         CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
       })),
@@ -834,7 +835,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                       key={option.BookingremarkID}
                       value={option.BookingremarkID}
                     >
-                      {option.RemarkName}   `({option.RemarkDate},{option.AmountTypeName})
+                      {option.RemarkName}   ({option.RemarkDate},{option.AmountTypeName})
                     </MenuItem>
                   ))}
                 </TextField>
@@ -887,24 +888,24 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  select
-                  label="Select Payment Type"
-                  value={selectedPaymentType}
-                  onChange={handleChangePayment}
-                  fullWidth
-                  margin="normal"
-                >
-                  {paymentTypes.map((option) => (
-                    <MenuItem
-                      key={option.paymenttypeID}
-                      value={option.paymenttypeName}
-                    >
-                      {option.paymenttypeName}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+  <TextField
+    select
+    label="Select Payment Type"
+    value={selectedPaymentType}
+    onChange={handleChangePayment}
+    fullWidth
+    margin="normal"
+  >
+    {paymentTypes.map((option) => (
+      <MenuItem
+        key={option.paymenttypeID}
+        value={option.paymenttypeID} // Changed from paymenttypeName to paymenttypeID
+      >
+        {option.paymenttypeName}
+      </MenuItem>
+    ))}
+  </TextField>
+</Grid>
 
               {amountType === "1" && (
                 <>
@@ -1058,7 +1059,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
               )}
             </>
 
-            {selectedPaymentType === "Partial payment" && (
+            {selectedPaymentType === 2 && (
               <>
                 <Grid item xs={12}>
                   <Typography variant="h6" gutterBottom>
