@@ -222,9 +222,9 @@ const Reciept = ({ bookingID }) => {
                   sx={{ textAlign: "center", padding: 0, border: 0 }}
                 >
                   <Typography style={{ fontSize: 14, padding: 5 }}>
-                    Head Office: {data[0]?.CompanyAddress || "N/A"}  GST : {data[0]?.CompanyGst || "N/A"}   Website: {data[0]?.CompanyWebsite || "N/A"}
-                    Email: {data[0]?.CompanyEmail || "N/A"}   Site Address: {data[0]?.ProjectAddress || "N/A"} MahaRera
-                    No. {data[0]?.reraregistration || "N/A"}
+                    Corporate Office: {data[0]?.CompanyAddress || "N/A"}.  GST No: {data[0]?.CompanyGst || "N/A"}    <br></br>
+                      Website: {data[0]?.CompanyWebsite || "N/A"}    Email: {data[0]?.CompanyEmail || "N/A"}  <br></br>  Site Address: {data[0]?.ProjectAddress || "N/A"} MahaRera
+                    No. {data[0]?.reraregistration || "N/A"}  Mobile No. 9876543210
                   </Typography>
                   
                 </StyledTableCell>
@@ -329,10 +329,10 @@ const Reciept = ({ bookingID }) => {
           <Table style={{ border: "1px solid black" }}>
             <TableHead>
               <TableRow>
-                <TableCell> Date</TableCell>
-                <TableCell>Bank Name</TableCell>
-                <TableCell> Number</TableCell>
-                <TableCell> Amount</TableCell>
+              <TableCell sx={{ textAlign: 'center'}}>Date</TableCell>
+            <TableCell sx={{ textAlign: 'center' }}>Bank Name</TableCell>
+            <TableCell sx={{ textAlign: 'center' }}>Number</TableCell>
+            <TableCell sx={{ textAlign: 'center' }}>Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
