@@ -133,18 +133,18 @@ const Dashboard = ({ onHistoryClick }) => {
         ToDate: formData?.ToDate?.toISOString(),
         SourceID: formData.SourceID,
       });
-  
+
       console.log(params.toString(), "Request Parameters");
-  
+
       const response = await fetch(
         `https://apiforcorners.cubisysit.com/api/api-fetch-admindashboard.php?${params}`
       );
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Network response was not ok: ${errorText}`);
       }
-  
+
       const data = await response.json();
       console.log(data, "Dashboard Data");
       setTelecallingData(data);
@@ -154,7 +154,6 @@ const Dashboard = ({ onHistoryClick }) => {
       setLoading(false);
     }
   };
-  
 
   const handleCardClick = (type) => {
     if (type === "todayLeads") {
@@ -190,7 +189,12 @@ const Dashboard = ({ onHistoryClick }) => {
       setSelectedType("todaysPayment");
 
       // Handle other cases if needed
-    } 
+    } else if (type == "booking") {
+      setSelectedData(telecallingData?.data?.bookingRecords?.records || []);
+      setSelectedType("booking");
+
+      // Handle other cases if needed
+    }
   };
 
   useEffect(() => {
@@ -330,13 +334,13 @@ const Dashboard = ({ onHistoryClick }) => {
 
   const pieData = {
     labels: [
-      "Telecalling", 
-      "Contacts", 
-      "Opportunity", 
-      "Booking", 
-      "Todays Lead FollowUp", 
-      "Todays Payment Followup", 
-      "Todays Loan FollowUp"
+      "Telecalling",
+      "Contacts",
+      "Opportunity",
+      "Booking",
+      "Todays Lead FollowUp",
+      "Todays Payment Followup",
+      "Todays Loan FollowUp",
     ],
     datasets: [
       {
@@ -347,30 +351,29 @@ const Dashboard = ({ onHistoryClick }) => {
           telecallingData?.data?.bookingRecords?.count || 0,
           telecallingData?.data?.nextFollowup?.count || 0,
           telecallingData?.data?.opportunityFollowup?.count || 0,
-          telecallingData?.data?.bookingRemarkWithoutLoan?.count || 0
+          telecallingData?.data?.bookingRemarkWithoutLoan?.count || 0,
         ],
         backgroundColor: [
-          "#FF6384", 
-          "#36A2EB", 
-          "#FFCE56", 
-          "#4BC0C0", 
-          "#9966FF", 
-          "#FF9F40", 
-          "#FFCD56"
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+          "#FFCD56",
         ],
         hoverBackgroundColor: [
-          "#FF6384", 
-          "#36A2EB", 
-          "#FFCE56", 
-          "#4BC0C0", 
-          "#9966FF", 
-          "#FF9F40", 
-          "#FFCD56"
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+          "#FFCD56",
         ],
       },
     ],
   };
-  
 
   const pieOptions = {
     responsive: true,
@@ -552,7 +555,7 @@ const Dashboard = ({ onHistoryClick }) => {
                     </Grid>
 
                     <Grid item xs={12} sm={4}>
-                      <Card onClick={() => handleCardClick("opportunity")}>
+                      <Card onClick={() => handleCardClick("booking")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
@@ -664,9 +667,10 @@ const Dashboard = ({ onHistoryClick }) => {
                       {selectedType === "telecalling"
                         ? `${userName} Telecalling Data`
                         : selectedType === "contacts"
-                        ? ` ${userName} Contact Data`
-                        : `${userName} Opportunity Data`
-                        }
+                        ? `${userName} Contact Data`
+                        : selectedType === "booking"
+                        ? `${userName} Booking`
+                        : ""}
                     </Typography>
                   </Box>
                 </Grid>
@@ -689,43 +693,66 @@ const Dashboard = ({ onHistoryClick }) => {
                         <TableBody>
                           {selectedData?.map((row, index) => (
                             <TableRow key={index}>
-                              <TableCell>{row.CName}</TableCell>
-                              <TableCell>{row.Mobile}</TableCell>
+                              <TableCell>
+                                {selectedType === "booking"
+                                  ? row.Name
+                                  : row.CName}
+                              </TableCell>
                               <TableCell>
                                 {selectedType === "telecalling"
                                   ? row.NextFollowUpDate
                                   : row.CreateDate}
                               </TableCell>
                               <TableCell>
-                                {selectedType === "telecalling" ? (
-                                  <Button
-                                    onClick={() => fetchDataForModal(row.Tid)}
-                                  >
-                                    View Lead Profile
-                                  </Button>
-                                ) : selectedType === "contacts" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalContact(row.Cid)
-                                    }
-                                  >
-                                    View Contact Profile
-                                  </Button>
-                                ) : selectedType === "Salesopportunity" ? (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalOpportunity(row.Oid)
-                                    }
-                                  >
-                                    View Opportunity Profile
-                                  </Button>
-                                ) : selectedType === "todayLeads" ? (
-                                  <Button
-                                    onClick={() => fetchDataForModal(row.Tid)}
-                                  >
-                                    View Opportunity Profile
-                                  </Button>
-                                ) : null}
+                                {(() => {
+                                  switch (selectedType) {
+                                    case "telecalling":
+                                      return (
+                                        <Button
+                                          onClick={() =>
+                                            fetchDataForModal(row.Tid)
+                                          }
+                                        >
+                                          View Lead Profile
+                                        </Button>
+                                      );
+                                    case "contacts":
+                                      return (
+                                        <Button
+                                          onClick={() =>
+                                            fetchDataForModalContact(row.Cid)
+                                          }
+                                        >
+                                          View Contact Profile
+                                        </Button>
+                                      );
+                                    case "Salesopportunity":
+                                      return (
+                                        <Button
+                                          onClick={() =>
+                                            fetchDataForModalOpportunity(
+                                              row.Oid
+                                            )
+                                          }
+                                        >
+                                          View Opportunity Profile
+                                        </Button>
+                                      );
+                                    case "todayLeads":
+                                      return (
+                                        <Button
+                                          onClick={() =>
+                                            fetchDataForModal(row.Tid)
+                                          }
+                                        >
+                                          View Opportunity Profile
+                                        </Button>
+                                      );
+
+                                    default:
+                                      return null;
+                                  }
+                                })()}
                               </TableCell>
                             </TableRow>
                           ))}
