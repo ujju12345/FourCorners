@@ -72,9 +72,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const Dashboard = ({ onHistoryClick }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    FromDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
-    ToDate: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000),
-    SourceName: "",
+    FromDate: null,
+    ToDate: null,
+    SourceID: "",
     UserID: "",
     Status: 1,
   });
@@ -131,26 +131,30 @@ const Dashboard = ({ onHistoryClick }) => {
         UserID: formData.UserID,
         FromDate: formData?.FromDate?.toISOString(),
         ToDate: formData?.ToDate?.toISOString(),
-        SourceName: formData?.SourceName,
+        SourceID: formData.SourceID,
       });
-
-      console.log(params.toString(), "seee this paramsss<<<<<<<<<>>>>>>>.");
+  
+      console.log(params.toString(), "Request Parameters");
+  
       const response = await fetch(
         `https://apiforcorners.cubisysit.com/api/api-fetch-admindashboard.php?${params}`
       );
-
+  
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorText = await response.text();
+        throw new Error(`Network response was not ok: ${errorText}`);
       }
+  
       const data = await response.json();
-      console.log(data, "dashboard data<<>>>>>>>>>>>");
+      console.log(data, "Dashboard Data");
       setTelecallingData(data);
     } catch (error) {
-      console.error("Error fetching telecalling data:", error);
+      console.error("Error fetching telecalling data:", error.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleCardClick = (type) => {
     if (type === "todayLeads") {
@@ -186,7 +190,7 @@ const Dashboard = ({ onHistoryClick }) => {
       setSelectedType("todaysPayment");
 
       // Handle other cases if needed
-    }
+    } 
   };
 
   useEffect(() => {
@@ -234,12 +238,12 @@ const Dashboard = ({ onHistoryClick }) => {
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      SourceName: undefined,
+      SourceID: undefined,
     }));
 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      SourceName: value,
+      SourceID: value,
     }));
   };
 
@@ -248,7 +252,7 @@ const Dashboard = ({ onHistoryClick }) => {
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      SourceName: undefined,
+      SourceID: undefined,
     }));
 
     setFormData((prevFormData) => ({
@@ -421,12 +425,12 @@ const Dashboard = ({ onHistoryClick }) => {
                       <FormControl fullWidth>
                         <InputLabel>Source</InputLabel>
                         <Select
-                          value={formData.SourceName}
+                          value={formData.SourceID}
                           onChange={handleSource}
                           label="Source"
                         >
                           {source.map((bhk) => (
-                            <MenuItem key={bhk.SourceID} value={bhk.SourceName}>
+                            <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
                               {bhk.SourceName}
                             </MenuItem>
                           ))}
@@ -443,7 +447,7 @@ const Dashboard = ({ onHistoryClick }) => {
                       <DatePicker
                         selected={formData.FromDate}
                         onChange={(date) => handleDateChange(date, "FromDate")}
-                        dateFormat="dd-MM-yyyy"
+                        dateFormat="yyyy-MM-dd"
                         className="form-control"
                         customInput={
                           <TextField
@@ -462,7 +466,7 @@ const Dashboard = ({ onHistoryClick }) => {
                       <DatePicker
                         selected={formData.ToDate}
                         onChange={(date) => handleDateChange(date, "ToDate")}
-                        dateFormat="dd-MM-yyyy"
+                        dateFormat="yyyy-MM-dd"
                         className="form-control"
                         customInput={
                           <TextField
@@ -661,7 +665,8 @@ const Dashboard = ({ onHistoryClick }) => {
                         ? `${userName} Telecalling Data`
                         : selectedType === "contacts"
                         ? ` ${userName} Contact Data`
-                        : `${userName} Opportunity Data`}
+                        : `${userName} Opportunity Data`
+                        }
                     </Typography>
                   </Box>
                 </Grid>

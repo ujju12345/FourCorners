@@ -130,7 +130,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
     const totalAPlusB = cash + chequeAmount;
   
     // Conditionally set the Date value based on the presence of ChequeAmount
-    const displayDate = chequeAmount > 0 ? payment.ChequeDate : payment.Date;
+    const displayDate = payment.Date;
   
     // Calculate the current balance by subtracting the current TotalAPlusB from the running balance
     const currentBalance = runningBalance - totalAPlusB;

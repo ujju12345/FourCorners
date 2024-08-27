@@ -106,6 +106,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   const [chequePayments, setChequePayments] = useState([
     {
       chequePaid: "",
+      Date:"",
       bankName: "",
       cheqNo: "",
       chequeDate: null,
@@ -222,11 +223,12 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleChequePaymentChange = (index, field, value) => {
-    const updatedChequePayments = chequePayments.map((payment, i) =>
       i === index ? { ...payment, [field]: value } : payment
-    );
+    const updatedChequePayments = [...chequePayments];
+    updatedChequePayments[index][field] = value;
     setChequePayments(updatedChequePayments);
   };
+  
   
 
   useEffect(() => {
@@ -393,13 +395,16 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleDateChangeCash = (date) => {
-    setCashdate({ CashDate: date });
-  };
-
-  const handleDateChange = (date, index) => {
     const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    handleChequePaymentChange(index, "chequeDate", adjustedDate);
+    setCashdate({ CashDate: adjustedDate });
   };
+  
+
+  const handleDateChange = (date, index, fieldName) => {
+    const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    handleChequePaymentChange(index, fieldName, adjustedDate);
+  };
+  
   
   const handleDateChangePayment = (date, field) => {
     setFormData((prevFormData) => ({
@@ -425,7 +430,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
     newRemarks[index][field] = e.target.value;
     setRemarks(newRemarks);
   };
-
+  
   const handleDateRemarks = (date, index) => {
     const newRemarks = [...remarks];
     newRemarks[index].RemarkDate = date;
@@ -516,26 +521,19 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         Cash: amountType === "1" ? parseFloat(cashPaid) || 0 : 0,
         ChequeAmount: amountType === "2" ? parseFloat(payment.chequePaid) || 0 : 0,
         BankName: payment.bankName || "",
-        AmountTypeID: payment.AmountTypeID || "",
+        AmountTypeID: amountType || 1,
         ChequeNumber: payment.cheqNo || "",
-  
-        // Use chequeDate or fallback to cashDate if not available
         ChequeDate: payment.chequeDate
           ? payment.chequeDate.toISOString().split("T")[0]
-          : (cashDate && cashDate.CashDate
-              ? cashDate.CashDate.toISOString().split("T")[0]
-              : null),
-  
-        Date: cashDate && cashDate.CashDate
-          ? cashDate.CashDate.toISOString().split("T")[0]
-          : null,
-  
+          : cashDate?.CashDate?.toISOString().split("T")[0] || null,
+        Date: amountType === "1"
+          ? cashDate?.CashDate?.toISOString().split("T")[0] || null
+          : payment.Date?.toISOString().split("T")[0] || null,
         PLoan: remarks.reduce(
           (acc, remark) => acc + (parseInt(remark.Loan) || 0),
           0
         ),
         paymenttypeID: parseInt(selectedPaymentType) || "",
-
         CreateUID: 1,
         CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
       })),
@@ -553,22 +551,22 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       ModifyUID: 1,
     };
   
-    console.log(payload, 'DATEEE CHECKKK KARRR<<<<<<<<<>>>>>>>>>>>');
+    console.log(payload, "Payload before submitting");
+  
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
       if (response.data.status === "Success") {
-        console.log(response.data, 'checkkk the ad payemnt ');
-        Swal.fire({
-          icon: "success",
-          title: "Data Submitted Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          window.location.reload();
-        });
+        // Swal.fire({
+        //   icon: "success",
+        //   title: "Data Submitted Successfully",
+        //   showConfirmButton: false,
+        //   timer: 1000,
+        // }).then(() => {
+        //   window.location.reload();
+        // });
       } else {
         console.error("Failed to submit payment:", response.data.message);
       }
@@ -1030,13 +1028,21 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                         />
                       </Grid>
                       <Grid item xs={4} mt={3}>
-                        <DatePicker
-                          selected={payment.chequeDate}
-                          onChange={(date) => handleDateChange(date, index)}
-                          dateFormat="yyyy-MM-dd"
-                          customInput={<TextField label="Date" fullWidth />}
-                        />
-                      </Grid>
+      <DatePicker
+        selected={payment.chequeDate}
+        onChange={(date) => handleDateChange(date, index, "chequeDate")}
+        dateFormat="yyyy-MM-dd"
+        customInput={<TextField label="Cheque Date" fullWidth />}
+      />
+    </Grid>
+    <Grid item xs={4} mt={3}>
+      <DatePicker
+        selected={payment.Date}
+        onChange={(date) => handleDateChange(date, index, "Date")}
+        dateFormat="yyyy-MM-dd"
+        customInput={<TextField label="Date" fullWidth />}
+      />
+    </Grid>
                       <Grid item xs={1}>
                         {/* <Grid item xs={12} mt={2}> */}
                         <IconButton
