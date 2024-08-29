@@ -466,11 +466,12 @@ const SaleDashboard = () => {
                     >
                       {selectedType === "telecalling"
                         ? `${userName} Telecalling Data`
-                        : selectedType === "contacts"
-                        ? ` ${userName} Contact Data`
+                        : selectedType === "opportunity"
+                        ? selectedType === "opportunity"
                         : `${userName} Opportunity Data`
-                        ?`${userName} Booking Data`
-                        : selectedType === "booking"}
+                       
+                        ? selectedType === "booking"
+                        : `${userName} Booking Data`}
                     </Typography>
                   </Box>
                 </Grid>

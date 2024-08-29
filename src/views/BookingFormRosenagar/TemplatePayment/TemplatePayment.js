@@ -1292,6 +1292,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                               fontWeight: "bold",
                               border: "2px solid black",
                             }}
+                            
                           >
                             FLOOR
                           </TableCell>

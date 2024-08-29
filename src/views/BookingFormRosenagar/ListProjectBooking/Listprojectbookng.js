@@ -1343,7 +1343,9 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                               {item.AmountTypeID === 1 ? "Current" : "Post"}
                             </TableCell>
                             <TableCell>
-                              {item.RemarkDate}                            </TableCell>
+  {new Date(item.RemarkDate).toLocaleDateString("en-GB").replace(/\//g, "-")}
+</TableCell>
+
                           </TableRow>
                         ))
                       ) : (
