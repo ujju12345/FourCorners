@@ -454,7 +454,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             <TableBody>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 ,  textAlign: 'left',}}
                   colSpan={4}
                 >
                   Type of Booking
@@ -466,7 +466,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.BookingTypeName}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   GST* (As per Govt.Notification)
@@ -480,7 +480,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
                   colSpan={4}
                 >
                   Area in Building (in Sq.Ft)
@@ -492,7 +492,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Area}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Stamp Duty* (As per Govt.Notification)
@@ -506,7 +506,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
                   colSpan={4}
                 >
                   Rate Sq.Ft
@@ -518,7 +518,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Ratesqft}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Registration* (As per Govt.Notification)
@@ -532,7 +532,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
                   colSpan={4}
                 >
                   TTL Amount As Per Builtup
@@ -544,7 +544,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.TtlAmount}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Advocate* (At time of registration)
@@ -558,7 +558,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Development Charges
@@ -570,7 +570,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Charges}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Extra Cost (B)
@@ -584,7 +584,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Parking Facility
@@ -596,7 +596,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.ParkingFacility}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Total (A + B)
@@ -610,7 +610,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
                   colSpan={4}
                 >
                   Gross Flat Cost (A)
@@ -622,7 +622,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.FlatCost}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 }}
+                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
                   colSpan={4}
                 >
                   Booking Ref.Code (T & C)
@@ -867,17 +867,22 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     {data.ProjectName}
                   </Typography>
                 </StyledTableCell>
+              <StyledTableCell style={{ textAlign: "center" }}>
+  <Typography variant="body1">WING</Typography>
+  <Typography variant="body2">{data?.WingName}</Typography>
+</StyledTableCell>
+
                 <StyledTableCell style={{ textAlign: "center" }}>
-                  WING
+                <Typography variant="body1">FLOOR</Typography>
+  <Typography variant="body2">{data?.FloorNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>
-                  FLOOR
+                <Typography variant="body1">FLAT NO</Typography>
+  <Typography variant="body2">{data?.FlatNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>
-                  FLAT NO.
-                </StyledTableCell>
-                <StyledTableCell style={{ textAlign: "center" }}>
-                  TYPE
+                <Typography variant="body1">TYPE</Typography>
+  <Typography variant="body2">{data?.UnittypeName}</Typography>
                 </StyledTableCell>
               </TableRow>
 
@@ -961,7 +966,8 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     borderBottom: "1px solid #ccc", // Add a bottom border
                   }}
                 >
-                  WING
+                  <Typography variant="body1">WING</Typography>
+  <Typography variant="body2">{data?.WingName}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -969,7 +975,8 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     borderBottom: "1px solid #ccc", // Add a bottom border
                   }}
                 >
-                  FLOOR
+                  <Typography variant="body1">FLOOR</Typography>
+  <Typography variant="body2">{data?.FloorNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -977,7 +984,8 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     borderBottom: "1px solid #ccc", // Add a bottom border
                   }}
                 >
-                  FLAT NO.
+                  <Typography variant="body1">FLAT NO</Typography>
+  <Typography variant="body2">{data?.FlatNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -985,7 +993,8 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     borderBottom: "1px solid #ccc", // Add a bottom border
                   }}
                 >
-                  TYPE
+                  <Typography variant="body1">TYPE</Typography>
+  <Typography variant="body2">{data?.UnittypeName}</Typography>
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -1057,8 +1066,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             variant="body2"
             sx={{ fontSize: 14, lineHeight: 1.5, mt: 2 }}
           >
-            (6) Make all payments to the company name of GAMS REALTY BUILDERS &
-            DEVELOPERS from their bank account only and not from and through the
+            (6) Make all payments to the company name of   <strong>{data.ProjectName}</strong> from their bank account only and not from and through the
             bank accounts of any third parties.
           </Typography>
 
@@ -1108,8 +1116,8 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             variant="body2"
             sx={{ fontSize: 14, lineHeight: 1.5, mt: 2 }}
           >
-            (12) The area (Builtup) of the flat / shops which is wriƩen in the
-            above quotaƟon is only for beƩer understanding of you.
+            (12) The area (Builtup) of the flat / shops which is written in the
+            above quotation is only for better understanding of you.
           </Typography>
           <Typography
             variant="body2"
@@ -1202,7 +1210,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     "On behalf of the entire{" "}
-                    <strong>GAMS REALTY BUILDERS & DEVELOPERS</strong> staff,
+                    <strong>{data.ProjectName}</strong> staff,
                     I'd like to take this opportunity to welcome you as a new
                     customer. We are thrilled to have you with us."
                   </Typography>
