@@ -1316,18 +1316,17 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container spacing={4} mb={3}></Grid>
+            
 
             <Grid container spacing={3}>
               {/* Upcoming Payments */}
               <Grid item xs={12}>
                 <Typography variant="h6">Upcoming Payments</Typography>
                 <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
+                  <Table >
                     <TableHead>
                       <TableRow>
                         <TableCell>Remark</TableCell>
-
                         <TableCell>Amount</TableCell>
                         <TableCell>Payment Type</TableCell>
                         <TableCell>Date</TableCell>
@@ -1341,11 +1340,10 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
 
                             <TableCell>{item.Remarkamount}</TableCell>
                             <TableCell>
-                              {item.AmountTypeID === 1 ? "Cash" : "Cheque"}
+                              {item.AmountTypeID === 1 ? "Current" : "Post"}
                             </TableCell>
                             <TableCell>
-                              {new Date(item.RemarkDate).toLocaleDateString()}
-                            </TableCell>
+                              {item.RemarkDate}                            </TableCell>
                           </TableRow>
                         ))
                       ) : (
@@ -1364,7 +1362,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
               <Grid item xs={12}>
                 <Typography variant="h6">Received Payments</Typography>
                 <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
+                  <Table>
                     <TableHead>
                       <TableRow>
                         <TableCell>Cuurent </TableCell>

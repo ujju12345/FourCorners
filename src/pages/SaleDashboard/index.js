@@ -142,7 +142,7 @@ const SaleDashboard = () => {
       setSelectedType("opportunity");
     }
     else if (type === "booking") {
-      setSelectedData(telecallingData?.data?.oproccessCount);
+      setSelectedData(telecallingData?.data?.oproccessRecords);
       setSelectedType("booking");
     }
   };

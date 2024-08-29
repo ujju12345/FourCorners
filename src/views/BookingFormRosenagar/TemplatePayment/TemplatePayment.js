@@ -1066,7 +1066,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             variant="body2"
             sx={{ fontSize: 14, lineHeight: 1.5, mt: 2 }}
           >
-            (6) Make all payments to the company name of   <strong>{data.ProjectName}</strong> from their bank account only and not from and through the
+            (6) Make all payments to the company name of   <strong>{data.CompanyName}</strong> from their bank account only and not from and through the
             bank accounts of any third parties.
           </Typography>
 
@@ -1180,7 +1180,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   style={{ border: "none", paddingBottom: 16 }}
                 >
                   <Typography variant="h6" align="right">
-                    Date : 07-08-2024
+                    Date : 
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -1190,16 +1190,14 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     TO,
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    <strong> MR. ATIK AKHTAR SHAIKH</strong>
+                    <strong> {data.BookingName}</strong>
                   </Typography>
                   <Typography
                     variant="body1"
                     gutterBottom
                     sx={{ marginBottom: 10 }}
                   >
-                    FLAT NO. 602, 6TH FLOOR, BLDG. NO. B2, KK RESIDENCY, NEAR
-                    KALYAN PHATA, KALYAN SHIL ROAD, DIVA, THANE, MAHARASHTRA -
-                    400 612.
+                    FLAT NO. {data.FlatNo}, {data.FloorNo} FLOOR, {data.Address}
                   </Typography>
                   <Typography
                     variant="body1"
@@ -1210,7 +1208,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     "On behalf of the entire{" "}
-                    <strong>{data.ProjectName}</strong> staff,
+                    <strong>{data.CompanyName}</strong> staff,
                     I'd like to take this opportunity to welcome you as a new
                     customer. We are thrilled to have you with us."
                   </Typography>
@@ -1244,13 +1242,13 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                               border: "2px solid black",
                             }}
                           >
-                            PROJECT
+                            PROJECT NAME
                           </TableCell>
                           <TableCell
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                            "ROSE NAGAR"
+                           {data.ProjectName}
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -1267,7 +1265,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                            1 BHK
+                            {data.UnittypeName}
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -1284,7 +1282,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                            C1
+                            {data.WingName}
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -1301,7 +1299,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                            1st
+                            {data.FloorNo}
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -1318,7 +1316,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                            103
+                            {data.FlatNo}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -1334,7 +1332,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     gutterBotto
                     sx={{ marginBottom: 10 }}
                   >
-                    "At <strong>GAMS REALTY BUILDERS & DEVELOPERS</strong>, we
+                    "At <strong>{data.CompanyName}</strong>, we
                     pride ourselves on offering our customers responsive,
                     competent, and excellent service. Our customers are the most
                     important part of our business, and we work tirelessly to

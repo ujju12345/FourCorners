@@ -49,7 +49,7 @@ const AddProjectDetails = ({ show, setShowUploadExcel, editData }) => {
 
   const wingsData = Array.from({ length: 26 }, (_, i) => ({
     WingID: i + 1,
-    WingName: `Wing ${String.fromCharCode(65 + i)}`,
+    WingName: `${String.fromCharCode(65 + i)}`,
   }));
 
   const handleFormDataChange = (e) => {
