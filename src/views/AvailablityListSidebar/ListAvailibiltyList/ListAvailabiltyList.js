@@ -284,7 +284,7 @@ const ListAvailabiltyList = ({ item }) => {
                 },
               }}
             >
-              {wing.WingName}
+              Wing {wing.WingName}
             </Button>
           </Grid>
         ))}

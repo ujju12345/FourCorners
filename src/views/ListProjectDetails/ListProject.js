@@ -140,7 +140,7 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
     const isAsc = orderBy === sortBy && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(sortBy);
-    const sortedData = filteredRows?.slice()?.sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
+    const sortedData = filteredRows.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
     setFilteredRows(sortedData);
   };
 
@@ -277,7 +277,7 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
               </TableHead>
               <TableBody>
                 {telecallingData
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  
                   .map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>{row.ProjectName}</TableCell>
