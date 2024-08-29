@@ -80,12 +80,12 @@ const MyOpportunity = () => {
         color: 'success',
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
-      {
-        stats: counts.transfertobooking,
-        color: 'warning',
-        title: 'Transfer to Booking',
-        icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-      },
+      // {
+      //   stats: counts.transfertobooking,
+      //   color: 'warning',
+      //   title: 'Transfer to Booking',
+      //   icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      // },
       {
         stats: counts.totalFollowup,
         color: 'info',

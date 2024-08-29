@@ -277,7 +277,7 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
               </TableHead>
               <TableBody>
                 {telecallingData
-                
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>{row.ProjectName}</TableCell>
