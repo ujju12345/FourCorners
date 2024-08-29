@@ -97,7 +97,7 @@ const BacklogLead = () => {
     const salesData = [
       { stats: counts.todayFollowup, title: 'Today Follow Up', color: 'primary', icon: <AccountBalanceWalletIcon sx={{ fontSize: '1.75rem' }} /> },
       { stats: counts.backlogFollowup, title: 'Backlog pending', color: 'success', icon: <ScheduleIcon sx={{ fontSize: '1.75rem' }} /> },
-      { stats: counts.transfertooppo, title: 'Transfer to Opportunity', color: 'warning', icon: <FavoriteIcon sx={{ fontSize: '1.75rem' }} /> },
+      { stats: counts.nextFollowup, title: 'Open Lead', color: 'warning', icon: <FavoriteIcon sx={{ fontSize: '1.75rem' }} /> },
       { stats: counts.totalFollowup, title: 'Total Follow up  ', color: 'info', icon: <CancelIcon sx={{ fontSize: '1.75rem' }} /> }
     ];
 
@@ -132,7 +132,7 @@ const BacklogLead = () => {
     return [
       { name: 'Today Leads', value: counts.todayFollowup, color: '#3f51b5' },
       { name: 'Backlog Followup', value: counts.backlogFollowup, color: '#4caf50' },
-      { name: 'Tranfer to Opportunity', value: counts.transfertooppo, color: '#ff9800' },
+      { name: 'Open Lead', value: counts.nextFollowup, color: '#ff9800' },
       { name: 'Total Followup', value: counts.totalFollowup, color: '#00acc1' }
     ];
   };

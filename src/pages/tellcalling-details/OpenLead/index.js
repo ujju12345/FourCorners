@@ -127,8 +127,8 @@ const OpenLead = () => {
         icon: <ScheduleIcon sx={{ fontSize: "1.75rem" }} />,
       },
       {
-        stats: counts.transfertooppo,
-        title: "Transfer to Opportunity",
+        stats: counts.nextFollowup,
+        title: "Open Lead",
         color: "warning",
         icon: <FavoriteIcon sx={{ fontSize: "1.75rem" }} />,
       },
