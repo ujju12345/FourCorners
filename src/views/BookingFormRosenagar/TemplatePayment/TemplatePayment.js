@@ -1183,7 +1183,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   style={{ border: "none", paddingBottom: 16 }}
                 >
                   <Typography variant="h6" align="right">
-                    Date :
+                    Date :{data.BookingDate}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -1362,7 +1362,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
       >
         <strong>{data.CompanyName}</strong>
         <br />
-        {data.CompanyName}
+        {/* {data.CompanyName} */}
         <br />
         Contact No. 99309 60449 / 90044 75240
         <br />
