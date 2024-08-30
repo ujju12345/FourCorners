@@ -1350,42 +1350,30 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell
-                  colSpan={2}
-                  style={{ border: "none", paddingTop: 16 }}
-                >
-                  <Typography variant="h6" align="center" gutterBottom>
-                    THANK YOU
-                  </Typography>
-                  <TableRow>
-                    <TableCell
-                      colSpan={2}
-                      style={{ border: "none", paddingTop: 16 }}
-                    >
-                      <TableCell style={{ textAlign: "right", border: "none" }}>
-                        <Typography
-                          variant="body1"
-                          gutterBottom
-                          sx={{ marginLeft: 65 }}
-                        >
-                          <strong> {data.BookingName}</strong>
-                          <br />
-                          {data.CompanyName}
-                          <br />
-                          Contact No. 99309 60449 / 90044 75240
-                          <br />
-                          Email: {data.companyemail}
-                          <br />
-                          Website: {data.Website}
-                        </Typography>
-                      </TableCell>
-                      {/*           
-Email: ssk@almantasharealty.com -> Company Email-ID
-Website: www.almantasharealty.com -> Company Website URL */}
-                    </TableCell>
-                  </TableRow>
-                </TableCell>
-              </TableRow>
+  <TableCell
+    colSpan={2}
+    style={{ border: "none", paddingTop: 16 }}
+  >
+    <TableCell style={{ textAlign: "right", border: "none" }}>
+      <Typography
+        variant="body1"
+        gutterBottom
+        sx={{ marginLeft: 65 }}
+      >
+        <strong>{data.CompanyName}</strong>
+        <br />
+        {data.CompanyName}
+        <br />
+        Contact No. 99309 60449 / 90044 75240
+        <br />
+        Email: {data.companyemail}
+        <br />
+        Website: {data.Website}
+      </Typography>
+    </TableCell>
+  </TableCell>
+</TableRow>
+
             </TableBody>
           </Table>
         </TableContainer>
