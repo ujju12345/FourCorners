@@ -562,7 +562,16 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       );
       console.log('API Response:', response.data);
       if (response.data.status === "Success") {
-        // Handle success
+        Swal.fire({
+          icon: "success",
+          title: 
+           "Data Updated Successfully",
+            
+          showConfirmButton: true,
+          timer: 1000,
+        }).then(() => {
+          window.location.reload();
+        });
       } else {
         Swal.fire({
           icon: "error",
