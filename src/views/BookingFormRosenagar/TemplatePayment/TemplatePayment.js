@@ -1361,7 +1361,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
         sx={{ marginLeft: 65 }}
       >
         <strong>{data.CompanyName}</strong>
-        <br />
+        {/* <br /> */}
         {/* {data.CompanyName} */}
         <br />
         Contact No. 99309 60449 / 90044 75240
