@@ -173,16 +173,18 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
   // Combine actual and default rows
   const finalRows = [...rows, ...defaultRows];
   const handlePrint = () => {
-    const printWindow = window.open('', '', 'height=800,width=800');
-    const printContent = Array.from(document.querySelectorAll('.printableArea'))
-                              .map(el => el.innerHTML)
-                              .join('<div style="page-break-after: always;"></div>'); // Page break after each invoice
+    const printWindow = window.open("", "", "height=800,width=800");
+    const printContent = Array.from(document.querySelectorAll(".printableArea"))
+      .map((el) => el.innerHTML)
+      .join('<div style="page-break-after: always;"></div>'); // Page break after each invoice
 
-    printWindow.document.write('<html><head><title>Print</title>');
-    printWindow.document.write('<style>@media print { .no-print { display: none; } }</style>');
-    printWindow.document.write('</head><body >');
+    printWindow.document.write("<html><head><title>Print</title>");
+    printWindow.document.write(
+      "<style>@media print { .no-print { display: none; } }</style>"
+    );
+    printWindow.document.write("</head><body >");
     printWindow.document.write(printContent);
-    printWindow.document.write('</body></html>');
+    printWindow.document.write("</body></html>");
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
@@ -194,7 +196,6 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
   if (error) {
     return <Typography>Error loading data</Typography>;
   }
-
 
   return (
     <>
@@ -454,7 +455,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             <TableBody>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 ,  textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Type of Booking
@@ -466,7 +467,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.BookingTypeName}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   GST* (As per Govt.Notification)
@@ -480,7 +481,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Area in Building (in Sq.Ft)
@@ -492,7 +493,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Area}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Stamp Duty* (As per Govt.Notification)
@@ -506,7 +507,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Rate Sq.Ft
@@ -518,7 +519,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Ratesqft}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Registration* (As per Govt.Notification)
@@ -532,7 +533,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   TTL Amount As Per Builtup
@@ -544,7 +545,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.TtlAmount}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Advocate* (At time of registration)
@@ -558,7 +559,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Development Charges
@@ -570,7 +571,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.Charges}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Extra Cost (B)
@@ -584,7 +585,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Parking Facility
@@ -596,7 +597,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.ParkingFacility}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Total (A + B)
@@ -610,7 +611,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0 , textAlign: 'left', }}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Gross Flat Cost (A)
@@ -622,7 +623,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   {data.FlatCost}
                 </StyledTableCell>
                 <StyledTableCell
-                  style={{ width: "30%", padding: 0  , textAlign: 'left',}}
+                  style={{ width: "30%", padding: 0, textAlign: "left" }}
                   colSpan={4}
                 >
                   Booking Ref.Code (T & C)
@@ -856,6 +857,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
 
               {/* Table Headers */}
               <TableRow>
+                
                 <StyledTableCell
                   colSpan={5}
                   style={{ textAlign: "center", borderBottom: "none" }}
@@ -867,22 +869,22 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     {data.ProjectName}
                   </Typography>
                 </StyledTableCell>
-              <StyledTableCell style={{ textAlign: "center" }}>
-  <Typography variant="body1">WING</Typography>
-  <Typography variant="body2">{data?.WingName}</Typography>
-</StyledTableCell>
+                <StyledTableCell style={{ textAlign: "center" }}>
+                  <Typography variant="body1">WING</Typography>
+                  <Typography variant="body2">{data?.WingName}</Typography>
+                </StyledTableCell>
 
                 <StyledTableCell style={{ textAlign: "center" }}>
-                <Typography variant="body1">FLOOR</Typography>
-  <Typography variant="body2">{data?.FloorNo}</Typography>
+                  <Typography variant="body1">FLOOR</Typography>
+                  <Typography variant="body2">{data?.FloorNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>
-                <Typography variant="body1">FLAT NO</Typography>
-  <Typography variant="body2">{data?.FlatNo}</Typography>
+                  <Typography variant="body1">FLAT NO</Typography>
+                  <Typography variant="body2">{data?.FlatNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>
-                <Typography variant="body1">TYPE</Typography>
-  <Typography variant="body2">{data?.UnittypeName}</Typography>
+                  <Typography variant="body1">TYPE</Typography>
+                  <Typography variant="body2">{data?.UnittypeName}</Typography>
                 </StyledTableCell>
               </TableRow>
 
@@ -967,7 +969,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   }}
                 >
                   <Typography variant="body1">WING</Typography>
-  <Typography variant="body2">{data?.WingName}</Typography>
+                  <Typography variant="body2">{data?.WingName}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -976,7 +978,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   }}
                 >
                   <Typography variant="body1">FLOOR</Typography>
-  <Typography variant="body2">{data?.FloorNo}</Typography>
+                  <Typography variant="body2">{data?.FloorNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -985,7 +987,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   }}
                 >
                   <Typography variant="body1">FLAT NO</Typography>
-  <Typography variant="body2">{data?.FlatNo}</Typography>
+                  <Typography variant="body2">{data?.FlatNo}</Typography>
                 </StyledTableCell>
                 <StyledTableCell
                   style={{
@@ -994,7 +996,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   }}
                 >
                   <Typography variant="body1">TYPE</Typography>
-  <Typography variant="body2">{data?.UnittypeName}</Typography>
+                  <Typography variant="body2">{data?.UnittypeName}</Typography>
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -1066,8 +1068,9 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
             variant="body2"
             sx={{ fontSize: 14, lineHeight: 1.5, mt: 2 }}
           >
-            (6) Make all payments to the company name of   <strong>{data.CompanyName}</strong> from their bank account only and not from and through the
-            bank accounts of any third parties.
+            (6) Make all payments to the company name of{" "}
+            <strong>{data.CompanyName}</strong> from their bank account only and
+            not from and through the bank accounts of any third parties.
           </Typography>
 
           <Typography
@@ -1180,7 +1183,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   style={{ border: "none", paddingBottom: 16 }}
                 >
                   <Typography variant="h6" align="right">
-                    Date : 
+                    Date :
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -1207,10 +1210,9 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     Dear Sir/Madam,
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    "On behalf of the entire{" "}
-                    <strong>{data.CompanyName}</strong> staff,
-                    I'd like to take this opportunity to welcome you as a new
-                    customer. We are thrilled to have you with us."
+                    "On behalf of the entire <strong>{data.CompanyName}</strong>{" "}
+                    staff, I'd like to take this opportunity to welcome you as a
+                    new customer. We are thrilled to have you with us."
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     You’re booking details as follows:
@@ -1248,7 +1250,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                             align="center"
                             sx={{ border: "2px solid black" }}
                           >
-                           {data.ProjectName}
+                            {data.ProjectName}
                           </TableCell>
                         </TableRow>
                         <TableRow>
@@ -1292,7 +1294,6 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                               fontWeight: "bold",
                               border: "2px solid black",
                             }}
-                            
                           >
                             FLOOR
                           </TableCell>
@@ -1333,12 +1334,12 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     gutterBotto
                     sx={{ marginBottom: 10 }}
                   >
-                    "At <strong>{data.CompanyName}</strong>, we
-                    pride ourselves on offering our customers responsive,
-                    competent, and excellent service. Our customers are the most
-                    important part of our business, and we work tirelessly to
-                    ensure your complete satisfaction, now and for as long as
-                    you are a customer."
+                    "At <strong>{data.CompanyName}</strong>, we pride ourselves
+                    on offering our customers responsive, competent, and
+                    excellent service. Our customers are the most important part
+                    of our business, and we work tirelessly to ensure your
+                    complete satisfaction, now and for as long as you are a
+                    customer."
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     "I am also happy to inform you that I will be your primary
@@ -1367,17 +1368,20 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                           gutterBottom
                           sx={{ marginLeft: 65 }}
                         >
-                          <strong>SHAHABUDDIN KHAN (RAJU)</strong>
+                          <strong> {data.BookingName}</strong>
                           <br />
-                          Account Manager & Public Relation Officer
+                          {data.CompanyName}
                           <br />
-                          Contact No. 86525 00384 / 72082 77770
+                          Contact No. 99309 60449 / 90044 75240
                           <br />
-                          Email: ssk@almantasharealty.com
+                          Email: {data.companyemail}
                           <br />
-                          Website: www.almantasharealty.com
+                          Website: {data.Website}
                         </Typography>
                       </TableCell>
+                      {/*           
+Email: ssk@almantasharealty.com -> Company Email-ID
+Website: www.almantasharealty.com -> Company Website URL */}
                     </TableCell>
                   </TableRow>
                 </TableCell>
