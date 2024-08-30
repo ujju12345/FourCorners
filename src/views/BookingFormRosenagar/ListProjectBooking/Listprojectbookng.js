@@ -509,8 +509,12 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleSubmit = async () => {
+    // Construct the payload
     const payload = {
       BookingID: selectedRow,
+      Proccess: 1,
+      ModifyUID: 1,
+      paymenttypeID: parseInt(selectedPaymentType) || "",
       Payments: chequePayments.map((payment) => ({
         BookingremarkID: selectedBookingRemark,
         PRemarkamount: remarks.reduce(
@@ -534,7 +538,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         ),
         paymenttypeID: parseInt(selectedPaymentType) || "",
         CreateUID: 1,
-        CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
+        // CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
       })),
       remarks: remarks.map((remark) => ({
         Remarkamount: parseFloat(remark.Remarkamount) || 0,
@@ -546,27 +550,19 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         Status: parseInt(remark.Status) || 1,
         AmountTypeID: amountType || 1,
       })),
-      Proccess: 1,
-      ModifyUID: 1,
+    
     };
   
-    console.log(payload, "Payload before submitting");
-    
+    console.log('Payload:', JSON.stringify(payload, null, 2));
+  
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
-      console.log(response , "<<<<<<<<<<<<<<<<<<<dekhhh dataa>>>>>>>>>>>>>>>>>>>");
+      console.log('API Response:', response.data);
       if (response.data.status === "Success") {
-        Swal.fire({
-          icon: "success",
-          title: "Data Submitted Successfully",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(() => {
-          window.location.reload();
-        });
+        // Handle success
       } else {
         Swal.fire({
           icon: "error",
@@ -574,11 +570,11 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           text: response.data.message || "Something went wrong!",
         });
       }
-      
     } catch (error) {
       console.error("Error submitting payment:", error);
     }
   };
+  
   
   
   // Helper function to format date correctly for the API
