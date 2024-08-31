@@ -126,7 +126,18 @@ const ListAvailabiltyList = ({ item }) => {
     const { floorNo, flatNo } = editingCell;
     const currentFlat = wingDetails[floorNo] && wingDetails[floorNo][flatNo - 1];
     const statusSkuID = currentFlat.skuID === 1 ? 2 : 1;
-
+  
+    const requestData = {
+      skuID: statusSkuID,
+      ModifyUID: 1,
+      ProjectID: item.ProjectID,
+      WingID: selectedWing.WingID,
+      FloorNo: floorNo,
+      FlatNo: currentFlat.FlatNo,  // Pass only the FlatNo
+    };
+  
+    console.log("Sending the following data:", requestData);
+  
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to update?`,
@@ -136,21 +147,14 @@ const ListAvailabiltyList = ({ item }) => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, update it!',
     });
-
+  
     if (result.isConfirmed) {
       try {
         const response = await axios.post(
           "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectsku.php",
-          {
-            skuID: statusSkuID,
-            ModifyUID: 1,
-            ProjectID: item.ProjectID,
-            WingID: selectedWing.WingID,
-            FloorNo: floorNo,
-            FlatNo: flatNo,
-          }
+          requestData
         );
-
+  
         if (response.data.status === "Success") {
           setWingDetails((prevDetails) => ({
             ...prevDetails,
@@ -160,7 +164,7 @@ const ListAvailabiltyList = ({ item }) => {
           }));
           Swal.fire(
             'Updated!',
-            'The Availiblity List has been updated successfully.',
+            'The Availability List has been updated successfully.',
             'success'
           );
           setEditingCell(null);
@@ -181,6 +185,8 @@ const ListAvailabiltyList = ({ item }) => {
       }
     }
   };
+  
+  
 
   const countStatuses = () => {
     const counts = { Avl: 0, HLD: 0, RFG: 0, SLD: 0 };

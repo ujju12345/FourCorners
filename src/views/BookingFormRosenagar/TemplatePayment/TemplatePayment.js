@@ -69,7 +69,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
 
   useEffect(() => {
     fetchData();
-  }, [bookingID]);
+  }, []);
 
   const fetchData = async (selectedFilter) => {
     try {

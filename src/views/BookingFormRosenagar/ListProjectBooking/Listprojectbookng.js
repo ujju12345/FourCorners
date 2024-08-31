@@ -708,7 +708,9 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           <CardContent>
             {loading ? (
               <CircularProgress />
+              
             ) : dataAvailable ? (
+         
               <>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 800 }} aria-label="wing details table">
