@@ -15,6 +15,8 @@ import {
   TableRow,
   Paper,
   Button,
+  Avatar,
+  ListItemAvatar,
 } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
@@ -271,18 +273,36 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                   </Typography>
                 </StyledTableCell>
               </TableRow>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell style={{ textAlign: "center", padding: 0 }}>
-                  <img src="{images}" alt="Logo" width="70" height="100" />
+              <TableRow
+                sx={{ padding: 0, display: "flex", alignItems: "center" }}
+              >
+                <StyledTableCell style={{ textAlign: "center" , padding:1 }}>
+                  <ListItemAvatar>
+                    <Avatar
+                      alt="John Doe"
+                      sx={{
+                        width: 'auto',
+                        height:160,
+                        margin: 2,
+                        borderRadius: 1,
+                      }}
+                      src="/images/avatars/rosenagar.png"
+                    />
+                  </ListItemAvatar>
                 </StyledTableCell>
-                <StyledTableCell sx={{ padding: 0 }}>
-                  <img
-                    src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png"
-                    alt="200 * 200"
-                    width="30"
-                    height="100"
-                  />
-                </StyledTableCell>
+                <Box
+                  sx={{
+                    marginLeft: 2,
+                    flexGrow: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="h6" align="center">
+                    Photo
+                  </Typography>
+                </Box>
               </TableRow>
             </TableBody>
           </Table>
@@ -857,7 +877,6 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
 
               {/* Table Headers */}
               <TableRow>
-                
                 <StyledTableCell
                   colSpan={5}
                   style={{ textAlign: "center", borderBottom: "none" }}
@@ -1350,30 +1369,29 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-  <TableCell
-    colSpan={2}
-    style={{ border: "none", paddingTop: 16 }}
-  >
-    <TableCell style={{ textAlign: "right", border: "none" }}>
-      <Typography
-        variant="body1"
-        gutterBottom
-        sx={{ marginLeft: 65 }}
-      >
-        <strong>{data.CompanyName}</strong>
-        {/* <br /> */}
-        {/* {data.CompanyName} */}
-        <br />
-        Contact No. 99309 60449 / 90044 75240
-        <br />
-        Email: {data.companyemail}
-        <br />
-        Website: {data.Website}
-      </Typography>
-    </TableCell>
-  </TableCell>
-</TableRow>
-
+                <TableCell
+                  colSpan={2}
+                  style={{ border: "none", paddingTop: 16 }}
+                >
+                  <TableCell style={{ textAlign: "right", border: "none" }}>
+                    <Typography
+                      variant="body1"
+                      gutterBottom
+                      sx={{ marginLeft: 65 }}
+                    >
+                      <strong>{data.CompanyName}</strong>
+                      {/* <br /> */}
+                      {/* {data.CompanyName} */}
+                      <br />
+                      Contact No. 99309 60449 / 90044 75240
+                      <br />
+                      Email: {data.companyemail}
+                      <br />
+                      Website: {data.Website}
+                    </Typography>
+                  </TableCell>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

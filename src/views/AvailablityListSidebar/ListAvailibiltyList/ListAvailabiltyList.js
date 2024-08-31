@@ -124,7 +124,6 @@ const ListAvailabiltyList = ({ item }) => {
   const handleSkuChange = async (event) => {
     const newSkuID = event.target.value;
     const { floorNo, flatNo } = editingCell;
-
     const currentFlat = wingDetails[floorNo] && wingDetails[floorNo][flatNo - 1];
     const statusSkuID = currentFlat.skuID === 1 ? 2 : 1;
 
@@ -213,7 +212,9 @@ const ListAvailabiltyList = ({ item }) => {
         </thead>
         <tbody>
           {Object.keys(data).map((floorNo) => {
+            console.log(data , 'aagaya dataatatatatatatatatata');
             const flats = data[floorNo];
+            console.log(flats , 'floor number dekh');
             return (
               <tr key={floorNo}>
                 <td style={{ border: '1px solid black', padding: '8px' }}>{floorNo}</td>
@@ -249,6 +250,7 @@ const ListAvailabiltyList = ({ item }) => {
                       ) : (
                         <>
                           {flat.Area}<br />
+                          {flat.Flat}
                           <span style={{ color: '#000000' }}>{getStatusText(flat.skuID)}</span>
                         </>
                       )}
