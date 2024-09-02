@@ -71,7 +71,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
     Ratesqft: "",
     UnittypeID: "",
     Advocate: "",
-
+    AggrementAmount:"",
     ExtraCost: "",
     TotalCost: "",
     UsableArea: "",
@@ -114,7 +114,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
     if (storedNotification) {
       const notificationData = JSON.parse(storedNotification);
-      console.log("Fetched Notification Data:", notificationData); // Log the data
+      console.log("Fetched Notification Data:", notificationData); 
 
       setFormData({
         ...formData,
@@ -821,7 +821,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   value={formData.Email || ""}
                   onChange={handleChange}
                 />
-                {/* Add error handling for Email if needed */}
+              
               </Grid>
 
               {/* Other form fields */}
@@ -1158,6 +1158,18 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   value={formData.BookingRef}
                   onChange={handleChange}
                   type="text"
+                />
+              </Grid>
+              <Grid item xs={8} sm={4}>
+                <TextField
+                
+                  fullWidth
+                  label="Aggrement Amount"
+                  name="AggrementAmount"
+                  placeholder="Aggrement Amount"
+                  value={formData.AggrementAmount || ""}
+                  onChange={handleChange}
+                 
                 />
               </Grid>
 
