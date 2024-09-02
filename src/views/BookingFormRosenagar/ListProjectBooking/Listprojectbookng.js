@@ -509,8 +509,12 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
   };
 
   const handleSubmit = async () => {
+    // Construct the payload
     const payload = {
       BookingID: selectedRow,
+      Proccess: 1,
+      ModifyUID: 1,
+      paymenttypeID: parseInt(selectedPaymentType) || "",
       Payments: chequePayments.map((payment) => ({
         BookingremarkID: selectedBookingRemark,
         PRemarkamount: remarks.reduce(
@@ -534,7 +538,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         ),
         paymenttypeID: parseInt(selectedPaymentType) || "",
         CreateUID: 1,
-        CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
+        // CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
       })),
       remarks: remarks.map((remark) => ({
         Remarkamount: parseFloat(remark.Remarkamount) || 0,
@@ -546,23 +550,24 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         Status: parseInt(remark.Status) || 1,
         AmountTypeID: amountType || 1,
       })),
-      Proccess: 1,
-      ModifyUID: 1,
+    
     };
   
-    console.log(payload, "Payload before submitting");
-    
+    console.log('Payload:', JSON.stringify(payload, null, 2));
+  
     try {
       const response = await axios.post(
         "https://ideacafe-backend.vercel.app/api/proxy/api-insert-payment.php",
         payload
       );
-      console.log(response , "<<<<<<<<<<<<<<<<<<<dekhhh dataa>>>>>>>>>>>>>>>>>>>");
+      console.log('API Response:', response.data);
       if (response.data.status === "Success") {
         Swal.fire({
           icon: "success",
-          title: "Data Submitted Successfully",
-          showConfirmButton: false,
+          title: 
+           "Data Updated Successfully",
+            
+          showConfirmButton: true,
           timer: 1000,
         }).then(() => {
           window.location.reload();
@@ -574,11 +579,11 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           text: response.data.message || "Something went wrong!",
         });
       }
-      
     } catch (error) {
       console.error("Error submitting payment:", error);
     }
   };
+  
   
   
   // Helper function to format date correctly for the API
@@ -660,7 +665,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                 },
               }}
             >
-              {wing.WingName}
+             Wing {wing.WingName}
             </Button>
           </Grid>
         ))}
@@ -703,7 +708,9 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
           <CardContent>
             {loading ? (
               <CircularProgress />
+              
             ) : dataAvailable ? (
+         
               <>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 800 }} aria-label="wing details table">
@@ -1316,18 +1323,17 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container spacing={4} mb={3}></Grid>
+            
 
             <Grid container spacing={3}>
               {/* Upcoming Payments */}
               <Grid item xs={12}>
                 <Typography variant="h6">Upcoming Payments</Typography>
                 <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
+                  <Table >
                     <TableHead>
                       <TableRow>
                         <TableCell>Remark</TableCell>
-
                         <TableCell>Amount</TableCell>
                         <TableCell>Payment Type</TableCell>
                         <TableCell>Date</TableCell>
@@ -1341,11 +1347,12 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
 
                             <TableCell>{item.Remarkamount}</TableCell>
                             <TableCell>
-                              {item.AmountTypeID === 1 ? "Cash" : "Cheque"}
+                              {item.AmountTypeID === 1 ? "Current" : "Post"}
                             </TableCell>
                             <TableCell>
-                              {new Date(item.RemarkDate).toLocaleDateString()}
-                            </TableCell>
+  {new Date(item.RemarkDate).toLocaleDateString("en-GB").replace(/\//g, "-")}
+</TableCell>
+
                           </TableRow>
                         ))
                       ) : (
@@ -1364,7 +1371,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
               <Grid item xs={12}>
                 <Typography variant="h6">Received Payments</Typography>
                 <TableContainer component={Paper} style={{ maxHeight: 400 }}>
-                  <Table stickyHeader>
+                  <Table>
                     <TableHead>
                       <TableRow>
                         <TableCell>Cuurent </TableCell>

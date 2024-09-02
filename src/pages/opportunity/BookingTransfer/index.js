@@ -54,54 +54,39 @@ const BacklogPayment = () => {
     }
 
     const dynamicSalesData = [
-      {
-        stats: counts?.todayFollowup,
-        title: "Today Followups",
-        color: "primary",
-        icon: <TrendingUp sx={{ fontSize: "1.75rem" }} />,
-      },
-      {
-        stats: counts?.backlogFollowup,
-        title: "Backlog Followups",
-        color: "success",
-        icon: <AccountOutline sx={{ fontSize: "1.75rem" }} />,
-      },
+     
       {
         stats: counts.transfertobooking,
         color: "warning",
         title: "Transfer to Booking",
         icon: <CellphoneLink sx={{ fontSize: "1.75rem" }} />,
       },
-      {
-        stats: counts.totalFollowup,
-        color: "info",
-        title: "Total Followups",
-        icon: <CurrencyUsd sx={{ fontSize: "1.75rem" }} />,
-      },
+      
     ];
 
     return dynamicSalesData.map((item, index) => (
-      <Grid item xs={12} sm={3} key={index}>
-        <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              mr: 3,
-              width: 44,
-              height: 44,
-              boxShadow: 3,
-              color: "common.white",
-              backgroundColor: `${item.color}.main`,
-            }}
-          >
-            {item.icon}
-          </Avatar>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography variant="caption">{item.title}</Typography>
-            <Typography variant="h6">{item.stats}</Typography>
-          </Box>
-        </Box>
-      </Grid>
+      <Grid item xs={12} sm={3} key={index} sx={{ display: "flex", justifyContent: "center", alignItems: "center" , marginLeft:65}}>
+  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <Avatar
+      variant="rounded"
+      sx={{
+        mr: 3,
+        width: 44,
+        height: 44,
+        boxShadow: 3,
+        color: "common.white",
+        backgroundColor: `${item.color}.main`,
+      }}
+    >
+      {item.icon}
+    </Avatar>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Typography variant="caption">{item.title}</Typography>
+      <Typography variant="h6">{item.stats}</Typography>
+    </Box>
+  </Box>
+</Grid>
+
     ));
   };
 
@@ -111,20 +96,11 @@ const BacklogPayment = () => {
     }
 
     return [
+     
+      
       {
-        name: "Today Followups",
-        value: counts.todayFollowup,
-        color: "#8884d8",
-      },
-      {
-        name: "Backlog Followups",
-        value: counts.backlogFollowup,
-        color: "#82ca9d",
-      },
-      { name: "Next Followups", value: counts.nextFollowup, color: "#ffc658" },
-      {
-        name: "Total Followups",
-        value: counts.totalFollowup,
+        name: "Tranfer to opportunity",
+        value: counts.transfertobooking,
         color: "#a4de6c",
       },
     ];

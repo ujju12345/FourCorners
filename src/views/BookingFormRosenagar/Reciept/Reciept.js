@@ -334,7 +334,7 @@ const Reciept = ({ bookingID }) => {
               <TableRow>
               <TableCell sx={{ textAlign: 'center'}}>Date</TableCell>
             <TableCell sx={{ textAlign: 'center' }}>Bank Name</TableCell>
-            <TableCell sx={{ textAlign: 'center' }}>Number</TableCell>
+            <TableCell sx={{ textAlign: 'center' }}>Cheque Number</TableCell>
             <TableCell sx={{ textAlign: 'center' }}>Amount</TableCell>
               </TableRow>
             </TableHead>

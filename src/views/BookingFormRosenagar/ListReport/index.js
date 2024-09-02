@@ -47,58 +47,74 @@ const ListReport = ({ item }) => {
   const [dataAvailable, setDataAvailable] = useState(true);
   const [page, setPage] = useState(0);
   const [amountsReceived, setAmountsReceived] = useState([]);
-  const [amountsUpcoming, setAmountsUpcoming] = useState([]);
-  const [totalReceived, setTotalReceived] = useState({ cash: 0, cheque: 0, total: 0 });
-  const [totalUpcoming, setTotalUpcoming] = useState({ cash: 0, cheque: 0, total: 0 });
+const [amountsUpcoming, setAmountsUpcoming] = useState([]);
 
-  
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [totalReceived, setTotalReceived] = useState({
+    cash: 0,
+    cheque: 0,
+    total: 0
+  });
+
+  const [totalUpcoming, setTotalUpcoming] = useState({
+    cash: 0,
+    cheque: 0,
+    total: 0
+  });
   const fetchData = async () => {
     if (!item) return;
+    
+    const { fromdate, todate, ProjectID, percentage } = formData;
+  
+    const formatDate = (date) => {
+      const d = new Date(date);
+      let month = '' + (d.getMonth() + 1);
+      let day = '' + d.getDate();
+      const year = d.getFullYear();
+  
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+  
+      return [year, month, day].join('-');
+    };
+  
+    const formattedFromDate = formatDate(fromdate);
+    const formattedToDate = formatDate(todate);
   
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-project-networth.php?ProjectID=${item}`
+        `https://apiforcorners.cubisysit.com/api/api-project-networth.php?ProjectID=${item}&fromdate=${formattedFromDate}&todate=${formattedToDate}&percentage=${percentage}`
       );
   
       if (response.data.status === "Success") {
-        const receivedRecords = response.data.receivedRecords || [];
-        const upcomingRecords = response.data.upcomingRecords || [];
+        // Destructure received and upcoming payment data directly from the response
+        const receivedRecords = response.data.receivedpayment || {};
+        const upcomingRecords = response.data.upcomingpayment || {};
   
-        const totalReceivedCash = receivedRecords.reduce((sum, record) => sum + (record.Cash || 0), 0);
-        const totalReceivedCheque = receivedRecords.reduce((sum, record) => sum + (record.ChequeAmount || 0), 0);
-        const totalReceivedTotal = receivedRecords.reduce((sum, record) => sum + (parseFloat(record.Cash || 0) + parseFloat(record.ChequeAmount || 0)), 0);
-  
-        const totalUpcomingCash = upcomingRecords.reduce((sum, record) => sum + (record.Cash || 0), 0);
-        const totalUpcomingCheque = upcomingRecords.reduce((sum, record) => sum + (record.ChequeAmount || 0), 0);
-        const totalUpcomingTotal = upcomingRecords.reduce((sum, record) => sum + (parseFloat(record.Cash || 0) + parseFloat(record.ChequeAmount || 0)), 0);
-  
-        // Set payment data
-        setPaymentReceivedData(receivedRecords);
-        setUpcomingPaymentData(upcomingRecords);
-  
-        // Set total received and upcoming payment data
+        // Set total received and upcoming payment data directly from the response
         setTotalReceived({
-          cash: totalReceivedCash,
-          cheque: totalReceivedCheque,
-          total: totalReceivedTotal,
+          cash: receivedRecords.cash || 0,
+          cheque: receivedRecords.cheque || 0,
+          loanCheque: receivedRecords.loanCheque || 0,
+          registerCheque: receivedRecords.registerCheque || 0,
+          total: receivedRecords.total || 0,
         });
+  
         setTotalUpcoming({
-          cash: totalUpcomingCash,
-          cheque: totalUpcomingCheque,
-          total: totalUpcomingTotal,
+          cash: upcomingRecords.cash || 0,
+          cheque: upcomingRecords.cheque || 0,
+          loanCheque: upcomingRecords.loanCheque || 0,
+          registerCheque: upcomingRecords.registerCheque || 0,
+          total: upcomingRecords.total || 0,
         });
   
         // Set amounts received and upcoming
-        setAmountsReceived(response.amountsReceived || []);
-        setAmountsUpcoming(response.amountsUpcoming || []);
-        
-        console.log('Amounts Received:', response.amountsReceived);
-        console.log('Amounts Upcoming:', response.amountsUpcoming);
-        
-        setDataAvailable(
-          receivedRecords.length > 0 || upcomingRecords.length > 0
-        );
+        setAmountsReceived(response.data.amountsReceived || []);
+        setAmountsUpcoming(response.data.amountsUpcoming || []);
+  
+        setDataAvailable(true);
       } else {
         setDataAvailable(false);
       }
@@ -157,99 +173,96 @@ const ListReport = ({ item }) => {
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} sm={12}>
-      <Card sx={{ padding: 2, marginBottom: 3 }}>
-      <CardContent>
-  <Typography
-    variant="h6"
-    sx={{ fontWeight: "bold", textAlign: "center" }}
-  >
-    Total Payment Summary
-  </Typography>
-  {loading ? (
-    <Typography variant="body1">Loading...</Typography>
-  ) : (
-    <>
-      <Box mt={2}>
-        <Typography variant="body1">
-          <strong>Received Payments:</strong>
-        </Typography>
-        <Typography variant="body2">Current: {totalReceived.cash?.toLocaleString()}</Typography>
-        <Typography variant="body2">Post: {totalReceived.cheque?.toLocaleString()}</Typography>
-        <Typography variant="body2">Total: {totalReceived.total?.toLocaleString()}</Typography>
-        
-        {/* Calculate percentage of amountsReceived */}
-      {amountsReceived.length > 0 && (
-  <Box mt={2}>
-    <Typography variant="body1">
-      <strong>Received Percentages:</strong>
-    </Typography>
-    {amountsReceived.map((amount, index) => {
-      const percentage = totalReceived.total > 0 ? ((amount / totalReceived.total) * 100).toFixed(2) : '0.00';
-      return (
-        <Typography key={index} variant="body2">
-          Amount {index + 1}: {percentage}% of Total Received
-        </Typography>
-      );
-    })}
-  </Box>
-)}
+      <Card sx={{ padding: 3, marginBottom: 4 }}>
+    <CardContent>
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: "bold", textAlign: "center", mb: 2 }}
+      >
+        Total Payment Summary
+      </Typography>
+      {loading ? (
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>Loading...</Typography>
+      ) : (
+        <>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  Received Payments:
+                </Typography>
+                <Typography variant="body2">
+                  Cash: {totalReceived.cash?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Cheque: {totalReceived.cheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Loan Cheque: {totalReceived.loanCheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Register Cheque: {totalReceived.registerCheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  <strong>Total: {totalReceived.total?.toLocaleString() || '0'}</strong>
+                </Typography>
 
-      </Box>
+                {amountsReceived.length > 0 && (
+                  <Box mt={2}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                      Received Loan Amount:
+                    </Typography>
+                    {amountsReceived.map((amount, index) => (
+                      <Typography key={index} variant="body2">
+                        Amount: {amount.toLocaleString()}
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Grid>
 
-      <Box mt={2}>
-        <Typography variant="body1">
-          <strong>Upcoming Payments:</strong>
-        </Typography>
-        <Typography variant="body2">Current: {totalUpcoming.cash?.toLocaleString()}</Typography>
-        <Typography variant="body2">Post: {totalUpcoming.cheque?.toLocaleString()}</Typography>
-        <Typography variant="body2">Total: {totalUpcoming.total?.toLocaleString()}</Typography>
-        
-        {/* Calculate percentage of amountsUpcoming */}
-        <Box mt={2}>
-  <Typography variant="body1">
-    <strong>Received Percentages:</strong>
-  </Typography>
-  {amountsReceived.length > 0 ? (
-    amountsReceived.map((amount, index) => {
-      // Ensure the key is unique. Using `amount` may not always be safe if there are duplicates.
-      // Use a unique identifier if available, otherwise, use a combination of index and value.
-      const percentage = totalReceived.total > 0 ? ((amount / totalReceived.total) * 100).toFixed(2) : '0.00';
-      return (
-        <Typography key={`received-${index}-${amount}`} variant="body2">
-          Amount {index + 1}: {percentage}% of Total Received
-        </Typography>
-      );
-    })
-  ) : (
-    <Typography variant="body2">No received amounts available.</Typography>
-  )}
-</Box>
+            <Grid item xs={12} md={6}>
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  Upcoming Payments:
+                </Typography>
+                <Typography variant="body2">
+                  Cash: {totalUpcoming.cash?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Cheque: {totalUpcoming.cheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Loan Cheque: {totalUpcoming.loanCheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2">
+                  Register Cheque: {totalUpcoming.registerCheque?.toLocaleString() || '0'}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  <strong>Total: {totalUpcoming.total?.toLocaleString() || '0'}</strong>
+                </Typography>
 
-<Box mt={2}>
-  <Typography variant="body1">
-    <strong>Upcoming Percentages:</strong>
-  </Typography>
-  {amountsUpcoming.length > 0 ? (
-    amountsUpcoming.map((amount, index) => {
-      const percentage = totalUpcoming.total > 0 ? ((amount / totalUpcoming.total) * 100).toFixed(2) : '0.00';
-      return (
-        <Typography key={`upcoming-${index}-${amount}`} variant="body2">
-          Amount {index + 1}: {percentage}% of Total Upcoming
-        </Typography>
-      );
-    })
-  ) : (
-    <Typography variant="body2">No upcoming amounts available.</Typography>
-  )}
-</Box>
+                {amountsUpcoming.length > 0 && (
+                  <Box mt={2}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                      Upcoming Loan amount:
+                    </Typography>
+                    {amountsUpcoming.map((amount, index) => (
+                      <Typography key={index} variant="body2">
+                        Amount: {amount.toLocaleString()}
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </CardContent>
+  </Card>
 
-      </Box>
-    </>
-  )}
-</CardContent>
-
-
-          </Card>
 
           <Card>
   <CardContent>

@@ -77,9 +77,9 @@ const NotInterested = () => {
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.transfertobooking,
+        stats: counts.notInterested,
         color: 'warning',
-        title: 'Transfer to Booking',
+        title: 'Not Intrested',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {

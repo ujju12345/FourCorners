@@ -124,10 +124,20 @@ const ListAvailabiltyList = ({ item }) => {
   const handleSkuChange = async (event) => {
     const newSkuID = event.target.value;
     const { floorNo, flatNo } = editingCell;
-
     const currentFlat = wingDetails[floorNo] && wingDetails[floorNo][flatNo - 1];
     const statusSkuID = currentFlat.skuID === 1 ? 2 : 1;
-
+  
+    const requestData = {
+      skuID: statusSkuID,
+      ModifyUID: 1,
+      ProjectID: item.ProjectID,
+      WingID: selectedWing.WingID,
+      FloorNo: floorNo,
+      FlatNo: currentFlat.FlatNo,  // Pass only the FlatNo
+    };
+  
+    console.log("Sending the following data:", requestData);
+  
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to update?`,
@@ -137,21 +147,14 @@ const ListAvailabiltyList = ({ item }) => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, update it!',
     });
-
+  
     if (result.isConfirmed) {
       try {
         const response = await axios.post(
           "https://ideacafe-backend.vercel.app/api/proxy/api-update-projectsku.php",
-          {
-            skuID: statusSkuID,
-            ModifyUID: 1,
-            ProjectID: item.ProjectID,
-            WingID: selectedWing.WingID,
-            FloorNo: floorNo,
-            FlatNo: flatNo,
-          }
+          requestData
         );
-
+  
         if (response.data.status === "Success") {
           setWingDetails((prevDetails) => ({
             ...prevDetails,
@@ -161,7 +164,7 @@ const ListAvailabiltyList = ({ item }) => {
           }));
           Swal.fire(
             'Updated!',
-            'The Availiblity List has been updated successfully.',
+            'The Availability List has been updated successfully.',
             'success'
           );
           setEditingCell(null);
@@ -182,6 +185,8 @@ const ListAvailabiltyList = ({ item }) => {
       }
     }
   };
+  
+  
 
   const countStatuses = () => {
     const counts = { Avl: 0, HLD: 0, RFG: 0, SLD: 0 };
@@ -213,7 +218,9 @@ const ListAvailabiltyList = ({ item }) => {
         </thead>
         <tbody>
           {Object.keys(data).map((floorNo) => {
+            console.log(data , 'aagaya dataatatatatatatatatata');
             const flats = data[floorNo];
+            console.log(flats , 'floor number dekh');
             return (
               <tr key={floorNo}>
                 <td style={{ border: '1px solid black', padding: '8px' }}>{floorNo}</td>
@@ -249,6 +256,7 @@ const ListAvailabiltyList = ({ item }) => {
                       ) : (
                         <>
                           {flat.Area}<br />
+                          {flat.Flat}
                           <span style={{ color: '#000000' }}>{getStatusText(flat.skuID)}</span>
                         </>
                       )}
@@ -284,7 +292,7 @@ const ListAvailabiltyList = ({ item }) => {
                 },
               }}
             >
-              {wing.WingName}
+              Wing {wing.WingName}
             </Button>
           </Grid>
         ))}

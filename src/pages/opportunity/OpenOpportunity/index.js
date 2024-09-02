@@ -73,9 +73,9 @@ const OpenOpportunity = () => {
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.transfertobooking,
+        stats: counts.nextFollowup,
         color: 'warning',
-        title: 'Transfer to Booking',
+        title: 'Open Opportunity',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {

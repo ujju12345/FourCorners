@@ -161,9 +161,9 @@ const Tellecalling = () => {
         icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
       },
       {
-        stats: counts.transfertooppo,
+        stats: counts.nextFollowup,
         color: 'warning',
-        title: 'Transfer to Opportunity',
+        title: 'Open lead',
         icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
       },
       {

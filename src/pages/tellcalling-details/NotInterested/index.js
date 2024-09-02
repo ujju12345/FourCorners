@@ -105,35 +105,19 @@ const NotIntrestedLead = () => {
     if (!counts) return null;
 
     const salesData = [
+     
       {
-        stats: counts.todayFollowup || '0',
-        title: 'Today Leads',
-        color: 'primary',
-        icon: <AccountBalanceWalletIcon sx={{ fontSize: '1.75rem' }} />
-      },
-      {
-        stats: counts.backlogFollowup || '0',
-        title: 'Backlog pending',
-        color: 'success',
-        icon: <ScheduleIcon sx={{ fontSize: '1.75rem' }} />
-      },
-      {
-        stats: counts.transfertooppo || '0',
-        title: 'Covert to opportunity',
+        stats: counts.notInterested || '0',
+        title: 'Not Intrested',
         color: 'warning',
         icon: <FavoriteIcon sx={{ fontSize: '1.75rem' }} />
       },
-      {
-        stats: counts.totalFollowup || '0',
-        title: 'Total follow up',
-        color: 'info',
-        icon: <CancelIcon sx={{ fontSize: '1.75rem' }} />
-      }
+     
     ];
 
     return salesData.map((item, index) => (
       <Grid item xs={12} sm={3} key={index}>
-        <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box key={index} sx={{ display: 'flex', alignItems: 'center' , marginLeft:80}}>
           <Avatar
             variant='rounded'
             sx={{
@@ -160,10 +144,10 @@ const NotIntrestedLead = () => {
     if (!counts) return [];
 
     return [
-      { name: 'Today Leads', value: counts.todayFollowup || 0, color: '#3f51b5' },
-      { name: 'Backlog Pending', value: counts.backlogFollowup || 0, color: '#4caf50' },
-      { name: 'Interested', value: counts.transfertooppo || 0, color: '#ff9800' },
-      { name: 'Total follow up', value: counts.totalFollowup || 0, color: '#00acc1' }
+      // { name: 'Today Leads', value: counts.todayFollowup || 0, color: '#3f51b5' },
+      // { name: 'Backlog Pending', value: counts.backlogFollowup || 0, color: '#4caf50' },
+      { name: 'Not Interested', value: counts.notInterested || 0, color: '#ff9800' },
+      // { name: 'Total follow up', value: counts.totalFollowup || 0, color: '#00acc1' }
     ];
   };
 
