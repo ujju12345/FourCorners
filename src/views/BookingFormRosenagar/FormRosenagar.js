@@ -49,6 +49,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
   const initialFormData = {
     BookingDate: null,
+    TitleID:"",
     BookedByID: "",
     Mobile: "",
     BookingRef: "",
@@ -101,6 +102,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
   const [notification, setNotification] = useState(null);
   const [wingData, setWingData] = useState([]);
   const [parking, setParking] = useState([]);
+  const [titles, setTitles] = useState([]);
 
   const [bookedByOptions, setBookedByOptions] = useState([]);
   const [bhkOptions, setBhkOptions] = useState([]);
@@ -118,6 +120,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
       setFormData({
         ...formData,
+        TitleID:notificationData.TitleID || "",
         Cid: notificationData.Cid || "",
         Name: notificationData.CName || "",
         SourceName: notificationData.SourceName || "",
@@ -155,6 +158,22 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
       localStorage.removeItem("selectedNotification");
     }
   }, []);
+
+  useEffect(() => {
+
+    fetchDataTitle();
+  }, []);
+
+  const fetchDataTitle = async () => {
+    try {
+      const response = await axios.get(
+        "https://apiforcorners.cubisysit.com/api/api-fetch-titleprefix.php"
+      );
+      setTitles(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const numberToWordsIndian = (num) => {
     const singleDigits = [
@@ -747,7 +766,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 
 
 
-            <Grid item xs={8} sm={4}>
+            {/* <Grid item xs={8} sm={4}>
                 <FormControl fullWidth>
                   {editData ? (
                     <>
@@ -784,9 +803,27 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                   )}
                 
                 </FormControl>
-              </Grid>
+              </Grid> */}
 
-
+<Grid item xs={8} sm={4}>
+      <FormControl fullWidth>
+        <InputLabel id="title-select-label">Title</InputLabel>
+        <Select
+          labelId="title-select-label"
+          id="title-select"
+          value={formData.TitleID || ""}
+          label="Title"
+          name="TitleID"
+          onChange={handleChange}
+        >
+   {titles.map((title) => (
+                          <MenuItem key={title.TitleID} value={title.TitleID}>
+                            {title.TitleName}
+                          </MenuItem>
+                        ))}
+        </Select>
+      </FormControl>
+    </Grid>
 
 
 
