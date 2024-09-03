@@ -189,7 +189,7 @@ const StatisticsCardsales = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Total Follow Up</Typography>
-              <Typography variant='h6'>{counts?.totalFollowup ?? '--'}</Typography>
+              <Typography variant='h6'>{counts?.totalFollowupoppo ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
