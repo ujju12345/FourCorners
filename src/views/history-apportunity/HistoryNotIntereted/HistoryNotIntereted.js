@@ -185,7 +185,7 @@ export default function HistoryNotIntereted({ item }) {
                       Time: {data.NextFollowUpTime}
                     </Typography>
                   </Typography>
-                  <Typography>Note: {item.Note} </Typography>
+                  <Typography>Note: {data.Note} </Typography>
                 </CustomPaper>
               </TimelineContent>
             </TimelineItem>
