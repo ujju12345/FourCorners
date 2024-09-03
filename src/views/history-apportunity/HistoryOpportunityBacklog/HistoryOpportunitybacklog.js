@@ -82,7 +82,7 @@ export default function HistoryOpportunitybacklog({ item }) {
     const fetchData = async () => {
       if (!item) return;
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${item.Oid}`;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${item.Oid}`;
         const response = await axios.get(apiUrl);
         if (response.data.status === 'Success') {
           console.log(response.data.data, 'Single telecalling data fetched Lol');

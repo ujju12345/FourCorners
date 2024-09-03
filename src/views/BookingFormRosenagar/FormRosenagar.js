@@ -740,6 +740,56 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           </Grid>
           <form style={{ marginTop: "50px" }}>
             <Grid container spacing={7}>
+
+
+
+
+
+
+
+            <Grid item xs={8} sm={4}>
+                <FormControl fullWidth>
+                  {editData ? (
+                    <>
+                      <InputLabel>
+                        Title <RequiredIndicator />
+                      </InputLabel>
+                      <Select
+                        value={
+                          formData.titleprefixID ||
+                          contactDataTele?.TitleID ||
+                          ""
+                        }
+                        onChange={handleTitleChange}
+                        label="Title"
+                      >
+                        {titles.map((title) => (
+                          <MenuItem key={title.TitleID} value={title.TitleID}>
+                            {title.TitleName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  ) : (
+                    <Box
+                      sx={{
+                        padding: "16px",
+                        border: "1px solid #ced4da",
+                        borderRadius: "4px",
+                        color: "rgba(0, 0, 0, 0.87)",
+                      }}
+                    >
+                      {contactDataTele?.TitleName || "No Code"}
+                    </Box>
+                  )}
+                
+                </FormControl>
+              </Grid>
+
+
+
+
+
               <Grid item xs={8} sm={4}>
                 <TextField
                   fullWidth
