@@ -211,8 +211,8 @@ const StatisticsCardsales = () => {
               <MoneyIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Payment Reminder Transfer</Typography>
-              <Typography variant='h6'>{counts.paymentremindertransfertoOppCount ?? '--'}</Typography>
+              <Typography variant='caption'> Payment Reminder Open</Typography>
+              <Typography variant='h6'>{counts.paymentremindernextFollowupCount ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
@@ -277,8 +277,8 @@ const StatisticsCardsales = () => {
               <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Loan Reminder Transfer</Typography>
-              <Typography variant='h6'>{counts.loanremindertransfertoOppCount ?? '--'}</Typography>
+              <Typography variant='caption'>Loan Reminder Open</Typography>
+              <Typography variant='h6'>{counts.loanremindernextFollowupCount ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
