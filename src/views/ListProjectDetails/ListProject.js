@@ -140,17 +140,26 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
     const isAsc = orderBy === sortBy && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(sortBy);
-    const sortedData = filteredRows.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
+    
+    let sortedData;
+    
+    if (sortBy === 'skuName') {
+      sortedData = [...filteredRows].sort((a, b) => {
+        // Custom sorting logic for skuName
+        if (a.skuName === b.skuName) return 0;
+        if (a.skuName === 'AVL') return -1;
+        if (b.skuName === 'AVL') return 1;
+        if (a.skuName === 'SLD') return -1;
+        if (b.skuName === 'SLD') return 1;
+        return 0;
+      });
+    } else {
+      sortedData = filteredRows.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
+    }
+    
     setFilteredRows(sortedData);
   };
-
-  const getComparator = (order, sortBy) => {
-    return (a, b) => {
-      if (a[sortBy] < b[sortBy]) return order === 'asc' ? -1 : 1;
-      if (a[sortBy] > b[sortBy]) return order === 'asc' ? 1 : -1;
-      return 0;
-    };
-  };
+  
 
   const SortableTableCell = ({ label, sortBy }) => (
     <TableCell onClick={() => handleSort(sortBy)} sx={{ fontWeight: 'bold', cursor: 'pointer' }}>
@@ -168,6 +177,7 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
       </Box>
     </TableCell>
   );
+  
 
 
   const jsonToCSV = (json) => {
@@ -265,16 +275,17 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
 
           <TableContainer>
             <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
-              <TableHead>
-                <TableRow>
-                  <SortableTableCell label="Project Name" sortBy="ProjectName" />
-                  <SortableTableCell label="Unit Type" sortBy="UnitType" />
-                  <SortableTableCell label="Area" sortBy="Area" />
-                  <SortableTableCell label="Flat No" sortBy="FlatNo" />
-                  <SortableTableCell label="Party Name" sortBy="PartyName" />
-                  <SortableTableCell label="SKU Name" sortBy="skuName" />
-                </TableRow>
-              </TableHead>
+             <TableHead>
+  <TableRow>
+    <SortableTableCell label="Project Name" sortBy="ProjectName" />
+    <SortableTableCell label="Unit Type" sortBy="UnitType" />
+    <SortableTableCell label="Area" sortBy="Area" />
+    <SortableTableCell label="Flat No" sortBy="FlatNo" />
+    <SortableTableCell label="Party Name" sortBy="PartyName" />
+    <SortableTableCell label="SKU Name" sortBy="skuName" />
+  </TableRow>
+</TableHead>
+
               <TableBody>
                 {telecallingData
                   
