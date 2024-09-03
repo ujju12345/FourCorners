@@ -183,7 +183,7 @@ const StatisticsCard = () => {
                   Transferred to Opportunity
                 </Typography>
                 <Typography variant="h6">
-                  {apiData?.data?.nextFollowupCounts?.transfertoBookingCount ||
+                  {apiData?.data?.nextFollowupCounts?.transfertoOppCount ||
                     0}
                 </Typography>
               </Box>

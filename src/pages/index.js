@@ -128,23 +128,23 @@ const Dashboard = ({ onHistoryClick }) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        UserID: formData.UserID,
+        UserID: formData.UserID, // If "All" is selected, this will be 0
         FromDate: formData?.FromDate?.toISOString(),
         ToDate: formData?.ToDate?.toISOString(),
         SourceID: formData.SourceID,
       });
-
+  
       console.log(params.toString(), "Request Parameters");
-
+  
       const response = await fetch(
         `https://apiforcorners.cubisysit.com/api/api-fetch-admindashboard.php?${params}`
       );
-
+  
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Network response was not ok: ${errorText}`);
       }
-
+  
       const data = await response.json();
       console.log(data, "Dashboard Data");
       setTelecallingData(data);
@@ -154,6 +154,7 @@ const Dashboard = ({ onHistoryClick }) => {
       setLoading(false);
     }
   };
+  
 
   const handleCardClick = (type) => {
     if (type === "todayLeads") {
@@ -238,31 +239,18 @@ const Dashboard = ({ onHistoryClick }) => {
     }
   };
   const handleSource = (event) => {
-    const { value } = event.target;
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      SourceID: undefined,
-    }));
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      SourceID: value,
-    }));
+    setFormData({
+      ...formData,
+      SourceID: event.target.value, // This will be 0 when "All" is selected
+    });
   };
+  
 
   const handleUser = (event) => {
-    const { value } = event.target;
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      SourceID: undefined,
-    }));
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      UserID: value,
-    }));
+    setFormData({
+      ...formData,
+      UserID: event.target.value,  // This will be 0 when "All" is selected
+    });
   };
 
   const fetchDataForModalContact = async (Cid) => {
@@ -407,44 +395,46 @@ const Dashboard = ({ onHistoryClick }) => {
               <Card>
                 <CardContent>
                   <Grid container spacing={3}>
-                    <Grid item xs={6} sm={3}>
-                      <FormControl fullWidth>
-                        <InputLabel>User</InputLabel>
-                        <Select
-                          value={formData.UserID}
-                          onChange={handleUser}
-                          label="User"
-                        >
-                          {users.map((user) => (
-                            <MenuItem key={user.UserID} value={user.UserID}>
-                              {user.Name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                  <Grid item xs={6} sm={3}>
+  <FormControl fullWidth>
+    <InputLabel>User</InputLabel>
+    <Select
+      value={formData.UserID}
+      onChange={handleUser}
+      label="User"
+    >
+      <MenuItem value={0}>All</MenuItem> 
+      {users.map((user) => (
+        <MenuItem key={user.UserID} value={user.UserID}>
+          {user.Name}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
 
-                    <Grid item xs={6} sm={3}>
-                      <FormControl fullWidth>
-                        <InputLabel>Source</InputLabel>
-                        <Select
-                          value={formData.SourceID}
-                          onChange={handleSource}
-                          label="Source"
-                        >
-                          {source.map((bhk) => (
-                            <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
-                              {bhk.SourceName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        {errors.SourceID && (
-                          <Typography variant="caption" color="error">
-                            {errors.SourceID}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Grid>
+<Grid item xs={6} sm={3}>
+  <FormControl fullWidth>
+    <InputLabel>Source</InputLabel>
+    <Select
+      value={formData.SourceID}
+      onChange={handleSource}
+      label="Source"
+    >
+      <MenuItem value={0}>All</MenuItem> {/* Setting value to 0 for "All" */}
+      {source.map((bhk) => (
+        <MenuItem key={bhk.SourceID} value={bhk.SourceID}>
+          {bhk.SourceName}
+        </MenuItem>
+      ))}
+    </Select>
+    {errors.SourceID && (
+      <Typography variant="caption" color="error">
+        {errors.SourceID}
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
 
                     <Grid item xs={12} sm={3}>
                       <DatePicker
