@@ -105,7 +105,7 @@ const HistoryComponent = ({ item }) => {
                                         <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
                                             Time: {data.NextFollowUpTime}
                                         </Typography>
-                                    </Typography>  
+                                       </Typography>  
                                     <Typography variant="body2">Note:  {data.Note} </Typography>
                                 </CustomPaper>
                             </TimelineContent>

@@ -96,19 +96,13 @@ const Dashboard = ({ onHistoryClick }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenHistory, setOpenHistory] = useState(false);
-
-
-
+  const [modalOpenHistoryOppo, setOpenHistoryOppo] = useState(false);
   const [modalOpenContact, setModalOpenContact] = useState(false);
   const [modalOpenOpportunity, setModalOpenOpportunity] = useState(false);
-
   const [selectedContact, setSelectedContact] = useState(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
-
   const [selectedTelecaller, setSelectedTelecaller] = useState(null);
-
   const userName = cookies.amr?.FullName || "User";
-
   useEffect(() => {
     if (!cookies || !cookies.amr || !cookies.amr.UserID) {
       router.push("/pages/login");
@@ -315,7 +309,7 @@ const Dashboard = ({ onHistoryClick }) => {
         const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity?.Oid}`;
         const response = await axios.get(apiUrl);
         if (response.data.status === "Success") {
-          console.log(response.data, "aagaayaa dataaaa<<<<<>>>>>>>>>>>");
+          console.log(response.data, "aagaayaa oid dataaaa<<<<<>>>>>>>>>>>");
           setRowData(response.data.data);
         }
       } catch (error) {
@@ -349,12 +343,26 @@ const Dashboard = ({ onHistoryClick }) => {
   };
 
 
+  const handleHistoryClickOppo = async () => {
+    try {
+      debugger;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity?.Oid}`;
+      const response = await axios.get(apiUrl);
+      if (response.data.status === "Success") {
+        console.log(response.data, "OID OID OID ODI  OID dataaaa<<<<<>>>>>>>>>>>");
+        setRowData(response.data.data); 
+        setOpenHistoryOppo(true);
+      } else {
+        console.error("Error: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-
-
-
-
-
+  const handleCloseHistoryOppo = () => {
+    setOpenHistoryOppo(false);
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -838,8 +846,7 @@ const Dashboard = ({ onHistoryClick }) => {
                       width: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      // alignItems: "center",
-                      ml: 15,
+                   
                     }}
                   >
                     <Box sx={{ display: "flex", mb: 2 }}>
@@ -872,7 +879,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           borderRadius: 2,
                           minHeight: 20,
                           marginLeft: 2,
-                          marginRight: 5,
+                         
                           "&:hover": {
                             backgroundColor: "#dcdcdc",
                           },
@@ -885,7 +892,7 @@ const Dashboard = ({ onHistoryClick }) => {
                         sx={{
                           color: "#333333",
                           fontSize: "0.7rem",
-                          minWidth: "auto",
+                        
                           padding: "5px",
                           backgroundColor: "#f0f0f0",
                           borderRadius: 2,
@@ -899,7 +906,7 @@ const Dashboard = ({ onHistoryClick }) => {
                         Follow Up Time: {selectedOpportunity?.NextFollowUpTime}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", ml: 30, mt: 7 }}>
+                    <Box sx={{ display: "flex", mt: 7, justifyContent:"center" }}>
                       <a
                         href={`tel:${selectedOpportunity?.Mobile}`}
                         style={{ marginRight: 40 }}
@@ -920,7 +927,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           <PhoneIcon />
                         </IconButton>
                       </a>
-                      <a style={{ marginRight: 10 }}>
+                      <a style={{ marginRight: 40 }}>
                         <IconButton
                           aria-label="share"
                           size="small"
@@ -929,7 +936,26 @@ const Dashboard = ({ onHistoryClick }) => {
                             backgroundColor: "#e3f2fd",
                             borderRadius: "50%",
                             padding: "10px",
-                            marginRight: 15,
+
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                          onClick={handleHistoryClickOppo}
+                        >
+                          <HistoryIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 40 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+                       
                             "&:hover": {
                               backgroundColor: "#bbdefb",
                             },
@@ -938,108 +964,6 @@ const Dashboard = ({ onHistoryClick }) => {
                           <ShareIcon />
                         </IconButton>
                       </a>
-
-                      <Box flex="1">
-                        <IconButton
-                          aria-label="history"
-                          size="small"
-                          sx={{
-                            color: "#000",
-                            backgroundColor: "#e3f2fd",
-                            borderRadius: "50%",
-                            padding: "10px",
-                            marginRight: 1,
-                            "&:hover": {
-                              backgroundColor: "#bbdefb",
-                            },
-                          }}
-                          onClick={handleHistoryClick}
-                        >
-                          <HistoryIcon />
-                        </IconButton>
-                        <Box>
-                          <Timeline
-                            align="alternate"
-                            display="flex"
-                            justifyContent="right"
-                          >
-                            {rowData.length > 0 ? (
-                              rowData.map((data, index) => (
-                                <TimelineItem key={index}>
-                                  <TimelineOppositeContent>
-                                    <Typography
-                                      variant="body2"
-                                      color="textSecondary"
-                                    >
-                                      {data.NextFollowUpDate}
-                                    </Typography>
-                                  </TimelineOppositeContent>
-                                  <TimelineSeparator>
-                                    <TimelineDot
-                                      style={{ backgroundColor: "green" }}
-                                    >
-                                      <CheckCircleIcon
-                                        style={{ color: "white" }}
-                                      />
-                                    </TimelineDot>
-                                    <TimelineConnector />
-                                  </TimelineSeparator>
-                                  <TimelineContent>
-                                    <CustomPaper elevation={3}>
-                                      <Typography
-                                        variant="h6"
-                                        component="h1"
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <span
-                                          style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                          }}
-                                        >
-                                          <PersonIcon
-                                            style={{ marginRight: 8 }}
-                                          />
-                                          <span style={{ fontWeight: "bold" }}>
-                                            {data.UserRole}
-                                          </span>
-                                        </span>
-                                        <Typography
-                                          variant="body2"
-                                          color="textSecondary"
-                                          style={{ marginLeft: "16px" }}
-                                        >
-                                          Time: {data.NextFollowUpTime}
-                                        </Typography>
-                                      </Typography>
-                                      <Typography>Note: {data.Note}</Typography>
-                                    </CustomPaper>
-                                  </TimelineContent>
-                                </TimelineItem>
-                              ))
-                            ) : (
-                              <Box
-                                display="flex"
-                                flexDirection="column"
-                                alignItems="center"
-                                justifyContent="center"
-                                height="50vh"
-                              >
-                                <Typography
-                                  variant="h6"
-                                  color="textSecondary"
-                                  style={{ marginTop: "16px" }}
-                                >
-                                  No data available
-                                </Typography>
-                              </Box>
-                            )}
-                          </Timeline>
-                        </Box>
-                      </Box>
                       <a
                         href={`mailto:${selectedOpportunity?.Email}`}
                         style={{ marginRight: 35 }}
@@ -1335,6 +1259,7 @@ const Dashboard = ({ onHistoryClick }) => {
                   </Box>
                 </Paper>
               </DialogContent>
+             
             </>
           ) : (
             <DialogContent>
@@ -1343,9 +1268,21 @@ const Dashboard = ({ onHistoryClick }) => {
                 <Typography>No data available for selected Name.</Typography>
               </DialogContent>
             </DialogContent>
-          )}
+         )}
         </Dialog>
-
+        <Dialog open={modalOpenHistoryOppo} onClose={handleCloseHistoryOppo} sx={{width:'100%'}}>
+                <DialogTitle>
+                 Opportunity Follow-Up Data
+                  <IconButton edge="end" color="inherit" onClick={handleCloseHistoryOppo} aria-label="close" style={{ position: 'absolute', right: 8, top: 8 }}>
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent >
+                  <Box >
+                    <HistoryComponent item={selectedOpportunity?.Oid}></HistoryComponent>
+                  </Box>
+                </DialogContent>
+              </Dialog>  
         <Dialog
           open={modalOpenContact}
           onClose={() => setModalOpenContact(false)}
@@ -1761,7 +1698,7 @@ const Dashboard = ({ onHistoryClick }) => {
             </DialogContent>
           )}
         </Dialog>
-
+     
         <Dialog
           open={modalOpen}
           onClose={() => setModalOpen(false)}
