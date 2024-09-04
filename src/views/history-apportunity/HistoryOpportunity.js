@@ -19,19 +19,19 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from 'sweetalert2';
 import { useCookies } from 'react-cookie';
 
-// Styled component for Paper
+
 const CustomPaper = styled(Paper)({
   padding: '6px 16px',
   maxWidth: '600px',
 });
 
-// Custom styling for the Timeline
+
 const CustomTimeline = styled(Timeline)({
   width: '100%',
   margin: '0',
 });
 
-const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG URL or import
+const NoDataSVG = 'https://path-to-your-svg-image.svg'; 
 
 export default function HistoryOpportunity({ item }) {
 console.log(item  , 'aagaya dataa oid ');

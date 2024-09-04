@@ -1362,9 +1362,8 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
                     backgroundColor: "#9155FD",
                     color: "#FFFFFF",
                   }}
-                  onClick={handleSubmit}
-                >
-                  Submit
+                  onClick={handleSubmit}>
+                  Submit  
                 </Button>
               </Grid>
             </Grid>
@@ -1373,8 +1372,7 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           <Snackbar
             open={submitSuccess}
             autoHideDuration={6000}
-            onClose={handleAlertClose}
-          >
+            onClose={handleAlertClose}>
             <MuiAlert
               onClose={handleAlertClose}
               severity="success"
@@ -1395,13 +1393,11 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
           <Snackbar
             open={submitError}
             autoHideDuration={6000}
-            onClose={handleAlertClose}
-          >
+            onClose={handleAlertClose}>
             <MuiAlert
               onClose={handleAlertClose}
               severity="error"
-              sx={{ width: "100%" }}
-            >
+              sx={{ width: "100%" }}>
               {submitError.message}
             </MuiAlert>
           </Snackbar>
@@ -1412,3 +1408,4 @@ const FormRosenagar = ({ onFormSubmitSuccess, show, editData }) => {
 };
 
 export default FormRosenagar;
+

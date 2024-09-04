@@ -22,8 +22,11 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import MenuItem from "@mui/material/MenuItem";
+import PersonIcon from '@mui/icons-material/Person';
 
+import { styled } from '@mui/system';
 import HistoryIcon from "@mui/icons-material/History";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useCookies } from "react-cookie";
 import Select from "@mui/material/Select";
@@ -43,6 +46,7 @@ import TotalEarning from "src/views/dashboard/TotalEarning";
 import CardStatisticsVerticalComponent from "src/@core/components/card-statistics/card-stats-vertical";
 import SalesByCountries from "src/views/dashboard/SalesByCountries";
 import DepositWithdraw from "src/views/dashboard/DepositWithdraw";
+import HistoryComponent from "src/components/history";
 import {
   HelpCircleOutline,
   BriefcaseVariantOutline,
@@ -91,6 +95,10 @@ const Dashboard = ({ onHistoryClick }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenHistory, setOpenHistory] = useState(false);
+
+
+
   const [modalOpenContact, setModalOpenContact] = useState(false);
   const [modalOpenOpportunity, setModalOpenOpportunity] = useState(false);
 
@@ -123,7 +131,10 @@ const Dashboard = ({ onHistoryClick }) => {
   const whatsappText = encodeURIComponent(
     `Hello, I wanted to discuss the following details:\n\nSource Name: ${selectedTelecaller?.SourceName}\nLocation: ${selectedTelecaller?.Location}\nAttended By: ${selectedTelecaller?.TelecallAttendedByName}`
   );
-
+  const CustomTimeline = styled(Timeline)({
+    width: '100%',
+    margin: '0 auto',
+  });
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -310,10 +321,10 @@ const Dashboard = ({ onHistoryClick }) => {
   };
 
   const handleHistoryClick = async () => {
-    // Fetch data when the history icon is clicked
+    debugger;
     const fetchData = async () => {
       try {
-        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity.Oid}`;
+        const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity?.Oid}`;
         const response = await axios.get(apiUrl);
         if (response.data.status === "Success") {
           console.log(response.data, "aagaayaa dataaaa<<<<<>>>>>>>>>>>");
@@ -326,6 +337,36 @@ const Dashboard = ({ onHistoryClick }) => {
 
     await fetchData();
   };
+
+
+  const handleHistoryClickLead = async () => {
+    try {
+      debugger;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${selectedTelecaller?.Tid}`;
+      const response = await axios.get(apiUrl);
+      if (response.data.status === "Success") {
+        console.log(response.data, "TID dataaaa<<<<<>>>>>>>>>>>");
+        setRowData(response.data.data); // Use response.data.data to set the rowData
+        setOpenHistory(true);
+      } else {
+        console.error("Error: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleCloseHistory = () => {
+    setOpenHistory(false);
+  };
+
+
+
+
+
+
+
+
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -667,10 +708,10 @@ const Dashboard = ({ onHistoryClick }) => {
                       {selectedType === "telecalling"
                         ? `${userName} Telecalling Data`
                         : selectedType === "contacts"
-                        ? `${userName} Contact Data`
-                        : selectedType === "booking"
-                        ? `${userName} Booking`
-                        : ""}
+                          ? `${userName} Contact Data`
+                          : selectedType === "booking"
+                            ? `${userName} Booking`
+                            : ""}
                     </Typography>
                   </Box>
                 </Grid>
@@ -1030,9 +1071,8 @@ const Dashboard = ({ onHistoryClick }) => {
                         </IconButton>
                       </a>
                       <a
-                        href={`https://wa.me/${
-                          selectedOpportunity?.Mobile
-                        }?text=${encodeURIComponent(whatsappText)}`}
+                        href={`https://wa.me/${selectedOpportunity?.Mobile
+                          }?text=${encodeURIComponent(whatsappText)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -1768,7 +1808,7 @@ const Dashboard = ({ onHistoryClick }) => {
                     </Box>
                   </Box>
 
-                  <Box sx={{ width: "100%", ml: 20 }}>
+                  <Box sx={{ width: "100%" }}>
                     <Box sx={{ display: "flex", alignItems: "center", mr: 10 }}>
                       <Typography
                         variant="body2"
@@ -1802,7 +1842,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           "&:hover": {
                             backgroundColor: "#dcdcdc",
                           },
-                          mr: 2, // Add margin-right to separate the items
+                          // Add margin-right to separate the items
                         }}
                       >
                         Location: {selectedTelecaller?.Location}
@@ -1828,7 +1868,7 @@ const Dashboard = ({ onHistoryClick }) => {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
+                    <Box sx={{ display: "flex", mt: 10, justifyContent: "center" }}>
                       <a
                         href={`tel:${selectedTelecaller?.Mobile}`}
                         style={{ marginRight: 40 }}
@@ -1849,7 +1889,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           <PhoneIcon />
                         </IconButton>
                       </a>
-                      <a style={{ marginRight: 10 }}>
+                      <a style={{ marginRight: 40 }}>
                         <IconButton
                           aria-label="share"
                           size="small"
@@ -1858,7 +1898,26 @@ const Dashboard = ({ onHistoryClick }) => {
                             backgroundColor: "#e3f2fd",
                             borderRadius: "50%",
                             padding: "10px",
-                            marginRight: 15,
+
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                          onClick={handleHistoryClickLead}
+                        >
+                          <HistoryIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 40 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+
                             "&:hover": {
                               backgroundColor: "#bbdefb",
                             },
@@ -1867,10 +1926,9 @@ const Dashboard = ({ onHistoryClick }) => {
                           <ShareIcon />
                         </IconButton>
                       </a>
-
                       <a
                         href={`mailto:${selectedTelecaller?.Email}`}
-                        style={{ marginRight: 35 }}
+                        style={{ marginRight: 40 }}
                       >
                         <IconButton
                           aria-label="email"
@@ -2193,6 +2251,19 @@ const Dashboard = ({ onHistoryClick }) => {
                   </Box>
                 </Paper>
               </DialogContent>
+              <Dialog open={modalOpenHistory} onClose={handleCloseHistory} sx={{width:'100%'}}>
+                <DialogTitle>
+                  Follow-Up Data
+                  <IconButton edge="end" color="inherit" onClick={handleCloseHistory} aria-label="close" style={{ position: 'absolute', right: 8, top: 8 }}>
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent >
+                  <Box >
+                    <HistoryComponent item={selectedTelecaller?.Tid}></HistoryComponent>
+                  </Box>
+                </DialogContent>
+              </Dialog>
             </>
           ) : (
             <>
