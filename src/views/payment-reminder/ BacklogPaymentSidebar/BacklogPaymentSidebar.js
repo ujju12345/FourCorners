@@ -138,12 +138,12 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.RemarkDate) - new Date(b.RemarkDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.RemarkDate) - new Date(a.RemarkDate)
         );
         break;
       case "a-z":
@@ -323,7 +323,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
                 >
                   <ListItemAvatar>
                     <Avatar
-                      alt={item.CName}
+                      alt={item.Name}
                       sx={{ width: 40, height: 40, margin: 2 }}
                       src="/images/avatars/1.png"
                     />

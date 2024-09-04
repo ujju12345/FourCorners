@@ -137,10 +137,10 @@ const OpenOpportunitySidebar = ({ onItemClick, onCreate , onDashboardClick}) => 
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a?.NextFollowUpDate?.localeCompare(b.NextFollowUpDate));
+        sortedRows.sort((a, b) => a?.CName?.localeCompare(b.CName));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b?.NextFollowUpDate.localeCompare(a.NextFollowUpDate));
+        sortedRows.sort((a, b) => b?.CName.localeCompare(a.CName));
         break;
       default:
         break;

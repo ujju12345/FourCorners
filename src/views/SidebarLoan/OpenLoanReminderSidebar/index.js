@@ -173,16 +173,16 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
     const sortedRows = [...filteredRows];
     switch (option) {
       case "asc":
-        sortedRows.sort((a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate));
+        sortedRows.sort((a, b) => new Date(a.RemarkDate) - new Date(b.RemarkDate));
         break;
       case "desc":
-        sortedRows.sort((a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate));
+        sortedRows.sort((a, b) => new Date(b.RemarkDate) - new Date(a.RemarkDate));
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
+        sortedRows.sort((a, b) => a.Name.localeCompare(b.Name));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
+        sortedRows.sort((a, b) => b.Name.localeCompare(a.Name));
         break;
       default:
         break;
@@ -307,7 +307,7 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
                    
                 </ListItemAvatar>
                 <ListItemText
-                  primary={row.PartyName}
+                  // primary={row.Name}
                   secondary={
                     <Box display="flex" flexDirection="column">
                         <Typography
@@ -322,9 +322,9 @@ const OpenLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboardCli
                       <Typography variant="body2" color="textSecondary">
                         Mobile: {row.Mobile}
                       </Typography>
-                      {/* <Typography variant="body2" color="textSecondary">
-                      Remark Name: {row.RemarkName}
-                      </Typography> */}
+                      <Typography variant="body2" color="textSecondary">
+                      Remark Date: {row.RemarkDate}
+                      </Typography>
                     </Box>
                   }
                 />

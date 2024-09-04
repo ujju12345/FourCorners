@@ -492,6 +492,7 @@ const SaleDashboard = () => {
                    <TableCell>Customer Name</TableCell>
                    <TableCell>Remark Date</TableCell>
                    <TableCell>Remark Amount</TableCell>
+                   <TableCell>Mobile Number</TableCell>
                  </>
                ) : (
                  <>
@@ -516,6 +517,8 @@ const SaleDashboard = () => {
                      <TableCell>{row.CName}</TableCell>
                      <TableCell>{row.RemarkDate}</TableCell>
                      <TableCell>{row.Remarkamount}</TableCell>
+                     <TableCell>{row.Mobile}</TableCell>
+
                    </>
                  ) : (
                    <>

@@ -134,13 +134,13 @@ const TodayPayment = ({ onItemClick, onCreate }) => {
       case "asc":
         sortedRows.sort(
           (a, b) =>
-            new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+            new Date(a.RemarkDate) - new Date(b.RemarkDate)
         );
         break;
       case "desc":
         sortedRows.sort(
           (a, b) =>
-            new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+            new Date(b.RemarkDate) - new Date(a.RemarkDate)
         );
         break;
       case "a-z":

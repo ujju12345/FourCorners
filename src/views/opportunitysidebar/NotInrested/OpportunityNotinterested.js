@@ -122,10 +122,10 @@ const OpportunityNotinterested = ({ onItemClick, onCreate ,onDashboardClick}) =>
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.CName.localeCompare(b.CName));
+        sortedRows.sort((a, b) => a?.CName?.localeCompare(b.CName));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.CName.localeCompare(a.CName));
+        sortedRows.sort((a, b) => b?.CName?.localeCompare(a.CName));
         break;
       default:
         break;

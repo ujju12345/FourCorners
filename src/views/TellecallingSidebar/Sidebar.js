@@ -202,10 +202,10 @@ const Sidebar = ({ onEdit, onItemClick, onCreate  , onDashboardClick}) => {
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
+        sortedRows.sort((a, b) => a?.CName?.localeCompare(b.CName));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
+        sortedRows.sort((a, b) => b?.CName?.localeCompare(a.CName));
         break;
       default:
         break;

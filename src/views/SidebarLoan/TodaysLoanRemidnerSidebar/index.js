@@ -182,19 +182,19 @@ const TodaysLoanRemidnerSidebar = ({
     switch (option) {
       case "asc":
         sortedRows.sort(
-          (a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate)
+          (a, b) => new Date(a.RemarkDate) - new Date(b.RemarkDate)
         );
         break;
       case "desc":
         sortedRows.sort(
-          (a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate)
+          (a, b) => new Date(b.RemarkDate) - new Date(a.RemarkDate)
         );
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
+        sortedRows.sort((a, b) => a.Name.localeCompare(b.Name));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
+        sortedRows.sort((a, b) => b.Name.localeCompare(a.Name));
         break;
       default:
         break;
@@ -232,7 +232,7 @@ const TodaysLoanRemidnerSidebar = ({
       <Grid item xs={12} sx={{ marginBottom: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" sx={{ fontWeight: "bold", fontSize: 20 }}>
-            All Loan Reminders
+            Todays Loan Reminders
           </Typography>
           <Box display="flex" alignItems="center">
             <IconButton
@@ -342,7 +342,7 @@ const TodaysLoanRemidnerSidebar = ({
                   
                   </ListItemAvatar>
                   <ListItemText
-                    primary={row.PartyName}
+                    // primary={row.PartyName},
                     secondary={
                       <Box display="flex" flexDirection="column">
                         <Typography
@@ -357,9 +357,9 @@ const TodaysLoanRemidnerSidebar = ({
                         <Typography variant="body2" color="textSecondary">
                           Mobile: {row.Mobile}
                         </Typography>
-                        {/* <Typography variant="body2" color="textSecondary">
-                      Remark Name: {row.RemarkName}
-                      </Typography> */}
+                        <Typography variant="body2" color="textSecondary">
+                      Remark Date: {row.RemarkDate}
+                      </Typography>
                       </Box>
                     }
                   />

@@ -68,7 +68,7 @@ const BacklogLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboard
 
     try {
       const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogloan.php?UserID=42`
+        `https://apiforcorners.cubisysit.com/api/api-fetch-backlogloan.php?UserID=${userid}`
       );
       console.log("API Response:", response.data);
       setRows(response.data.data || []);
@@ -173,16 +173,16 @@ const BacklogLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboard
     const sortedRows = [...filteredRows];
     switch (option) {
       case "asc":
-        sortedRows.sort((a, b) => new Date(a.NextFollowUpDate) - new Date(b.NextFollowUpDate));
+        sortedRows.sort((a, b) => new Date(a.RemarkDate) - new Date(b.RemarkDate));
         break;
       case "desc":
-        sortedRows.sort((a, b) => new Date(b.NextFollowUpDate) - new Date(a.NextFollowUpDate));
+        sortedRows.sort((a, b) => new Date(b.RemarkDate) - new Date(a.RemarkDate));
         break;
       case "a-z":
-        sortedRows.sort((a, b) => a.PartyName.localeCompare(b.PartyName));
+        sortedRows.sort((a, b) => a.Name.localeCompare(b.Name));
         break;
       case "z-a":
-        sortedRows.sort((a, b) => b.PartyName.localeCompare(a.PartyName));
+        sortedRows.sort((a, b) => b.Name.localeCompare(a.Name));
         break;
       default:
         break;
@@ -293,7 +293,7 @@ const BacklogLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboard
       ) : (
         <List>
           {filteredRows
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            
             .map((row) => (
               <ListItem
                 key={row.BookingremarkID}
@@ -322,9 +322,9 @@ const BacklogLoanReminderSidebar = ({ onEdit, onItemClick, onCreate, onDashboard
                       <Typography variant="body2" color="textSecondary">
                         Mobile: {row.Mobile}
                       </Typography>
-                      {/* <Typography variant="body2" color="textSecondary">
-                      Remark Name: {row.RemarkName}
-                      </Typography> */}
+                      <Typography variant="body2" color="textSecondary">
+                      Remark Date: {row.RemarkDate}
+                      </Typography>
                     </Box>
                   }
                 />
