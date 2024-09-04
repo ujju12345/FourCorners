@@ -44,6 +44,7 @@ import { useRouter } from "next/router";
 import TemplatePayment from "../TemplatePayment/TemplatePayment";
 import Reciept from "../Reciept/Reciept";
 import EditBookingform from "../EditBookingform/EditBookingform";
+import { FlaskEmpty } from "mdi-material-ui";
 
 const NoDataIcon = () => (
   <Avatar
@@ -189,11 +190,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-wing.php?WingID=${wing.WingID}&ProjectID=${item.ProjectID}`;
       const response = await axios.get(apiUrl);
       if (response.data.status === "Success") {
-        console.log(
-          response.data,
-          "wing dataaaaaaa,<<<<<<<<<<<<>>>>>>>>>>>>>..."
-        );
-
+        console.log(response.data, "wing dataaaaaaa,<<<<<<<<<<<<>>>>>>>>>>>>>...");
         setWingDetails(response.data.data);
         setSelectedWing(wing);
         setDataAvailable(response.data.data.length > 0);
@@ -207,6 +204,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       setDataAvailable(false);
     }
   };
+  
 
   const handleAddChequePayment = () => {
     setChequePayments([
@@ -538,7 +536,6 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         ),
         paymenttypeID: parseInt(selectedPaymentType) || "",
         CreateUID: 1,
-        // CreateDate: new Date().toISOString().replace("T", " ").split(".")[0],
       })),
       remarks: remarks.map((remark) => ({
         Remarkamount: parseFloat(remark.Remarkamount) || 0,
@@ -550,7 +547,6 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         Status: parseInt(remark.Status) || 1,
         AmountTypeID: amountType || 1,
       })),
-    
     };
   
     console.log('Payload:', JSON.stringify(payload, null, 2));
@@ -564,14 +560,19 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       if (response.data.status === "Success") {
         Swal.fire({
           icon: "success",
-          title: 
-           "Data Updated Successfully",
-            
+          title: "Data Updated Successfully",
           showConfirmButton: true,
           timer: 1000,
-        }).then(() => {
-          window.location.reload();
         });
+        // Refresh wing details
+        setCashPaid("");
+        setChequePayments([]);
+        setRemarks([]);
+        setSelectedPaymentType("");
+        setAmountType("1");
+        setCashdate(null);
+        setModalOpen(false)
+        handleWingClick(selectedWing);
       } else {
         Swal.fire({
           icon: "error",
@@ -583,6 +584,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
       console.error("Error submitting payment:", error);
     }
   };
+  
   
   
   
@@ -953,7 +955,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         </Grid>
         <Grid item xs={3} mt={3.5}>
           <DatePicker
-            selected={cashDate.CashDate}
+            selected={cashDate?.CashDate}
             onChange={handleDateChangeCash}
             dateFormat="yyyy-MM-dd"
             customInput={<TextField label="Cash date" fullWidth />}
