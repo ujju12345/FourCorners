@@ -189,143 +189,200 @@ const StatisticsCardsales = () => {
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant='caption'>Total Follow Up</Typography>
-              <Typography variant='h6'>{counts?.totalFollowup ?? '--'}</Typography>
+              <Typography variant='h6'>{counts?.totalFollowupoppo ?? '--'}</Typography>
             </Box>
           </Box>
         </Grid>
-        {/* Payment Reminder - Transfer to Opportunity */}
      
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'primary.main',
-              }}
-            >
-              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Payment Reminder Transfer</Typography>
-              <Typography variant='h6'>{counts.paymentremindertransfertoOppCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Payment Reminder - Today Follow Up */}
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'success.main',
-              }}
-            >
-              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Payment Reminder Today</Typography>
-              <Typography variant='h6'>{counts.paymentremindertodayFollowupCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Payment Reminder - Backlog */}
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'warning.main',
-              }}
-            >
-              <MoneyIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Payment Reminder Backlog</Typography>
-              <Typography variant='h6'>{counts.paymentreminderbacklogFollowupCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Loan Reminder - Transfer to Opportunity */}
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'primary.main',
-              }}
-            >
-              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Loan Reminder Transfer</Typography>
-              <Typography variant='h6'>{counts.loanremindertransfertoOppCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Loan Reminder - Today Follow Up */}
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'success.main',
-              }}
-            >
-              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Loan Reminder Today</Typography>
-              <Typography variant='h6'>{counts.loanremindertodayFollowupCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-        {/* Loan Reminder - Backlog */}
-        <Grid item xs={12} sm={2}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              variant='rounded'
-              sx={{
-                mr: 3,
-                width: 44,
-                height: 44,
-                boxShadow: 3,
-                color: 'common.white',
-                backgroundColor: 'warning.main',
-              }}
-            >
-              <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
-            </Avatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant='caption'>Loan Reminder Backlog</Typography>
-              <Typography variant='h6'>{counts.loanreminderbacklogFollowupCount ?? '--'}</Typography>
-            </Box>
-          </Box>
-        </Grid>
+        <Grid container spacing={2}>
+  {/* Loan Reminder Section */}
+  <Grid container item xs={12} spacing={2}>
+   
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'primary.main',
+          }}
+        >
+          <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Loan Reminder Open</Typography>
+          <Typography variant='h6'>{counts.loanremindernextFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Loan Reminder - Today Follow Up */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'success.main',
+          }}
+        >
+          <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Loan Reminder Today</Typography>
+          <Typography variant='h6'>{counts.loanremindertodayFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Loan Reminder - Backlog */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'warning.main',
+          }}
+        >
+          <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Loan Reminder Backlog</Typography>
+          <Typography variant='h6'>{counts.loanreminderbacklogFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Total Loan Reminder */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'warning.main',
+          }}
+        >
+          <CreditCardIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Total Loan Reminder</Typography>
+          <Typography variant='h6'>{counts.loanremindernextTotalCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+  </Grid>
+
+  {/* Payment Reminder Section */}
+  <Grid container item xs={12} spacing={2}>
+    {/* Payment Reminder - Open */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'primary.main',
+          }}
+        >
+          <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Payment Reminder Open</Typography>
+          <Typography variant='h6'>{counts.paymentremindernextFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Payment Reminder - Today Follow Up */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'success.main',
+          }}
+        >
+          <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Payment Reminder Today</Typography>
+          <Typography variant='h6'>{counts.paymentremindertodayFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Payment Reminder - Backlog */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'warning.main',
+          }}
+        >
+          <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Payment Reminder Backlog</Typography>
+          <Typography variant='h6'>{counts.paymentreminderbacklogFollowupCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+    {/* Total Payment Reminder */}
+    <Grid item xs={12} sm={2}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar
+          variant='rounded'
+          sx={{
+            mr: 3,
+            width: 44,
+            height: 44,
+            boxShadow: 3,
+            color: 'common.white',
+            backgroundColor: 'warning.main',
+          }}
+        >
+          <MoneyIcon sx={{ fontSize: '1.75rem' }} />
+        </Avatar>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant='caption'>Total Payment Reminder</Typography>
+          <Typography variant='h6'>{counts.paymentremindernextTotalCount ?? '--'}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+  </Grid>
+</Grid>
+
+
+
+
         </Grid>
 
     );

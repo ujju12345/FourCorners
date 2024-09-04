@@ -226,11 +226,12 @@ const Reciept = ({ bookingID }) => {
                 >
                   <Typography style={{ fontSize: 14, padding: 5 }}>
                     Corporate Office: {data[0]?.CompanyAddress || "N/A"}.  GST No: {data[0]?.CompanyGst || "N/A"}    <br></br>
-                      Website: {data[0]?.CompanyWebsite || "N/A"}    Email: {data[0]?.CompanyEmail || "N/A"}  <br></br>  Site Address: {data[0]?.ProjectAddress || "N/A"} MahaRera
-                    No. {data[0]?.reraregistration || "N/A"}  Mobile No. 9876543210
+                      Website: {data[0]?.CompanyWebsite || "N/A"} <br></br> Email: {data[0]?.CompanyEmail || "N/A"}  <br></br>  Site Address: {data[0]?.ProjectAddress || "N/A"} MahaRera
+                    No. {data[0]?.reraregistration || "N/A"} <br></br> Mobile No. 9930960449/9004475240
                   </Typography>
                   
                 </StyledTableCell>
+                
               </Grid>
               <Grid item xs={3}>
                 <div style={{ minWidth: "100%", borderWidth: 1 }}>

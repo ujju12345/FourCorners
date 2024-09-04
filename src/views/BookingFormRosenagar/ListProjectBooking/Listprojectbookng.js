@@ -902,11 +902,11 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
 
 <Grid item xs={4} mt={3}>
       <FormControl fullWidth>
-        <InputLabel>Amount Type</InputLabel>
+        <InputLabel>Amount will be given by</InputLabel>
         <Select
           value={amountType}
           onChange={(e) => setAmountType(e.target.value)}
-          label="Amount Type"
+          label="Amount will be given by"
         >
           {amountTypes.map((type) => (
             <MenuItem key={type.AmountTypeID} value={type.AmountTypeID}>
@@ -1374,7 +1374,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Cuurent </TableCell>
+                        <TableCell>Current </TableCell>
                         <TableCell>Post</TableCell>
                         <TableCell>Date</TableCell>
                       </TableRow>

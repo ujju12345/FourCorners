@@ -62,10 +62,13 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
     cheque: 0,
     total: 0
   });
+
+   
+  
   const fetchData = async () => {
     if (!item) return;
-    
-    const { fromdate, todate, ProjectID, percentage } = formData;
+  
+    const { fromdate, todate, percentage } = formData;
   
     const formatDate = (date) => {
       const d = new Date(date);
@@ -84,16 +87,19 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
   
     try {
       setLoading(true);
-      const response = await axios.get(
-        `https://apiforcorners.cubisysit.com/api/api-project-networth.php?ProjectID=${item}&fromdate=${formattedFromDate}&todate=${formattedToDate}&percentage=${percentage}`
-      );
+  
+      // Construct API URL based on whether percentage is provided
+      let apiUrl = `https://apiforcorners.cubisysit.com/api/api-project-networth.php?ProjectID=${item}&fromdate=${formattedFromDate}&todate=${formattedToDate}`;
+      if (percentage) {
+        apiUrl += `&percentage=${percentage}`;
+      }
+  
+      const response = await axios.get(apiUrl);
   
       if (response.data.status === "Success") {
-        // Destructure received and upcoming payment data directly from the response
         const receivedRecords = response.data.receivedpayment || {};
         const upcomingRecords = response.data.upcomingpayment || {};
   
-        // Set total received and upcoming payment data directly from the response
         setTotalReceived({
           cash: receivedRecords.cash || 0,
           cheque: receivedRecords.cheque || 0,
@@ -110,10 +116,11 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
           total: upcomingRecords.total || 0,
         });
   
-        // Set amounts received and upcoming
         setAmountsReceived(response.data.amountsReceived || []);
         setAmountsUpcoming(response.data.amountsUpcoming || []);
   
+        setPaymentReceivedData(response.data.receivedRecords || []);
+        setUpcomingPaymentData(response.data.upcomingRecords || []);
         setDataAvailable(true);
       } else {
         setDataAvailable(false);
@@ -129,25 +136,16 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
   
 
   useEffect(() => {
-    fetchData(); // Fetch data on component mount
-  }, [item, formData]);
+    fetchData();
+  }, [item, formData]); // Dependencies to re-run the effect when they change
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
+
 
   const handleDateChange = (date, field) => {
     setFormData({ ...formData, [field]: date });
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const handleAddPayment = (row) => {
     // Implement your payment add logic here
@@ -160,7 +158,7 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
       fontWeight: "bold",
       fontSize: "1rem",
       cursor: "pointer",
-      position: "sticky",
+
       top: 0,
       zIndex: 1,
       backgroundColor: "#ffffff", // Background color for the sticky header
@@ -429,7 +427,7 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
               minWidth: 800,
               position: "relative",
               "& thead th": {
-                position: "sticky",
+           
                 top: 0,
                 zIndex: 1,
                 backgroundColor: "#ffffff", // You can change this to match your design

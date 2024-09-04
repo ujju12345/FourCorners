@@ -140,10 +140,15 @@ const SaleDashboard = () => {
     } else if (type === "opportunity") {
       setSelectedData(telecallingData?.data?.opportunityRecords);
       setSelectedType("opportunity");
-    }
-    else if (type === "booking") {
+    } else if (type === "booking") {
       setSelectedData(telecallingData?.data?.oproccessRecords);
       setSelectedType("booking");
+    } else if (type === "loan") {
+      setSelectedData(telecallingData?.data?.bookingRemarkLoanRecords);
+      setSelectedType("loan")
+    } else if (type === "payment") {
+      setSelectedData(telecallingData?.data?.bookingRemarkRecords);
+      setSelectedType("payment");
     }
   };
   useEffect(() => {
@@ -406,27 +411,27 @@ const SaleDashboard = () => {
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card>
+                      <Card onClick={() => handleCardClick("loan")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Todays Loan reminder
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: 0 {/* Adjust this key as needed */}
+                            Total Counts:  {telecallingData?.data.bookingRemarkLoanCount}  {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                      <Card>
+                      <Card onClick={() => handleCardClick("payment")}>
                         <CardContent sx={{ textAlign: "center" }}>
                           <Contacts fontSize="large" color="primary" />
                           <Typography variant="h6" gutterBottom>
                             Todays Payment reminder
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
-                            Total Counts: 0 {/* Adjust this key as needed */}
+                            Total Counts: {telecallingData?.data.bookingRemarkCount} {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -476,64 +481,79 @@ const SaleDashboard = () => {
                   </Box>
                 </Grid>
                 {selectedData && (
-               <Grid item xs={12} sx={{ mt: 3 }}>
-               <TableContainer component={Box} sx={{ maxHeight: 400 }}>
-                 <Table stickyHeader>
-                   <TableHead>
-                     <TableRow>
-                       <TableCell>Name</TableCell>
-                       <TableCell>Mobile</TableCell>
+       <Grid item xs={12} sx={{ mt: 3 }}>
+       <TableContainer component={Box} sx={{ maxHeight: 400 }}>
+         <Table stickyHeader>
+           <TableHead>
+             <TableRow>
+               {selectedType === "payment" || selectedType === "loan" ? (
+                 <>
+                   <TableCell>Remark Name</TableCell>
+                   <TableCell>Customer Name</TableCell>
+                   <TableCell>Remark Date</TableCell>
+                   <TableCell>Remark Amount</TableCell>
+                 </>
+               ) : (
+                 <>
+                   <TableCell>Name</TableCell>
+                   <TableCell>Mobile</TableCell>
+                   {selectedType === "telecalling" ? (
+                     <TableCell>Next Follow Up</TableCell>
+                   ) : (
+                     <TableCell>Created Date</TableCell>
+                   )}
+                   <TableCell>Action</TableCell>
+                 </>
+               )}
+             </TableRow>
+           </TableHead>
+           <TableBody>
+             {(selectedData || [])?.map((row, index) => (
+               <TableRow key={index}>
+                 {selectedType === "payment" || selectedType === "loan" ? (
+                   <>
+                     <TableCell>{row.RemarkName}</TableCell>
+                     <TableCell>{row.CName}</TableCell>
+                     <TableCell>{row.RemarkDate}</TableCell>
+                     <TableCell>{row.Remarkamount}</TableCell>
+                   </>
+                 ) : (
+                   <>
+                     <TableCell>{row.CName}</TableCell>
+                     <TableCell>{row.Mobile}</TableCell>
+                     <TableCell>
+                       {selectedType === "telecalling"
+                         ? row.NextFollowUpDate
+                         : row.CreateDate}
+                     </TableCell>
+                     <TableCell>
                        {selectedType === "telecalling" ? (
-                         <TableCell>Next Follow Up</TableCell>
-                       ) : (
-                         <TableCell>Created Date</TableCell>
-                       )}
-                       <TableCell>Action</TableCell>
-                     </TableRow>
-                   </TableHead>
-                   <TableBody>
-                     {(selectedData || [])?.map((row, index) => (
-                       <TableRow key={index}>
-                         <TableCell>{row.CName}</TableCell>
-                         <TableCell>{row.Mobile}</TableCell>
-                         <TableCell>
-                           {selectedType === "telecalling"
-                             ? row.NextFollowUpDate
-                             : row.CreateDate}
-                         </TableCell>
-                         <TableCell>
-                           {selectedType === "telecalling" ? (
-                             <Button
-                               onClick={() => fetchDataForModal(row.Tid)}
-                             >
-                               View Telecaller Profile
-                             </Button>
-                           ) : selectedType === "contacts" ? (
-                             <Button
-                               onClick={() => fetchDataForModalContact(row.Cid)}
-                             >
-                               View Contact Profile
-                             </Button>
-                           ) : selectedType === "opportunity" ? (
-                             <Button
-                               onClick={() => fetchDataForModalOpportunity(row.Oid)}
-                             >
-                               View Opportunity Profile
-                             </Button>
-                           ) : selectedType === "booking" ? (
-                             <Button
-                               onClick={() => fetchDataForBooking(row.BookingID)}
-                             >
-                               View Booking Profile
-                             </Button>
-                           ) : null}
-                         </TableCell>
-                       </TableRow>
-                     ))}
-                   </TableBody>
-                 </Table>
-               </TableContainer>
-             </Grid>
+                         <Button onClick={() => fetchDataForModal(row.Tid)}>
+                           View Telecaller Profile
+                         </Button>
+                       ) : selectedType === "contacts" ? (
+                         <Button onClick={() => fetchDataForModalContact(row.Cid)}>
+                           View Contact Profile
+                         </Button>
+                       ) : selectedType === "opportunity" ? (
+                         <Button onClick={() => fetchDataForModalOpportunity(row.Oid)}>
+                           View Opportunity Profile
+                         </Button>
+                       ) : selectedType === "booking" ? (
+                         <Button onClick={() => fetchDataForBooking(row.BookingID)}>
+                           View Booking Profile
+                         </Button>
+                       ) : null}
+                     </TableCell>
+                   </>
+                 )}
+               </TableRow>
+             ))}
+           </TableBody>
+         </Table>
+       </TableContainer>
+     </Grid>
+     
              
                 )}
               </CardContent>
@@ -638,7 +658,7 @@ const SaleDashboard = () => {
                           backgroundColor: "#f0f0f0",
                           borderRadius: 2,
                           minHeight: 20,
-                          marginLeft: 2,
+                          marginRight: 12,
                           "&:hover": {
                             backgroundColor: "#dcdcdc",
                           },
