@@ -483,77 +483,77 @@ const SaleDashboard = () => {
                 {selectedData && (
        <Grid item xs={12} sx={{ mt: 3 }}>
        <TableContainer component={Box} sx={{ maxHeight: 400 }}>
-         <Table stickyHeader>
-           <TableHead>
-             <TableRow>
-               {selectedType === "payment" || selectedType === "loan" ? (
-                 <>
-                   <TableCell>Remark Name</TableCell>
-                   <TableCell>Customer Name</TableCell>
-                   <TableCell>Remark Date</TableCell>
-                   <TableCell>Remark Amount</TableCell>
-                   <TableCell>Mobile Number</TableCell>
-                 </>
-               ) : (
-                 <>
-                   <TableCell>Name</TableCell>
-                   <TableCell>Mobile</TableCell>
-                   {selectedType === "telecalling" ? (
-                     <TableCell>Next Follow Up</TableCell>
-                   ) : (
-                     <TableCell>Created Date</TableCell>
-                   )}
-                   <TableCell>Action</TableCell>
-                 </>
-               )}
-             </TableRow>
-           </TableHead>
-           <TableBody>
-             {(selectedData || [])?.map((row, index) => (
-               <TableRow key={index}>
-                 {selectedType === "payment" || selectedType === "loan" ? (
-                   <>
-                     <TableCell>{row.RemarkName}</TableCell>
-                     <TableCell>{row.CName}</TableCell>
-                     <TableCell>{row.RemarkDate}</TableCell>
-                     <TableCell>{row.Remarkamount}</TableCell>
-                     <TableCell>{row.Mobile}</TableCell>
+       <Table stickyHeader>
+  <TableHead>
+    <TableRow>
+      {selectedType === "payment" || selectedType === "loan" ? (
+        <>
+          <TableCell>Remark Name</TableCell>
+          <TableCell>Customer Name</TableCell>
+          <TableCell>Remark Date</TableCell>
+          <TableCell>Remark Amount</TableCell>
+          <TableCell>Mobile Number</TableCell>
+        </>
+      ) : (
+        <>
+          <TableCell>Name</TableCell>
+          <TableCell>Mobile</TableCell>
+          {selectedType === "telecalling" ? (
+            <TableCell>Next Follow Up</TableCell>
+          ) : (
+            <TableCell>Created Date</TableCell>
+          )}
+          {selectedType !== "booking" && (
+            <TableCell>Action</TableCell>
+          )}
+        </>
+      )}
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {(selectedData || [])?.map((row, index) => (
+      <TableRow key={index}>
+        {selectedType === "payment" || selectedType === "loan" ? (
+          <>
+            <TableCell>{row.RemarkName}</TableCell>
+            <TableCell>{row.CName}</TableCell>
+            <TableCell>{row.RemarkDate}</TableCell>
+            <TableCell>{row.Remarkamount}</TableCell>
+            <TableCell>{row.Mobile}</TableCell>
+          </>
+        ) : (
+          <>
+            <TableCell>{row.CName}</TableCell>
+            <TableCell>{row.Mobile}</TableCell>
+            <TableCell>
+              {selectedType === "telecalling"
+                ? row.NextFollowUpDate
+                : row.CreateDate}
+            </TableCell>
+            {selectedType !== "booking" && (
+              <TableCell>
+                {selectedType === "telecalling" ? (
+                  <Button onClick={() => fetchDataForModal(row.Tid)}>
+                    View Telecaller Profile
+                  </Button>
+                ) : selectedType === "contacts" ? (
+                  <Button onClick={() => fetchDataForModalContact(row.Cid)}>
+                    View Contact Profile
+                  </Button>
+                ) : selectedType === "opportunity" ? (
+                  <Button onClick={() => fetchDataForModalOpportunity(row.Oid)}>
+                    View Opportunity Profile
+                  </Button>
+                ) : null}
+              </TableCell>
+            )}
+          </>
+        )}
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
 
-                   </>
-                 ) : (
-                   <>
-                     <TableCell>{row.CName}</TableCell>
-                     <TableCell>{row.Mobile}</TableCell>
-                     <TableCell>
-                       {selectedType === "telecalling"
-                         ? row.NextFollowUpDate
-                         : row.CreateDate}
-                     </TableCell>
-                     <TableCell>
-                       {selectedType === "telecalling" ? (
-                         <Button onClick={() => fetchDataForModal(row.Tid)}>
-                           View Telecaller Profile
-                         </Button>
-                       ) : selectedType === "contacts" ? (
-                         <Button onClick={() => fetchDataForModalContact(row.Cid)}>
-                           View Contact Profile
-                         </Button>
-                       ) : selectedType === "opportunity" ? (
-                         <Button onClick={() => fetchDataForModalOpportunity(row.Oid)}>
-                           View Opportunity Profile
-                         </Button>
-                       ) : selectedType === "booking" ? (
-                         <Button onClick={() => fetchDataForBooking(row.BookingID)}>
-                           View Booking Profile
-                         </Button>
-                       ) : null}
-                     </TableCell>
-                   </>
-                 )}
-               </TableRow>
-             ))}
-           </TableBody>
-         </Table>
        </TableContainer>
      </Grid>
      
