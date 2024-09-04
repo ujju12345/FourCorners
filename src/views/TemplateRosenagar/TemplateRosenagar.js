@@ -126,7 +126,7 @@ const TemplateRosenagar = ({ bookingID , onGoBack }) => {
                   <Typography>Name Of Purchase</Typography>
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
-                  {data.BookingName}
+                 {data.TitleName} {data.BookingName}
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>

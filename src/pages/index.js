@@ -716,87 +716,72 @@ const Dashboard = ({ onHistoryClick }) => {
                 {selectedData && (
                   <Grid item xs={12} sx={{ mt: 3 }}>
                     <TableContainer component={Box} sx={{ maxHeight: 400 }}>
-                      <Table stickyHeader>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Mobile</TableCell>
-                            {selectedType === "telecalling" ? (
-                              <TableCell>Next Follow Up</TableCell>
-                            ) : (
-                              <TableCell>Created Date</TableCell>
-                            )}
-                            <TableCell>Action</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {selectedData?.map((row, index) => (
-                            <TableRow key={index}>
-                              <TableCell>
-                                {selectedType === "booking"
-                                  ? row.Name
-                                  : row.CName}
-                              </TableCell>
-                              <TableCell>
-                                {selectedType === "telecalling"
-                                  ? row.NextFollowUpDate
-                                  : row.CreateDate}
-                              </TableCell>
-                              <TableCell>
-                                {(() => {
-                                  switch (selectedType) {
-                                    case "telecalling":
-                                      return (
-                                        <Button
-                                          onClick={() =>
-                                            fetchDataForModal(row.Tid)
-                                          }
-                                        >
-                                          View Lead Profile
-                                        </Button>
-                                      );
-                                    case "contacts":
-                                      return (
-                                        <Button
-                                          onClick={() =>
-                                            fetchDataForModalContact(row.Cid)
-                                          }
-                                        >
-                                          View Contact Profile
-                                        </Button>
-                                      );
-                                    case "Salesopportunity":
-                                      return (
-                                        <Button
-                                          onClick={() =>
-                                            fetchDataForModalOpportunity(
-                                              row.Oid
-                                            )
-                                          }
-                                        >
-                                          View Opportunity Profile
-                                        </Button>
-                                      );
-                                    case "todayLeads":
-                                      return (
-                                        <Button
-                                          onClick={() =>
-                                            fetchDataForModal(row.Tid)
-                                          }
-                                        >
-                                          View Opportunity Profile
-                                        </Button>
-                                      );
+                    <Table stickyHeader>
+  <TableHead>
+    <TableRow>
+      <TableCell>Name</TableCell>
+      <TableCell>Mobile</TableCell>
+      {selectedType === "telecalling" ? (
+        <TableCell>Next Follow Up</TableCell>
+      ) : (
+        <TableCell>Created Date</TableCell>
+      )}
+      {selectedType !== "booking" && <TableCell>Action</TableCell>}
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {selectedData?.map((row, index) => (
+      <TableRow key={index}>
+        <TableCell>
+          {selectedType === "booking" ? row.Name : row.CName}
+        </TableCell>
+        <TableCell>{row.Mobile}</TableCell> {/* Added Mobile Number */}
+        <TableCell>
+          {selectedType === "telecalling"
+            ? row.NextFollowUpDate
+            : row.CreateDate}
+        </TableCell>
+        {selectedType !== "booking" && (
+          <TableCell>
+            {(() => {
+              switch (selectedType) {
+                case "telecalling":
+                  return (
+                    <Button onClick={() => fetchDataForModal(row.Tid)}>
+                      View Lead Profile
+                    </Button>
+                  );
+                case "contacts":
+                  return (
+                    <Button onClick={() => fetchDataForModalContact(row.Cid)}>
+                      View Contact Profile
+                    </Button>
+                  );
+                case "Salesopportunity":
+                  return (
+                    <Button
+                      onClick={() => fetchDataForModalOpportunity(row.Oid)}
+                    >
+                      View Opportunity Profile
+                    </Button>
+                  );
+                case "todayLeads":
+                  return (
+                    <Button onClick={() => fetchDataForModal(row.Tid)}>
+                      View Opportunity Profile
+                    </Button>
+                  );
+                default:
+                  return null;
+              }
+            })()}
+          </TableCell>
+        )}
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
 
-                                    default:
-                                      return null;
-                                  }
-                                })()}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
                     </TableContainer>
                   </Grid>
                 )}

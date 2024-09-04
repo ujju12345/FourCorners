@@ -1219,7 +1219,7 @@ const TemplatePayment = ({ bookingID, handleCancel }) => {
                     gutterBottom
                     sx={{ marginBottom: 10 }}
                   >
-                    FLAT NO. {data.FlatNo}, {data.FloorNo} FLOOR, {data.Address}
+                 {data.Address}
                   </Typography>
                   <Typography
                     variant="body1"
