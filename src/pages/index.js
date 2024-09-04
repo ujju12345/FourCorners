@@ -2119,7 +2119,7 @@ const Dashboard = ({ onHistoryClick }) => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.AlternateMobileNo}
+                            {selectedTelecaller?.OtherNumbers}
                           </Typography>
                         </Card>
                       </Grid>
