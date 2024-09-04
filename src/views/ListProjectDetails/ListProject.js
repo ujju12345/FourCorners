@@ -42,23 +42,23 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
   const [wingData, setWingData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setFilteredRows(rows);
-  }, [rows]);
+  // useEffect(() => {
+  //   setFilteredRows(rows);
+  // }, [rows]);
 
-  useEffect(() => {
-    const filteredData = rows?.filter((row) => {
-      return (
-        String(row.PartyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Mobile).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.ProjectID).toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.Source).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(row.SourceDescription).toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    setFilteredRows(filteredData);
-  }, [searchQuery, rows]);
+  // useEffect(() => {
+  //   const filteredData = rows?.filter((row) => {
+  //     return (
+  //       String(row.PartyName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       String(row.Mobile).toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       String(row.ProjectID).toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       String(row.Source).toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       String(row.SourceName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //       String(row.SourceDescription).toLowerCase().includes(searchQuery.toLowerCase())
+  //     );
+  //   });
+  //   setFilteredRows(filteredData);
+  // }, [searchQuery, rows]);
 
   useEffect(() => {
     axios
@@ -136,31 +136,65 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const getComparator = (order, orderBy) => {
+    if (orderBy === 'skuName') {
+      return (a, b) => {
+        // Define priority where AVL comes first, then HLD, RFG, and SLD last
+        const skuNameOrder = { 'AVL': 1, 'HLD': 2, 'RFG': 3, 'SLD': 4 };
+  
+        // Get the priority value for each SKU, defaulting to a high number if not in the list
+        const aOrder = skuNameOrder[a[orderBy]] || 5;
+        const bOrder = skuNameOrder[b[orderBy]] || 5;
+  
+        // Compare based on priority
+        if (aOrder !== bOrder) {
+          return order === 'desc' ? bOrder - aOrder : aOrder - bOrder;
+        }
+  
+        // If priorities are the same or not in the priority list, sort alphabetically
+        if (a[orderBy] < b[orderBy]) {
+          return order === 'desc' ? 1 : -1;
+        }
+        if (a[orderBy] > b[orderBy]) {
+          return order === 'desc' ? -1 : 1;
+        }
+        return 0;
+      };
+    } else {
+      return (a, b) => {
+        if (a[orderBy] < b[orderBy]) {
+          return order === 'desc' ? 1 : -1;
+        }
+        if (a[orderBy] > b[orderBy]) {
+          return order === 'desc' ? -1 : 1;
+        }
+        return 0;
+      };
+    }
+  };
+  
+  
+
   const handleSort = (sortBy) => {
     const isAsc = orderBy === sortBy && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(sortBy);
     
     let sortedData;
-    
-    if (sortBy === 'skuName') {
-      sortedData = [...filteredRows].sort((a, b) => {
-        // Custom sorting logic for skuName
-        if (a.skuName === b.skuName) return 0;
-        if (a.skuName === 'AVL') return -1;
-        if (b.skuName === 'AVL') return 1;
-        if (a.skuName === 'SLD') return -1;
-        if (b.skuName === 'SLD') return 1;
-        return 0;
-      });
+  
+    if (sortBy === 'skuName' || sortBy === 'FlatNo') {
+      // Apply the customized comparator for sorting
+      sortedData = telecallingData.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
     } else {
-      sortedData = filteredRows.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
+      // Sort data based on specified criteria
+      sortedData = telecallingData.slice().sort(getComparator(isAsc ? 'desc' : 'asc', sortBy));
     }
     
-    setFilteredRows(sortedData);
+    setTelecallingData(sortedData);
   };
   
-
+  
+  
   const SortableTableCell = ({ label, sortBy }) => (
     <TableCell onClick={() => handleSort(sortBy)} sx={{ fontWeight: 'bold', cursor: 'pointer' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -177,6 +211,7 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
       </Box>
     </TableCell>
   );
+  
   
 
 
@@ -275,21 +310,22 @@ const ListProject = ({ rows, onEdit, onDelete }) => {
 
           <TableContainer>
             <Table sx={{ minWidth: 800 }} aria-label="table in dashboard">
-             <TableHead>
+            <TableHead>
   <TableRow>
     <SortableTableCell label="Project Name" sortBy="ProjectName" />
     <SortableTableCell label="Unit Type" sortBy="UnitType" />
     <SortableTableCell label="Area" sortBy="Area" />
-    <SortableTableCell label="Flat No" sortBy="FlatNo" />
+    <SortableTableCell label="Flat No" sortBy="FlatNo" /> {/* Enable filtering */}
     <SortableTableCell label="Party Name" sortBy="PartyName" />
-    <SortableTableCell label="SKU Name" sortBy="skuName" />
+    <SortableTableCell label="SKU Name" sortBy="skuName" /> {/* Enable filtering */}
   </TableRow>
 </TableHead>
+
 
               <TableBody>
                 {telecallingData
                   
-                  .map((row, index) => (
+                  ?.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>{row.ProjectName}</TableCell>
                       <TableCell>{row.UnittypeName}</TableCell>

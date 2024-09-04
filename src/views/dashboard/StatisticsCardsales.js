@@ -193,12 +193,11 @@ const StatisticsCardsales = () => {
             </Box>
           </Box>
         </Grid>
-        {/* Payment Reminder - Transfer to Opportunity */}
      
         <Grid container spacing={2}>
   {/* Loan Reminder Section */}
   <Grid container item xs={12} spacing={2}>
-    {/* Loan Reminder - Transfer to Opportunity */}
+   
     <Grid item xs={12} sm={2}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
