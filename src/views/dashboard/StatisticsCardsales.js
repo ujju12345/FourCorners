@@ -61,7 +61,7 @@ const StatisticsCardsales = () => {
     const counts = apiData?.counts || {};
 
     return (
-      <Grid container spacing={[5, 0]}>
+      <Grid container spacing={[5, 0]} sx={{ minHeight: '25vh' }}>
         <Grid item xs={12} sm={2}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
@@ -194,10 +194,9 @@ const StatisticsCardsales = () => {
           </Box>
         </Grid>
      
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center" >
   {/* Loan Reminder Section */}
-  <Grid container item xs={12} spacing={2}>
-   
+  <Grid container item xs={12} spacing={2} justifyContent="center" alignItems="center">
     <Grid item xs={12} sm={2}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
@@ -288,10 +287,10 @@ const StatisticsCardsales = () => {
   </Grid>
 
   {/* Payment Reminder Section */}
-  <Grid container item xs={12} spacing={2}>
+  <Grid container item xs={12} spacing={2} justifyContent="center" alignItems="center">
     {/* Payment Reminder - Open */}
     <Grid item xs={12} sm={2}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center',  }}>
         <Avatar
           variant='rounded'
           sx={{
@@ -379,6 +378,7 @@ const StatisticsCardsales = () => {
     </Grid>
   </Grid>
 </Grid>
+
 
 
 
