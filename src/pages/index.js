@@ -121,7 +121,49 @@ const Dashboard = ({ onHistoryClick }) => {
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${time}`; // dd-mm-yyyy format
     return formattedDate;
   };
-
+  const handleDownload = () => {
+    // Ensure we only proceed if selectedType is 'booking' and there is data
+    if (selectedType !== "booking" || !selectedData || selectedData.length === 0) {
+      console.error("No booking data available for download.");
+      return;
+    }
+  
+    // Define the headers for the CSV file
+    const headers = [
+      { label: "Name", key: "Name" },
+      { label: "Mobile", key: "Mobile" },
+      { label: "SourceName", key: "SourceName" },
+      { label: "Created Date", key: "CreateDate" },
+    ];
+  
+    // Prepare the data
+    const csvData = selectedData.map((row) => ({
+      Name: row.Name,
+      Mobile: row.Mobile,
+      SourceName: row.SourceName,
+      CreateDate: row.CreateDate,
+    }));
+  
+    // Convert data to CSV format
+    const csvString = [
+      headers.map((header) => header.label).join(","), // Create header row
+      ...csvData.map((row) =>
+        headers.map((header) => row[header.key] || "").join(",")
+      ),
+    ].join("\n");
+  
+    // Create a blob and download it
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "booking_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  
   const whatsappText = encodeURIComponent(
     `Hello, I wanted to discuss the following details:\n\nSource Name: ${selectedTelecaller?.SourceName}\nLocation: ${selectedTelecaller?.Location}\nAttended By: ${selectedTelecaller?.TelecallAttendedByName}`
   );
@@ -159,6 +201,7 @@ const Dashboard = ({ onHistoryClick }) => {
       setLoading(false);
     }
   };
+
   
 
   const handleCardClick = (type) => {
@@ -246,7 +289,7 @@ const Dashboard = ({ onHistoryClick }) => {
   const handleSource = (event) => {
     setFormData({
       ...formData,
-      SourceID: event.target.value, // This will be 0 when "All" is selected
+      SourceID: event.target.value, 
     });
   };
   
@@ -254,7 +297,7 @@ const Dashboard = ({ onHistoryClick }) => {
   const handleUser = (event) => {
     setFormData({
       ...formData,
-      UserID: event.target.value,  // This will be 0 when "All" is selected
+      UserID: event.target.value, 
     });
   };
 
@@ -602,7 +645,13 @@ const Dashboard = ({ onHistoryClick }) => {
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Counts:{" "}
-                            {telecallingData?.data?.bookingRecords?.count}{" "}
+                            {telecallingData?.data?.bookingRecords?.count}{" "}  <Button
+          variant="contained"
+          color="primary"
+          onClick={handleDownload}
+          sx={{ mt: 2, mb: 2 }}>
+          Download CSV
+        </Button> 
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
@@ -688,6 +737,7 @@ const Dashboard = ({ onHistoryClick }) => {
             </CardContent>
           </Card>
         </Grid>
+    
 
         {selectedType && (
           <Grid item xs={12} sx={{ display: "flex", mt: 3 }}>
@@ -710,6 +760,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           : selectedType === "booking"
                             ? `${userName} Booking`
                             : ""}
+                            
                     </Typography>
                   </Box>
                 </Grid>
@@ -730,13 +781,18 @@ const Dashboard = ({ onHistoryClick }) => {
     </TableRow>
   </TableHead>
   <TableBody>
-    {selectedData?.map((row, index) => (
-      <TableRow key={index}>
-        <TableCell>
-          {selectedType === "booking" ? row.Name : row.CName}
-        </TableCell>
-        <TableCell>{row.Mobile}</TableCell> {/* Added Mobile Number */}
-        <TableCell>
+      {selectedData?.map((row, index) => (
+     
+        
+        
+        <TableRow key={index}>
+        
+          <TableCell>
+            {selectedType === "booking" ? row.Name : row.CName}
+            
+          </TableCell>
+          <TableCell>{row.Mobile}</TableCell> 
+          <TableCell>
           {selectedType === "telecalling"
             ? row.NextFollowUpDate
             : row.CreateDate}
@@ -2119,7 +2175,7 @@ const Dashboard = ({ onHistoryClick }) => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.OtherNumbers}
+                            {selectedTelecaller?.AlternateMobileNo}
                           </Typography>
                         </Card>
                       </Grid>
