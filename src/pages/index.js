@@ -1406,7 +1406,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           },
                         }}
                       >
-                        City: {selectedContact?.CityName}
+                        City: {selectedContact?.CityName}/{selectedContact?.LocationName}
                       </Typography>
                     </div>
                     <div style={{ marginRight: 5 }}>
@@ -1687,25 +1687,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           </Typography>
                         </Card>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Card
-                          variant="outlined"
-                          sx={{ borderRadius: 1, padding: "10px" }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
-                          >
-                            Source Type
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "0.8rem" }}
-                          >
-                            {selectedContact?.SourceTypename}
-                          </Typography>
-                        </Card>
-                      </Grid>
+                     
                       <Grid item xs={4}>
                         <Card
                           variant="outlined"
@@ -1813,7 +1795,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           // Add margin-right to separate the items
                         }}
                       >
-                        Location: {selectedTelecaller?.Location}
+                        Location: {selectedTelecaller?.Location}/{selectedTelecaller?.CityName}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -2131,7 +2113,7 @@ const Dashboard = ({ onHistoryClick }) => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.TelecallingCreateDate}
+                            {selectedTelecaller?.CreateDate}
                           </Typography>
                         </Card>
                       </Grid>
@@ -2175,7 +2157,7 @@ const Dashboard = ({ onHistoryClick }) => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.AlternateMobileNo}
+                            {selectedTelecaller?.OtherNumbers}
                           </Typography>
                         </Card>
                       </Grid>
@@ -2301,7 +2283,7 @@ const Dashboard = ({ onHistoryClick }) => {
                           mr: 2, // Add margin-right to separate the items
                         }}
                       >
-                        Location: {selectedTelecaller?.Location}
+                        Location: {selectedTelecaller?.Location}/{selectedTelecaller?.CityName}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -2645,7 +2627,7 @@ const Dashboard = ({ onHistoryClick }) => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.AlternateMobileNo}
+                            {selectedTelecaller?.OtherNumbers}
                           </Typography>
                         </Card>
                       </Grid>

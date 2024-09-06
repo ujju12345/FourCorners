@@ -492,20 +492,19 @@ const TeleDashboard = () => {
                               <TableCell>
                                 {/* Conditionally render different buttons based on selectedType */}
                                 {selectedType === "telecalling" ? (
-                                  <Button
-                                    onClick={() => fetchDataForModal(row.Tid)}
-                                  >
-                                    View Telecaller Profile
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    onClick={() =>
-                                      fetchDataForModalContact(row.Cid)
-                                    }
-                                  >
-                                    View Contact Profile
-                                  </Button>
-                                )}
+  <Button onClick={() => fetchDataForModal(row.Tid)}>
+    View Telecaller Profile
+  </Button>
+) : selectedType === "contacts" ? (
+  <Button onClick={() => fetchDataForModalContact(row.Cid)}>
+    View Contact Profile
+  </Button>
+) : (
+  <Button onClick={() => fetchDataForModal(row.Tid)}>
+    View Transferred Profile
+  </Button>
+)}
+
                               </TableCell>
                             </TableRow>
                           ))}
@@ -601,7 +600,7 @@ const TeleDashboard = () => {
                           },
                         }}
                       >
-                        City: {selectedContact?.CityName}
+                        City: {selectedContact?.CityName}/{selectedContact?.LocationName}
                       </Typography>
                     </div>
                     <div style={{ marginRight: 5 }}>
@@ -882,25 +881,7 @@ const TeleDashboard = () => {
                           </Typography>
                         </Card>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Card
-                          variant="outlined"
-                          sx={{ borderRadius: 1, padding: "10px" }}
-                        >
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "0.9rem", fontWeight: 500 }}
-                          >
-                            Source Type
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ fontSize: "0.8rem" }}
-                          >
-                            {selectedContact?.SourceTypename}
-                          </Typography>
-                        </Card>
-                      </Grid>
+                    
                       <Grid item xs={4}>
                         <Card
                           variant="outlined"
@@ -1008,7 +989,7 @@ const TeleDashboard = () => {
                           mr: 2, // Add margin-right to separate the items
                         }}
                       >
-                        Location: {selectedTelecaller?.Location}
+                        Location: {selectedTelecaller?.Location}/{selectedTelecaller?.CityName}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -1327,7 +1308,7 @@ const TeleDashboard = () => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.TelecallingCreateDate}
+                            {selectedTelecaller?.CreateDate}
                           </Typography>
                         </Card>
                       </Grid>
@@ -1371,7 +1352,7 @@ const TeleDashboard = () => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.AlternateMobileNo}
+                            {selectedTelecaller?.OtherNumbers}
                           </Typography>
                         </Card>
                       </Grid>
@@ -1418,7 +1399,7 @@ const TeleDashboard = () => {
             </>
           ) : (
             <>
-              <DialogTitle>Contact Profile</DialogTitle>
+              <DialogTitle>Telecalling Profile</DialogTitle>
               <DialogContent>
                 <Paper sx={{ padding: 2 }}>
                   <Box
@@ -1484,7 +1465,7 @@ const TeleDashboard = () => {
                           mr: 2, // Add margin-right to separate the items
                         }}
                       >
-                        Location: {selectedTelecaller?.Location}
+                        Location: {selectedTelecaller?.Location}/{selectedTelecaller?.CityName}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -1828,7 +1809,7 @@ const TeleDashboard = () => {
                             variant="body2"
                             sx={{ fontSize: "0.7rem" }}
                           >
-                            {selectedTelecaller?.AlternateMobileNo}
+                            {selectedTelecaller?.OtherNumbers}
                           </Typography>
                         </Card>
                       </Grid>
