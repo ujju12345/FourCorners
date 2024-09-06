@@ -1376,6 +1376,8 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                   <Table>
                     <TableHead>
                       <TableRow>
+                      <TableCell>RemarkName</TableCell>
+
                         <TableCell>Current </TableCell>
                         <TableCell>Post</TableCell>
                         <TableCell>Date</TableCell>
@@ -1385,9 +1387,12 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
                       {receivedPayments.length > 0 ? (
                         receivedPayments.map((item, index) => (
                           <TableRow key={index}>
+                            <TableCell>{item.RemarkName}</TableCell>
+
                             <TableCell>{item.Cash}</TableCell>
                             <TableCell>{item.ChequeAmount}</TableCell>
-                            <TableCell>{item.Date}</TableCell>
+                            <TableCell>  {new Date(item.Date).toLocaleDateString("en-GB").replace(/\//g, "-")}
+</TableCell>
                           </TableRow>
                         ))
                       ) : (
