@@ -172,6 +172,7 @@ const TeleDashboard = () => {
       console.error("Error fetching single telecalling data:", error);
     }
   };
+
   const handleSource = (event) => {
     const { value } = event.target;
 
@@ -474,7 +475,10 @@ const TeleDashboard = () => {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Mobile</TableCell>
                                 <TableCell>Created Date</TableCell>
+                                <TableCell>Tranfered To</TableCell>
                                 <TableCell>Action</TableCell>
+                                
+                                
                               </>
                             )}
                           </TableRow>
@@ -489,6 +493,11 @@ const TeleDashboard = () => {
                                   ? row.NextFollowUpDate
                                   : row.CreateDate}
                               </TableCell>
+                              {selectedType !== "telecalling" && selectedType !== "contacts" && (
+      <TableCell>{row.Name}</TableCell>
+    )}
+    
+
                               <TableCell>
                                 {/* Conditionally render different buttons based on selectedType */}
                                 {selectedType === "telecalling" ? (
@@ -1393,6 +1402,12 @@ const TeleDashboard = () => {
                         </Card>
                       </Grid>
                     </Grid>
+
+
+
+
+
+                  
                   </Box>
                 </Paper>
               </DialogContent>
