@@ -488,6 +488,8 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         const bookingRemarks = response.data.data.bookingremark;
         const payments = response.data.data.payment;
 
+        console.log(payments , 'agaaya dataa<<<<<>>>>>>>>');
+
         setUpcomingPayments([...bookingRemarks.cash, ...bookingRemarks.cheque]);
         setReceivedPayments([...payments.cash, ...payments.cheque]);
         setFormData({
