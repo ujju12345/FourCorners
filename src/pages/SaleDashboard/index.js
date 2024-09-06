@@ -49,6 +49,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import HistoryComponent from "src/components/history";
+import CloseIcon from "@mui/icons-material/Close";
+import HistoryIcon from "@mui/icons-material/History";
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 const SaleDashboard = () => {
   const router = useRouter();
@@ -62,6 +66,7 @@ const SaleDashboard = () => {
   const [telecallingData, setTelecallingData] = useState(null);
   const [source, setSource] = useState([]);
   const [errors, setErrors] = useState({});
+  const [modalOpenHistoryOppo, setOpenHistoryOppo] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
@@ -72,6 +77,7 @@ const SaleDashboard = () => {
   const [modalOpenContact, setModalOpenContact] = useState(false);
   const [modalOpenOpportunity, setModalOpenOpportunity] = useState(false);
   const [modalOpenBooking, setModalOpenBooking] = useState(false);
+  const [rowData, setRowData] = useState([]);
 
   const [selectedContact, setSelectedContact] = useState(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
@@ -207,7 +213,6 @@ const SaleDashboard = () => {
       console.error("Error fetching single telecalling data:", error);
     }
   };
-
   const fetchDataForModalOpportunity = async (Oid) => {
     console.log("Oid AAYA", Oid);
     console.log("press");
@@ -227,6 +232,30 @@ const SaleDashboard = () => {
       console.error("Error fetching single telecalling data:", error);
     }
   };
+
+  const handleHistoryClickOppo = async () => {
+    try {
+      debugger;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${selectedOpportunity?.Oid}`;
+      const response = await axios.get(apiUrl);
+      if (response.data.status === "Success") {
+        console.log(response.data, "OID OID OID ODI  OID dataaaa<<<<<>>>>>>>>>>>");
+        setRowData(response.data.data); 
+        setOpenHistoryOppo(true);
+      } else {
+        console.error("Error: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
+
+  const handleCloseHistoryOppo = () => {
+    setOpenHistoryOppo(false);
+  };
+
 
   const fetchDataForBooking = async (BookingID) => {
     console.log("Oid AAYA", BookingID);
@@ -612,10 +641,10 @@ const SaleDashboard = () => {
                       display: "flex",
                       flexDirection: "column",
                       // alignItems: "center",
-                      ml: 15,
+                      // ml: 15,
                     }}
                   >
-                    <Box sx={{ display: "flex", mb: 2 }}>
+                    <Box sx={{ display: "flex", mb: 2 , ml:5 }}>
                       <Typography
                         variant="body2"
                         sx={{
@@ -672,7 +701,7 @@ const SaleDashboard = () => {
                         Follow Up Time: {selectedOpportunity?.NextFollowUpTime}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", ml: 30, mt: 7 }}>
+                    <Box sx={{ display: "flex", ml: 20, mt: 7 }}>
                       <a
                         href={`tel:${selectedOpportunity?.Mobile}`}
                         style={{ marginRight: 40 }}
@@ -691,6 +720,25 @@ const SaleDashboard = () => {
                           }}
                         >
                           <PhoneIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 40 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                          onClick={handleHistoryClickOppo}
+                        >
+                          <HistoryIcon />
                         </IconButton>
                       </a>
                       <a style={{ marginRight: 10 }}>
@@ -1017,6 +1065,25 @@ const SaleDashboard = () => {
             </DialogContent>
           )}
         </Dialog>
+
+
+        <Dialog open={modalOpenHistoryOppo} onClose={handleCloseHistoryOppo} sx={{width:'100%'}}>
+                <DialogTitle>
+                 Opportunity Follow-Up Data
+                  <IconButton edge="end" color="inherit" onClick={handleCloseHistoryOppo} aria-label="close" style={{ position: 'absolute', right: 8, top: 8 }}>
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent >
+                  <Box >
+                    <HistoryComponent item={selectedOpportunity?.Oid}></HistoryComponent>
+                  </Box>
+                </DialogContent>
+              </Dialog>  
+
+
+
+
 
         <Dialog
           open={modalOpenBooking}

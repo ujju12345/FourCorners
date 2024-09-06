@@ -22,13 +22,16 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import MenuItem from "@mui/material/MenuItem";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useCookies } from "react-cookie";
 import Select from "@mui/material/Select";
+import HistoryIcon from "@mui/icons-material/History";
 
 import Avatar from "@mui/material/Avatar";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import HistoryComponent from "src/components/history";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -66,6 +69,8 @@ const TeleDashboard = () => {
   const [telecallingData, setTelecallingData] = useState(null);
   const [source, setSource] = useState([]);
   const [errors, setErrors] = useState({});
+  const [rowData, setRowData] = useState([]);
+  const [modalOpenHistory, setOpenHistory] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
@@ -180,6 +185,9 @@ const TeleDashboard = () => {
       SourceID: value,
     });
   };
+  const handleCloseHistory = () => {
+    setOpenHistory(false);
+  };
   const fetchDataForModalContact = async (Cid) => {
     console.log("CID AAYA", Cid);
     console.log("press");
@@ -197,6 +205,23 @@ const TeleDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching single telecalling data:", error);
+    }
+  };
+
+  const handleHistoryClickLead = async () => {
+    try {
+      debugger;
+      const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${selectedTelecaller?.Tid}`;
+      const response = await axios.get(apiUrl);
+      if (response.data.status === "Success") {
+        console.log(response.data, "TID dataaaa<<<<<>>>>>>>>>>>");
+        setRowData(response.data.data); // Use response.data.data to set the rowData
+        setOpenHistory(true);
+      } else {
+        console.error("Error: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -1006,7 +1031,7 @@ const TeleDashboard = () => {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
+                    <Box sx={{ display: "flex", mt: 10,}}>
                       <a
                         href={`tel:${selectedTelecaller?.Mobile}`}
                         style={{ marginRight: 40 }}
@@ -1043,6 +1068,25 @@ const TeleDashboard = () => {
                           }}
                         >
                           <ShareIcon />
+                        </IconButton>
+                      </a>
+                      <a style={{ marginRight: 40 }}>
+                        <IconButton
+                          aria-label="share"
+                          size="small"
+                          sx={{
+                            color: "blue",
+                            backgroundColor: "#e3f2fd",
+                            borderRadius: "50%",
+                            padding: "10px",
+
+                            "&:hover": {
+                              backgroundColor: "#bbdefb",
+                            },
+                          }}
+                          onClick={handleHistoryClickLead}
+                        >
+                          <HistoryIcon />
                         </IconButton>
                       </a>
 
@@ -1830,7 +1874,23 @@ const TeleDashboard = () => {
               </DialogContent>
             </>
           )}
-        </Dialog>
+        </Dialog> 
+        <Dialog open={modalOpenHistory} onClose={handleCloseHistory} sx={{width:'100%'}}>
+                <DialogTitle>
+                  Follow-Up Data
+                  <IconButton edge="end" color="inherit" onClick={handleCloseHistory} aria-label="close" style={{ position: 'absolute', right: 8, top: 8 }}>
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent >
+                  <Box >
+                    <HistoryComponent item={selectedTelecaller?.Tid}></HistoryComponent>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+        
+
+        
 
         {/* <Grid item xs={12} md={6}>
           <WeeklyOverview />
