@@ -103,16 +103,16 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
         setTotalReceived({
           cash: receivedRecords.cash || 0,
           cheque: receivedRecords.cheque || 0,
-          loanCheque: receivedRecords.loanCheque || 0,
-          registerCheque: receivedRecords.registerCheque || 0,
+          loan: receivedRecords.loan || 0,
+          register: receivedRecords.register || 0,
           total: receivedRecords.total || 0,
         });
   
         setTotalUpcoming({
           cash: upcomingRecords.cash || 0,
           cheque: upcomingRecords.cheque || 0,
-          loanCheque: upcomingRecords.loanCheque || 0,
-          registerCheque: upcomingRecords.registerCheque || 0,
+          loan: upcomingRecords.loan || 0,
+          register: upcomingRecords.register|| 0,
           total: upcomingRecords.total || 0,
         });
   
@@ -190,16 +190,16 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
                   Received Payments:
                 </Typography>
                 <Typography variant="body2">
-                  Cash: {totalReceived.cash?.toLocaleString() || '0'}
+                  Current : {totalReceived.cash?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Cheque: {totalReceived.cheque?.toLocaleString() || '0'}
+                  Post : {totalReceived.cheque?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Loan Cheque: {totalReceived.loanCheque?.toLocaleString() || '0'}
+                  Loan : {totalReceived.loan?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Register Cheque: {totalReceived.registerCheque?.toLocaleString() || '0'}
+                  Register : {totalReceived.register?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   <strong>Total: {totalReceived.total?.toLocaleString() || '0'}</strong>
@@ -226,16 +226,16 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
                   Upcoming Payments:
                 </Typography>
                 <Typography variant="body2">
-                  Cash: {totalUpcoming.cash?.toLocaleString() || '0'}
+                  Currrent: {totalUpcoming.cash?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Cheque: {totalUpcoming.cheque?.toLocaleString() || '0'}
+                  Post: {totalUpcoming.cheque?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Loan Cheque: {totalUpcoming.loanCheque?.toLocaleString() || '0'}
+                  Loan : {totalUpcoming.loan?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2">
-                  Register Cheque: {totalUpcoming.registerCheque?.toLocaleString() || '0'}
+                  Register : {totalUpcoming.register?.toLocaleString() || '0'}
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   <strong>Total: {totalUpcoming.total?.toLocaleString() || '0'}</strong>
