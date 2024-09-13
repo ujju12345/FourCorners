@@ -1076,7 +1076,7 @@ const SaleDashboard = () => {
                 </DialogTitle>
                 <DialogContent >
                   <Box >
-                    <HistoryComponent item={selectedOpportunity?.Oid}></HistoryComponent>
+                    <HistoryComponent type={'sales'} item={selectedOpportunity?.Oid}></HistoryComponent>
                   </Box>
                 </DialogContent>
               </Dialog>  

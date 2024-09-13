@@ -37,7 +37,7 @@ const NoDataSVG = 'https://path-to-your-svg-image.svg'; // Replace with your SVG
 
 
 
-const HistoryComponent = ({ item }) => {
+const HistoryComponent = ({ item, type }) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(["amr"]);
     const intialName = {
@@ -57,31 +57,31 @@ const HistoryComponent = ({ item }) => {
 
 
     useEffect(() => {
-       
-        const fetchData = async () => {
-            
-            if (!item) return;
-            try {
-                const apiUrl = `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${item}`;
-                const response = await axios.get(apiUrl);
-                if (response.data.status === 'Success') {
-                   
-                    console.log(response.data.data, 'Single telecalling data fetched Lol');
-                    setRowDataToUpdate(response.data.data);
-                }
-            } catch (error) {
-                console.error('Error fetching single telecalling data:', error);
-            }
-        };
         fetchData();
     }, [item]);
+
+    const fetchData = async () => {
+        debugger;
+        if (!item) return;
+        try {
+            const apiUrl = type == "sales" ? `https://apiforcorners.cubisysit.com/api/api-singel-opportunityfollowup.php?Oid=${item}` :  `https://apiforcorners.cubisysit.com/api/api-fetch-nextfollowup.php?Tid=${item}`;
+            const response = await axios.get(apiUrl);
+            if (response.data.status === 'Success') {
+
+                console.log(response.data.data, 'Single telecalling data fetched Lol');
+                setRowDataToUpdate(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching single telecalling data:', error);
+        }
+    };
 
     return (
         <Box>
             <Box  >
                 <CustomTimeline align="alternate" >
                     {rowData.length > 0 ? rowData.map((data, index) => (
-                        <TimelineItem key={index} sx={{display:'flex',justifyContent:'center'}}>
+                        <TimelineItem key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
                             <TimelineOppositeContent>
                                 <Typography variant="body2" color="textSecondary">
                                     {data.NextFollowUpDate}
@@ -105,7 +105,7 @@ const HistoryComponent = ({ item }) => {
                                         <Typography variant="body2" color="textSecondary" style={{ marginLeft: '16px' }}>
                                             Time: {data.NextFollowUpTime}
                                         </Typography>
-                                       </Typography>  
+                                    </Typography>
                                     <Typography variant="body2">Note:  {data.Note} </Typography>
                                 </CustomPaper>
                             </TimelineContent>
@@ -118,7 +118,7 @@ const HistoryComponent = ({ item }) => {
                         </Box>
                     )}
                 </CustomTimeline>
-              
+
             </Box>
         </Box>
     );

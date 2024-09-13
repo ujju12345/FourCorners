@@ -8,7 +8,9 @@ import {
   TableBody,
   TableCell,
   TextField,
+  Card,
   TableContainer,
+  Grid,
   TableRow,
   Paper,
   Button,
@@ -231,25 +233,7 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
 
   return (
     <>
-   
-      <Box sx={{ marginBottom: 100}}>
-        <Button
-          variant="contained"
-          startIcon={<PersonAddIcon />}
-          onClick={handleAddPayment}
-          sx={{
-            color: "#333333",
-            fontSize: "0.875rem",
-            backgroundColor: "#f0f0f0",
-            "&:hover": {
-              backgroundColor: "#dcdcdc",
-            },
-          }}
-        >
-          Next Follow-Up
-        </Button>
-      </Box>
-      <Modal open={open} onClose={handleClose}>
+       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
             position: "absolute",
@@ -361,6 +345,24 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
           </Box>
         </Box>
       </Modal>
+      <Box sx={{ marginBottom: 100}}>
+        <Button
+          variant="contained"
+          startIcon={<PersonAddIcon />}
+          onClick={handleAddPayment}
+          sx={{
+            color: "#333333",
+            fontSize: "0.875rem",
+            backgroundColor: "#f0f0f0",
+            "&:hover": {
+              backgroundColor: "#dcdcdc",
+            },
+          }}
+        >
+          Next Follow-Up
+        </Button>
+     
+  
       <InvoiceBox className="printableArea" ref={printRef}>
         <TableContainer component={Paper}>
           <Table>
@@ -909,6 +911,7 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
           </Table>
         </TableContainer>
       </InvoiceBox>
+      </Box>
     </>
   );
 };

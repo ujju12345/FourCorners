@@ -82,7 +82,7 @@ const TodaysFollowupPayment = ({ initialRows }) => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={3}>
+      <Grid item xs={5}>
         <TodayPayment
           rows={rows}
           onItemClick={handleShow}
