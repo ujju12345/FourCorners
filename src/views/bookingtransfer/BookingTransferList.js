@@ -792,10 +792,10 @@ const BookingTransferList = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Telecall Attended By
+                   Sales Transfer To
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.UserName}
+                    {item?.BookingName}
                   </Typography>
                 </Card>
               </Grid>

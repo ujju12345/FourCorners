@@ -870,10 +870,10 @@ const ListOpportunity = ({ item, onDelete, onEdit, onHistoryClick }) => {
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    City
+                    Telecaller Name
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.CityName}
+                    {item?.TeleName}
                   </Typography>
                 </Card>
               </Grid>

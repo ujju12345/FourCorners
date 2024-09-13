@@ -33,8 +33,7 @@ const GlobalStyle = createGlobalStyle`
     }
     .printableArea {
       position: absolute;
-      left: 0;
-      top: 0;
+   
       width: 100%;
     }
   }
@@ -47,9 +46,7 @@ const StyledTableCell = styled(TableCell)({
 });
 
 const InvoiceBox = styled(Box)({
-  maxWidth: "890px",
-  margin: "auto",
-  padding: "10px",
+ 
   border: "1px solid #eee",
   fontSize: "11px",
   lineHeight: "18px",
@@ -234,10 +231,8 @@ const TodayPaymentTemplate = ({ item, onGoBack }) => {
 
   return (
     <>
-      <GlobalStyle />
-      <Box sx={{ marginBottom: 2 }}>
-        {" "}
-        {/* Control spacing with marginBottom */}
+   
+      <Box sx={{ marginBottom: 100}}>
         <Button
           variant="contained"
           startIcon={<PersonAddIcon />}

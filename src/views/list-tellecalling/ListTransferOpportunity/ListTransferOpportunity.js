@@ -621,8 +621,8 @@ const ListTransferOpportunity = ({
             </Box>
           </Box>
 
-          <Box sx={{ width: "100%", ml: 20 }}>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+          <Box sx={{ width: "100%"  }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 1,ml: 20 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -681,8 +681,8 @@ const ListTransferOpportunity = ({
               </Typography> */}
             </Box>
 
-            <Box sx={{ display: "flex", mt: 10, ml: 20 }}>
-              <a href={`tel:${item?.Mobile}`} style={{ marginRight: 40 }}>
+            <Box sx={{ display: "flex", mt: 10,justifyContent:"center" }}>
+              <a href={`tel:${item?.Mobile}`} style={{ marginRight: 30 }}>
                 <IconButton
                   aria-label="phone"
                   size="small"
@@ -699,7 +699,7 @@ const ListTransferOpportunity = ({
                   <PhoneIcon />
                 </IconButton>
               </a>
-              <a style={{ marginRight: 10 }}>
+              <a style={{ marginRight: 30 }}>
                 <IconButton
                   aria-label="share"
                   size="small"
@@ -708,7 +708,7 @@ const ListTransferOpportunity = ({
                     backgroundColor: "#e3f2fd",
                     borderRadius: "50%",
                     padding: "10px",
-                    marginRight: 15,
+                    
                     "&:hover": {
                       backgroundColor: "#bbdefb",
                     },
@@ -727,7 +727,7 @@ const ListTransferOpportunity = ({
                     backgroundColor: "#e3f2fd",
                     borderRadius: "50%",
                     padding: "10px",
-                    marginRight: 15,
+                   
                     "&:hover": {
                       backgroundColor: "#bbdefb",
                     },
@@ -738,7 +738,7 @@ const ListTransferOpportunity = ({
                 </IconButton>
               </a>
 
-              <a href={`mailto:${item?.Email}`} style={{ marginRight: 35 }}>
+              <a href={`mailto:${item?.Email}`} style={{ marginRight: 30 }}>
                 <IconButton
                   aria-label="email"
                   size="small"
@@ -971,10 +971,10 @@ const ListTransferOpportunity = ({
                     variant="body2"
                     sx={{ fontWeight: 600, fontSize: "0.8rem" }}
                   >
-                    Telecall Attended By
+                    Telecall Transfer To
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: "0.7rem" }}>
-                    {item?.UserName}
+                    {item?.ConvertName}
                   </Typography>
                 </Card>
               </Grid>
