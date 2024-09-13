@@ -20,10 +20,7 @@ import { useCookies } from "react-cookie";
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
-import  Photo  from 'src/pages/404'
-import Listprojectbookng from 'src/views/BookingFormRosenagar/ListProjectBooking/Listprojectbookng';
-import SidebarBookingProject from 'src/views/BookingFormRosenagar/SidebarBookingProject/SidebarBookingProject';
-import TemplateRosenagar from 'src/views/TemplateRosenagar/TemplateRosenagar';
+import  Photo  from 'src/pages/404';
 import Reciept from 'src/views/BookingFormRosenagar/Reciept/Reciept';
 import TemplatePayment from 'src/views/BookingFormRosenagar/TemplatePayment/TemplatePayment';
 import EditBookingform from 'src/views/BookingFormRosenagar/EditBookingform/EditBookingform';

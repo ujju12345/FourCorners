@@ -1,9 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Button,
+} from '@mui/material';
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+
 const GlobalStyle = createGlobalStyle`
   @media print {
     body * {
@@ -23,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
 
 const StyledTableCell = styled(TableCell)({
   border: '2px solid black',
-  padding: '0px', // Removed padding
+  padding: '0px',
   textAlign: 'center',
 });
 
@@ -37,9 +48,8 @@ const InvoiceBox = styled(Box)({
   fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
 });
 
-const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
+const ModifyHistoryTemplate = ({ bookingID, onGoBack }) => {
   const router = useRouter();
-  console.log(bookingID , 'booking id aaya');
   const printRef = useRef();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +62,7 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
     document.body.innerHTML = printContents;
     window.print();
     document.body.innerHTML = originalContents;
-    window.location.reload(); // Reload the page to reset the original contents
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -61,18 +71,18 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`https://apiforcorners.cubisysit.com/api/api-singel-historybooking.php?BookingID=${bookingID}`);
-      console.log("data aaya dekh", response.data);
+      const response = await axios.get(
+        `https://apiforcorners.cubisysit.com/api/api-singel-historybooking.php?BookingID=${bookingID}`
+      );
+      console.log('data fetched:', response.data);
       setData(response.data.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
       setError(error);
       setLoading(false);
     }
   };
-
-  
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -82,12 +92,16 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
     return <Typography>Error loading data</Typography>;
   }
 
-
   return (
     <>
       <GlobalStyle />
-      <Button variant="contained" color="primary"   onClick={onGoBack}  style={{ marginBottom: '10px' }}>
-        Go back 
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onGoBack}
+        style={{ marginBottom: '10px' }}
+      >
+        Go back
       </Button>
 
       <InvoiceBox className="printableArea" ref={printRef}>
@@ -96,74 +110,80 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
             <TableBody>
               <TableRow sx={{ height: '10px', padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ height: '10px', padding: 0 }}>
-                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}>QUOTATION</Typography>
+                  <Typography
+                    style={{ textAlign: 'center', fontSize: 20, fontWeight: 900 }}
+                  >
+                    QUOTATION
+                  </Typography>
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={3} sx={{ padding: 0 }}>
-                  <Typography style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}>RERA NO.  {data.reraregistration}</Typography>
-                  <Typography style={{ float: 'left', fontSize: 15, fontWeight: 200 }}>Date: {data.BookingDate}</Typography>
-                  <Typography style={{ float: 'right', fontSize: 15, fontWeight: 200 }}>Booked By: {data.UserName}</Typography>
+                  <Typography
+                    style={{ textAlign: 'center', fontSize: 20, fontWeight: 700 }}
+                  >
+                    RERA NO. {data.historybooking.reraregistration}
+                  </Typography>
+                  <Typography
+                    style={{ float: 'left', fontSize: 15, fontWeight: 200 }}
+                  >
+                    Date: {data.historybooking.BookingDate}
+                  </Typography>
+                  <Typography
+                    style={{ float: 'right', fontSize: 15, fontWeight: 200 }}
+                  >
+                    Booked By: {data.historybooking.UserName}
+                  </Typography>
+                </StyledTableCell>
+              </TableRow>
+              {/* Additional rows for other data */}
+              <TableRow sx={{ padding: 0 }}>
+                <StyledTableCell colSpan={2} sx={{ textAlign: 'left', padding: 0 }}>
+                  <Typography>Name Of Purchaser</Typography>
+                </StyledTableCell>
+                <StyledTableCell colSpan={10} sx={{ padding: 0 }}>
+                  {data.historybooking.Name}
                 </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell style={{ textAlign: 'center', padding: 0 }}>
-                  <img src="{images}" alt="Logo" width="70" height="100" />
-                </StyledTableCell>
-                <StyledTableCell sx={{ padding: 0 }}>
-                  <img src="https://i.postimg.cc/PJfmZCRv/Untitled-design-2024-04-12-T161558-455.png" alt="200 * 200" width="30" height="100" />
-                </StyledTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <TableContainer component={Paper}>
-          <Table>
-            <TableBody>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell style={{ textAlign: 'left', width: '20%', padding: 0 }} colSpan={2}>
-                  <Typography>Name Of Purchase</Typography>
-                </StyledTableCell>
-                <StyledTableCell style={{ width: '80%', padding: 0 }} colSpan={10}>
-                  {data.BookingName}
-                </StyledTableCell>
-              </TableRow>
-              <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
+                <StyledTableCell colSpan={2} sx={{ textAlign: 'left', padding: 0 }}>
                   <Typography>Address</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Address}</StyledTableCell>
+                <StyledTableCell colSpan={10} sx={{ padding: 0 }}>
+                  {data.historybooking.Address}
+                </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
-                <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
-                  <Typography>MOBILE No.</Typography>
+                <StyledTableCell colSpan={2} sx={{ textAlign: 'left', padding: 0 }}>
+                  <Typography>Mobile No.</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Mobile}</StyledTableCell>
+                <StyledTableCell colSpan={10} sx={{ padding: 0 }}>
+                  {data.historybooking.Mobile}
+                </StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
                   <Typography>PAN Card No.</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Pancard}</StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.historybooking.Pancard}</StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell colSpan={2} style={{ textAlign: 'left', padding: 0 }}>
                   <Typography>Aadhar No.</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Aadhar}</StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.historybooking.Aadhar}</StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
                   <Typography>Email Id.</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.Email}</StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.historybooking.Email}</StyledTableCell>
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={2}>
                   <Typography>Source Name.</Typography>
                 </StyledTableCell>
-                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.SourceName}</StyledTableCell>
+                <StyledTableCell colSpan={10} style={{ textAlign: 'center', padding: 0 }}>{data.historybooking.SourceName}</StyledTableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -191,19 +211,19 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
               </TableRow>
               <TableRow sx={{ padding: 0 }}>
                 <StyledTableCell style={{ width: '40%', padding: 0 }} colSpan={10}>
-                  {data.ProjectName}
+                  {data.historybooking.ProjectName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.WingName}
+                  {data.historybooking.WingName}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.FloorNo}
+                  {data.historybooking.FloorNo}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.FlatNo}
+                  {data.historybooking.FlatNo}
                 </StyledTableCell>
                 <StyledTableCell style={{ width: '15%', padding: 0 }} colSpan={10}>
-                  {data.UnittypeName}
+                  {data.historybooking.UnittypeName}
                 </StyledTableCell>
               </TableRow>
             </TableBody>
@@ -215,46 +235,46 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Type of Booking</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingTypeName}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.BookingTypeName}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>GST* (As per Govt.Notification)</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Gst}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Gst}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Area in Building (in Sq.Ft)</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Area}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Area}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Stamp Duty* (As per Govt.Notification)</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.StampDuty}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.StampDuty}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Rate Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Ratesqft}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Ratesqft}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Registration* (As per Govt.Notification)</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Registration}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Registration}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>TTL Amount As Per Builtup</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.TtlAmount}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.TtlAmount}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Advocate* (At time of registration)</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Advocate}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Advocate}</StyledTableCell>
 </TableRow>
 <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Development Charges</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.Charges}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.Charges}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Extra Cost (B)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ExtraCost}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.ExtraCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Parking Facility</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.ParkingFacility}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.ParkingFacility}</StyledTableCell>
         
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Total (A + B)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.TotalCost}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.TotalCost}</StyledTableCell>
       </TableRow>
       <TableRow sx={{ padding: 0 }}>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Gross Flat Cost (A)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.FlatCost}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.FlatCost}</StyledTableCell>
         <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Booking Ref.Code (T & C)</StyledTableCell>
-        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.BookingRef}</StyledTableCell>
+        <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.BookingRef}</StyledTableCell>
         
         
       </TableRow>
@@ -266,7 +286,7 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
   <Table className="info-border">
     <TableBody>
       <TableRow style={{ border: '1px solid black', padding: 0 }}>
-        <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>Rupees in words : {data.FlatCostInWords}</StyledTableCell>
+        <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>Rupees in words : {data.historybooking.FlatCostInWords}</StyledTableCell>
       </TableRow>
     </TableBody>
   </Table>
@@ -277,50 +297,30 @@ const ModifyHistoryTemplate = ({ bookingID , onGoBack }) => {
     <TableBody>
     <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Usable Area in Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.UsableArea}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.UsableArea}</StyledTableCell>
   <StyledTableCell style={{ width: '30%', padding: 0 }} colSpan={4}>Agreement Carpet (RERA) in Sq.Ft</StyledTableCell>
-  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.AgreementCarpet}</StyledTableCell>
+  <StyledTableCell style={{ width: '20%', padding: 0 }} colSpan={1}>{data.historybooking.AgreementCarpet}</StyledTableCell>
 </TableRow>
 
       <TableRow sx={{ padding: 0 }}>
   <StyledTableCell style={{ textAlign: 'left', fontSize: 15, fontWeight: 500, padding: 0 }} colSpan={10}>REMARKS :</StyledTableCell>
 </TableRow>
-
-{/* Map over remarks array */}
-{data.remarks && data.remarks.map((remark, index) => (
-  <TableRow key={index} sx={{ padding: 0 }}>
-    <StyledTableCell style={{ textAlign: 'left', padding: 0 }} colSpan={10}>
-      {index + 1}. {remark.Remarkamount} {remark.RemarkName} {remark.RemarkDate}
-    </StyledTableCell>
-  </TableRow>
-))}
-
-    </TableBody>
-  </Table>
-</TableContainer>
-
-<TableContainer component={Paper}>
-  <Table className="info-border">
-    <TableBody>
-      <TableRow style={{ border: '1px solid black', padding: 0 }}>
-        <StyledTableCell colSpan={4} style={{ padding: 0 }}>Verified By</StyledTableCell>
-        <StyledTableCell colSpan={4} style={{ padding: 0 }}>Maked By</StyledTableCell>
-        <StyledTableCell colSpan={4} style={{ padding: 0 }}>Purchaser Signature & Date</StyledTableCell>
-      </TableRow>
-      {/* Add rows for signatures */}
-      <TableRow style={{ padding: 0 }}>
-        <StyledTableCell colSpan={4} style={{ height: '90px', padding: 0 }}></StyledTableCell>
-        <StyledTableCell colSpan={4} style={{ height: '90px', padding: 0 }}></StyledTableCell>
-        <StyledTableCell colSpan={4} style={{ height: '90px', padding: 0 }}></StyledTableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
-</TableContainer>
-
+              {data.remarks.map((remark, index) => (
+                <TableRow key={index} sx={{ padding: 0 }}>
+                  <StyledTableCell colSpan={2} sx={{ padding: 0 }}>
+                    <Typography>Remark {index + 1}</Typography>
+                  </StyledTableCell>
+                  <StyledTableCell colSpan={10} sx={{ padding: 0 }}>
+                    {remark.RemarkName} - {remark.Remarkamount} ({remark.RemarkDate})
+                  </StyledTableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </InvoiceBox>
     </>
   );
 };
 
 export default ModifyHistoryTemplate;
-
