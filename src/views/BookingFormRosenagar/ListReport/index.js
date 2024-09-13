@@ -484,7 +484,6 @@ const [amountsUpcoming, setAmountsUpcoming] = useState([]);
     )}
   </CardContent>
 </Card>
-
       </Grid>
     </Grid>
   );

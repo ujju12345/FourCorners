@@ -423,7 +423,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Cash Paid"
+                    label="Current Paid"
                     value={cashPaid}
                     onChange={(e) => setCashPaid(e.target.value)}
                     type="number"
@@ -432,7 +432,7 @@ const BacklogPaymentSidebar = ({ onItemClick, onCreate }) => {
                 <Grid item xs={6}>
                   <TextField
                     fullWidth
-                    label="Cheque Paid"
+                    label="Post Paid"
                     value={chequePaid}
                     onChange={(e) => setChequePaid(e.target.value)}
                     type="number"

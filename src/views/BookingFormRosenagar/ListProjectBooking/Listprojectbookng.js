@@ -942,7 +942,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
         </Grid>
         <Grid item xs={4}>
           <TextField
-            label="Cash Paid"
+            label="Current Paid"
             type="number"
             value={cashPaid}
             onChange={(e) => setCashPaid(e.target.value)}
@@ -960,7 +960,7 @@ const Listprojectbookng = ({ onChequeReceiptClick, item }) => {
             selected={cashDate?.CashDate}
             onChange={handleDateChangeCash}
             dateFormat="yyyy-MM-dd"
-            customInput={<TextField label="Cash date" fullWidth />}
+            customInput={<TextField label="Current date" fullWidth />}
           />
         </Grid>
       </>
