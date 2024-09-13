@@ -148,10 +148,10 @@ const SaleDashboard = () => {
       setSelectedData(telecallingData?.data?.oproccessRecords);
       setSelectedType("booking");
     } else if (type === "loan") {
-      setSelectedData(telecallingData?.data?.bookingRemarkLoanRecords);
+      setSelectedData(telecallingData?.data?.bookingremarkLoanRecords);
       setSelectedType("loan");
     } else if (type === "payment") {
-      setSelectedData(telecallingData?.data?.bookingRemarkRecords);
+      setSelectedData(telecallingData?.data?.bookingremarkRecords);
       setSelectedType("payment");
     }
   };
@@ -438,7 +438,7 @@ const SaleDashboard = () => {
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Counts:{" "}
-                            {telecallingData?.data.bookingRemarkLoanCount}{" "}
+                            {telecallingData?.data.bookingremarkLoanCount}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
@@ -453,7 +453,7 @@ const SaleDashboard = () => {
                           </Typography>
                           <Typography variant="body1" color="textSecondary">
                             Total Counts:{" "}
-                            {telecallingData?.data.bookingRemarkCount}{" "}
+                            {telecallingData?.data.bookingremarkCount}{" "}
                             {/* Adjust this key as needed */}
                           </Typography>
                         </CardContent>
