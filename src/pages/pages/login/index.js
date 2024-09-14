@@ -96,45 +96,46 @@ const LoginPage = () => {
         password: values.password,
       };
   
-      axios.post('https://apiforcorners.cubisysit.com/api/api-login.php', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => {
-          if (response.data.status === 'Success') {
-            const user = {
-              FullName: response.data.data.Name,
-              UserID: response.data.data.userid,
-              RoleID: response.data.data.roleid,
-              RoleName: response.data.data.rolename,
-            };
-            console.log(user, 'SUBMITTED DATA');
-            setCookie("amr", JSON.stringify(user), { path: "/" });
-       
-            // router.push('/SaleDashboard');
-            console.log('bac');
-            // return
-            if (user.RoleID === 1) {
-              router.push('/');
-            } else if (user.RoleID === 3) {
-              router.push('/SaleDashboard');
-            } else {
-              router.push('/Telecalling');
-            }
-            console.log('SUBMITTED DATA');
-          } else {
-            setIsSnackbarOpen(true);
-            setSnackbarMessage(response.data.message);
-          }
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-          setIsSnackbarOpen(true);
-          setSnackbarMessage('There was an error, Please contact admin');
-        });
+      // Send login request
+      const response = await axios.post(
+        'https://apiforcorners.cubisysit.com/api/api-login.php',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      // Handle successful login
+      if (response.data.status === 'Success') {
+        const user = {
+          FullName: response.data.data.Name,
+          UserID: response.data.data.userid,
+          RoleID: response.data.data.roleid,
+          RoleName: response.data.data.rolename,
+        };
+        
+        // Store user details in a cookie
+        setCookie("amr", JSON.stringify(user), { path: "/" });
+  
+        // Redirect based on user role
+        if (user.RoleID === 1) {
+          router.push('/');
+        } else if (user.RoleID === 3) {
+          router.push('/SaleDashboard');
+        } else {
+          router.push('/Telecalling');
+        }
+  
+      } else {
+        // Show error message
+        setIsSnackbarOpen(true);
+        setSnackbarMessage(response.data.message);
+      }
   
     } catch (error) {
+      // Handle network or server errors
       console.error('Login failed:', error);
       setIsSnackbarOpen(true);
       setSnackbarMessage('There was an error, Please contact admin');
