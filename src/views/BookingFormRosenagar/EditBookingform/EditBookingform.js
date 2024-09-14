@@ -36,7 +36,7 @@ import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 
-const EditBookingform = ({ show, bookingID, goBack }) => {
+const EditBookingform = ({ show, bookingID, goBack , handleCloseEditForm}) => {
   const router = useRouter();
   const initialRemark = {
     BookingremarkID: "",
@@ -262,15 +262,13 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
 
 
   
-
   const handleChange = (event, index, field) => {
-    const { type, checked, value } = event.target;
-
+    const { name, type, checked, value } = event.target; // Extract `name`
+  
     if (index !== undefined && field !== undefined) {
       // Handle remarks update
       const newRemarks = [...remarks];
-      newRemarks[index][field] =
-        type === "checkbox" ? (checked ? 1 : 0) : value;
+      newRemarks[index][field] = type === "checkbox" ? (checked ? 1 : 0) : value;
       setRemarks(newRemarks);
     } else {
       // Clear error for the field being changed
@@ -278,8 +276,8 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
         ...prevErrors,
         [name]: undefined,
       }));
-
-      // Handling specific fields
+  
+      // Handle specific fields like 'Mobile', 'TotalCost', etc.
       if (name === "Mobile" || name === "AlternateMobileNo") {
         const numericValue = value.replace(/\D/g, ""); 
         setFormData((prevFormData) => ({
@@ -296,52 +294,46 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
       } else if (name === "Area" || name === "Ratesqft") {
         const newArea = name === "Area" ? value : formData.Area;
         const newRatesqft = name === "Ratesqft" ? value : formData.Ratesqft;
-        const newTtlAmount =
-          (parseFloat(newArea) || 0) * (parseFloat(newRatesqft) || 0);
-
+        const newTtlAmount = (parseFloat(newArea) || 0) * (parseFloat(newRatesqft) || 0);
+  
         setFormData((prevFormData) => ({
           ...prevFormData,
-          Area: name === "Area" ? value : prevFormData.Area,
-          Ratesqft: name === "Ratesqft" ? value : prevFormData.Ratesqft,
+          Area: newArea,
+          Ratesqft: newRatesqft,
           TtlAmount: newTtlAmount.toFixed(2),
         }));
       } else {
+        // Default update for other fields
         setFormData((prevFormData) => ({
           ...prevFormData,
-          [name]: value,
+          [name]: value, // Correctly update the field based on `name`
         }));
       }
-
+  
       // Additional calculation for FlatCost
       const { TtlAmount, Charges, ParkingFacility, Advocate } = {
         ...formData,
         [name]: value,
       };
-
-      if (
-        name === "TtlAmount" ||
-        name === "Charges" ||
-        name === "ParkingFacility" ||
-        name === "Advocate"
-      ) {
-        const newFlatCost =
-          (parseFloat(TtlAmount) || 0) +
-          (parseFloat(Charges) || 0) +
-          (parseFloat(ParkingFacility) || 0) +
+  
+      if (["TtlAmount", "Charges", "ParkingFacility", "Advocate"].includes(name)) {
+        const newFlatCost = 
+          (parseFloat(TtlAmount) || 0) + 
+          (parseFloat(Charges) || 0) + 
+          (parseFloat(ParkingFacility) || 0) + 
           (parseFloat(Advocate) || 0);
-
+  
         const FlatCostInWords = numberToWordsIndian(parseInt(newFlatCost || 0));
-
+  
         setFormData((prevFormData) => ({
           ...prevFormData,
           FlatCost: newFlatCost.toFixed(2),
-          FlatCostInWords:
-            FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
+          FlatCostInWords: FlatCostInWords.charAt(0).toUpperCase() + FlatCostInWords.slice(1),
         }));
       }
     }
   };
-
+  
   const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -626,10 +618,10 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     // URL for the API request
     const url = `https://ideacafe-backend.vercel.app/api/proxy/api-update-projectbooking.php`;
-
+  
     // Format remarks to match the API format and include BookingRemarkID
     const formattedRemarks = remarks.map((remark) => ({
       BookingremarkID: remark.BookingremarkID || "", // Include BookingRemarkID
@@ -644,28 +636,29 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
       Status: 1,
       ModifyUID: cookies?.amr?.UserID || 1,
     }));
-
+  
     // Structure the data as per the API requirement
     const dataToSend = {
       ...formData, // All other form data like BookingDate, Mobile, etc.
       BookingID: bookingID, // Ensure this is included
       BookingremarkData: formattedRemarks, // Add the formatted remarks with BookingRemarkID
     };
-
+  
     console.log(dataToSend, "Data to Send<<<<>>>>>>>>>>>>><<<<<<<<");
-
+  
     try {
       const response = await axios.post(url, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.data.status === "Success") {
         console.log(response.data, "Submission successful<>>>>>>>>>>>>>>>");
-        setFormData(initialFormData); 
-        setRemarks([initialRemark]); 
-
+  
+        setFormData(initialFormData); // Reset form data
+        setRemarks([initialRemark]); // Reset remarks
+  
         // Show success alert
         Swal.fire({
           icon: "success",
@@ -673,8 +666,10 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
           showConfirmButton: false,
           timer: 1000,
         });
+  
+        // Close the modal after success
+        handleCloseEditForm();  // Call the function to close the modal
       } else {
-        
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -691,6 +686,7 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
       });
     }
   };
+  
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -807,17 +803,16 @@ const EditBookingform = ({ show, bookingID, goBack }) => {
                   onChange={handleChange}
                 />
               </Grid>
-
               <Grid item xs={8} sm={4}>
-                <TextField
-                  fullWidth
-                  label={<>Pan Card Number</>}
-                  name="Pancard"
-                  placeholder="Pan Card Number"
-                  value={formData.Pancard}
-                  onChange={handleChange}
-                />
-              </Grid>
+  <TextField
+    fullWidth
+    label={<>Pan Card Number</>}
+    name="Pancard" // Make sure the `name` corresponds to the field in `formData`
+    placeholder="Pan Card Number"
+    value={formData.Pancard} // Ensure the value is correctly bound from `formData`
+    onChange={handleChange} // Correctly pass the `handleChange` function
+  />
+</Grid>
 
               <Grid item xs={8} sm={4}>
                 <TextField
